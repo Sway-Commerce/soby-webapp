@@ -32,47 +32,40 @@ const App = () => {
     '123ABCabc#'
   );
 
-  // const cmd = {
-  //   firstName: 'tuan',
-  //   lastName: 'le',
-  //   phoneCountryCode: '+1',
-  //   phoneNumber: '9379492383',
-  //   email: 'underreaction@greendike.com',
-  //   signingPublicKey,
-  //   signingSecret,
-  //   encryptionPublicKey,
-  //   encryptionSecret,
-  //   password: '123ABCabc#',
-  // };
+  const cmd = {
+    firstName: 'tuan',
+    lastName: 'le',
+    phoneCountryCode: '+1',
+    phoneNumber: '9379492383',
+    email: 'underreaction@greendike.com',
+    signingPublicKey,
+    signingSecret,
+    encryptionPublicKey,
+    encryptionSecret,
+    password: '123ABCabc#',
+  };
 
-  // const REGISTER = gql`
-  //   mutation Register($cmd: RegisterCmd!) {
-  //     register(cmd: $cmd) {
-  //       success
-  //       message
-  //       data
-  //     }
-  //   }
-  // `;
+  const REGISTER = gql`
+    mutation Register($cmd: RegisterCmd!) {
+      register(cmd: $cmd) {
+        success
+        message
+        data
+      }
+    }
+  `;
 
-  // const [register] = useMutation(REGISTER);
-
-  // register({ variables: { cmd } });
-
-  // client
-  //   .mutate({
-  //     mutation: gql`
-  //    register($cmd: ${cmd}) {
-  //     }
-  // `,
-  //   })
-  //   .then((result) => console.log(result));
+  const [register] = useMutation(REGISTER, {
+    variables: {
+      cmd
+    }
+  });
 
   return (
     <div>
       <GlobalStyle />
       <Header />
-      <div>Hello Soby</div>
+      <div onClick={() => register()}>Hello Soby</div>
     </div>
   );
 };
