@@ -7,50 +7,46 @@ import { gql, useMutation } from '@apollo/client';
 import { Encryption, Signing } from 'credify-crypto';
 
 const App = () => {
-  const generateEncryptionKey = async (password) => {
-    const encryption = new Encryption();
-    await encryption.generateKeyPair();
-    const encryptionSecret = await encryption.exportPrivateKey(password);
-    const encryptionPublic = await encryption.exportPublicKey();
-
-    console.log({ encryptionSecret, encryptionPublic });
-    return { encryptionSecret, encryptionPublic };
-  };
-
-  const generateSiginKey = (password) => {
-    const signing = new Signing();
-    signing.generateKeyPair();
-    const signingSecretKey = signing.exportPrivateKey(password);
-    const signingPublicKey = signing.exportPublicKey();
-
-    console.log({ signingSecretKey, signingPublicKey });
-    return { signingSecretKey, signingPublicKey };
-  };
-
-  const { signingSecret, signingPublicKey } = generateSiginKey('123ABCabc#');
-  const { encryptionSecret, encryptionPublicKey } = generateEncryptionKey(
-    '123ABCabc#'
-  );
-
   const cmd = {
     firstName: 'tuan',
     lastName: 'le',
     phoneCountryCode: '+1',
     phoneNumber: '9379492383',
     email: 'underreaction@greendike.com',
-    signingPublicKey,
-    signingSecret,
-    encryptionPublicKey,
-    encryptionSecret,
-    password: '123ABCabc#',
+    signingPublicKey: null,
+    signingSecret: null,
+    encryptionPublicKey: null,
+    encryptionSecret: null,
+    password: 'ABCabc123#',
   };
+
+  const generateEncryptionKey = async (password) => {
+    const encryption = new Encryption();
+    await encryption.generateKeyPair();
+    cmd.encryptionSecret = await encryption.exportPrivateKey(password);
+    cmd.encryptionPublicKey = await encryption.exportPublicKey();
+  };
+
+  const generateSignInKey = (password) => {
+    const signing = new Signing();
+    signing.generateKeyPair();
+    cmd.signingSecret = signing.exportPrivateKey(password);
+    cmd.signingPublicKey = signing.exportPublicKey();
+  };
+
+  generateSignInKey('123ABCabc#');
+  generateEncryptionKey('123ABCabc#');
+
+  console.log(cmd);
 
   const REGISTER = gql`
     mutation Register($cmd: RegisterCmd!) {
       register(cmd: $cmd) {
         success
         message
-        data
+        data {
+          id
+        }
       }
     }
   `;
