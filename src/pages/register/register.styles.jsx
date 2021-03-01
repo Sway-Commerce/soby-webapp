@@ -5,7 +5,7 @@ const mainColor = '#2B74E4';
 export const SignUpContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 544px;
+  max-width: 544px;
   margin: 0 auto;
 `;
 
