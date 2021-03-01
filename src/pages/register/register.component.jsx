@@ -4,6 +4,7 @@ import PhoneInput from 'react-phone-number-input';
 
 import FormInput from '../../components/form-input/form-input.component';
 import CustomButton from '../../components/custom-button/custom-button.component';
+import usePhoneNumber from '../../custom-hooks/usePhoneNumber';
 
 // import { signUpStart } from '../../redux/user/user.actions';
 
@@ -11,30 +12,40 @@ import {
   SignUpContainer,
   SignUpTitle,
   ControlTitle,
-  Gap
+  Gap,
 } from './register.styles';
 
 const Register = () => {
   const [userCredentials, setUserCredentials] = useState({
-    phoneNumber: '',
+    phoneNumberIntl: '',
     password: '',
     firstName: '',
     lastName: '',
     email: '',
   });
 
-  const { firstName, lastName, email, password, phoneNumber } = userCredentials;
+  const {
+    firstName,
+    lastName,
+    email,
+    password,
+    phoneNumberIntl,
+  } = userCredentials;
+  const { countryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    console.log({ firstName, lastName, email, password, phoneNumber });
+    console.log({ phoneNumber, countryCode });
 
     // signUpStart({ displayName, email, password });
   };
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
+    if (!event) {
+      return;
+    }
+    const { name, value } = event?.target;
 
     setUserCredentials({ ...userCredentials, [name]: value });
   };
@@ -46,10 +57,14 @@ const Register = () => {
         <ControlTitle>Your phone numbers</ControlTitle>
         <PhoneInput
           international
+          initialValueFormat="national"
+          countryCallingCodeEditable={false}
           defaultCountry="VN"
           name="phoneNumber"
-          value={phoneNumber}
-          onChange={handleChange}
+          value={phoneNumberIntl}
+          onChange={(value) =>
+            setUserCredentials({ ...userCredentials, phoneNumberIntl: value })
+          }
         />
         <ControlTitle>Your password</ControlTitle>
         <FormInput
@@ -90,7 +105,7 @@ const Register = () => {
           onChange={handleChange}
           label="Email"
         />
-        <Gap/>
+        <Gap />
         <CustomButton type="submit">Sign up</CustomButton>
       </form>
     </SignUpContainer>
