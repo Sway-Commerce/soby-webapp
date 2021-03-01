@@ -73,15 +73,3 @@ export const typeDefs = gql`
     register(cmd: RegisterCmd!): IndividualResult!
   }
 `;
-
-export const GET_INDIVIDUAL = gql`
-  {
-    getIndividual @client
-  }
-`;
-
-export const GET_SECRET = gql`
-  {
-    getSecret @client
-  }
-`;
