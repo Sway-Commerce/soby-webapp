@@ -25,3 +25,8 @@ export const Gap = styled.div`
   margin-bottom: 20px;
 `;
 
+export const ErrorTitle = styled.h5`
+  color: red;
+  margin: 5px 0;
+`;
+

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 // import { connect } from 'react-redux';
-import PhoneInput from 'react-phone-number-input';
+import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
 
 import FormInput from '../../components/form-input/form-input.component';
 import CustomButton from '../../components/custom-button/custom-button.component';
 import usePhoneNumber from '../../custom-hooks/usePhoneNumber';
+import passwordValidation from '../../utils/passwordValidation';
+import emailValidation from '../../utils/emailValidation';
 
 // import { signUpStart } from '../../redux/user/user.actions';
 
@@ -13,6 +15,7 @@ import {
   SignUpTitle,
   ControlTitle,
   Gap,
+  ErrorTitle,
 } from './register.styles';
 
 const Register = () => {
@@ -24,6 +27,12 @@ const Register = () => {
     email: '',
   });
 
+  const [inputValidation, setInputValidation] = useState({
+    isPhoneValid: true,
+    isPasswordValid: true,
+    isEmailValid: true,
+  });
+
   const {
     firstName,
     lastName,
@@ -32,9 +41,17 @@ const Register = () => {
     phoneNumberIntl,
   } = userCredentials;
   const { countryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
+  const { isPhoneValid, isPasswordValid, isEmailValid } = inputValidation;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    setInputValidation({
+      ...inputValidation,
+      isPhoneValid: isPossiblePhoneNumber(phoneNumberIntl),
+      isPasswordValid: passwordValidation(password),
+      isEmailValid: emailValidation(email),
+    });
 
     console.log({ phoneNumber, countryCode });
 
@@ -66,6 +83,9 @@ const Register = () => {
             setUserCredentials({ ...userCredentials, phoneNumberIntl: value })
           }
         />
+        {!isPhoneValid ? (
+          <ErrorTitle>Your phone number is not correct</ErrorTitle>
+        ) : null}
         <ControlTitle>Your password</ControlTitle>
         <FormInput
           type="password"
@@ -75,6 +95,12 @@ const Register = () => {
           label="Abcabc123#"
           required
         />
+        {!isPasswordValid ? (
+          <ErrorTitle>
+            Your password must be between 6 to 20 characters which contain at
+            least one numeric digit, one uppercase and one lowercase letter
+          </ErrorTitle>
+        ) : null}
         <div className="second-col">
           <div>
             <ControlTitle>First name</ControlTitle>
@@ -105,6 +131,9 @@ const Register = () => {
           onChange={handleChange}
           label="Email"
         />
+        {!isEmailValid ? (
+          <ErrorTitle>Your email is not correct</ErrorTitle>
+        ) : null}
         <Gap />
         <CustomButton type="submit">Sign up</CustomButton>
       </form>
