@@ -8,8 +8,8 @@ import {
   SignInLink,
   CartContainer
 } from './header.styles';
-import { ReactComponent as Logo } from '../../images/logo.svg';
-import { ReactComponent as Cart } from '../../images/cart.svg';
+import { ReactComponent as Logo } from '../../assets/logo.svg';
+import { ReactComponent as Cart } from '../../assets/cart.svg';
 
 export const Header = () => (
   <HeaderContainer>
