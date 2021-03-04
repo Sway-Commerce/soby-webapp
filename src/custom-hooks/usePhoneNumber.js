@@ -5,7 +5,10 @@ import {
 
 const usePhoneNumber = (phoneNumberIntl) => {
   const [phoneCountryCode] = formatPhoneNumberIntl(phoneNumberIntl).split(' ');
-  const phoneNumber = formatPhoneNumber(phoneNumberIntl).split(' ').join('');
+  let phoneNumber = formatPhoneNumber(phoneNumberIntl).split(' ').join('');
+  if (phoneCountryCode === '+84') {
+    phoneNumber = phoneNumber.substring(1);
+  }
 
   return { phoneCountryCode, phoneNumber };
 };

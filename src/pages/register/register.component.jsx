@@ -8,7 +8,7 @@ import CustomButton from '../../components/custom-button/custom-button.component
 import usePhoneNumber from '../../custom-hooks/usePhoneNumber';
 import passwordValidation from '../../utils/passwordValidation';
 import emailValidation from '../../utils/emailValidation';
-import { REGISTER } from '../../usecase/register.usecase';
+import { REGISTER } from '../../repository/individual.repository';
 import {
   generateEncryptionKey,
   generateSignInKey,
@@ -27,7 +27,7 @@ import {
   ErrorTitle,
 } from './register.styles';
 
-const Register = () => {
+const Register = ({ signUpSuccess, signUpFailure, signUpStart }) => {
   const [userCredentials, setUserCredentials] = useState({
     password: '',
     firstName: '',
@@ -47,19 +47,40 @@ const Register = () => {
     isEmailValid: true,
   });
 
-  const { firstName, lastName, email, password } = userCredentials;
+  const {
+    firstName,
+    lastName,
+    email,
+    password,
+    encryptionSecret,
+    signingSecret,
+  } = userCredentials;
   const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
   const { isPhoneValid, isPasswordValid, isEmailValid } = inputValidation;
-  const [register, { data, error }] = useMutation(REGISTER);
+  const [register, { data, error }] = useMutation(REGISTER, {
+    errorPolicy: 'all',
+  });
+
+  if (data?.register) {
+    signUpSuccess({ encryptionSecret, signingSecret });
+  }
+
+  if (error) {
+    signUpFailure(error);
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const isPhoneValid = isPossiblePhoneNumber(phoneNumberIntl);
+    const isPasswordValid = passwordValidation(password);
+    const isEmailValid = emailValidation(email);
+
     setInputValidation({
       ...inputValidation,
-      isPhoneValid: isPossiblePhoneNumber(phoneNumberIntl),
-      isPasswordValid: passwordValidation(password),
-      isEmailValid: emailValidation(email),
+      isPhoneValid,
+      isPasswordValid,
+      isEmailValid,
     });
 
     if (isPhoneValid && isPasswordValid && isEmailValid) {
@@ -68,6 +89,12 @@ const Register = () => {
         encryptionPublicKey,
       } = await generateEncryptionKey(password);
       const { signingSecret, signingPublicKey } = generateSignInKey(password);
+
+      setUserCredentials({
+        ...userCredentials,
+        encryptionSecret,
+        signingSecret,
+      });
 
       const cmd = {
         ...userCredentials,
@@ -78,7 +105,6 @@ const Register = () => {
         phoneNumber,
         phoneCountryCode,
       };
-      console.log(cmd);
       signUpStart();
       register({
         variables: {
@@ -86,8 +112,6 @@ const Register = () => {
         },
       });
     }
-
-    // console.log({ phoneNumber, countryCode });
   };
 
   const handleChange = (event) => {
@@ -98,14 +122,6 @@ const Register = () => {
 
     setUserCredentials({ ...userCredentials, [name]: value });
   };
-
-  if (data) {
-    signUpSuccess();
-  }
-
-  if (error) {
-    signUpFailure(error);
-  }
 
   return (
     <SignUpContainer>
