@@ -3,15 +3,24 @@ import React from 'react';
 import {
   HeaderContainer,
   OptionsContainer,
-  OptionLink
+  OptionLink,
+  LogoContainer,
+  SignInLink,
+  CartContainer
 } from './header.styles';
+import { ReactComponent as Logo } from '../../images/logo.svg';
+import { ReactComponent as Cart } from '../../images/cart.svg';
 
-export const Header = ({ currentUser, signOutStart }) => (
+export const Header = () => (
   <HeaderContainer>
+    <LogoContainer to="/">
+      <Logo />
+    </LogoContainer>
     <OptionsContainer>
-      <OptionLink to='/home'>Home</OptionLink>
-      <OptionLink to='/dashboard'>My Dashboard</OptionLink>
-      <OptionLink to='/reference'>Refer a Friend</OptionLink>
+      <OptionLink to="/">Home</OptionLink>
+      <OptionLink to="/dashboard">My Dashboard</OptionLink>
+      <SignInLink to="/signin">Đăng nhập</SignInLink>
+      <CartContainer ><Cart/></CartContainer>
     </OptionsContainer>
   </HeaderContainer>
 );

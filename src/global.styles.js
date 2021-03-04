@@ -6,12 +6,8 @@ const colorWhite = '#FFFFFF';
 
 export const GlobalStyle = createGlobalStyle`
 	body {
-		font-family: "Open Sans";
-		font-weight: normal;
-
-		@media screen and (max-width: 800px) {
-			padding: 10px;
-		}
+		font-family: 'Commissioner', sans-serif;
+		font-weight: regular;
 	}
 
 	a {

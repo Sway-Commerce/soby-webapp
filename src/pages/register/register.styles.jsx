@@ -30,7 +30,7 @@ export const ErrorTitle = styled.h5`
 `;
 
 export const CardWrapper = styled.div`
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
   padding: 16px;
   max-width: 544px;

@@ -4,33 +4,23 @@ import { Link } from 'react-router-dom';
 const mainColor = '#2B74E4';
 
 export const HeaderContainer = styled.div`
-  height: 70px;
+  height: 80px;
   width: 100%;
   display: flex;
   justify-content: space-between;
   margin-bottom: 25px;
+  padding: 0 240px;
   background-color: ${mainColor};
-
-  @media screen and (max-width: 800px) {
-    height: 60px;
-    padding: 10px;
-    margin-bottom: 20px;
-  }
+  font-size: 20px;
 `;
 
 export const LogoContainer = styled(Link)`
   height: 100%;
   width: 70px;
-  padding: 25px;
-
-  @media screen and (max-width: 800px) {
-    width: 50px;
-    padding: 0;
-  }
+  padding: 16.5px 0;
 `;
 
 export const OptionsContainer = styled.div`
-  width: 50%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -42,9 +32,28 @@ export const OptionsContainer = styled.div`
 `;
 
 export const OptionLink = styled(Link)`
-  padding: 10px 15px;
+  padding: 10px 40px;
   cursor: pointer;
   color: white;
+`;
+
+export const SignInLink = styled(Link)`
+  padding: 10px 40px;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+`;
+
+export const CartContainer = styled(Link)`
+  height: 44px;
+  width: 44px;
+  margin: 19px 0 17px 40px;
+  background-color: white;
+  display: flex;
+  border-radius: 50%;
+  svg {
+    margin:auto 9px;
+  }
 `;
 
 OptionLink.displayName = 'OptionLink';
