@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
+const mainColor = '#2B74E4';
+
 export const HeaderContainer = styled.div`
   height: 70px;
   width: 100%;
   display: flex;
   justify-content: space-between;
   margin-bottom: 25px;
+  background-color: ${mainColor};
 
   @media screen and (max-width: 800px) {
     height: 60px;
@@ -41,6 +44,7 @@ export const OptionsContainer = styled.div`
 export const OptionLink = styled(Link)`
   padding: 10px 15px;
   cursor: pointer;
+  color: white;
 `;
 
 OptionLink.displayName = 'OptionLink';

@@ -9,15 +9,9 @@ import {
 export const Header = ({ currentUser, signOutStart }) => (
   <HeaderContainer>
     <OptionsContainer>
-      <OptionLink to='/shop'>SHOP</OptionLink>
-      <OptionLink to='/shop'>CONTACT</OptionLink>
-      {currentUser ? (
-        <OptionLink as='div' onClick={signOutStart}>
-          SIGN OUT
-        </OptionLink>
-      ) : (
-        <OptionLink to='/signin'>SIGN IN</OptionLink>
-      )}
+      <OptionLink to='/home'>Home</OptionLink>
+      <OptionLink to='/dashboard'>My Dashboard</OptionLink>
+      <OptionLink to='/reference'>Refer a Friend</OptionLink>
     </OptionsContainer>
   </HeaderContainer>
 );

@@ -5,7 +5,6 @@ const mainColor = '#2B74E4';
 export const SignUpContainer = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 544px;
   margin: 0 auto;
 `;
 
@@ -30,3 +29,19 @@ export const ErrorTitle = styled.h5`
   margin: 5px 0;
 `;
 
+export const CardWrapper = styled.div`
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  padding: 16px;
+  max-width: 544px;
+
+  &:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  }
+`;
+
+export const RegisterContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 100px 90px 0;
+`;
