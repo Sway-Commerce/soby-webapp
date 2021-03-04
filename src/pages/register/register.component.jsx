@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
-// import { connect } from 'react-redux';
 import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
+import { useMutation } from '@apollo/client';
+import { connect } from 'react-redux';
 
 import FormInput from '../../components/form-input/form-input.component';
 import CustomButton from '../../components/custom-button/custom-button.component';
 import usePhoneNumber from '../../custom-hooks/usePhoneNumber';
 import passwordValidation from '../../utils/passwordValidation';
 import emailValidation from '../../utils/emailValidation';
-
-// import { signUpStart } from '../../redux/user/user.actions';
+import { REGISTER } from '../../usecase/register.usecase';
+import {
+  generateEncryptionKey,
+  generateSignInKey,
+} from '../../utils/generateKeyPair';
+import {
+  signUpStart,
+  signUpSuccess,
+  signUpFailure,
+} from '../../redux/user/user.actions';
 
 import {
   SignUpContainer,
@@ -20,12 +29,17 @@ import {
 
 const Register = () => {
   const [userCredentials, setUserCredentials] = useState({
-    phoneNumberIntl: '',
     password: '',
     firstName: '',
     lastName: '',
     email: '',
+    encryptionSecret: '',
+    encryptionPublicKey: '',
+    signingSecret: '',
+    signingPublicKey: '',
   });
+
+  const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
 
   const [inputValidation, setInputValidation] = useState({
     isPhoneValid: true,
@@ -33,15 +47,10 @@ const Register = () => {
     isEmailValid: true,
   });
 
-  const {
-    firstName,
-    lastName,
-    email,
-    password,
-    phoneNumberIntl,
-  } = userCredentials;
-  const { countryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
+  const { firstName, lastName, email, password } = userCredentials;
+  const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
   const { isPhoneValid, isPasswordValid, isEmailValid } = inputValidation;
+  const [register, { data, error }] = useMutation(REGISTER);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -53,9 +62,32 @@ const Register = () => {
       isEmailValid: emailValidation(email),
     });
 
-    console.log({ phoneNumber, countryCode });
+    if (isPhoneValid && isPasswordValid && isEmailValid) {
+      const {
+        encryptionSecret,
+        encryptionPublicKey,
+      } = await generateEncryptionKey(password);
+      const { signingSecret, signingPublicKey } = generateSignInKey(password);
 
-    // signUpStart({ displayName, email, password });
+      const cmd = {
+        ...userCredentials,
+        encryptionSecret,
+        encryptionPublicKey,
+        signingSecret,
+        signingPublicKey,
+        phoneNumber,
+        phoneCountryCode,
+      };
+      console.log(cmd);
+      signUpStart();
+      register({
+        variables: {
+          cmd,
+        },
+      });
+    }
+
+    // console.log({ phoneNumber, countryCode });
   };
 
   const handleChange = (event) => {
@@ -66,6 +98,14 @@ const Register = () => {
 
     setUserCredentials({ ...userCredentials, [name]: value });
   };
+
+  if (data) {
+    signUpSuccess();
+  }
+
+  if (error) {
+    signUpFailure(error);
+  }
 
   return (
     <SignUpContainer>
@@ -79,9 +119,7 @@ const Register = () => {
           defaultCountry="VN"
           name="phoneNumber"
           value={phoneNumberIntl}
-          onChange={(value) =>
-            setUserCredentials({ ...userCredentials, phoneNumberIntl: value })
-          }
+          onChange={(value) => setPhoneNumberIntl(value)}
         />
         {!isPhoneValid ? (
           <ErrorTitle>Your phone number is not correct</ErrorTitle>
@@ -141,12 +179,10 @@ const Register = () => {
   );
 };
 
-// const mapDispatchToProps = dispatch => ({
-//   signUpStart: userCredentials => dispatch(signUpStart(userCredentials))
-// });
+const mapDispatchToProps = (dispatch) => ({
+  signUpStart: (userCredentials) => dispatch(signUpStart(userCredentials)),
+  signUpFailure: (error) => dispatch(signUpFailure(error)),
+  signUpSuccess: (keyPair) => dispatch(signUpSuccess(keyPair)),
+});
 
-export default Register;
-// export default connect(
-//   null,
-//   mapDispatchToProps
-// )(SignUp);
+export default connect(null, mapDispatchToProps)(Register);

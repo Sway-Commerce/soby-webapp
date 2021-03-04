@@ -2,6 +2,8 @@ import UserActionTypes from './user.types';
 
 const INITIAL_STATE = {
   currentUser: null,
+  signingSecret: null,
+  encryptionSecret: null,
   error: null
 };
 
@@ -26,6 +28,13 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         error: action.payload
       };
+    case UserActionTypes.SIGN_UP_SUCCESS:
+      const {signingSecret, encryptionSecret} = action.payload
+      return {
+        ...state,
+        signingSecret,
+        encryptionSecret
+      }
     default:
       return state;
   }
