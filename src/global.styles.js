@@ -19,6 +19,10 @@ export const GlobalStyle = createGlobalStyle`
 		box-sizing: border-box;
 	}
 
+	button:focus, button {
+		outline: none;
+	}
+
 	.primary-color {
 		color: ${mainColor};
 	}
@@ -49,5 +53,26 @@ export const GlobalStyle = createGlobalStyle`
 		display: grid;
 		grid-column-gap: 16px;
 		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.soby-title {
+		font-family: 'Paytone One', sans-serif;
+		font-style: normal;
+		font-weight: normal;
+		font-size: 40px;
+		line-height: 56px;
+		color: ${mainColor};
+		text-align: center;
+	}
+
+	.form-label {
+		font-family: Commissioner;
+		font-style: normal;
+		font-weight: 600;
+		font-size: 24px;
+		line-height: 29px;
+		color: ${mainColor};
+		text-transform: none;
+		margin-bottom: 16px;
 	}
 `;

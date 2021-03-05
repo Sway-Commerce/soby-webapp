@@ -38,17 +38,6 @@ export const Card = styled.div`
   }
 `;
 
-export const SobyTitle = styled.div`
-  font-family: 'Paytone One', sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 40px;
-  line-height: 56px;
-  color: ${mainColor};
-  text-align: center;
-  margin-top: 80px;
-`;
-
 export const ForgotPass = styled.div`
   font-style: normal;
   font-weight: 600;
@@ -57,33 +46,6 @@ export const ForgotPass = styled.div`
   color: black;
   text-align: right;
   margin-top: 8px;
-`;
-
-export const SignUpText = styled.div`
-  font-style: normal;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 15px;
-  color: black;
-  text-align: center;
-  margin-top: 56px;
-  span {
-    font-weight: 600;
-  }
-`;
-
-export const VerifyText = styled.div`
-  font-style: normal;
-  font-size: 11px;
-  font-weight: 400;
-  line-height: 20px;
-  color: black;
-  text-align: center;
-  margin-top: 8px;
-  span {
-    font-weight: 600;
-    color: ${mainColor};
-  }
 `;
 
 export const ButtonGroup = styled.div`

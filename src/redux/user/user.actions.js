@@ -45,3 +45,8 @@ export const signUpFailure = error => ({
   type: UserActionTypes.SIGN_UP_FAILURE,
   payload: error
 });
+
+export const setUserPhoneNumber = ({phoneNumber, phoneCountryCode}) => ({
+  type: UserActionTypes.SET_USER_PHONE_NUMBER,
+  payload: {phoneNumber, phoneCountryCode}
+});

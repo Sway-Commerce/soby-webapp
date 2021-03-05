@@ -6,7 +6,7 @@ const buttonStyles = css`
   background-color: ${mainColor};
   color: white;
   border: 1px solid white;
-  min-width: 165px;
+  min-width: 350px;
   width: 100%;
   height: 56px;
   letter-spacing: 0.5px;

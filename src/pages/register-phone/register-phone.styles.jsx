@@ -25,8 +25,7 @@ export const CardWrapper = styled.div`
   transition: 0.3s;
   padding: 80px 68px;
   width: 586px;
-  min-height: 798px;
-  height: auto;
+  height: 580px;
 
   &:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
@@ -40,7 +39,7 @@ export const CardWrapper = styled.div`
 export const RegisterContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin: 210px 0;
+  margin-top: 210px;
 `;
 
 export const FormContainer = styled.div`
@@ -51,7 +50,3 @@ export const FormContainer = styled.div`
     width: 100%;
   }
 `;
-
-export const InputGroup = styled.div`
-  margin-top: 32px;
-`

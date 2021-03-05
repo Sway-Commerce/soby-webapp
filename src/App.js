@@ -8,7 +8,8 @@ import Spinner from './components/spinner/spinner.component';
 import ErrorBoundary from './components/error-boundary/error-boundary.component';
 
 const HomePage = lazy(() => import('./pages/homepage/homepage.component'));
-const SignUp = lazy(() => import('./pages/register/register.component'));
+const SignUp = lazy(() => import('./pages/register-phone/register-phone.component'));
+const SignUpInfo = lazy(() => import('./pages/register/register.component'));
 
 const App = () => {
   return (
@@ -23,6 +24,11 @@ const App = () => {
               exact
               path='/signup'
               component={SignUp}
+            />
+            <Route
+              exact
+              path='/signup-info'
+              component={SignUpInfo}
             />
           </Suspense>
         </ErrorBoundary>
