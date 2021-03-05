@@ -10,9 +10,13 @@ import {
   ForgotPass,
   SignUpText,
   VerifyText,
+  ButtonGroup,
+  CenterLogo,
 } from './homepage.styles';
-import { ReactComponent as Temp } from '../../assets/temp.svg';
 import CustomButton from '../../components/custom-button/custom-button.component';
+import { ReactComponent as Temp } from '../../assets/temp.svg';
+import { ReactComponent as Phone } from '../../assets/phone.svg';
+import { ReactComponent as Mail } from '../../assets/mail.svg';
 
 const HomePage = () => (
   <HomePageContainer>
@@ -24,12 +28,25 @@ const HomePage = () => (
     <CardContainer>
       <Card>
         <SobyTitle>Welcome to Soby</SobyTitle>
-        <Temp></Temp>
-        <CustomButton>Đăng nhập Email</CustomButton>
-        <CustomButton>Đăng nhập Số điện thoại</CustomButton>
+        <CenterLogo>
+          <Temp></Temp>
+        </CenterLogo>
+
+        <ButtonGroup>
+          <CustomButton withIcon>
+            <div>Đăng nhập Email</div>
+            <Mail />
+          </CustomButton>
+          <CustomButton withIcon>
+            <div>Đăng nhập Số điện thoại</div>
+            <Phone />
+          </CustomButton>
+        </ButtonGroup>
+
         <ForgotPass>
           <Link to="/resetpass">Forgot your Password</Link>
         </ForgotPass>
+
         <SignUpText>
           Do not have account?
           <Link to="/signup">

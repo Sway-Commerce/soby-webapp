@@ -33,11 +33,6 @@ export const Card = styled.div`
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   }
 
-  svg {
-    margin: 56px auto;
-    display: flex;
-  }
-
   button + button {
     margin-top: 24px;
   }
@@ -87,6 +82,19 @@ export const VerifyText = styled.div`
   margin-top: 8px;
   span {
     font-weight: 600;
-    color: ${mainColor}
+    color: ${mainColor};
+  }
+`;
+
+export const ButtonGroup = styled.div`
+  div + div {
+    margin-top: 24px;
+  }
+`;
+
+export const CenterLogo = styled.div`
+  svg {
+    margin: 56px auto;
+    display: flex;
   }
 `;
