@@ -37,7 +37,7 @@ const googleSignInStyles = css`
   }
 `;
 
-const getButtonStyles = props => {
+const getButtonStyles = (props) => {
   if (props.isGoogleSignIn) {
     return googleSignInStyles;
   }
@@ -48,17 +48,18 @@ const getButtonStyles = props => {
 export const CustomButtonContainer = styled.button`
   min-width: 165px;
   width: 100%;
-  height: 50px;
+  height: 56px;
   letter-spacing: 0.5px;
-  line-height: 50px;
-  padding: 0 35px 0 35px;
-  font-size: 15px;
   text-transform: none;
-  font-weight: bolder;
   cursor: pointer;
   display: flex;
   justify-content: center;
   border-radius: 8px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 4px;
+  padding: 27px;
 
   ${getButtonStyles}
 `;
