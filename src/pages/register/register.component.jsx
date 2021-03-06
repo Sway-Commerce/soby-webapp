@@ -29,7 +29,7 @@ import {
 import { selectPhoneNumber } from '../../redux/user/user.selectors';
 import PolicyNavigate from '../../components/policy-navigate/policy-navigate.component';
 
-const Register = ({ signUpSuccess, signUpFailure, signUpStart, phone }) => {
+const Register = ({ history, signUpSuccess, signUpFailure, signUpStart, phone }) => {
   const [userCredentials, setUserCredentials] = useState({
     password: '',
     firstName: '',
@@ -117,6 +117,8 @@ const Register = ({ signUpSuccess, signUpFailure, signUpStart, phone }) => {
           cmd,
         },
       });
+
+      history.push('/phone-validation');
     }
   };
 
