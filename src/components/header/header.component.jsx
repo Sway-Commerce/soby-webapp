@@ -20,7 +20,7 @@ export const Header = () => (
       <OptionLink to="/">Home</OptionLink>
       <OptionLink to="/dashboard">My Dashboard</OptionLink>
       <SignInLink to="/signin">Đăng nhập</SignInLink>
-      <CartContainer ><Cart/></CartContainer>
+      <CartContainer to="/cart"><Cart/></CartContainer>
     </OptionsContainer>
   </HeaderContainer>
 );

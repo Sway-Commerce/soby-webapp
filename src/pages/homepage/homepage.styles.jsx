@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-const mainColor = '#2B74E4';
-
 export const HomePageContainer = styled.div`
   display: flex;
   align-items: center;

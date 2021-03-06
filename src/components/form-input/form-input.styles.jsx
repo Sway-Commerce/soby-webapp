@@ -1,7 +1,5 @@
 import styled from 'styled-components';
-
-const subColor = '#94B8F1';
-const mainColor = '#2B74E4';
+import { mainColor, subColor } from '../../css-variable/variable';
 
 export const GroupContainer = styled.div`
   position: relative;

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import { mainColor } from '../../css-variable/variable';
 
 export const SignUpContainer = styled.div`
@@ -25,7 +24,7 @@ export const CardWrapper = styled.div`
   transition: 0.3s;
   padding: 80px 68px;
   width: 586px;
-  height: 580px;
+  height: 585px;
 
   &:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
@@ -50,3 +49,18 @@ export const FormContainer = styled.div`
     width: 100%;
   }
 `;
+
+export const CodeText = styled.div`
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  margin: 32px 0 8px;
+`;
+
+export const SendAgain = styled.div`
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 15px;
+`

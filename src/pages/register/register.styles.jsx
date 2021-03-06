@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-
-const mainColor = '#2B74E4';
+import { mainColor } from '../../css-variable/variable';
 
 export const SignUpContainer = styled.div`
   display: flex;

@@ -1,8 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
-
-const mainColor = '#2B74E4';
-const subColor = '#94B8F1';
-const colorWhite = '#FFFFFF';
+import { mainColor, subColor} from './css-variable/variable';
 
 export const GlobalStyle = createGlobalStyle`
 	body {
@@ -28,7 +25,7 @@ export const GlobalStyle = createGlobalStyle`
 	}
 
 	.secondary-color {
-		color: ${colorWhite};
+		color: white;
 	}
 
 	.sub-color {

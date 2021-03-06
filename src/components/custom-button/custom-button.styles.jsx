@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components';
-
-const mainColor = '#2B74E4';
+import { mainColor } from '../../css-variable/variable';
 
 const buttonStyles = css`
   background-color: ${mainColor};
