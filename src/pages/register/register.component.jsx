@@ -7,7 +7,10 @@ import FormInput from '../../components/form-input/form-input.component';
 import CustomButton from '../../components/custom-button/custom-button.component';
 import passwordValidation from '../../utils/passwordValidation';
 import emailValidation from '../../utils/emailValidation';
-import { REGISTER } from '../../repository/individual.repository';
+import {
+  REGISTER,
+  SEND_PHONE_VERIFICATION,
+} from '../../repository/individual.repository';
 import {
   generateEncryptionKey,
   generateSignInKey,
@@ -16,6 +19,7 @@ import {
   signUpStart,
   signUpSuccess,
   signUpFailure,
+  sendPhoneVerification,
 } from '../../redux/user/user.actions';
 
 import {
@@ -29,7 +33,13 @@ import {
 import { selectPhoneNumber } from '../../redux/user/user.selectors';
 import PolicyNavigate from '../../components/policy-navigate/policy-navigate.component';
 
-const Register = ({ history, signUpSuccess, signUpFailure, signUpStart, phone }) => {
+const Register = ({
+  history,
+  signUpSuccess,
+  signUpFailure,
+  signUpStart,
+  phone,
+}) => {
   const [userCredentials, setUserCredentials] = useState({
     password: '',
     firstName: '',
@@ -61,13 +71,23 @@ const Register = ({ history, signUpSuccess, signUpFailure, signUpStart, phone })
     isFirstNameValid,
     isLastNameValid,
   } = inputValidation;
+  const { phoneNumber, phoneCountryCode } = phone;
 
   const [register, { data, error }] = useMutation(REGISTER, {
     errorPolicy: 'all',
   });
 
+  const [sendPhoneVerification] = useMutation(SEND_PHONE_VERIFICATION, {
+    errorPolicy: 'all',
+  });
+
   if (data?.register) {
     signUpSuccess({ encryptionSecret, signingSecret });
+    sendPhoneVerification({
+      variables: {
+        cmd: { phoneCountryCode, phoneNumber },
+      },
+    });
   }
 
   if (error) {
@@ -94,7 +114,6 @@ const Register = ({ history, signUpSuccess, signUpFailure, signUpStart, phone })
         encryptionPublicKey,
       } = await generateEncryptionKey(password);
       const { signingSecret, signingPublicKey } = generateSignInKey(password);
-      const { phoneNumber, phoneCountryCode } = phone;
 
       setUserCredentials({
         ...userCredentials,
@@ -118,7 +137,7 @@ const Register = ({ history, signUpSuccess, signUpFailure, signUpStart, phone })
         },
       });
 
-      history.push('/phone-validation');
+      history.push('/phone-verification');
     }
   };
 
@@ -218,6 +237,7 @@ const mapDispatchToProps = (dispatch) => ({
   signUpStart: (userCredentials) => dispatch(signUpStart(userCredentials)),
   signUpFailure: (error) => dispatch(signUpFailure(error)),
   signUpSuccess: (keyPair) => dispatch(signUpSuccess(keyPair)),
+  sendPhoneVerification: () => dispatch(sendPhoneVerification()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

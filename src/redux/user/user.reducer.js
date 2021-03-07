@@ -1,7 +1,7 @@
 import UserActionTypes from './user.types';
 
 const INITIAL_STATE = {
-  currentUser: null,
+  accessToken: null,
   signingSecret: null,
   encryptionSecret: null,
   phoneNumber: null,
@@ -14,15 +14,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case UserActionTypes.SIGN_IN_SUCCESS:
       return {
         ...state,
-        currentUser: action.payload,
+        accessToken: action.payload,
         error: null,
       };
     case UserActionTypes.SIGN_OUT_SUCCESS:
-      return {
-        ...state,
-        currentUser: null,
-        error: null,
-      };
+      return INITIAL_STATE;
     case UserActionTypes.SIGN_IN_FAILURE:
     case UserActionTypes.SIGN_OUT_FAILURE:
     case UserActionTypes.SIGN_UP_FAILURE:

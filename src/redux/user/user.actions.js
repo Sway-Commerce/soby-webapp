@@ -1,8 +1,8 @@
 import UserActionTypes from './user.types';
 
-export const signInSuccess = user => ({
+export const signInSuccess = accessToken => ({
   type: UserActionTypes.SIGN_IN_SUCCESS,
-  payload: user
+  payload: accessToken
 });
 
 export const signInFailure = error => ({
@@ -49,4 +49,12 @@ export const signUpFailure = error => ({
 export const setUserPhoneNumber = ({phoneNumber, phoneCountryCode}) => ({
   type: UserActionTypes.SET_USER_PHONE_NUMBER,
   payload: {phoneNumber, phoneCountryCode}
+});
+
+export const sendPhoneVerification = () => ({
+  type: UserActionTypes.SEND_PHONE_VERIFICATION
+});
+
+export const verifyPhone = () => ({
+  type: UserActionTypes.VERIFY_PHONE
 });

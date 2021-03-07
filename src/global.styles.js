@@ -1,10 +1,11 @@
 import { createGlobalStyle } from 'styled-components';
-import { mainColor, subColor} from './css-variable/variable';
+import { mainColor, subColor } from './css-variable/variable';
 
 export const GlobalStyle = createGlobalStyle`
 	body {
 		font-family: 'Commissioner', sans-serif;
 		font-weight: regular;
+		min-width: 1900px;
 	}
 
 	a {
@@ -33,7 +34,7 @@ export const GlobalStyle = createGlobalStyle`
 	}
 
 	.PhoneInput {
-		border-bottom: 1px ${mainColor} solid;
+		border-bottom: 1px ${subColor} solid;
     padding: 0 10px;
 		input.PhoneInputInput {
 			border: none;
@@ -43,6 +44,9 @@ export const GlobalStyle = createGlobalStyle`
 		}
 		.PhoneInputCountrySelectArrow {
 			display: none;
+		}
+		&:focus, &:hover {
+			border-bottom: 1px ${mainColor} solid;
 		}
 	}
 

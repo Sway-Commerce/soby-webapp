@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 import { BoxContainer, NumberBox } from './validation-input.styles';
 
-const ValidationInput = () => {
+const ValidationInput = ({ collectVerifyCode }) => {
   const firstRef = useRef();
   const secondRef = useRef();
   const thirdRef = useRef();
@@ -53,6 +53,12 @@ const ValidationInput = () => {
       fifthRef.current.value = null;
       sixthRef.current.value = null;
       firstRef.current.focus();
+    }
+
+    if (e.target.value) {
+      collectVerifyCode(
+        `${firstRef.current.value}${secondRef.current.value}${thirdRef.current.value}${fourthRef.current.value}${fifthRef.current.value}${sixthRef.current.value}`
+      );
     }
   };
 

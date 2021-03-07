@@ -69,7 +69,42 @@ export const typeDefs = gql`
     nationality: String
   }
 
+  extend input VerifyPhoneCmd {
+    phoneCountryCode: String!
+    phoneNumber: String!
+    verificationCode: String!
+  }
+
+  extend type SimpleResult {
+    success: Boolean!
+    message: String
+  }
+
+  extend input SendPhoneVerificationCmd {
+    phoneCountryCode: String!
+    phoneNumber: String!
+  }
+
+  extend input LoginWithPhoneAndPasswordCmd {
+    phoneCountryCode: String!
+    phoneNumber: String!
+    password: String!
+  }
+
+  extend type LoginResult {
+    success: Boolean!
+    message: String
+    data: LoginResultData
+  }
+
+  extend type LoginResultData {
+    accessToken: String!
+  }
+
   extend type Mutation {
     register(cmd: RegisterCmd!): IndividualResult!
+    verifyPhone(cmd: VerifyPhoneCmd): SimpleResult
+    sendPhoneVerification(cmd: SendPhoneVerificationCmd): SimpleResult
+    loginWithPhoneAndPassword(cmd: LoginWithPhoneAndPasswordCmd!): LoginResult
   }
 `;

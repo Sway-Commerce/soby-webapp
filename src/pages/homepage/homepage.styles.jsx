@@ -47,7 +47,7 @@ export const ForgotPass = styled.div`
 `;
 
 export const ButtonGroup = styled.div`
-  div + div {
+  a + a div {
     margin-top: 24px;
   }
 `;

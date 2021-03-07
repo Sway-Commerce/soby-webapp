@@ -15,3 +15,33 @@ export const REGISTER = gql`
     }
   }
 `;
+
+export const SEND_PHONE_VERIFICATION = gql`
+  mutation SendPhoneVerification($cmd: SendPhoneVerificationCmd) {
+    sendPhoneVerification(cmd: $cmd) {
+      success
+      message
+    }
+  }
+`;
+
+export const VERIFY_PHONE = gql`
+  mutation verifyPhone($cmd: VerifyPhoneCmd) {
+    verifyPhone(cmd: $cmd) {
+      success
+      message
+    }
+  }
+`;
+
+export const PHONE_LOGIN = gql`
+  mutation LoginWithPhoneAndPassword($cmd: LoginWithPhoneAndPasswordCmd!) {
+    loginWithPhoneAndPassword(cmd: $cmd) {
+      success
+      message
+      data {
+        accessToken
+      }
+    }
+  }
+`;

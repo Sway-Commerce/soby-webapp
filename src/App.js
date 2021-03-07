@@ -12,8 +12,11 @@ const SignUp = lazy(() =>
   import('./pages/register-phone/register-phone.component')
 );
 const SignUpInfo = lazy(() => import('./pages/register/register.component'));
-const PhoneValidation = lazy(() =>
-  import('./pages/phone-validation/phone-validation.component')
+const PhoneVerification = lazy(() =>
+  import('./pages/phone-verification/phone-verification.component')
+);
+const PhoneSignin = lazy(() =>
+  import('./pages/phone-signin/phone-signin.component')
 );
 
 const App = () => {
@@ -25,9 +28,10 @@ const App = () => {
         <ErrorBoundary>
           <Suspense fallback={<Spinner />}>
             <Route exact path="/" component={HomePage} />
-            <Route exact path="/phone-validation" component={PhoneValidation} />
+            <Route exact path="/phone-verification" component={PhoneVerification} />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/signup-info" component={SignUpInfo} />
+            <Route exact path="/phone-signin" component={PhoneSignin} />
           </Suspense>
         </ErrorBoundary>
       </Switch>

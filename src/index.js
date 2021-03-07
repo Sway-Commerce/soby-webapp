@@ -9,7 +9,6 @@ import {
   ApolloProvider,
   createHttpLink,
 } from '@apollo/client';
-// import { resolvers, typeDefs } from './graphql/resolvers';
 
 import { store, persistor } from './redux/store';
 
@@ -23,9 +22,6 @@ const httpLink = createHttpLink({
 const client = new ApolloClient({
   link: httpLink,
   cache: new InMemoryCache(),
-
-  // typeDefs,
-  // resolvers,
 });
 
 ReactDOM.render(

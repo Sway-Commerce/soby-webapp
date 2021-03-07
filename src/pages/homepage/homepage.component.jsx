@@ -31,20 +31,24 @@ const HomePage = () => (
         </CenterLogo>
 
         <ButtonGroup>
-          <CustomButton withIcon>
-            <div>Đăng nhập Email</div>
-            <Mail />
-          </CustomButton>
-          <CustomButton withIcon>
-            <div>Đăng nhập Số điện thoại</div>
-            <Phone />
-          </CustomButton>
+          <Link to="/email-signin">
+            <CustomButton withIcon>
+              <div>Đăng nhập Email</div>
+              <Mail />
+            </CustomButton>
+          </Link>
+          <Link to="/phone-signin">
+            <CustomButton withIcon>
+              <div>Đăng nhập Số điện thoại</div>
+              <Phone />
+            </CustomButton>
+          </Link>
         </ButtonGroup>
 
         <ForgotPass>
           <Link to="/resetpass">Forgot your Password</Link>
         </ForgotPass>
-        <PolicyNavigate/>
+        <PolicyNavigate />
       </Card>
     </CardContainer>
   </HomePageContainer>

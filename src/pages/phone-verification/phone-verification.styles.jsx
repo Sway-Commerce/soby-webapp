@@ -63,4 +63,5 @@ export const SendAgain = styled.div`
   font-weight: 600;
   font-size: 12px;
   line-height: 15px;
+  cursor: pointer;
 `
