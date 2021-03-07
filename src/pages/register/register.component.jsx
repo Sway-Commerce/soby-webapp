@@ -82,12 +82,12 @@ const Register = ({
   });
 
   if (data?.register) {
-    signUpSuccess({ encryptionSecret, signingSecret });
     sendPhoneVerification({
       variables: {
         cmd: { phoneCountryCode, phoneNumber },
       },
     });
+    signUpSuccess({ encryptionSecret, signingSecret });
   }
 
   if (error) {
