@@ -101,10 +101,15 @@ export const typeDefs = gql`
     accessToken: String!
   }
 
+  extend input LoginWithSignatureCmd {
+    signature: String!
+  }
+
   extend type Mutation {
     register(cmd: RegisterCmd!): IndividualResult!
     verifyPhone(cmd: VerifyPhoneCmd): SimpleResult
     sendPhoneVerification(cmd: SendPhoneVerificationCmd): SimpleResult
     loginWithPhoneAndPassword(cmd: LoginWithPhoneAndPasswordCmd!): LoginResult
+    loginWithSignature(cmd: LoginWithSignatureCmd!): LoginResult
   }
 `;

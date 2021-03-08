@@ -10,11 +10,10 @@ import emailValidation from '../../utils/emailValidation';
 import {
   REGISTER,
   SEND_PHONE_VERIFICATION,
-} from '../../repository/individual.repository';
-import {
   generateEncryptionKey,
   generateSignInKey,
-} from '../../utils/generateKeyPair';
+  getSignature
+} from '../../repository/individual.repository';
 import {
   signUpStart,
   signUpSuccess,
@@ -136,6 +135,8 @@ const Register = ({
           cmd,
         },
       });
+
+      getSignature(signingPublicKey, signingSecret, password);
 
       history.push('/phone-verification');
     }
