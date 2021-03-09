@@ -36,9 +36,9 @@ export const signUpStart = () => ({
   type: UserActionTypes.SIGN_UP_START
 });
 
-export const signUpSuccess = ({ signingSecret, encryptionSecret }) => ({
+export const signUpSuccess = ({ signingSecret, encryptionSecret, signingPublicKey }) => ({
   type: UserActionTypes.SIGN_UP_SUCCESS,
-  payload: { signingSecret, encryptionSecret }
+  payload: { signingSecret, encryptionSecret, signingPublicKey }
 });
 
 export const signUpFailure = error => ({

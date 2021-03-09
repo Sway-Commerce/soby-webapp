@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { Encryption, Signing, generateJwt } from 'credify-crypto';
+import { Encryption, generateJwt, Signing } from 'credify-crypto';
 
 export const REGISTER = gql`
   mutation Register($cmd: RegisterCmd!) {
@@ -68,26 +68,21 @@ export const generateEncryptionKey = async (password) => {
 };
 
 export const generateSignInKey = (password) => {
+  if (!password) {
+    return { signingSecretKey: null, signingPublicKey: null };
+  }
   const signing = new Signing();
   signing.generateKeyPair();
-  const signingSecret = signing.exportPrivateKey(password);
+  const signingSecretKey = signing.exportPrivateKey(password);
   const signingPublicKey = signing.exportPublicKey();
-  return { signingSecret, signingPublicKey };
+  return { signingSecretKey, signingPublicKey };
 };
 
-export const getSignature = async (signingPublicKey, signingSecret, password) => {
+export const getSignature = (signingPublicKey, signingSecret, password) => {
   const signing = new Signing();
-  const encryption = new Encryption();
 
   signing.importPublicKey(signingPublicKey);
   signing.importPrivateKey(signingSecret, password);
-  // await encryption.importPublicKey(encryptionPublicKey);
-  // const signinKey = signing.publicKey;
-  // const encryptionKey = encryption.privateKey;
-  // console.log({ signinKey, encryptionKey });
-  // console.log(generateJwt(signing));
-  localStorage.setItem('token', generateJwt(signing))
 
-  // console.log(generateRequestToken(signinKey, encryptionKey, []));
-  // return generateRequestToken(signinKey,enscrytionKey, []);
+  return generateJwt(signing);
 };

@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   accessToken: null,
   signingSecret: null,
   encryptionSecret: null,
+  signingPublicKey: null,
   phoneNumber: null,
   phoneCountryCode: null,
   error: null,
@@ -27,11 +28,12 @@ const userReducer = (state = INITIAL_STATE, action) => {
         error: action.payload,
       };
     case UserActionTypes.SIGN_UP_SUCCESS:
-      const { signingSecret, encryptionSecret } = action.payload;
+      const { signingSecret, encryptionSecret, signingPublicKey } = action.payload;
       return {
         ...state,
         signingSecret,
         encryptionSecret,
+        signingPublicKey
       };
     case UserActionTypes.SET_USER_PHONE_NUMBER:
       const { phoneNumber, phoneCountryCode } = action.payload;

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -12,7 +13,8 @@ import {
   SEND_PHONE_VERIFICATION,
   generateEncryptionKey,
   generateSignInKey,
-  getSignature
+  getSignature,
+  LOGIN_WITH_SIGNATURE,
 } from '../../repository/individual.repository';
 import {
   signUpStart,
@@ -29,7 +31,10 @@ import {
   FormContainer,
   InputGroup,
 } from './register.styles';
-import { selectPhoneNumber } from '../../redux/user/user.selectors';
+import {
+  selectPhoneNumber,
+  selectUserCredential,
+} from '../../redux/user/user.selectors';
 import PolicyNavigate from '../../components/policy-navigate/policy-navigate.component';
 
 const Register = ({
@@ -38,6 +43,7 @@ const Register = ({
   signUpFailure,
   signUpStart,
   phone,
+  userKeyPair,
 }) => {
   const [userCredentials, setUserCredentials] = useState({
     password: '',
@@ -61,9 +67,8 @@ const Register = ({
     lastName,
     email,
     password,
-    encryptionSecret,
-    signingSecret,
   } = userCredentials;
+
   const {
     isPasswordValid,
     isEmailValid,
@@ -72,29 +77,70 @@ const Register = ({
   } = inputValidation;
   const { phoneNumber, phoneCountryCode } = phone;
 
-  const [register, { data, error }] = useMutation(REGISTER, {
+  const [register, { data: registerData, errors }] = useMutation(REGISTER, {
     errorPolicy: 'all',
   });
+
+  const [signinWithSignature, { data: signatureData }] = useMutation(
+    LOGIN_WITH_SIGNATURE,
+    {
+      errorPolicy: 'all',
+    }
+  );
 
   const [sendPhoneVerification] = useMutation(SEND_PHONE_VERIFICATION, {
     errorPolicy: 'all',
   });
 
-  if (data?.register) {
-    sendPhoneVerification({
-      variables: {
-        cmd: { phoneCountryCode, phoneNumber },
-      },
-    });
-    signUpSuccess({ encryptionSecret, signingSecret });
-  }
+  useEffect(() => {
+    if (signatureData?.loginWithSignature?.data?.accessToken) {
+      localStorage.setItem(
+        'token',
+        signatureData?.loginWithSignature?.data?.accessToken
+      );
 
-  if (error) {
-    signUpFailure(error);
+      sendPhoneVerification({
+        variables: {
+          cmd: { phoneCountryCode, phoneNumber },
+        },
+      });
+
+      history.push('/phone-verification');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signatureData?.loginWithSignature?.success]);
+
+  useEffect(() => {
+    if (registerData?.register?.data?.id) {
+      localStorage.setItem('token', '');
+      debugger
+
+      const signature = getSignature(
+        userKeyPair?.signingPublicKey,
+        userKeyPair?.signingSecret,
+        password
+      );
+      signinWithSignature({
+        variables: {
+          cmd: { signature },
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [registerData?.register?.success]);
+
+  if (errors) {
+    signUpFailure(errors);
   }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const {
+      encryptionSecret,
+      encryptionPublicKey,
+    } = await generateEncryptionKey(password);
+
+    const { signingSecretKey, signingPublicKey } = generateSignInKey(password);
 
     const isPasswordValid = passwordValidation(password);
     const isEmailValid = emailValidation(email);
@@ -108,23 +154,19 @@ const Register = ({
     });
 
     if (isPasswordValid && isEmailValid) {
-      const {
-        encryptionSecret,
-        encryptionPublicKey,
-      } = await generateEncryptionKey(password);
-      const { signingSecret, signingPublicKey } = generateSignInKey(password);
+      debugger;
 
       setUserCredentials({
         ...userCredentials,
         encryptionSecret,
-        signingSecret,
+        signingSecret: signingSecretKey,
       });
 
       const cmd = {
         ...userCredentials,
         encryptionSecret,
         encryptionPublicKey,
-        signingSecret,
+        signingSecret: signingSecretKey,
         signingPublicKey,
         phoneNumber,
         phoneCountryCode,
@@ -135,10 +177,7 @@ const Register = ({
           cmd,
         },
       });
-
-      getSignature(signingPublicKey, signingSecret, password);
-
-      history.push('/phone-verification');
+      signUpSuccess({ signingSecret: signingSecretKey, encryptionSecret, signingPublicKey });
     }
   };
 
@@ -232,6 +271,7 @@ const Register = ({
 
 const mapStateToProps = createStructuredSelector({
   phone: selectPhoneNumber,
+  userKeyPair: selectUserCredential,
 });
 
 const mapDispatchToProps = (dispatch) => ({

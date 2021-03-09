@@ -11,3 +11,9 @@ export const selectPhoneNumber = createSelector([selectUser], (user) => ({
   phoneNumber: user.phoneNumber,
   phoneCountryCode: user.phoneCountryCode,
 }));
+
+export const selectUserCredential = createSelector([selectUser], (user) => ({
+  signingSecret: user.signingSecret,
+  encryptionSecret: user.encryptionSecret,
+  signingPublicKey: user.signingPublicKey,
+}));
