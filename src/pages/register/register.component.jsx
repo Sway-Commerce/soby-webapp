@@ -36,6 +36,7 @@ import {
   selectUserCredential,
 } from '../../redux/user/user.selectors';
 import PolicyNavigate from '../../components/policy-navigate/policy-navigate.component';
+import Spinner from '../../components/spinner/spinner.component';
 
 const Register = ({
   history,
@@ -61,13 +62,9 @@ const Register = ({
     isFirstNameValid: true,
     isLastNameValid: true,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    firstName,
-    lastName,
-    email,
-    password,
-  } = userCredentials;
+  const { firstName, lastName, email, password } = userCredentials;
 
   const {
     isPasswordValid,
@@ -105,6 +102,8 @@ const Register = ({
         },
       });
 
+      setIsLoading(false);
+
       history.push('/phone-verification');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,7 +112,6 @@ const Register = ({
   useEffect(() => {
     if (registerData?.register?.data?.id) {
       localStorage.setItem('token', '');
-      debugger
 
       const signature = getSignature(
         userKeyPair?.signingPublicKey,
@@ -131,6 +129,7 @@ const Register = ({
 
   if (errors) {
     signUpFailure(errors);
+    setIsLoading(false);
   }
 
   const handleSubmit = async (event) => {
@@ -154,7 +153,8 @@ const Register = ({
     });
 
     if (isPasswordValid && isEmailValid) {
-      debugger;
+
+      setIsLoading(true);
 
       setUserCredentials({
         ...userCredentials,
@@ -177,7 +177,12 @@ const Register = ({
           cmd,
         },
       });
-      signUpSuccess({ signingSecret: signingSecretKey, encryptionSecret, signingPublicKey });
+      signUpSuccess({
+        signingSecret: signingSecretKey,
+        encryptionSecret,
+        signingPublicKey,
+        encryptionPublicKey,
+      });
     }
   };
 
@@ -191,6 +196,9 @@ const Register = ({
   };
 
   return (
+    isLoading ?
+      <Spinner/>
+    :
     <RegisterContainer>
       <CardWrapper>
         <SignUpContainer>

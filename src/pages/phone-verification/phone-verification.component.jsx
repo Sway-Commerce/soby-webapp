@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
@@ -27,16 +28,22 @@ import {
 } from '../../repository/individual.repository';
 import { useMutation } from '@apollo/client';
 
-const PhoneVerification = ({ phone, verify, sendVerification }) => {
+const PhoneVerification = ({ history, phone, verify, sendVerification }) => {
   const { phoneNumber, phoneCountryCode } = phone;
   const [verificationCode, setVerificationCode] = useState(null);
   const [isCodeValid, setIsCodeValid] = useState(true);
   const [sendPhoneVerification] = useMutation(SEND_PHONE_VERIFICATION, {
     errorPolicy: 'all',
   });
-  const [verifyPhone] = useMutation(VERIFY_PHONE, {
+  const [verifyPhone, { data }] = useMutation(VERIFY_PHONE, {
     errorPolicy: 'all',
   });
+
+  useEffect(() => {
+    if (data?.verifyPhone?.success) {
+      history.push('/signout');
+    }
+  }, [data?.verifyPhone?.success]);
 
   const handleSubmit = (event) => {
     event.preventDefault();

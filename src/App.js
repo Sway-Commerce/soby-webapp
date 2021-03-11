@@ -18,6 +18,12 @@ const PhoneVerification = lazy(() =>
 const PhoneSignin = lazy(() =>
   import('./pages/phone-signin/phone-signin.component')
 );
+const PaymentResult = lazy(() =>
+  import('./pages/payment-result/payment-result.component')
+);
+const SignOut = lazy(() =>
+  import('./pages/signout/signout.component')
+);
 
 const App = () => {
   return (
@@ -32,6 +38,8 @@ const App = () => {
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/signup-info" component={SignUpInfo} />
             <Route exact path="/phone-signin" component={PhoneSignin} />
+            <Route exact path="/payment-result" component={PaymentResult} />
+            <Route exact path="/signout" component={SignOut} />
           </Suspense>
         </ErrorBoundary>
       </Switch>

@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { Encryption, generateJwt, Signing } from 'credify-crypto';
+import { Encryption, generateJwt, Signing, sha256 } from 'credify-crypto';
 
 export const REGISTER = gql`
   mutation Register($cmd: RegisterCmd!) {
@@ -85,4 +85,8 @@ export const getSignature = (signingPublicKey, signingSecret, password) => {
   signing.importPrivateKey(signingSecret, password);
 
   return generateJwt(signing);
+};
+
+export const getHashPassword = (password) => {
+  return sha256(password);
 };

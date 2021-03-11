@@ -16,4 +16,5 @@ export const selectUserCredential = createSelector([selectUser], (user) => ({
   signingSecret: user.signingSecret,
   encryptionSecret: user.encryptionSecret,
   signingPublicKey: user.signingPublicKey,
+  encryptionPublicKey: user.encryptionPublicKey
 }));

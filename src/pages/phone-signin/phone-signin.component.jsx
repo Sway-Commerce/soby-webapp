@@ -6,7 +6,10 @@ import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
 import FormInput from '../../components/form-input/form-input.component';
 import CustomButton from '../../components/custom-button/custom-button.component';
 import passwordValidation from '../../utils/passwordValidation';
-import { PHONE_LOGIN } from '../../repository/individual.repository';
+import {
+  getHashPassword,
+  PHONE_LOGIN,
+} from '../../repository/individual.repository';
 import {
   phoneSignInStart,
   signInFailure,
@@ -26,7 +29,14 @@ import PolicyNavigate from '../../components/policy-navigate/policy-navigate.com
 import usePhoneNumber from '../../custom-hooks/usePhoneNumber';
 import { Link } from 'react-router-dom';
 
-const PhoneSignin = ({ history, phone, phoneSignInStart, signInFailure, signInSuccess }) => {
+const PhoneSignin = ({
+  history,
+  phone,
+  phoneSignInStart,
+  signInFailure,
+  signInSuccess,
+  userKeyPair,
+}) => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
 
   const [password, setPassword] = useState('');
@@ -60,7 +70,11 @@ const PhoneSignin = ({ history, phone, phoneSignInStart, signInFailure, signInSu
       phoneSignInStart();
       phoneSignin({
         variables: {
-          cmd: { phoneNumber, phoneCountryCode, password },
+          cmd: {
+            phoneNumber,
+            phoneCountryCode,
+            password: getHashPassword(password),
+          },
         },
       });
     }
