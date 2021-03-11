@@ -9,7 +9,7 @@ import passwordValidation from '../../utils/passwordValidation';
 import {
   getHashPassword,
   PHONE_LOGIN,
-} from '../../repository/individual.repository';
+} from '../../graphQL/repository/individual.repository';
 import {
   phoneSignInStart,
   signInFailure,

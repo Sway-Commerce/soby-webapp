@@ -15,7 +15,7 @@ import {
   generateSignInKey,
   getSignature,
   LOGIN_WITH_SIGNATURE,
-} from '../../repository/individual.repository';
+} from '../../graphQL//repository/individual.repository';
 import {
   signUpStart,
   signUpSuccess,

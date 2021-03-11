@@ -25,7 +25,7 @@ import ValidationInput from '../../components/validation-input/validation-input.
 import {
   SEND_PHONE_VERIFICATION,
   VERIFY_PHONE,
-} from '../../repository/individual.repository';
+} from '../../graphQL//repository/individual.repository';
 import { useMutation } from '@apollo/client';
 
 const PhoneVerification = ({ history, phone, verify, sendVerification }) => {
