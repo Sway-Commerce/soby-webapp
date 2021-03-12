@@ -1,4 +1,12 @@
 import React from 'react';
+import {
+  TransactionContainer,
+  CardWrapper,
+  Container,
+  FormContainer,
+} from './payment-result.styles';
+import CustomButton from '../../components/custom-button/custom-button.component';
+import {currencyFormatter} from '../../utils/formatCurrency';
 
 const PaymentResult = () => {
   const url = new URL(
@@ -11,18 +19,58 @@ const PaymentResult = () => {
   const vnp_OrderInfo = params.get('vnp_OrderInfo');
   const vnp_PayDate = params.get('vnp_PayDate');
   const vnp_ResponseCode = params.get('vnp_ResponseCode');
-  const vnp_Amount = params.get('vnp_Amount');
-  console.log({
-    url,
-    vnp_Amount,
-    vnp_BankCode,
-    vnp_BankTranNo,
-    vnp_CardType,
-    vnp_OrderInfo,
-    vnp_PayDate,
-    vnp_ResponseCode,
-  });
-  return <div>Payment result work</div>;
+  const vnp_Amount = currencyFormatter(+params.get('vnp_Amount'));
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+  };
+
+  return (
+    <Container>
+      <CardWrapper>
+        <TransactionContainer>
+          <div className="soby-title">Transaction Result</div>
+          <FormContainer>
+            <form onSubmit={handleSubmit}>
+              <div className="second-col">
+                <div className="form-label">Tên giao dịch VNPAY:</div>
+                <div className="info">{vnp_OrderInfo}</div>
+              </div>
+              <div className="second-col">
+                <div className="form-label">Mã ngân hàng:</div>
+                <div className="info">{vnp_BankCode}</div>
+              </div>
+              <div className="second-col">
+                <div className="form-label">Mã giao dịch:</div>
+                <div className="info">{vnp_BankTranNo}</div>
+              </div>
+              <div className="second-col">
+                <div className="form-label">Loại thẻ:</div>
+                <div className="info">{vnp_CardType}</div>
+              </div>
+              <div className="second-col">
+                <div className="form-label">Số tiền:</div>
+                <div className="info">{vnp_Amount}</div>
+              </div>
+              <div className="second-col">
+                <div className="form-label">Ngày giao dịch:</div>
+                <div className="info">{vnp_PayDate}</div>
+              </div>
+              <div className="second-col">
+                <div className="form-label">Trạng thái:</div>
+                <div className="info">
+                  {vnp_ResponseCode ? 'Thành công' : ''}
+                </div>
+              </div>
+              <CustomButton type="submit" id="back-btn">
+                Trở về
+              </CustomButton>
+            </form>
+          </FormContainer>
+        </TransactionContainer>
+      </CardWrapper>
+    </Container>
+  );
 };
 
 export default PaymentResult;

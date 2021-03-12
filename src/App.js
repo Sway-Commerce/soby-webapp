@@ -38,8 +38,8 @@ const App = () => {
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/signup-info" component={SignUpInfo} />
             <Route exact path="/phone-signin" component={PhoneSignin} />
-            <Route exact path="/payment-result" component={PaymentResult} />
             <Route exact path="/signout" component={SignOut} />
+            <Route path="/transaction" component={PaymentResult} />
           </Suspense>
         </ErrorBoundary>
       </Switch>
