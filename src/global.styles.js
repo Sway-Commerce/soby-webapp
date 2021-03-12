@@ -6,6 +6,9 @@ export const GlobalStyle = createGlobalStyle`
 		font-family: 'Commissioner', sans-serif;
 		font-weight: regular;
 		min-width: 1900px;
+		font-size: 20px;
+		line-height: 24px;
+		color: #000000;
 	}
 
 	a {
@@ -57,7 +60,7 @@ export const GlobalStyle = createGlobalStyle`
 	}
 
 	.soby-title {
-		font-family: 'Paytone One', sans-serif;
+		font-family: Commissioner;
 		font-style: normal;
 		font-weight: normal;
 		font-size: 40px;

@@ -9,7 +9,6 @@ export const HeaderContainer = styled.div`
   justify-content: space-between;
   padding: 0 240px;
   background-color: ${mainColor};
-  font-size: 20px;
 `;
 
 export const LogoContainer = styled(Link)`
