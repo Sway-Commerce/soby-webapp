@@ -19,4 +19,17 @@ export const StatusContainer = styled.div`
     }
     margin: auto 0;
   }
+
+  @media screen and (max-width: 800px) {
+    width: 328px;
+    height: 72px;
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+    .info .status {
+      font-size: 16px;
+      line-height: 29px;
+    }
+  }
 `;

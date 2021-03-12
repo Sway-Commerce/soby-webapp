@@ -5,7 +5,6 @@ export const GlobalStyle = createGlobalStyle`
 	body {
 		font-family: 'Commissioner', sans-serif;
 		font-weight: regular;
-		min-width: 1900px;
 		font-size: 20px;
 		line-height: 24px;
 		color: #000000;

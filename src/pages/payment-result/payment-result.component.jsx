@@ -76,6 +76,7 @@ const PaymentResult = () => {
           </FormContainer>
         </TransactionContainer>
       </CardWrapper>
+      <div className="back-btn">Back</div>
     </Container>
   );
 };

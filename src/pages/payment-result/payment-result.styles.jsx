@@ -10,6 +10,13 @@ export const TransactionContainer = styled.div`
     font-size: 40px;
     line-height: 49px;
   }
+
+  @media screen and (max-width: 800px) {
+    .soby-title {
+      font-size: 20px;
+      line-height: 24px;
+    }
+  }
 `;
 
 export const ErrorTitle = styled.h5`
@@ -22,8 +29,9 @@ export const CardWrapper = styled.div`
   transition: 0.3s;
   padding: 100px 50px;
   width: 700px;
-  min-height: 735px;
+  height: 735px;
   height: auto;
+  margin: auto;
 
   &:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
@@ -32,12 +40,24 @@ export const CardWrapper = styled.div`
   button {
     margin-top: 56px;
   }
+
+  @media screen and (max-width: 800px) {
+    font-size: 14px;
+    width: 376px;
+    min-height: 393px;
+    padding: 48px 24px;
+  }
 `;
 
 export const Container = styled.div`
   display: flex;
   justify-content: center;
+  flex-direction: column;
   margin: 210px 0;
+  .back-btn {
+    margin: auto;
+    margin-top: 85px;
+  }
 `;
 
 export const FormContainer = styled.div`
@@ -56,7 +76,8 @@ export const FormContainer = styled.div`
 
         .info {
           text-align: right;
-          img, svg {
+          img,
+          svg {
             height: 24px;
           }
         }
@@ -69,10 +90,11 @@ export const FormContainer = styled.div`
 
     .amount-info {
       display: flex;
+      justify-content: space-between;
       #amount {
+        font-weight: bold;
         font-size: 64px;
         line-height: 78px;
-        flex: 2;
       }
       margin-bottom: 32px;
     }
@@ -81,6 +103,40 @@ export const FormContainer = styled.div`
       color: black;
       margin-top: 8px;
       text-align: right;
+    }
+  }
+
+  @media screen and (max-width: 800px) {
+    font-size: 14px;
+    margin-top: 8px;
+    form {
+      .amount-info {
+        justify-content: space-between;
+
+        #amount {
+          font-size: 32px;
+          line-height: 39px;
+        }
+        margin-bottom: 16px;
+      }
+
+      .pay-info {
+        margin-top: 0;
+        line-height: 17px;
+      }
+
+      #description {
+        margin-top: 19px;
+
+        .second-col {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .second-col + .second-col {
+          margin-top: 16px;
+        }
+      }
     }
   }
 `;

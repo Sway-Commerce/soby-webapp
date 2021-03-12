@@ -9,6 +9,9 @@ export const HeaderContainer = styled.div`
   justify-content: space-between;
   padding: 0 240px;
   background-color: ${mainColor};
+  @media screen and (max-width: 800px) {
+    padding: 0 10px;
+  }
 `;
 
 export const LogoContainer = styled(Link)`
@@ -32,6 +35,7 @@ export const OptionLink = styled(Link)`
   padding: 10px 40px;
   cursor: pointer;
   color: white;
+
 `;
 
 export const SignInLink = styled(Link)`
@@ -39,6 +43,7 @@ export const SignInLink = styled(Link)`
   cursor: pointer;
   color: white;
   font-weight: 600;
+
 `;
 
 export const CartContainer = styled(Link)`

@@ -17,10 +17,7 @@ export const Header = () => (
       <Logo />
     </LogoContainer>
     <OptionsContainer>
-      <OptionLink to="/">Home</OptionLink>
-      <OptionLink to="/dashboard">My Dashboard</OptionLink>
       <SignInLink to="/phone-signin">Đăng nhập</SignInLink>
-      <CartContainer to="/cart"><Cart/></CartContainer>
     </OptionsContainer>
   </HeaderContainer>
 );
