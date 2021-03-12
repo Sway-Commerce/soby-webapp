@@ -43,7 +43,13 @@ export const SignInLink = styled(Link)`
   cursor: pointer;
   color: white;
   font-weight: 600;
+`;
 
+export const SignOut = styled.div`
+  padding: 10px 40px;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
 `;
 
 export const CartContainer = styled(Link)`
