@@ -13,11 +13,11 @@ import { setContext } from '@apollo/client/link/context';
 
 import { store, persistor } from './redux/store';
 
-import './index.scss';
+import './index.css';
 import App from './App';
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:8080/graphql',
+  uri: 'https://api-dev.soby.vn/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
