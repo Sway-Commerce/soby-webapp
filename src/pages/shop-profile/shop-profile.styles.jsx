@@ -5,6 +5,11 @@ export const ShopContainer = styled.div`
   padding: 0 240px;
   min-height: 150vh;
   font-family: 'Work Sans', sans-serif;
+  margin-top: 80px;
+  display: flex;
+  .left-panel {
+    margin-right: 40px;
+  }
 `;
 
 export const CardShadow = styled.div`
@@ -17,7 +22,7 @@ export const CardShadow = styled.div`
   &.shop-name {
     height: 154px;
     display: flex;
-    margin: 80px 40px 32px 0;
+    margin: 0 40px 32px 0;
     .info {
       margin: auto 0 auto 16px;
       .title {
@@ -125,5 +130,99 @@ export const Card = styled.div`
     padding: 0;
     font-weight: normal;
     font-size: 18px;
+  }
+`;
+
+export const MainContent = styled.div`
+  flex: 2;
+  h3 {
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 28px;
+    color: black;
+    margin: 0 0 32px;
+    padding: 0;
+  }
+
+  p {
+    margin: 0 0 56px;
+    padding: 0;
+    font-weight: normal;
+    font-size: 20px;
+  }
+  .category-list {
+    display: flex;
+    margin-bottom: 56px;
+    .category-item {
+      width: 199px;
+      height: 46px;
+      padding: 8px 20px;
+      border: 1px solid rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      display: flex;
+
+      p {
+        margin: auto 0 auto 8px;
+      }
+
+      & + .category-item {
+        margin-left: 16px;
+      }
+    }
+  }
+
+  .shop-info {
+    display: flex;
+
+    p {
+      font-size: 18px;
+    }
+
+    .wrapper {
+      display: flex;
+      width: 453px;
+    }
+
+    svg {
+      margin-right: 16px;
+    }
+  }
+
+  .website-group {
+    margin: 56px 0;
+    display: grid;
+    grid-column-gap: 40px;
+    grid-row-gap: 24px;
+    grid-template-columns: repeat(2, 1fr);
+    .wrapper {
+      display: flex;
+      justify-content: space-between;
+      .sub-wrapper {
+        display: flex;
+      }
+      p {
+        margin: auto 0;
+        &.url {
+          font-size: 18px;
+        }
+      }
+    }
+
+    svg {
+      margin-right: 16px;
+      &.temp {
+        width: 60px;
+        height: 60px;
+      }
+    }
+
+    .icon-wrapper {
+      padding: 15px;
+      height: 60px;
+      width: 60px;
+      margin-right: 16px;
+      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.07);
+      border-radius: 8px;
+    }
   }
 `;
