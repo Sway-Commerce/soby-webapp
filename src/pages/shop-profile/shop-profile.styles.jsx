@@ -38,7 +38,7 @@ export const CardShadow = styled.div`
       }
     }
 
-    svg {
+    img {
       width: 74px;
       height: 74px;
       margin: auto 0 auto 40px;

@@ -20,7 +20,6 @@ const userReducer = (state = INITIAL_STATE, action) => {
         error: null,
       };
     case UserActionTypes.SIGN_OUT_START:
-      debugger
       return INITIAL_STATE;
     case UserActionTypes.SIGN_IN_FAILURE:
     case UserActionTypes.SIGN_OUT_FAILURE:
