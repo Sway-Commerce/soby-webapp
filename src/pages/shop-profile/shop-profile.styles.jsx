@@ -39,8 +39,8 @@ export const CardShadow = styled.div`
     }
 
     img {
-      width: 74px;
-      height: 74px;
+      width: 100px;
+      height: 100px;
       margin: auto 0 auto 40px;
     }
   }
@@ -81,13 +81,6 @@ export const Card = styled.div`
       display: flex;
       justify-content: space-between;
       margin-bottom: 16px;
-      .status {
-        padding: 4px 12px;
-        background: #2b74e4;
-        border-radius: 4px;
-        font-size: 20px;
-        color: white;
-      }
     }
 
     .info-group {
@@ -153,22 +146,6 @@ export const MainContent = styled.div`
   .category-list {
     display: flex;
     margin-bottom: 56px;
-    .category-item {
-      width: 199px;
-      height: 46px;
-      padding: 8px 20px;
-      border: 1px solid rgba(0, 0, 0, 0.5);
-      border-radius: 8px;
-      display: flex;
-
-      p {
-        margin: auto 0 auto 8px;
-      }
-
-      & + .category-item {
-        margin-left: 16px;
-      }
-    }
   }
 
   .shop-info {
@@ -194,35 +171,5 @@ export const MainContent = styled.div`
     grid-column-gap: 40px;
     grid-row-gap: 24px;
     grid-template-columns: repeat(2, 1fr);
-    .wrapper {
-      display: flex;
-      justify-content: space-between;
-      .sub-wrapper {
-        display: flex;
-      }
-      p {
-        margin: auto 0;
-        &.url {
-          font-size: 18px;
-        }
-      }
-    }
-
-    svg {
-      margin-right: 16px;
-      &.temp {
-        width: 60px;
-        height: 60px;
-      }
-    }
-
-    .icon-wrapper {
-      padding: 15px;
-      height: 60px;
-      width: 60px;
-      margin-right: 16px;
-      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.07);
-      border-radius: 8px;
-    }
   }
 `;
