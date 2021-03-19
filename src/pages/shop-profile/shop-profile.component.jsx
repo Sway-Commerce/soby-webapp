@@ -64,7 +64,7 @@ const ShopProfile = () => {
         <h3>Shop Categories</h3>
         <div className="category-list">
           {categories.map((category) => (
-            <ShopCategory category={category} />
+            <ShopCategory category={category} key={category} />
           ))}
         </div>
 
@@ -77,7 +77,7 @@ const ShopProfile = () => {
 
         <div className="website-group">
           {shopUrls.map((x) => (
-            <WebsiteUrl url={x} />
+            <WebsiteUrl url={x} key={x} />
           ))}
         </div>
 

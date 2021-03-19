@@ -8,11 +8,11 @@ import { Carousel } from 'react-responsive-carousel';
 const ImageGallery = ({}) => {
   return (
     <Container>
-      <div class="card">
+      <div className="card">
         <Carousel showArrows={false} showStatus={false} showIndicators={false}>
-          <img src="/images/item2.jpg" alt="" />
-          <img src="/images/rectangle-1.png" alt="" />
-          <img src="/images/item.jpg" alt="" />
+          <img src="/images/item2.jpg" alt="" key={Math.random()} />
+          <img src="/images/rectangle-1.png" alt="" key={Math.random()}  />
+          <img src="/images/item.jpg" alt="" key={Math.random()}  />
         </Carousel>
       </div>
     </Container>
