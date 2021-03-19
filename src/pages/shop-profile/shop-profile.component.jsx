@@ -10,7 +10,6 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
 
-import { ReactComponent as Location } from '../../assets/location.svg';
 import { ReactComponent as Phone } from '../../assets/phone-icon.svg';
 
 import { GET_SHOP_BY_ID } from '../../graphQL/repository/shop.repository';
@@ -19,6 +18,7 @@ import Spinner from '../../components/spinner/spinner.component';
 import ShopCategory from '../../components/shop-category/shop-category.component';
 import WebsiteUrl from '../../components/website-url/website-url.component';
 import KypStatus from '../../components/kyb-status/kyb-status.component';
+import ProductListCard from '../../components/product-listcard/product-listcard.component';
 
 const ShopProfile = () => {
   const { shopId } = useParams();
@@ -48,7 +48,6 @@ const ShopProfile = () => {
           <img src={logoUrl} alt="logo" />
           <div className="info">
             <h2 className="title">{name}</h2>
-            <p className="rank">Soby rank 4</p>
           </div>
         </CardShadow>
         <Card className="personal-kyb">
@@ -80,6 +79,11 @@ const ShopProfile = () => {
           {shopUrls.map((x) => (
             <WebsiteUrl url={x} />
           ))}
+        </div>
+
+        <h3>Product</h3>
+        <div className="product-group">
+          <ProductListCard />
         </div>
       </MainContent>
     </ShopContainer>

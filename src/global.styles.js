@@ -15,7 +15,18 @@ export const GlobalStyle = createGlobalStyle`
 		color: black;
 	}
 
+	html {
+		scroll-behavior: smooth;
+	}
+
+	::-webkit-scrollbar {
+		width: 0;
+		height: 0;
+	}
+
 	* {
+		margin: 0;
+		padding: 0;
 		box-sizing: border-box;
 	}
 

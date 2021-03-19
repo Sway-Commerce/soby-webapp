@@ -172,4 +172,8 @@ export const MainContent = styled.div`
     grid-row-gap: 24px;
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .product-group {
+    display: flex;
+  }
 `;
