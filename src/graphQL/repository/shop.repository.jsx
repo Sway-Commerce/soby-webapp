@@ -28,3 +28,24 @@ export const GET_SHOP_BY_ID = gql`
     }
   }
 `;
+
+export const ACCEPT_REFUND_REQUEST = gql`
+  mutation AcceptRefundRequest($cmd: AcceptRefundRequestCmd!) {
+    acceptRefundRequest(cmd: $cmd) {
+      message
+      data {
+        ...AssessFragment
+      }
+    }
+  }
+`;
+export const REJECT_REFUND_REQUEST = gql`
+  mutation RejectRefundRequest($cmd: RejectRefundRequestCmd!) {
+    rejectRefundRequest(cmd: $cmd) {
+      message
+      data {
+        ...AssessFragment
+      }
+    }
+  }
+`;

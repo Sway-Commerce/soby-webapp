@@ -1,11 +1,6 @@
 import React from 'react';
 
-import {
-  CardShadow,
-  ShopContainer,
-  Card,
-  MainContent,
-} from './shop-profile.styles';
+import { ShopContainer, Card, MainContent } from './shop-profile.styles';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
@@ -13,21 +8,42 @@ import { formatPhoneNumberIntl } from 'react-phone-number-input';
 import { ReactComponent as Phone } from '../../assets/phone-icon.svg';
 
 import { GET_SHOP_BY_ID } from '../../graphQL/repository/shop.repository';
+import { SEARCH_PRODUCT } from '../../graphQL/repository/product.repository';
 
 import Spinner from '../../components/spinner/spinner.component';
 import ShopCategory from '../../components/shop-category/shop-category.component';
 import WebsiteUrl from '../../components/website-url/website-url.component';
 import KypStatus from '../../components/kyb-status/kyb-status.component';
 import ProductListCard from '../../components/product-listcard/product-listcard.component';
+import ShopNameCard from '../../components/shop-name-card/shop-name-card.component';
 
 const ShopProfile = () => {
   const { shopId } = useParams();
-  const { loading, error, data } = useQuery(GET_SHOP_BY_ID, {
-    variables: { id: shopId },
+  const { loading: shopLoading, error: shopError, data: shopData } = useQuery(
+    GET_SHOP_BY_ID,
+    {
+      variables: { id: shopId },
+    }
+  );
+  const {
+    loading: productLoading,
+    error: productError,
+    data: productData,
+  } = useQuery(SEARCH_PRODUCT, {
+    variables: {
+      searchInput: {
+        page: 0,
+        pageSize: 5,
+        filters: null,
+        queries: `shopId:${shopId}` ,
+        sorts: null,
+      },
+    },
   });
 
-  if (loading) return <Spinner />;
-  if (error) return `Error! ${error}`;
+  if (shopLoading && productLoading) return <Spinner />;
+  if (shopError || productError) return `Error! ${shopError || productError}`;
+  debugger;
 
   const {
     name,
@@ -38,18 +54,16 @@ const ShopProfile = () => {
     categories,
     shopUrls,
     kyb,
-  } = data.getShopById?.data;
+  } = shopData?.getShopById?.data;
 
-  console.log({ data });
+  const { records } = productData?.searchProduct?.data || { records: [] };
+
+  console.log({ records });
+  console.log({ shopData });
   return (
     <ShopContainer>
       <div className="left-panel">
-        <CardShadow className="shop-name">
-          <img src={logoUrl} alt="logo" />
-          <div className="info">
-            <h2 className="title">{name}</h2>
-          </div>
-        </CardShadow>
+        <ShopNameCard name={name} logoUrl={logoUrl} />
         <Card className="personal-kyb">
           <div className="title">
             <h4>Personal KYB</h4>
