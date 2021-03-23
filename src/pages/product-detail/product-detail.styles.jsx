@@ -94,8 +94,8 @@ export const Container = styled.div`
 
       .options {
         display: flex;
-        button {
-          margin: 0 10px 20px 0;
+        * + * {
+          margin-left: 16px;
         }
 
         .row {

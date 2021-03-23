@@ -8,6 +8,7 @@ import { GET_PRODUCT } from '../../graphQL/repository/product.repository';
 import Spinner from '../../components/spinner/spinner.component';
 import ProductCard from '../../components/product-card/product-card.component';
 import { currencyFormatter } from '../../utils/formatCurrency';
+import SkuChip from '../../components/sku-chip/sku-chip.component';
 
 const ProductDetail = ({}) => {
   const { productId } = useParams();
@@ -48,16 +49,14 @@ const ProductDetail = ({}) => {
           <p>{description}</p>
           <div className="h3">Colours</div>
           <div className="options">
-            <button>Yellow</button>
-            <button>White</button>
+            <SkuChip name="Yellow" />
+            <SkuChip name="White" />
           </div>
           <div className="h3">Size</div>
           <div className="options">
-            <button>xS</button>
-            <button>S</button>
-            <button>M</button>
-            <button>L</button>
-            <button>XL</button>
+            <SkuChip name="xS" />
+            <SkuChip name="S" />
+            <SkuChip name="M" />
           </div>
 
           <div className="h3">Show Categories</div>
