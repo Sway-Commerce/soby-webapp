@@ -27,6 +27,9 @@ const SignOut = lazy(() =>
 const ShopProfile = lazy(() =>
   import('./pages/shop-profile/shop-profile.component')
 );
+const ProductDetail = lazy(() =>
+  import('./pages/product-detail/product-detail.component')
+);
 
 const App = () => {
   return (
@@ -44,6 +47,7 @@ const App = () => {
             <Route exact path="/signout" component={SignOut} />
             <Route path="/transaction" component={PaymentResult} />
             <Route path="/shop-profile/:shopId" component={ShopProfile} />
+            <Route path="/product/:productId" component={ProductDetail} />
           </Suspense>
         </ErrorBoundary>
       </Switch>

@@ -2,45 +2,32 @@ import React from 'react';
 import ImageGallery from '../carousel/carousel.component';
 
 import { Container } from './product-listcard.styles';
+import { currencyFormatter } from '../../utils/formatCurrency';
+import { Link } from 'react-router-dom';
+import ProductCard from '../product-card/product-card.component';
 
-const ProductListCard = ({}) => (
-  <Container>
-    <div className="content-bottom">
-      <div className="card">
-        <ImageGallery />
-        <div className="card-infor">
-          <div className="h3">1,120,000 vnd</div>
-          <p>Lorem ipsum dolor sit amet dwqd dwqdhkj.</p>
-        </div>
+const ProductListCard = ({ records = [] }) => {
+  return (
+    <Container>
+      <div className="content-bottom">
+        {records.map((x) => {
+          let sku = {};
+          if (x.skus.length) {
+            sku = x.skus[x.skus.length - 1];
+          }
+          return (
+            <ProductCard
+              key={x.id}
+              id={x.id}
+              imageUrls={x.imageUrls}
+              currentPrice={sku?.currentPrice}
+              description={x.description}
+            />
+          );
+        })}
       </div>
-
-      <div className="card-2">
-        <img src="/images/rectangle-1.png" alt="" className="main-image" />
-
-        <div className="card-infor">
-          <div className="h3">1,120,000 vnd</div>
-          <p>Lorem ipsum dolor sit amet Lorem, ipsum dolor..</p>
-        </div>
-      </div>
-
-      <div className="card">
-        <ImageGallery />
-        <div className="card-infor">
-          <div className="h3">1,120,000 vnd</div>
-          <p>Lorem ipsum dolor sit amet dwqd dwqdhkj.</p>
-        </div>
-      </div>
-
-      <div className="card-2">
-        <img src="/images/rectangle-1.png" alt="" className="main-image" />
-
-        <div className="card-infor">
-          <div className="h3">1,120,000 vnd</div>
-          <p>Lorem ipsum dolor sit amet Lorem, ipsum dolor..</p>
-        </div>
-      </div>
-    </div>
-  </Container>
-);
+    </Container>
+  );
+};
 
 export default ProductListCard;

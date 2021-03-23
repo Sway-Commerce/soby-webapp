@@ -35,7 +35,7 @@ const ShopProfile = () => {
         page: 0,
         pageSize: 5,
         filters: null,
-        queries: `shopId:${shopId}` ,
+        queries: `shopId:${shopId}`,
         sorts: null,
       },
     },
@@ -43,7 +43,6 @@ const ShopProfile = () => {
 
   if (shopLoading && productLoading) return <Spinner />;
   if (shopError || productError) return `Error! ${shopError || productError}`;
-  debugger;
 
   const {
     name,
@@ -57,9 +56,8 @@ const ShopProfile = () => {
   } = shopData?.getShopById?.data;
 
   const { records } = productData?.searchProduct?.data || { records: [] };
+  const { status } = kyb ?? {status: null};
 
-  console.log({ records });
-  console.log({ shopData });
   return (
     <ShopContainer>
       <div className="left-panel">
@@ -67,7 +65,7 @@ const ShopProfile = () => {
         <Card className="personal-kyb">
           <div className="title">
             <h4>Personal KYB</h4>
-            <KypStatus status={kyb?.status} />
+            <KypStatus status={status} />
           </div>
         </Card>
       </div>
@@ -97,7 +95,7 @@ const ShopProfile = () => {
 
         <h3>Product</h3>
         <div className="product-group">
-          <ProductListCard />
+          <ProductListCard records={records} />
         </div>
       </MainContent>
     </ShopContainer>
@@ -105,10 +103,3 @@ const ShopProfile = () => {
 };
 
 export default ShopProfile;
-// <div className="shop-info">
-//   <Location />
-//   <p>
-//     CirCo Coworking Space, H3 Building, 384 Hoàng Diệu, Phường 6, Quận
-//     4, Thành phố Hồ Chí Minh
-//   </p>
-// </div>
