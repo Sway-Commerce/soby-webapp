@@ -35,5 +35,6 @@ export const Container = styled.div`
     width: 360px;
     background: rgba(241, 241, 241, 1);
     border: none;
+    box-shadow: none;
   }
 `;
