@@ -1,32 +1,33 @@
 import { gql } from '@apollo/client';
 
 export const INDIVIDUAL_PROFILE_FRAGMENT = gql`
-fragment IndividualProfileFragment on IndividualResultData {
-  id
-  firstName
-  lastName
-  middleName
-  imageUrl
-  email
-  phoneCountryCode
-  phoneNumber
-  dob
-  nationality
-  country
-  postalCode
-  province
-  city
-  addressLine
-  invitationCode
-  kycStatus
-  emailStatus
-  phoneStatus
-  signingPublicKey
-  encryptionPublicKey
-  pendingIdentities {
+  fragment IndividualProfileFragment on IndividualResultData {
+    id
+    firstName
+    lastName
+    middleName
+    imageUrl
+    email
+    phoneCountryCode
+    phoneNumber
+    dob
+    nationality
+    country
+    postalCode
+    province
+    city
+    addressLine
+    invitationCode
+    kycStatus
+    emailStatus
+    phoneStatus
+    signingPublicKey
+    encryptionPublicKey
+    pendingIdentities {
       id
       source
       hash
+    }
   }
 `;
 
@@ -84,7 +85,15 @@ export const ORDER_FRAGMENT = gql`
   }
 `;
 
+export const PROPERTY_FRAGMENT = gql`
+  fragment PropertyFragment on Property {
+    name
+    value
+  }
+`;
+
 export const SKU_FRAGMENT = gql`
+  ${PROPERTY_FRAGMENT}
   fragment SkuFragment on Sku {
     currentPrice
     id
@@ -114,12 +123,7 @@ export const PRODUCT_FRAGMENT = gql`
     updatedAt
   }
 `;
-export const PROPERTY_FRAGMENT = gql`
-  fragment PropertyFragment on Property {
-    name
-    value
-  }
-`;
+
 export const INVOICE_FRAGMENT = gql`
   fragment InvoiceFragment on Invoice {
     id

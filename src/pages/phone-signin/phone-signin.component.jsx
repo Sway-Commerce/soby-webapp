@@ -8,7 +8,7 @@ import CustomButton from '../../components/custom-button/custom-button.component
 import passwordValidation from '../../utils/passwordValidation';
 import {
   getHashPassword,
-  PHONE_LOGIN,
+  LOGIN_WITH_PHONE_AND_PASSWORD,
 } from '../../graphQL/repository/individual.repository';
 import {
   phoneSignInStart,
@@ -45,7 +45,7 @@ const PhoneSignin = ({
     isPhoneValid: true,
   });
   const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
-  const [phoneSignin, { data, error }] = useMutation(PHONE_LOGIN, {
+  const [phoneSignin, { data, error }] = useMutation(LOGIN_WITH_PHONE_AND_PASSWORD, {
     errorPolicy: 'all',
   });
 

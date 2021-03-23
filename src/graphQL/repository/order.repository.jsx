@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { ORDER_FRAGMENT } from '../common.fragment';
 
 export const CREATE_ORDER = gql`
   mutation CreateOrder($cmd: CreateOrderCmd!) {
@@ -55,6 +56,39 @@ export const UPDATE_ORDER_STATUS = gql`
     updateOrderStatus(cmd: $cmd) {
       message
       success
+    }
+  }
+`;
+
+export const GET_INDIVIDUAL_ORDER_LIST = gql`
+  ${ORDER_FRAGMENT}
+  query GetIndividualOrderList($query: IndividualOrderQuery!) {
+    getIndividualOrderList(query: $query) {
+      message
+      data {
+        page
+        pageSize
+        total
+        records {
+          ...OrderFragment
+        }
+      }
+    }
+  }
+`;
+export const GET_SHOP_ORDER_LIST = gql`
+  ${ORDER_FRAGMENT}
+  query GetShopOrderList($query: ShopOrderQuery!) {
+    getShopOrderList(query: $query) {
+      message
+      data {
+        page
+        pageSize
+        total
+        records {
+          ...OrderFragment
+        }
+      }
     }
   }
 `;

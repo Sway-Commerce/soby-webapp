@@ -125,6 +125,30 @@ export const LOGIN_WITH_SIGNATURE = gql`
   }
 `;
 
+export const GET_INDIVIDUAL_BASIC_INFO = gql`
+  ${INDIVIDUAL_PROFILE_FRAGMENT}
+  query GetIndividualBasicInfo {
+    getIndividual {
+      data {
+        ...IndividualProfileFragment
+      }
+      message
+    }
+  }
+`;
+
+export const GETSECRET = gql`
+  query GetSecret {
+    getSecret {
+      message
+      data {
+        signingSecret
+        encryptionSecret
+      }
+    }
+  }
+`;
+
 export const generateEncryptionKey = async (password) => {
   const encryption = new Encryption();
   await encryption.generateKeyPair();

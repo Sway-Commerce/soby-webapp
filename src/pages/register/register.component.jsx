@@ -9,7 +9,7 @@ import CustomButton from '../../components/custom-button/custom-button.component
 import passwordValidation from '../../utils/passwordValidation';
 import emailValidation from '../../utils/emailValidation';
 import {
-  REGISTER,
+  CREATE_INDIVIDUAL,
   SEND_PHONE_VERIFICATION,
   generateEncryptionKey,
   generateSignInKey,
@@ -74,7 +74,7 @@ const Register = ({
   } = inputValidation;
   const { phoneNumber, phoneCountryCode } = phone;
 
-  const [register, { data: registerData, errors }] = useMutation(REGISTER, {
+  const [register, { data: registerData, errors }] = useMutation(CREATE_INDIVIDUAL, {
     errorPolicy: 'all',
   });
 

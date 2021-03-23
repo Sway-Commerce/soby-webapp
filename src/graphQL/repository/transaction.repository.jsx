@@ -39,3 +39,20 @@ export const CREATE_OR_UPDATE_SHOP_BANK_ACCOUNT = gql`
     }
   }
 `;
+export const GET_SHOP_BANK_ACCOUNT = gql`
+  query GetShopBankAccount {
+    getShopBankAccount {
+      message
+      data {
+        id
+        shopId
+        bankCode
+        accountType
+        accountNumber
+        accountOwner
+        accountIssuedOn
+        bankBranch
+      }
+    }
+  }
+`;
