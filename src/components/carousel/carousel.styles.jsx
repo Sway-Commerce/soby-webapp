@@ -26,4 +26,22 @@ export const Container = styled.div`
     width: 250px;
     height: 250px;
   }
+
+  .large {
+    width: 360px;
+    ul.slider li.slide {
+      width: 360px;
+      height: 500px;
+      img {
+        height: 500px;
+      }
+    }
+
+    div.thumbs-wrapper.axis-vertical {
+      ul.thumbs li.thumb {
+        height: 110px;
+        width: 110px !important;
+      }
+    }
+  }
 `;

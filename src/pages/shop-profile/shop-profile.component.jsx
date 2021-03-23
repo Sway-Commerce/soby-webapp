@@ -13,9 +13,9 @@ import { SEARCH_PRODUCT } from '../../graphQL/repository/product.repository';
 import Spinner from '../../components/spinner/spinner.component';
 import ShopCategory from '../../components/shop-category/shop-category.component';
 import WebsiteUrl from '../../components/website-url/website-url.component';
-import KypStatus from '../../components/kyb-status/kyb-status.component';
 import ProductListCard from '../../components/product-listcard/product-listcard.component';
 import ShopNameCard from '../../components/shop-name-card/shop-name-card.component';
+import KybCard from '../../components/kyb-card/kyb-card.component';
 
 const ShopProfile = () => {
   const { shopId } = useParams();
@@ -62,12 +62,7 @@ const ShopProfile = () => {
     <ShopContainer>
       <div className="left-panel">
         <ShopNameCard name={name} logoUrl={logoUrl} />
-        <Card className="personal-kyb">
-          <div className="title">
-            <h4>Personal KYB</h4>
-            <KypStatus status={status} />
-          </div>
-        </Card>
+        <KybCard status={status}/>
       </div>
 
       <MainContent>

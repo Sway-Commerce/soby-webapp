@@ -4,24 +4,11 @@ import { mainColor } from '../../css-variable/variable';
 export const Container = styled.div`
   margin: 20px auto;
   width: 1200px;
-  .h1,
-  .h2,
-  .h3 {
-    margin-bottom: 14px;
-    font-weight: 500;
-  }
-  .h1 {
-    font-size: 24px;
-    font-weight: 600;
-    letter-spacing: 1px;
-  }
-  .h2 {
-    font-size: 20px;
-    letter-spacing: 0.8px;
-  }
-  .h3 {
-    font-size: 18px;
-    letter-spacing: 0.5px;
+  h4 {
+    margin: 16px 0;
+    &.stretch {
+      margin: 32px 0 16px;
+    }
   }
 
   img {
@@ -36,7 +23,7 @@ export const Container = styled.div`
 
     .box-left {
       width: 30%;
-      min-width: 300px;
+      min-width: 360px;
 
       .container-image {
         display: flex;
@@ -215,5 +202,9 @@ export const Container = styled.div`
         margin-bottom: 7px;
       }
     }
+  }
+
+  .shop-card {
+    margin: 80px 0 32px;
   }
 `;

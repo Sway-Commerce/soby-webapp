@@ -1,16 +1,16 @@
 import React from 'react';
 
-import { ReactComponent as Cart } from '../../assets/category-cart.svg';
 import { ReactComponent as Car } from '../../assets/category-car.svg';
 import { CategoryItem } from './shop-category.styles';
 
-const ShopCategory = ({ category }) => (
+const ShopCategory = ({ category, noBorder }) => {
+  return (
   <CategoryItem>
-    <div className="category-item">
+    <div className={`category-item ${noBorder ? "no-border" : ""}`}>
       <Car />
       <p>{category}</p>
     </div>
   </CategoryItem>
-);
+)};
 
 export default ShopCategory;

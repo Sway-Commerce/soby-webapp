@@ -1,14 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Container } from './product-detail.styles';
+import { Card, Container } from './product-detail.styles';
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
-import { GET_PRODUCT } from '../../graphQL/repository/product.repository';
+import { useLazyQuery, useQuery } from '@apollo/client';
+import {
+  GET_PRODUCT,
+  SEARCH_PRODUCT,
+} from '../../graphQL/repository/product.repository';
 import Spinner from '../../components/spinner/spinner.component';
 import ProductCard from '../../components/product-card/product-card.component';
 import { currencyFormatter } from '../../utils/formatCurrency';
 import SkuChip from '../../components/sku-chip/sku-chip.component';
+import ShopCategory from '../../components/shop-category/shop-category.component';
+import { GET_SHOP_BY_ID } from '../../graphQL/repository/shop.repository';
+import ProductListCard from '../../components/product-listcard/product-listcard.component';
+import KybStatus from '../../components/kyb-status/kyb-status.component';
+import ShopNameCard from '../../components/shop-name-card/shop-name-card.component';
+import KybCard from '../../components/kyb-card/kyb-card.component';
 
 const ProductDetail = ({}) => {
   const { productId } = useParams();
@@ -17,18 +26,45 @@ const ProductDetail = ({}) => {
     variables: { id: productId },
   });
 
-  if (loading) return <Spinner />;
-  if (error) return `Error! ${error}`;
-
   const { data } = productData?.getProduct || { data: {} };
+  const { shopId } = data;
+
+  const {
+    loading: productsLoading,
+    error: productsError,
+    data: productsData,
+  } = useQuery(SEARCH_PRODUCT, {
+    variables: {
+      searchInput: {
+        page: 0,
+        pageSize: 5,
+        filters: null,
+        queries: `shopId:${shopId}`,
+        sorts: null,
+      },
+    },
+  });
+
+  const { loading: shopLoading, error: shopError, data: shopData } = useQuery(
+    GET_SHOP_BY_ID,
+    {
+      variables: { id: shopId },
+    }
+  );
+
+  if (loading || productsLoading || shopLoading) return <Spinner />;
+  if (error || productsError || shopError)
+    return `Error! ${error || productsError}`;
+
   let sku = {};
-  const { skus, id, imageUrls, description, name } = data;
+  const { skus, id, imageUrls, description, name, categories } = data;
+  const { records } = productsData?.searchProduct?.data || { records: [] };
+  const shopInfo = shopData?.getShopById?.data;
+  const { status } = shopInfo.kyb ?? {status: null};
 
   if (skus.length) {
     sku = skus[skus.length - 1];
   }
-
-  console.log(productData);
 
   return (
     <Container>
@@ -39,87 +75,44 @@ const ProductDetail = ({}) => {
             imageUrls={imageUrls}
             currentPrice={sku.currentPrice}
             description={description}
+            isMain
           />
+          <div className="shop-card">
+            <ShopNameCard
+              name={shopInfo.name}
+              logoUrl={shopInfo.logoUrl}
+              productView
+              id={shopInfo.id}
+            />
+          </div>
+          <KybCard status={status} productView/>
         </div>
 
         <div className="box-right">
           <div className="tag"></div>
-          <div className="h2">{name}</div>
-          <div className="h1">{currencyFormatter(sku.currentPrice)}</div>
+          <h2>{name}</h2>
+          <h1>{currencyFormatter(sku.currentPrice)}</h1>
           <p>{description}</p>
-          <div className="h3">Colours</div>
+          <h4>Colours</h4>
           <div className="options">
             <SkuChip name="Yellow" />
             <SkuChip name="White" />
           </div>
-          <div className="h3">Size</div>
+          <h4 className="stretch">Size</h4>
           <div className="options">
             <SkuChip name="xS" />
             <SkuChip name="S" />
             <SkuChip name="M" />
           </div>
 
-          <div className="h3">Show Categories</div>
+          <h4 className="stretch">Show Categories</h4>
           <div className="options">
-            <div className="row">
-              <div className="icon">🛒</div>
-              <p>Category #1</p>
-            </div>
-            <div className="row">
-              <div className="icon">🚙</div>
-              <p>Start Category #1</p>
-            </div>
+            {categories.map((x) => (
+              <ShopCategory category={x} key={x} noBorder />
+            ))}
           </div>
-        </div>
-      </div>
 
-      <div className="content-bottom">
-        <div className="card">
-          <img src="./item.jpg" alt="" className="main-image" />
-
-          <div className="container-image">
-            <img src="./item.jpg" alt="" className="small-image" />
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <div className="card-infor">
-            <div className="h3">1,120,000 vnd</div>
-            <p>Lorem ipsum dolor sit amet dwqd dwqdhkj.</p>
-          </div>
-        </div>
-
-        <div className="card-2">
-          <img src="./item2.jpg" alt="" className="main-image" />
-
-          <div className="card-infor">
-            <div className="h3">1,120,000 vnd</div>
-            <p>Lorem ipsum dolor sit amet Lorem, ipsum dolor..</p>
-          </div>
-        </div>
-
-        <div className="card">
-          <img src="./item.jpg" alt="" className="main-image" />
-
-          <div className="container-image">
-            <img src="./item.jpg" alt="" className="small-image" />
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <div className="card-infor">
-            <div className="h3">1,120,000 vnd</div>
-            <p>Lorem ipsum dolor sit amet dwqd dwqdhkj.</p>
-          </div>
-        </div>
-
-        <div className="card-2">
-          <img src="./item2.jpg" alt="" className="main-image" />
-
-          <div className="card-infor">
-            <div className="h3">1,120,000 vnd</div>
-            <p>Lorem ipsum dolor sit amet Lorem, ipsum dolor..</p>
-          </div>
+          <ProductListCard records={records} />
         </div>
       </div>
     </Container>

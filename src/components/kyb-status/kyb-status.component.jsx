@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { KybStatus } from './kyb-status.styles';
+import { Container } from './kyb-status.styles';
 
-const KypStatus = ({ status }) => <KybStatus>{status || 'APPROVED'}</KybStatus>;
+const KybStatus = ({ status }) => <Container>{status || 'APPROVED'}</Container>;
 
-export default KypStatus;
+export default KybStatus;

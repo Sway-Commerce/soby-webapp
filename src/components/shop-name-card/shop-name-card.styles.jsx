@@ -30,4 +30,10 @@ export const Container = styled.div`
     height: 100px;
     margin: auto 0 auto 40px;
   }
+
+  &.product-view {
+    width: 360px;
+    background: rgba(241, 241, 241, 1);
+    border: none;
+  }
 `;

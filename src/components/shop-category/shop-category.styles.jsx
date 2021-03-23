@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 export const CategoryItem = styled.div`
   .category-item {
-    width: 199px;
     height: 46px;
     padding: 8px 20px;
     border: 1px solid rgba(0, 0, 0, 0.5);
@@ -12,6 +11,15 @@ export const CategoryItem = styled.div`
     p {
       font-size: 19px;
       margin: auto 0 auto 8px;
+    }
+
+    svg {
+      width: -webkit-fill-available;
+    }
+
+    &.no-border {
+      border: none;
+      padding: 0;
     }
   }
 `;

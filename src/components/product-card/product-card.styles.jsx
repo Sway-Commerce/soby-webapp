@@ -1,36 +1,15 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
+  width: 207px;
   .card {
-    height: auto;
-    width: 250px;
-    margin-right: 35px;
+    img {
+      width: 207px;
+      height: 286px;
 
-    .main-image {
-      width: 250px;
-      height: 250px;
-    }
-
-    .container-image {
-      display: flex;
-      margin-top: 12px;
-
-      .small-image,
-      div {
-        margin-right: 5px;
-        height: 50px;
-        width: 50px;
-      }
-      div {
-        border-radius: 5px;
-        background-color: rgba(0, 0, 0, 0.1);
-      }
-    }
-
-    .card-infor {
-      .h3 {
-        margin-top: 14px;
-        margin-bottom: 7px;
+      &.main-image {
+        width: 360px;
+        height: 500px;
       }
     }
   }
