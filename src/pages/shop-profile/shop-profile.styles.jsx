@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { mainColor } from '../../css-variable/variable';
+import { mainColor } from 'css-variable/variable';
 
 export const ShopContainer = styled.div`
   padding: 0 240px;

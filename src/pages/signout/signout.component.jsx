@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import CustomButton from '../../components/custom-button/custom-button.component';
+import CustomButton from 'components/custom-button/custom-button.component';
 
 import {
   signOutStart,
-} from '../../redux/user/user.actions';
+} from 'redux/user/user.actions';
 
 import {
   SignoutContainer,
@@ -13,7 +13,7 @@ import {
   RegisterContainer,
   FormContainer,
 } from './signout.styles';
-import PolicyNavigate from '../../components/policy-navigate/policy-navigate.component';
+import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 
 const SignOut = ({
   signOutStart,

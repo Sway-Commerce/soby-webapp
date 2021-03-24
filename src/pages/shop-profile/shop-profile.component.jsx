@@ -5,17 +5,17 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
 
-import { ReactComponent as Phone } from '../../assets/phone-icon.svg';
+import { ReactComponent as Phone } from 'assets/phone-icon.svg';
 
-import { GET_SHOP_BY_ID } from '../../graphQL/repository/shop.repository';
-import { SEARCH_PRODUCT } from '../../graphQL/repository/product.repository';
+import { GET_SHOP_BY_ID } from 'graphQL/repository/shop.repository';
+import { SEARCH_PRODUCT } from 'graphQL/repository/product.repository';
 
-import Spinner from '../../components/spinner/spinner.component';
-import ShopCategory from '../../components/shop-category/shop-category.component';
-import WebsiteUrl from '../../components/website-url/website-url.component';
-import ProductListCard from '../../components/product-listcard/product-listcard.component';
-import ShopNameCard from '../../components/shop-name-card/shop-name-card.component';
-import KybCard from '../../components/kyb-card/kyb-card.component';
+import Spinner from 'components/spinner/spinner.component';
+import ShopCategory from 'components/shop-category/shop-category.component';
+import WebsiteUrl from 'components/website-url/website-url.component';
+import ProductListCard from 'components/product-listcard/product-listcard.component';
+import ShopNameCard from 'components/shop-name-card/shop-name-card.component';
+import KybCard from 'components/kyb-card/kyb-card.component';
 
 const ShopProfile = () => {
   const { shopId } = useParams();

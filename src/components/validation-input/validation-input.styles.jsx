@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { mainColor, subColor } from '../../css-variable/variable';
+import { mainColor, subColor } from 'css-variable/variable';
 
 export const BoxContainer = styled.div`
   display: grid;

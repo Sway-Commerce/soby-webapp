@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
 import { connect } from 'react-redux';
 
-import CustomButton from '../../components/custom-button/custom-button.component';
+import CustomButton from 'components/custom-button/custom-button.component';
 import usePhoneNumber from '../../custom-hooks/usePhoneNumber';
 
-import { setUserPhoneNumber } from '../../redux/user/user.actions';
+import { setUserPhoneNumber } from 'redux/user/user.actions';
 
 import {
   SignUpContainer,
@@ -15,7 +15,7 @@ import {
   FormContainer,
 } from './register-phone.styles';
 
-import PolicyNavigate from '../../components/policy-navigate/policy-navigate.component';
+import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 
 const RegisterPhone = ({ history, setUserPhoneNumber }) => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');

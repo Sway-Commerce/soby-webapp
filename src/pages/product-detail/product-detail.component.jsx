@@ -7,17 +7,17 @@ import { useLazyQuery, useQuery } from '@apollo/client';
 import {
   GET_PRODUCT,
   SEARCH_PRODUCT,
-} from '../../graphQL/repository/product.repository';
-import Spinner from '../../components/spinner/spinner.component';
-import ProductCard from '../../components/product-card/product-card.component';
-import { currencyFormatter } from '../../utils/formatCurrency';
-import SkuChip from '../../components/sku-chip/sku-chip.component';
-import ShopCategory from '../../components/shop-category/shop-category.component';
-import { GET_SHOP_BY_ID } from '../../graphQL/repository/shop.repository';
-import ProductListCard from '../../components/product-listcard/product-listcard.component';
-import KybStatus from '../../components/kyb-status/kyb-status.component';
-import ShopNameCard from '../../components/shop-name-card/shop-name-card.component';
-import KybCard from '../../components/kyb-card/kyb-card.component';
+} from 'graphQL/repository/product.repository';
+import Spinner from 'components/spinner/spinner.component';
+import ProductCard from 'components/product-card/product-card.component';
+import { currencyFormatter } from 'utils/formatCurrency';
+import SkuChip from 'components/sku-chip/sku-chip.component';
+import ShopCategory from 'components/shop-category/shop-category.component';
+import { GET_SHOP_BY_ID } from 'graphQL/repository/shop.repository';
+import ProductListCard from 'components/product-listcard/product-listcard.component';
+import KybStatus from 'components/kyb-status/kyb-status.component';
+import ShopNameCard from 'components/shop-name-card/shop-name-card.component';
+import KybCard from 'components/kyb-card/kyb-card.component';
 
 const ProductDetail = ({}) => {
   const { productId } = useParams();

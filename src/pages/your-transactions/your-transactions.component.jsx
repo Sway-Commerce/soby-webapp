@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Container } from './your-transactions.styles';
 import { useParams } from 'react-router-dom';
-import { ReactComponent as Clock } from '../../assets/clock.svg';
+import { ReactComponent as Clock } from 'assets/clock.svg';
 import ReceiveInvoice from '../receive-invoice/receive-invoice.component';
 
 const YourTransaction = ({ name }) => {

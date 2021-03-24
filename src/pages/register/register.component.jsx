@@ -4,10 +4,10 @@ import { useMutation } from '@apollo/client';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import FormInput from '../../components/form-input/form-input.component';
-import CustomButton from '../../components/custom-button/custom-button.component';
-import passwordValidation from '../../utils/passwordValidation';
-import emailValidation from '../../utils/emailValidation';
+import FormInput from 'components/form-input/form-input.component';
+import CustomButton from 'components/custom-button/custom-button.component';
+import passwordValidation from 'utils/passwordValidation';
+import emailValidation from 'utils/emailValidation';
 import {
   CREATE_INDIVIDUAL,
   SEND_PHONE_VERIFICATION,
@@ -15,13 +15,13 @@ import {
   generateSignInKey,
   getSignature,
   LOGIN_WITH_SIGNATURE,
-} from '../../graphQL//repository/individual.repository';
+} from 'graphQL/repository/individual.repository';
 import {
   signUpStart,
   signUpSuccess,
   signUpFailure,
   sendPhoneVerification,
-} from '../../redux/user/user.actions';
+} from 'redux/user/user.actions';
 
 import {
   SignUpContainer,
@@ -34,9 +34,9 @@ import {
 import {
   selectPhoneNumber,
   selectUserCredential,
-} from '../../redux/user/user.selectors';
-import PolicyNavigate from '../../components/policy-navigate/policy-navigate.component';
-import Spinner from '../../components/spinner/spinner.component';
+} from 'redux/user/user.selectors';
+import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
+import Spinner from 'components/spinner/spinner.component';
 
 const Register = ({
   history,

@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "utils/*": ["utils/*"],
+      "graphql/*": ["graphQL/*"],
+      "assets/*": ["assets/*"],
+      "redux/*": ["redux/*"],
+      "css-variable/*": ["css-variable/*"],
+      "pages/*": ["pages/*"],
+      "components/*": ["components/*"]
+    },
+    "module": "commonjs",
+    "target": "es6"
+  },
+  "exclude": ["node_modules"],
+  "include": ["src/**/*"]
+}

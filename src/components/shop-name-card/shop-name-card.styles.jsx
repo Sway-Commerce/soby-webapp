@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { mainColor } from '../../css-variable/variable';
+import { mainColor } from 'css-variable/variable';
 
 export const Container = styled.div`
   box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.07);

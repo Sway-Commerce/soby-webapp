@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ReactComponent as Car } from '../../assets/category-car.svg';
+import { ReactComponent as Car } from 'assets/category-car.svg';
 import { CategoryItem } from './shop-category.styles';
 
 const ShopCategory = ({ category, noBorder }) => {

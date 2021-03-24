@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Container } from './receive-invoice.styles';
 import { useParams } from 'react-router-dom';
-import { ReactComponent as Clock } from '../../assets/clock.svg';
+import { ReactComponent as Clock } from 'assets/clock.svg';
 
 const ReceiveInvoice = ({ name }) => {
   const { invoiceId } = useParams();

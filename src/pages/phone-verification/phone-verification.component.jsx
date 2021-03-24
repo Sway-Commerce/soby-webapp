@@ -3,13 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import CustomButton from '../../components/custom-button/custom-button.component';
+import CustomButton from 'components/custom-button/custom-button.component';
 
 import {
   sendPhoneVerification,
   verifyPhone,
-} from '../../redux/user/user.actions';
-import { selectPhoneNumber } from '../../redux/user/user.selectors';
+} from 'redux/user/user.actions';
+import { selectPhoneNumber } from 'redux/user/user.selectors';
 
 import {
   SignUpContainer,
@@ -21,11 +21,11 @@ import {
   ErrorTitle,
 } from './phone-verification.styles';
 
-import ValidationInput from '../../components/validation-input/validation-input.component';
+import ValidationInput from 'components/validation-input/validation-input.component';
 import {
   SEND_PHONE_VERIFICATION,
   VERIFY_PHONE,
-} from '../../graphQL//repository/individual.repository';
+} from 'graphQL/repository/individual.repository';
 import { useMutation } from '@apollo/client';
 
 const PhoneVerification = ({ history, phone, verify, sendVerification }) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import ImageGallery from '../carousel/carousel.component';
 
 import { Container } from './product-card.styles';
-import { currencyFormatter } from '../../utils/formatCurrency';
+import { currencyFormatter } from 'utils/formatCurrency';
 import { Link } from 'react-router-dom';
 
 const ProductCard = ({ id, imageUrls, currentPrice, description, isMain }) => {

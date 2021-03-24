@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { mainColor } from '../../css-variable/variable';
+import { mainColor } from 'css-variable/variable';
 
 export const SigninContainer = styled.div`
   display: flex;

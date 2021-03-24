@@ -3,18 +3,18 @@ import { useMutation } from '@apollo/client';
 import { connect } from 'react-redux';
 import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
 
-import FormInput from '../../components/form-input/form-input.component';
-import CustomButton from '../../components/custom-button/custom-button.component';
-import passwordValidation from '../../utils/passwordValidation';
+import FormInput from 'components/form-input/form-input.component';
+import CustomButton from 'components/custom-button/custom-button.component';
+import passwordValidation from 'utils/passwordValidation';
 import {
   getHashPassword,
   LOGIN_WITH_PHONE_AND_PASSWORD,
-} from '../../graphQL/repository/individual.repository';
+} from 'graphQL/repository/individual.repository';
 import {
   phoneSignInStart,
   signInFailure,
   signInSuccess,
-} from '../../redux/user/user.actions';
+} from 'redux/user/user.actions';
 
 import {
   SigninContainer,
@@ -25,7 +25,7 @@ import {
   InputGroup,
   ForgotPass,
 } from './phone-signin.styles';
-import PolicyNavigate from '../../components/policy-navigate/policy-navigate.component';
+import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 import usePhoneNumber from '../../custom-hooks/usePhoneNumber';
 import { Link } from 'react-router-dom';
 

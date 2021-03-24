@@ -10,9 +10,9 @@ import {
   CartContainer,
   SignOut,
 } from './header.styles';
-import { ReactComponent as Logo } from '../../assets/logo.svg';
-import { ReactComponent as Cart } from '../../assets/cart.svg';
-import { signOutStart } from '../../redux/user/user.actions';
+import { ReactComponent as Logo } from 'assets/logo.svg';
+import { ReactComponent as Cart } from 'assets/cart.svg';
+import { signOutStart } from 'redux/user/user.actions';
 
 export const Header = ({ signOutStart }) => {
   const [isSignIn, setIsSignin] = useState(!!localStorage.getItem('token'));
