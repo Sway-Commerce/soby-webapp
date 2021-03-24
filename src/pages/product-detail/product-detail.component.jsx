@@ -60,7 +60,27 @@ const ProductDetail = ({}) => {
   const { skus, id, imageUrls, description, name, categories } = data;
   const { records } = productsData?.searchProduct?.data || { records: [] };
   const shopInfo = shopData?.getShopById?.data;
-  const { status } = shopInfo.kyb ?? {status: null};
+  const { status } = shopInfo.kyb ?? { status: null };
+  let sizes = [];
+  let colors = [];
+  let weights = [];
+  skus.map((x) =>
+    x.properties.map((y) => {
+      switch (y.name) {
+        case 'SIZE':
+          sizes = [...sizes, y.value];
+          return null;
+        case 'WEIGHT':
+          weights = [...weights, y.value];
+          return null;
+        case 'COLOR':
+          colors = [...colors, y.value];
+          return null;
+        default:
+          return null;
+      }
+    })
+  );
 
   if (skus.length) {
     sku = skus[skus.length - 1];
@@ -85,7 +105,7 @@ const ProductDetail = ({}) => {
               id={shopInfo.id}
             />
           </div>
-          <KybCard status={status} productView/>
+          <KybCard status={status} productView />
         </div>
 
         <div className="box-right">
@@ -95,14 +115,21 @@ const ProductDetail = ({}) => {
           <p>{description}</p>
           <h4>Colours</h4>
           <div className="options">
-            <SkuChip name="Yellow" />
-            <SkuChip name="White" />
+            {colors.map((x) => (
+              <SkuChip name={x} key={x} />
+            ))}
           </div>
           <h4 className="stretch">Size</h4>
           <div className="options">
-            <SkuChip name="xS" />
-            <SkuChip name="S" />
-            <SkuChip name="M" />
+            {sizes.map((x) => (
+              <SkuChip name={x} key={x} />
+            ))}
+          </div>
+          <h4 className="stretch">Weight</h4>
+          <div className="options">
+            {weights.map((x) => (
+              <SkuChip name={x} key={x} />
+            ))}
           </div>
 
           <h4 className="stretch">Show Categories</h4>

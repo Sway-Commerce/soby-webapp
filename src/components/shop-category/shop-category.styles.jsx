@@ -20,6 +20,7 @@ export const CategoryItem = styled.div`
     &.no-border {
       border: none;
       padding: 0;
+      display: flex;
     }
   }
 `;
