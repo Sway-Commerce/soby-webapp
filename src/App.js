@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Router } from 'react-router-dom';
 import 'react-phone-number-input/style.css';
 
 import { GlobalStyle } from './global.styles';
@@ -21,14 +21,15 @@ const PhoneSignin = lazy(() =>
 const PaymentResult = lazy(() =>
   import('./pages/payment-result/payment-result.component')
 );
-const SignOut = lazy(() =>
-  import('./pages/signout/signout.component')
-);
+const SignOut = lazy(() => import('./pages/signout/signout.component'));
 const ShopProfile = lazy(() =>
   import('./pages/shop-profile/shop-profile.component')
 );
 const ProductDetail = lazy(() =>
   import('./pages/product-detail/product-detail.component')
+);
+const ReceiveInvoice = lazy(() =>
+  import('./pages/receive-invoice/receive-invoice.component')
 );
 
 const App = () => {
@@ -40,7 +41,11 @@ const App = () => {
         <ErrorBoundary>
           <Suspense fallback={<Spinner />}>
             <Route exact path="/" component={HomePage} />
-            <Route exact path="/phone-verification" component={PhoneVerification} />
+            <Route
+              exact
+              path="/phone-verification"
+              component={PhoneVerification}
+            />
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="/signup-info" component={SignUpInfo} />
             <Route exact path="/phone-signin" component={PhoneSignin} />
@@ -48,6 +53,7 @@ const App = () => {
             <Route path="/transaction" component={PaymentResult} />
             <Route path="/shop-profile/:shopId" component={ShopProfile} />
             <Route path="/product/:productId" component={ProductDetail} />
+            <Route path="/receive-invoice/:invoiceId" component={ReceiveInvoice} />
           </Suspense>
         </ErrorBoundary>
       </Switch>
