@@ -4,10 +4,10 @@ import { mainColor } from '../../css-variable/variable';
 
 export const HeaderContainer = styled.div`
   height: 80px;
-  width: 100%;
+  width: 1140px;
   display: flex;
   justify-content: space-between;
-  padding: 0 240px;
+  padding: 0 calc((100vw - 1140px) / 2);
   background-color: ${mainColor};
   @media screen and (max-width: 800px) {
     padding: 0 10px;
@@ -35,7 +35,6 @@ export const OptionLink = styled(Link)`
   padding: 10px 40px;
   cursor: pointer;
   color: white;
-
 `;
 
 export const SignInLink = styled(Link)`
@@ -60,7 +59,7 @@ export const CartContainer = styled(Link)`
   display: flex;
   border-radius: 50%;
   svg {
-    margin:auto 9px;
+    margin: auto 9px;
   }
 `;
 

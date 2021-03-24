@@ -31,32 +31,44 @@ const ProductDetail = lazy(() =>
 const ReceiveInvoice = lazy(() =>
   import('./pages/receive-invoice/receive-invoice.component')
 );
+const YourTransaction = lazy(() =>
+  import('./pages/your-transactions/your-transactions.component')
+);
 
 const App = () => {
   return (
     <div>
       <Header />
       <GlobalStyle />
-      <Switch>
-        <ErrorBoundary>
-          <Suspense fallback={<Spinner />}>
-            <Route exact path="/" component={HomePage} />
-            <Route
-              exact
-              path="/phone-verification"
-              component={PhoneVerification}
-            />
-            <Route exact path="/signup" component={SignUp} />
-            <Route exact path="/signup-info" component={SignUpInfo} />
-            <Route exact path="/phone-signin" component={PhoneSignin} />
-            <Route exact path="/signout" component={SignOut} />
-            <Route path="/transaction" component={PaymentResult} />
-            <Route path="/shop-profile/:shopId" component={ShopProfile} />
-            <Route path="/product/:productId" component={ProductDetail} />
-            <Route path="/receive-invoice/:invoiceId" component={ReceiveInvoice} />
-          </Suspense>
-        </ErrorBoundary>
-      </Switch>
+      <div className="body-container">
+        <Switch>
+          <ErrorBoundary>
+            <Suspense fallback={<Spinner />}>
+              <Route exact path="/" component={HomePage} />
+              <Route
+                exact
+                path="/phone-verification"
+                component={PhoneVerification}
+              />
+              <Route exact path="/signup" component={SignUp} />
+              <Route exact path="/signup-info" component={SignUpInfo} />
+              <Route exact path="/phone-signin" component={PhoneSignin} />
+              <Route exact path="/signout" component={SignOut} />
+              <Route path="/transaction" component={PaymentResult} />
+              <Route path="/shop-profile/:shopId" component={ShopProfile} />
+              <Route path="/product/:productId" component={ProductDetail} />
+              <Route
+                path="/receive-invoice/:invoiceId"
+                component={ReceiveInvoice}
+              />
+              <Route
+                path="/your-transaction/:invoiceId"
+                component={YourTransaction}
+              />
+            </Suspense>
+          </ErrorBoundary>
+        </Switch>
+      </div>
     </div>
   );
 };
