@@ -26,7 +26,7 @@ import {
   ForgotPass,
 } from './phone-signin.styles';
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
-import usePhoneNumber from '../../custom-hooks/usePhoneNumber';
+import usePhoneNumber from 'custom-hooks/usePhoneNumber';
 import { Link } from 'react-router-dom';
 
 const PhoneSignin = ({

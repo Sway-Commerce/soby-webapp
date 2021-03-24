@@ -3,7 +3,7 @@ import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
 import { connect } from 'react-redux';
 
 import CustomButton from 'components/custom-button/custom-button.component';
-import usePhoneNumber from '../../custom-hooks/usePhoneNumber';
+import usePhoneNumber from 'custom-hooks/usePhoneNumber';
 
 import { setUserPhoneNumber } from 'redux/user/user.actions';
 
