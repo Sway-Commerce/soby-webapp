@@ -27,7 +27,7 @@ import {
 } from './phone-signin.styles';
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 import usePhoneNumber from 'custom-hooks/usePhoneNumber';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const PhoneSignin = ({
   history,
@@ -48,6 +48,9 @@ const PhoneSignin = ({
   const [phoneSignin, { data, error }] = useMutation(LOGIN_WITH_PHONE_AND_PASSWORD, {
     errorPolicy: 'all',
   });
+
+  const { invoiceId } = useParams();
+  console.log(invoiceId);
 
   if (error) {
     signInFailure(error);

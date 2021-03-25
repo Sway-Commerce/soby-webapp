@@ -175,7 +175,11 @@ export const AGGREGATED_INVOICE_FRAGMENT = gql`
     id
     name
     description
-    shopId
+    shop {
+      id
+      name
+      logoUrl
+    }
     shippingType
     escrowFee
     expiredAt

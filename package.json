@@ -6,6 +6,7 @@
     "@apollo/client": "^3.3.11",
     "credify-crypto": "^0.32.9",
     "graphql": "^15.5.0",
+    "jwt-decode": "^3.1.2",
     "node-sass": "^5.0.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

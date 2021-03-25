@@ -66,7 +66,7 @@ export const Container = styled.div`
           top: 100%;
           left: 50%;
           transform: translate(-50%, -50%);
-          background-color: ${mainColor};
+          background-image: url('/images/subtract.png');
           width: 398px;
           height: 80px;
           border-radius: 12px;
@@ -79,20 +79,6 @@ export const Container = styled.div`
             border-left: 3px solid #fff;
             position: relative;
             top: 3px;
-          }
-          &::after {
-            content: '';
-
-            position: absolute;
-            right: -20px;
-            top: 26px;
-            width: 0;
-            height: 0;
-            border-left: 10px solid #f1f1f1;
-            border-top: 13px solid transparent;
-            border-bottom: 22px solid transparent;
-            border-right: 20px solid transparent;
-            border-radius: 50%;
           }
         }
 

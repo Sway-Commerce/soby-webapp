@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { Switch, Route, Router } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import 'react-phone-number-input/style.css';
 
 import { GlobalStyle } from './global.styles';
@@ -52,7 +52,7 @@ const App = () => {
               />
               <Route exact path="/signup" component={SignUp} />
               <Route exact path="/signup-info" component={SignUpInfo} />
-              <Route exact path="/phone-signin" component={PhoneSignin} />
+              <Route path="/phone-signin" component={PhoneSignin} />
               <Route exact path="/signout" component={SignOut} />
               <Route path="/transaction" component={PaymentResult} />
               <Route path="/shop-profile/:shopId" component={ShopProfile} />
@@ -65,6 +65,7 @@ const App = () => {
                 path="/your-transaction/:invoiceId"
                 component={YourTransaction}
               />
+              <Route path="/phone-signin/invoice/:invoiceId" component={PhoneSignin} />
             </Suspense>
           </ErrorBoundary>
         </Switch>

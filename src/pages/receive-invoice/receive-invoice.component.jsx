@@ -9,14 +9,12 @@ import {
   GET_DETAILED_INVOICE_BY_ID,
 } from 'graphQL/repository/invoice.repository';
 import Spinner from 'components/spinner/spinner.component';
-import { GET_SHOP_BY_ID } from 'graphQL/repository/shop.repository';
 import { timestampToDate } from 'utils/getDate';
 import { currencyFormatter } from 'utils/formatCurrency';
 import InvoiceProductList from 'components/invoice-product-list/invoice-product-list.component';
 
-const ReceiveInvoice = ({}) => {
+const ReceiveInvoice = ({ history }) => {
   const { invoiceId } = useParams();
-  let invoiceShopId = null;
 
   const { loading, error, data: invoiceData } = useQuery(
     GET_DETAILED_INVOICE_BY_ID,
@@ -34,20 +32,8 @@ const ReceiveInvoice = ({}) => {
     }
   );
 
-  if (invoiceData?.getAggregatedInvoice?.data) {
-    const { shopId } = invoiceData?.getAggregatedInvoice?.data;
-    invoiceShopId = shopId;
-  }
-
-  const { loading: shopLoading, error: shopError, data: shopData } = useQuery(
-    GET_SHOP_BY_ID,
-    {
-      variables: { id: invoiceShopId },
-    }
-  );
-
-  if (loading || shopLoading) return <Spinner />;
-  if (error || shopError) return `Error! ${error}`;
+  if (loading) return <Spinner />;
+  if (error) return `Error! ${error}`;
 
   const {
     name,
@@ -55,10 +41,16 @@ const ReceiveInvoice = ({}) => {
     expiredAt,
     price,
     items,
+    shop,
   } = invoiceData?.getAggregatedInvoice?.data;
-  const shopInfo = shopData?.getShopById?.data;
+  const { logoUrl, name: shopName } = shop;
 
-  console.log(invoiceData);
+  const handleNavigate = () => {
+    if (!!localStorage.getItem('token')) {
+      return;
+    }
+    history.push(`/phone-signin/invoice/${invoiceId}`);
+  };
 
   return (
     <Container>
@@ -67,8 +59,8 @@ const ReceiveInvoice = ({}) => {
           <div className="box-top">
             <div className="header-group">
               <div className="shop-name">
-                <img src={shopInfo.logoUrl} alt="" />
-                <p className="h2">{shopInfo.name}</p>
+                <img src={logoUrl} alt="" />
+                <p className="h2">{shopName}</p>
               </div>
             </div>
 
@@ -102,19 +94,7 @@ const ReceiveInvoice = ({}) => {
 
           <InvoiceProductList items={items} />
 
-          <button
-            onClick={() =>
-              acceptInvoice({
-                variables: {
-                  cmd: {
-                    invoiceId,
-                  },
-                },
-              })
-            }
-          >
-            Check out
-          </button>
+          <button onClick={handleNavigate}>Check out</button>
         </div>
       </div>
     </Container>
@@ -130,3 +110,12 @@ export default ReceiveInvoice;
 //                 <p>Waiting</p>
 //               </div>
 //             </div>
+
+// () =>
+// acceptInvoice({
+//   variables: {
+//     cmd: {
+//       invoiceId,
+//     },
+//   },
+// }
