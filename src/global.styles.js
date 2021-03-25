@@ -95,4 +95,11 @@ export const GlobalStyle = createGlobalStyle`
 		text-transform: none;
 		margin-bottom: 16px;
 	}
+
+	p {
+		font-style: normal;
+		font-weight: normal;
+		font-size: 20px;
+		line-height: 26px;
+	}
 `;

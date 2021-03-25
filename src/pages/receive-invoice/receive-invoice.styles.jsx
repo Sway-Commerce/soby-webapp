@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {mainColor} from 'css-variable/variable';
+import { mainColor } from 'css-variable/variable';
 
 export const Container = styled.div`
   .main-content {
@@ -10,7 +10,7 @@ export const Container = styled.div`
 
     .content-left {
       border-radius: 5px;
-      box-shadow: 0 2px 8px rgba($color: #000000, $alpha: 0.1);
+      box-shadow: 0 2px 8px rgb(0, 0, 0 0.1);
       .box-top {
         position: relative;
         padding: 20px 60px 70px 60px;
@@ -122,7 +122,7 @@ export const Container = styled.div`
             font-size: 16px;
           }
 
-          .image {
+          img {
             height: 50px;
             width: 50px;
             border-radius: 4px;
@@ -150,12 +150,6 @@ export const Container = styled.div`
         font-size: 20px;
         line-height: 26px;
       }
-    }
-    p {
-      font-style: normal;
-      font-weight: normal;
-      font-size: 20px;
-      line-height: 26px;
     }
   }
 `;

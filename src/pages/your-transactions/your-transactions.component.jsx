@@ -11,22 +11,7 @@ const YourTransaction = ({ name }) => {
   return (
     <Container>
       <div className="content-left">
-        <div className="h2">Hình thức giao hàng</div>
-        <div className="option col">
-          <div className="checkbox">
-            <input type="checkbox" id="cb1" />
-            <label for="cb1">
-              <span>Soby Ship - free~50,000 vnd</span>
-            </label>
-          </div>
-          <div className="checkbox">
-            <input type="checkbox" id="cb2" />
-            <label for="cb2">
-              <span>Seller Ship - 100,000~150,000 vnd</span>
-            </label>
-          </div>
-        </div>
-        <div className="h2">Hình thức thanh toán</div>
+        <p><b>Hình thức thanh toán</b></p>
         <div className="option row">
           <div className="checkbox">
             <input type="checkbox" id="cb3" />
@@ -42,7 +27,7 @@ const YourTransaction = ({ name }) => {
           </div>
         </div>
 
-        <div className="h2">Thông tin giao hàng</div>
+        <p><b>Thông tin giao hàng</b></p>
         <label for="">Tên người nhận</label>
         <input type="text" placeholder="Brian Nguyen" />
         <label for="">Địa chỉ</label>

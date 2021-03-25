@@ -66,7 +66,7 @@ export const Container = styled.div`
           height: 15px;
           transition: transform 0.28s ease;
           border-radius: 3px;
-          background-color: rgba($color: #000000, $alpha: 0.2);
+          background-color: rgb(0, 0, 0, 0.2);
         }
         &:after {
           content: '';
@@ -78,8 +78,8 @@ export const Container = styled.div`
           transform: rotate(-45deg) scale(0) translate(-50%, -50%);
           transition: transform ease 0.25s;
           position: absolute;
-          top: 5px;
-          left: 4px;
+          top: 7px;
+          left: 5px;
         }
       }
       input[type='checkbox'] {

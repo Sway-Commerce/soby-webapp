@@ -58,7 +58,7 @@ const App = () => {
               <Route path="/shop-profile/:shopId" component={ShopProfile} />
               <Route path="/product/:productId" component={ProductDetail} />
               <Route
-                path="/receive-invoice/:invoiceId"
+                path="/invoice/:invoiceId"
                 component={ReceiveInvoice}
               />
               <Route

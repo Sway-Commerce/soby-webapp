@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Card, Container } from './product-detail.styles';
+import { Container } from './product-detail.styles';
 import { useParams } from 'react-router-dom';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import {
   GET_PRODUCT,
   SEARCH_PRODUCT,
