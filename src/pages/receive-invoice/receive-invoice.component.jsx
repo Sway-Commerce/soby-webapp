@@ -12,6 +12,7 @@ import Spinner from 'components/spinner/spinner.component';
 import { GET_SHOP_BY_ID } from 'graphQL/repository/shop.repository';
 import { timestampToDate } from 'utils/getDate';
 import { currencyFormatter } from 'utils/formatCurrency';
+import InvoiceProductList from 'components/invoice-product-list/invoice-product-list.component';
 
 const ReceiveInvoice = ({}) => {
   const { invoiceId } = useParams();
@@ -99,29 +100,7 @@ const ReceiveInvoice = ({}) => {
             <div className="circle"></div>
           </div>
 
-          <div className="box-bottom">
-            {items.map((x) => {
-              const {
-                product: {
-                  name,
-                  price,
-                  id,
-                  imageUrls: [imageUrl],
-                },
-              } = x;
-              console.log(imageUrl);
-              return (
-                <div className="item-row" key={id}>
-                  <img src={imageUrl} alt="" />
-                  <div className="info">
-                    <p>{name}</p>
-                    <p>{currencyFormatter(price)}</p>
-                  </div>
-                  <p>Qty - {x.quantity}</p>
-                </div>
-              );
-            })}
-          </div>
+          <InvoiceProductList items={items} />
 
           <button
             onClick={() =>
