@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { mainColor } from 'css-variable/variable';
 
 export const Container = styled.div`
+  font-family: 'Work Sans', sans-serif;
   .main-content {
     width: 461px;
     height: 785px;
@@ -13,7 +14,7 @@ export const Container = styled.div`
       box-shadow: 0 2px 8px rgb(0, 0, 0 0.1);
       .box-top {
         position: relative;
-        padding: 20px 60px 70px 60px;
+        padding: 47px 32px;
         background: #f1f1f1;
         height: 335px;
         border-radius: 5px 5px 40px 40px;
@@ -31,6 +32,10 @@ export const Container = styled.div`
             p {
               margin: auto 0;
             }
+          }
+
+          .auto-fit {
+            margin: auto 0;
           }
         }
 
@@ -106,6 +111,14 @@ export const Container = styled.div`
               border-radius: 8px;
             }
           }
+        }
+
+        .option-chip {
+          background: #ffffff;
+          border: 1px solid rgb(0, 0, 0, 0.5);
+          border-radius: 8px;
+          padding: 8px 12px;
+          font-size: 14px;
         }
       }
 

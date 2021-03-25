@@ -1,10 +1,13 @@
 import React from 'react';
+import { useMutation, useQuery } from '@apollo/client';
 
 import { Container } from './receive-invoice.styles';
 import { useParams } from 'react-router-dom';
 import { ReactComponent as Clock } from 'assets/clock.svg';
-import { useQuery } from '@apollo/client';
-import { GET_DETAILED_INVOICE_BY_ID } from 'graphQL/repository/invoice.repository';
+import {
+  ACCEPT_INVOICE,
+  GET_DETAILED_INVOICE_BY_ID,
+} from 'graphQL/repository/invoice.repository';
 import Spinner from 'components/spinner/spinner.component';
 import { GET_SHOP_BY_ID } from 'graphQL/repository/shop.repository';
 import { timestampToDate } from 'utils/getDate';
@@ -20,6 +23,13 @@ const ReceiveInvoice = ({}) => {
       variables: {
         id: invoiceId,
       },
+    }
+  );
+
+  const [acceptInvoice, { data, error: acceptError }] = useMutation(
+    ACCEPT_INVOICE,
+    {
+      errorPolicy: 'all',
     }
   );
 
@@ -68,17 +78,13 @@ const ReceiveInvoice = ({}) => {
               <p>Expriration date</p>
               <p>{timestampToDate(expiredAt)}</p>
             </div>
+
             <div className="item-wrapper">
-              <p>Status</p>
-              <div className="status">
-                <Clock />
-                <p>Waiting</p>
-              </div>
-            </div>
-            <div className="item-wrapper">
-              <p>Hình thức giao hàng</p>
-              <div className="status">
-                <p>{shippingType}</p>
+              <p className="auto-fit">Hình thức giao hàng</p>
+              <div>
+                <div className="option-chip">
+                  {shippingType === 'BY_SOBY' ? 'Soby ship' : 'Seller ship'}
+                </div>
               </div>
             </div>
 
@@ -117,7 +123,19 @@ const ReceiveInvoice = ({}) => {
             })}
           </div>
 
-          <button>Check out</button>
+          <button
+            onClick={() =>
+              acceptInvoice({
+                variables: {
+                  cmd: {
+                    invoiceId,
+                  },
+                },
+              })
+            }
+          >
+            Check out
+          </button>
         </div>
       </div>
     </Container>
@@ -125,3 +143,11 @@ const ReceiveInvoice = ({}) => {
 };
 
 export default ReceiveInvoice;
+
+// <div className="item-wrapper">
+//               <p>Status</p>
+//               <div className="status">
+//                 <Clock />
+//                 <p>Waiting</p>
+//               </div>
+//             </div>
