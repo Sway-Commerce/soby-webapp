@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@apollo/client';
 
 import { Container } from './receive-invoice.styles';
 import { useParams } from 'react-router-dom';
-import { ReactComponent as Clock } from 'assets/clock.svg';
+import { ReactComponent as Extra } from 'assets/extra.svg';
 import {
   ACCEPT_INVOICE,
   GET_DETAILED_INVOICE_BY_ID,
@@ -62,6 +62,7 @@ const ReceiveInvoice = ({ history }) => {
                 <img src={logoUrl} alt="" />
                 <p className="h2">{shopName}</p>
               </div>
+              <Extra/>
             </div>
 
             <p>

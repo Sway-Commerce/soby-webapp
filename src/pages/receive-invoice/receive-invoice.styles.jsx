@@ -17,7 +17,7 @@ export const Container = styled.div`
         padding: 47px 32px;
         background: #f1f1f1;
         height: 335px;
-        border-radius: 5px 5px 40px 40px;
+        border-radius: 0px 0px 30px 30px;
 
         .item-wrapper {
           margin-top: 16px;
@@ -88,6 +88,7 @@ export const Container = styled.div`
           margin-bottom: 16px;
           .shop-name {
             display: flex;
+            flex: 2;
             img + p {
               margin: auto 0 auto 22px;
             }
@@ -96,6 +97,9 @@ export const Container = styled.div`
               height: 50px;
               border-radius: 8px;
             }
+          }
+          svg {
+            margin: auto 0;
           }
         }
 
