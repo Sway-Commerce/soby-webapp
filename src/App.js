@@ -52,7 +52,6 @@ const App = () => {
               />
               <Route exact path="/signup" component={SignUp} />
               <Route exact path="/signup-info" component={SignUpInfo} />
-              <Route path="/phone-signin" component={PhoneSignin} />
               <Route exact path="/signout" component={SignOut} />
               <Route path="/transaction" component={PaymentResult} />
               <Route path="/shop-profile/:shopId" component={ShopProfile} />

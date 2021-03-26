@@ -28,6 +28,8 @@ import {
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 import usePhoneNumber from 'custom-hooks/usePhoneNumber';
 import { Link, useParams } from 'react-router-dom';
+import Spinner from 'components/spinner/spinner.component';
+import { ACCEPT_INVOICE } from 'graphQL/repository/invoice.repository';
 
 const PhoneSignin = ({
   history,
@@ -45,15 +47,41 @@ const PhoneSignin = ({
     isPhoneValid: true,
   });
   const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
-  const [phoneSignin, { data, error }] = useMutation(LOGIN_WITH_PHONE_AND_PASSWORD, {
+  const [phoneSignin, { data, error, loading }] = useMutation(LOGIN_WITH_PHONE_AND_PASSWORD, {
     errorPolicy: 'all',
   });
+  // invoice
+  const [acceptInvoice, { data: invoiceData, error: acceptErrors }] = useMutation(
+    ACCEPT_INVOICE,
+    {
+      errorPolicy: 'all',
+    }
+  );
 
   const { invoiceId } = useParams();
-  console.log(invoiceId);
 
-  if (error) {
+  if (loading) return <Spinner />;
+  if (error)  {
     signInFailure(error);
+    return `Error! ${error}`;
+  }
+
+  if(!!invoiceData?.acceptInvoice?.success) {
+    history.push(`/your-transaction/${invoiceId}`);
+  }
+
+  if (!!data?.loginWithPhoneAndPassword?.data) {
+    localStorage.setItem('token', data?.loginWithPhoneAndPassword?.data?.accessToken)
+
+    if (invoiceId) {
+      acceptInvoice({
+        variables: {
+          cmd: {
+            invoiceId,
+          },
+        },
+      });
+    }
   }
 
   const { isPasswordValid, isPhoneValid } = inputValidation;

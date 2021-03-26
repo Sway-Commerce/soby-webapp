@@ -13,7 +13,7 @@ import { timestampToDate } from 'utils/getDate';
 import { currencyFormatter } from 'utils/formatCurrency';
 import InvoiceProductList from 'components/invoice-product-list/invoice-product-list.component';
 
-const ReceiveInvoice = ({ history }) => {
+const ReceiveInvoice = ({ history, hideCheckout }) => {
   const { invoiceId } = useParams();
 
   const { loading, error, data: invoiceData } = useQuery(
@@ -25,7 +25,7 @@ const ReceiveInvoice = ({ history }) => {
     }
   );
 
-  const [acceptInvoice, { data, error: acceptError }] = useMutation(
+  const [acceptInvoice, { data, error: acceptErrors }] = useMutation(
     ACCEPT_INVOICE,
     {
       errorPolicy: 'all',
@@ -34,6 +34,15 @@ const ReceiveInvoice = ({ history }) => {
 
   if (loading) return <Spinner />;
   if (error) return `Error! ${error}`;
+
+  if (!!acceptErrors) {
+    acceptErrors?.graphQLErrors?.map((x) => {
+      if (x?.extensions?.code === 401) {
+        history.push(`/phone-signin/invoice/${invoiceId}`);
+      }
+      return null;
+    });
+  }
 
   const {
     name,
@@ -46,10 +55,17 @@ const ReceiveInvoice = ({ history }) => {
   const { logoUrl, name: shopName } = shop;
 
   const handleNavigate = () => {
-    if (!!localStorage.getItem('token')) {
-      return;
-    }
-    history.push(`/phone-signin/invoice/${invoiceId}`);
+    acceptInvoice({
+      variables: {
+        cmd: {
+          invoiceId,
+        },
+      },
+    });
+    // if (!!localStorage.getItem('token')) {
+    //   return;
+    // }
+    // history.push(`/phone-signin/invoice/${invoiceId}`);
   };
 
   return (
@@ -62,7 +78,7 @@ const ReceiveInvoice = ({ history }) => {
                 <img src={logoUrl} alt="" />
                 <p className="h2">{shopName}</p>
               </div>
-              <Extra/>
+              <Extra />
             </div>
 
             <p>
@@ -94,8 +110,9 @@ const ReceiveInvoice = ({ history }) => {
           </div>
 
           <InvoiceProductList items={items} />
-
-          <button onClick={handleNavigate}>Check out</button>
+          {
+            hideCheckout ? null : <button onClick={handleNavigate}>Check out</button>
+          }
         </div>
       </div>
     </Container>
@@ -111,12 +128,3 @@ export default ReceiveInvoice;
 //                 <p>Waiting</p>
 //               </div>
 //             </div>
-
-// () =>
-// acceptInvoice({
-//   variables: {
-//     cmd: {
-//       invoiceId,
-//     },
-//   },
-// }

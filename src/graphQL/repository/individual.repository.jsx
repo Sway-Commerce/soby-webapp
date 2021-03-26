@@ -172,7 +172,7 @@ export const getSignature = (signingPublicKey, signingSecret, password) => {
   const signing = new Signing();
 
   signing.importPublicKey(signingPublicKey);
-  signing.importPrivateKey(signingSecret, password);
+  signing.importPrivateKey(signingSecret);
 
   return generateJwt(signing);
 };

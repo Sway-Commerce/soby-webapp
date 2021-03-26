@@ -107,7 +107,7 @@ const Register = ({
       history.push('/phone-verification');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [signatureData?.loginWithSignature?.success]);
+  }, [signatureData?.loginWithSignature?.data]);
 
   useEffect(() => {
     if (registerData?.register?.data?.id) {
@@ -125,7 +125,7 @@ const Register = ({
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [registerData?.register?.success]);
+  }, [registerData?.register?.data]);
 
   if (errors) {
     signUpFailure(errors);

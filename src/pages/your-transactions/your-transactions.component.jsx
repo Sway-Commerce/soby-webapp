@@ -11,7 +11,9 @@ const YourTransaction = ({ name }) => {
   return (
     <Container>
       <div className="content-left">
-        <p><b>Hình thức thanh toán</b></p>
+        <p>
+          <b>Hình thức thanh toán</b>
+        </p>
         <div className="option row">
           <div className="checkbox">
             <input type="checkbox" id="cb3" />
@@ -27,7 +29,9 @@ const YourTransaction = ({ name }) => {
           </div>
         </div>
 
-        <p><b>Thông tin giao hàng</b></p>
+        <p>
+          <b>Thông tin giao hàng</b>
+        </p>
         <label for="">Tên người nhận</label>
         <input type="text" placeholder="Brian Nguyen" />
         <label for="">Địa chỉ</label>
@@ -36,7 +40,7 @@ const YourTransaction = ({ name }) => {
         <input type="text" name="" id="" placeholder="09123123123" />
         <button>Check out</button>
       </div>
-      <ReceiveInvoice />
+      <ReceiveInvoice hideCheckout />
     </Container>
   );
 };
