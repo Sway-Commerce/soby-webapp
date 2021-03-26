@@ -39,9 +39,9 @@ pipeline {
                 ])
                 script {
                     if ("${params.DEPLOY_ENV}" == 'dev') {
-                        "${env.DISTRIBUTION_ID}" = "${env.DISTRIBUTION_ID_DEV}"
+                        "${env.DISTRIBUTION_ID}" == "${env.DISTRIBUTION_ID_DEV}"
                     } else if ("${params.DEPLOY_ENV}" == 'prod') {
-                        "${env.DISTRIBUTION_ID}" = "${env.DISTRIBUTION_ID_PROD}"
+                        "${env.DISTRIBUTION_ID}" == "${env.DISTRIBUTION_ID_PROD}"
                     }
                 }
             }
