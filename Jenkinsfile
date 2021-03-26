@@ -21,7 +21,7 @@ pipeline {
         GIT_URL            = 'git@github.com:SOBY-JSC/soby-webapp.git'
         GIT_CREDS          = 'github-jenkins'
         AWS_S3_BUCKET      = "soby-${params.DEPLOY_ENV}-webapp"
-        DISTRIBUTION_ID    = ""
+        DISTRIBUTION_ID    = "E1LVHEUJ0L82ET"
         DISTRIBUTION_ID_DEV   = "E1LVHEUJ0L82ET"
         DISTRIBUTION_ID_PROD  = "E1LVHEUJ0L82Exxx"
     }
