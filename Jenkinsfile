@@ -13,7 +13,7 @@ pipeline {
 
     parameters {
       string(name: 'APP_NAME', defaultValue: 'soby-webapp', description: 'Define app name')
-      string(name: 'BRANCH_NAME', defaultValue: 'master', description: 'Define branch name')
+      string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Define branch name')
       choice(name: 'DEPLOY_ENV', choices: ['dev', 'test', 'prod'], description: 'Define environment name')
     }
 
