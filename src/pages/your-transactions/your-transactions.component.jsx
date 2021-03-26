@@ -12,24 +12,6 @@ const YourTransaction = ({ name }) => {
     <Container>
       <div className="content-left">
         <p>
-          <b>Hình thức thanh toán</b>
-        </p>
-        <div className="option row">
-          <div className="checkbox">
-            <input type="checkbox" id="cb3" />
-            <label for="cb3">
-              <span>COD</span>
-            </label>
-          </div>
-          <div className="checkbox">
-            <input type="checkbox" id="cb4" />
-            <label for="cb4">
-              <span>VNPAY</span>
-            </label>
-          </div>
-        </div>
-
-        <p>
           <b>Thông tin giao hàng</b>
         </p>
         <label for="">Tên người nhận</label>

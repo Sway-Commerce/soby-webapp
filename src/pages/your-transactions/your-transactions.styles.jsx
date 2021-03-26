@@ -36,7 +36,7 @@ export const Container = styled.div`
       width: 100%;
       outline: 0;
       border-width: 0 0 2px;
-      border-color: rgba($color: #000000, $alpha: 0.08);
+      border-color: rgb(0, 0, 0, 0.08);
       padding: 6px 0;
       font-size: 18px;
       margin: 5px 0 20px 0;
@@ -114,7 +114,7 @@ export const Container = styled.div`
       padding: 14px 0;
       margin-top: 40px;
       border-radius: 3px;
-      box-shadow: 0 0 8px rgba($color: #c4c4c4, $alpha: 0.2);
+      box-shadow: 0 0 8px rgba(196, 196, 196, 0.2);
     }
   }
 `;
