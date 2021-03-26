@@ -58,8 +58,7 @@ pipeline {
             }
             steps {
                     sh ("npx create-react-app ${params.APP_NAME}")
-                    sh ("cd ${env.WORKSPACE}/${params.APP_NAME}")
-                    sh ("yarn build")
+                    sh ("cd ${env.WORKSPACE}/${params.APP_NAME} && yarn build")
             }
         }
 
