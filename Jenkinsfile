@@ -67,8 +67,8 @@ pipeline {
               }
             }
             steps {
-                    sh ("yarn")
-                    sh ("react-scripts build")
+                    sh ("cd ${env.WORKSPACE} && yarn")
+                    sh ("node_modules/react-scripts/bin/react-scripts.js build")
             }
         }
 
