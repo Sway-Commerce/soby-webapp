@@ -79,7 +79,7 @@ pipeline {
               }
             }
             steps {
-                    sh ("aws s3 sync ${env.WORKSPACE}/${params.APP_NAME}/build/ s3://${env.AWS_S3_BUCKET}")
+                    sh ("aws s3 sync ${env.WORKSPACE}/build/ s3://${env.AWS_S3_BUCKET}")
             }
         }
 
