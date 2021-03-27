@@ -67,6 +67,7 @@ pipeline {
               }
             }
             steps {
+                    sh ("yarn")
                     sh ("react-scripts build")
             }
         }
