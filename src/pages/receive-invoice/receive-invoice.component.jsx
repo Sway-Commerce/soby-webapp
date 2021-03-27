@@ -38,7 +38,7 @@ const ReceiveInvoice = ({ history, hideCheckout }) => {
   if (!!acceptErrors) {
     acceptErrors?.graphQLErrors?.map((x) => {
       if (x?.extensions?.code === 401) {
-        history.push(`/phone-signin/invoice/${invoiceId}`);
+        history.push(`/phone-signin/${invoiceId}`);
       }
       return null;
     });

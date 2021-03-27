@@ -21,7 +21,7 @@ const HomePage = () => (
     <ImageContainer>
       <img src="/images/rectangle-1.png" alt="" />
       <img src="/images/rectangle-2.png" alt="" />
-      <img src="/images/rectangle-3.png" alt="" />
+      <img src="/images/rectangle-3.png" alt="" className="not-set" />
     </ImageContainer>
     <CardContainer>
       <Card>

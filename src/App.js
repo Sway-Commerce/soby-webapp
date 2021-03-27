@@ -64,7 +64,7 @@ const App = () => {
                 path="/your-transaction/:invoiceId"
                 component={YourTransaction}
               />
-              <Route path="/phone-signin/invoice/:invoiceId" component={PhoneSignin} />
+              <Route path="/phone-signin/:invoiceId?"  component={PhoneSignin} />
             </Suspense>
           </ErrorBoundary>
         </Switch>

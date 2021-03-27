@@ -129,6 +129,7 @@ const PhoneSignin = ({
             <form onSubmit={handleSubmit}>
               <div className="form-label">Your phone numbers</div>
               <PhoneInput
+                country="VN"
                 international
                 initialValueFormat="national"
                 countryCallingCodeEditable={false}

@@ -3,7 +3,10 @@ import styled from 'styled-components';
 export const HomePageContainer = styled.div`
   display: flex;
   align-items: center;
-  margin: 101px 240px;
+
+  justify-content: center;
+  margin: 40px auto;
+  min-height: 100vh;
 `;
 
 export const ImageContainer = styled.div`
@@ -11,21 +14,28 @@ export const ImageContainer = styled.div`
   img + img {
     margin-left: 24px;
   }
+  img {
+    width: 214px;
+    height: 794px;
+
+    &.not-set {
+      width: auto;
+    }
+  }
 `;
 
 export const CardContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  width: 100%;
+  width: 558px;
+  margin-left: 80px;
 `;
 
 export const Card = styled.div`
   box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
   padding: 80px 68px;
-  width: 586px;
-  height: 797px;
 
   &:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);

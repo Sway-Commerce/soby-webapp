@@ -3,10 +3,10 @@ import { mainColor } from 'css-variable/variable';
 
 export const Container = styled.div`
   display: flex;
-  .content-left {
+  .box-left {
     width: 655px;
     border-radius: 5px;
-    padding: 20px 50px;
+    padding: 0 24px 0 0;
     .h2 {
       font-size: 18px;
       font-weight: 500;
@@ -39,7 +39,7 @@ export const Container = styled.div`
       border-color: rgb(0, 0, 0, 0.08);
       padding: 6px 0;
       font-size: 18px;
-      margin: 5px 0 20px 0;
+      margin: 8px 0 24px 0;
     }
     .checkbox {
       width: 100%;
@@ -90,8 +90,8 @@ export const Container = styled.div`
         margin-left: -20px;
         &:checked ~ label {
           &:before {
-            background-color: #2b74e4;
-            border: 2px solid #2b74e4;
+            background-color: ${mainColor};
+            border: 2px solid ${mainColor};
           }
           &:after {
             transform: rotate(-45deg) scale(1);
@@ -103,9 +103,13 @@ export const Container = styled.div`
       }
     }
 
+    .PhoneInput {
+      margin: 10px 0 24px 0;
+    }
+
     button {
       width: 100%;
-      color: #2b74e4;
+      color: ${mainColor};
       font-size: 18px;
       font-weight: 500;
       background-color: #f1f1f1;
@@ -117,4 +121,17 @@ export const Container = styled.div`
       box-shadow: 0 0 8px rgba(196, 196, 196, 0.2);
     }
   }
+
+  .title {
+    margin: 40px 0 16px;
+  }
+
+  .select-wrapper {
+    display: flex;
+  }
+`;
+
+export const ErrorTitle = styled.h5`
+  color: red;
+  margin: 5px 0;
 `;
