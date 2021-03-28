@@ -127,7 +127,10 @@ export const Container = styled.div`
   }
 
   .select-wrapper {
-    display: flex;
+    display: grid;
+    grid-gap: 16px;
+		grid-template-columns: repeat(2, 1fr);
+    margin: 20px 0;
   }
 `;
 

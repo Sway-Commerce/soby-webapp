@@ -9,6 +9,12 @@ import usePhoneNumber from 'shared/hooks/usePhoneNumber';
 import { ErrorTitle } from './your-transactions.styles';
 import Dropdown from 'components/ui/dropdown/dropdown.component';
 
+import {
+  PROVINCE_LIST,
+  DISTRICT_LIST,
+  WARD_LIST,
+} from 'shared/constants/vietnamstate.constant';
+
 const YourTransaction = ({ name }) => {
   const { invoiceId } = useParams();
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
@@ -20,8 +26,18 @@ const YourTransaction = ({ name }) => {
   });
 
   // mock
-  const [winner, setWinner] = useState('')
-  const winnerOptions = ["red", "blue", "draw", "cancelled"]
+  const [province, setProvince] = useState('71');
+  const [district, setDistrict] = useState('');
+  const [ward, setWard] = useState('');
+  const provinceList = PROVINCE_LIST;
+  const districtList = DISTRICT_LIST.filter((x) => x.parentId == '71');
+  let wardList = WARD_LIST.filter((x) => x.parentId == district);
+
+  const onSelectDistrictChange = (value) => {
+    setDistrict(value);
+    setWard('');
+    wardList = WARD_LIST.filter((x) => x.parentId == district);
+  };
 
   const { isPhoneValid } = inputValidation;
 
@@ -36,12 +52,18 @@ const YourTransaction = ({ name }) => {
         <label htmlFor="">Địa chỉ</label>
         <input type="text" placeholder="H3 buidling ... HCMcity" />
 
-        <div className="select-wrapper ">
+        <div className="select-wrapper">
           <Dropdown
-            options={winnerOptions}
-            onChange={setWinner}
-            value={winner}
+            options={provinceList}
+            onChange={setProvince}
+            value={province}
           />
+          <Dropdown
+            options={districtList}
+            onChange={onSelectDistrictChange}
+            value={district}
+          />
+          <Dropdown options={wardList} onChange={setWard} value={ward} />
         </div>
 
         <label htmlFor="">Số điện thoại</label>
