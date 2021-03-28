@@ -13,8 +13,9 @@ import {
 import { ReactComponent as Logo } from 'assets/logo.svg';
 import { ReactComponent as Cart } from 'assets/cart.svg';
 import { signOutStart } from 'redux/user/user.actions';
+import { withRouter } from 'react-router-dom';
 
-export const Header = ({ signOutStart }) => {
+export const Header = ({ signOutStart, history }) => {
   const [isSignIn, setIsSignin] = useState(!!localStorage.getItem('token'));
 
   return (
@@ -27,8 +28,9 @@ export const Header = ({ signOutStart }) => {
           <SignOut
             onClick={() => {
               signOutStart();
-              localStorage.setItem('token', '');
+              localStorage.removeItem('token');
               setIsSignin(false);
+              history.push('');
             }}
           >
             Đăng xuất
@@ -45,4 +47,4 @@ const mapDispatchToProps = (dispatch) => ({
   signOutStart: () => dispatch(signOutStart()),
 });
 
-export default connect(null, mapDispatchToProps)(Header);
+export default connect(null, mapDispatchToProps)(withRouter(Header));

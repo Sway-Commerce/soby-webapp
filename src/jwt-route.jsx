@@ -58,7 +58,7 @@ function JwtRoute({ history, component: Component, ...rest }) {
   }, [auth]);
 
   if(isAuthenticated === null){
-    return <></>
+    return <></>;
   }
 
   return (
