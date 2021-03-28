@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Container } from './invoice-product.styles';
-import { currencyFormatter } from 'utils/formatCurrency';
+import { currencyFormatter } from 'shared/utils/formatCurrency';
 
 const InvoiceProduct = ({ imageUrl, name, price, quantity, properties }) => (
   <Container>

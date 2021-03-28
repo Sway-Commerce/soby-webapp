@@ -10,10 +10,10 @@ import {
   ButtonGroup,
   CenterLogo,
 } from './homepage.styles';
-import CustomButton from 'components/custom-button/custom-button.component';
-import { ReactComponent as Temp } from 'assets/temp.svg';
-import { ReactComponent as Phone } from 'assets/phone.svg';
-import { ReactComponent as Mail } from 'assets/mail.svg';
+import CustomButton from 'components/ui/custom-button/custom-button.component';
+import { ReactComponent as Temp } from 'shared/assets/temp.svg';
+import { ReactComponent as Phone } from 'shared/assets/phone.svg';
+import { ReactComponent as Mail } from 'shared/assets/mail.svg';
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 
 const HomePage = () => (

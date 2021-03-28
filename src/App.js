@@ -4,7 +4,7 @@ import 'react-phone-number-input/style.css';
 
 import { GlobalStyle } from './global.styles';
 import Header from 'components/header/header.component';
-import Spinner from 'components/spinner/spinner.component';
+import Spinner from 'components/ui/spinner/spinner.component';
 import ErrorBoundary from 'components/error-boundary/error-boundary.component';
 import JwtRoute from './jwt-route';
 

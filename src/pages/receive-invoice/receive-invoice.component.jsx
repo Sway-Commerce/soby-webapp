@@ -3,14 +3,14 @@ import { useMutation, useQuery } from '@apollo/client';
 
 import { Container } from './receive-invoice.styles';
 import { useParams } from 'react-router-dom';
-import { ReactComponent as Extra } from 'assets/extra.svg';
+import { ReactComponent as Extra } from 'shared/assets/extra.svg';
 import {
   ACCEPT_INVOICE,
   GET_DETAILED_INVOICE_BY_ID,
 } from 'graphQL/repository/invoice.repository';
-import Spinner from 'components/spinner/spinner.component';
-import { timestampToDate } from 'utils/getDate';
-import { currencyFormatter } from 'utils/formatCurrency';
+import Spinner from 'components/ui/spinner/spinner.component';
+import { timestampToDate } from 'shared/utils/getDate';
+import { currencyFormatter } from 'shared/utils/formatCurrency';
 import InvoiceProductList from 'components/invoice-product-list/invoice-product-list.component';
 
 const ReceiveInvoice = ({ history, hideCheckout }) => {

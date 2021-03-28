@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { StatusContainer } from './payment-status.styles';
-import { ReactComponent as AttentionIcon } from 'assets/attention-icon.svg';
-import { ReactComponent as SuccessIcon } from 'assets/success-payment.svg';
+import { ReactComponent as AttentionIcon } from 'shared/assets/attention-icon.svg';
+import { ReactComponent as SuccessIcon } from 'shared/assets/success-payment.svg';
 
 const PaymentStatus = (code) => {
   let status_message = '';

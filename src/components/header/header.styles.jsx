@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { mainColor } from 'css-variable/variable';
+import { mainColor } from 'shared/css-variable/variable';
 
 export const HeaderContainer = styled.div`
   height: 80px;

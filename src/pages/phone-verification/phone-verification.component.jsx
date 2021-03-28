@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import CustomButton from 'components/custom-button/custom-button.component';
+import CustomButton from 'components/ui/custom-button/custom-button.component';
 
 import { sendPhoneVerification, verifyPhone } from 'redux/user/user.actions';
 

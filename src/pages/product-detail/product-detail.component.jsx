@@ -7,9 +7,9 @@ import {
   GET_PRODUCT,
   SEARCH_PRODUCT,
 } from 'graphQL/repository/product.repository';
-import Spinner from 'components/spinner/spinner.component';
+import Spinner from 'components/ui/spinner/spinner.component';
 import ProductCard from 'components/product-card/product-card.component';
-import { currencyFormatter } from 'utils/formatCurrency';
+import { currencyFormatter } from 'shared/utils/formatCurrency';
 import SkuChip from 'components/sku-chip/sku-chip.component';
 import ShopCategory from 'components/shop-category/shop-category.component';
 import { GET_SHOP_BY_ID } from 'graphQL/repository/shop.repository';

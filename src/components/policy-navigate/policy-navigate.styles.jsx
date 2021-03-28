@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { mainColor } from 'css-variable/variable';
+import { mainColor } from 'shared/css-variable/variable';
 
 export const PolicyText = styled.div`
   font-style: normal;

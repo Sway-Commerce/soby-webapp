@@ -5,9 +5,9 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import FormInput from 'components/form-input/form-input.component';
-import CustomButton from 'components/custom-button/custom-button.component';
-import passwordValidation from 'utils/passwordValidation';
-import emailValidation from 'utils/emailValidation';
+import CustomButton from 'components/ui/custom-button/custom-button.component';
+import passwordValidation from 'shared/utils/passwordValidation';
+import emailValidation from 'shared/utils/emailValidation';
 import {
   CREATE_INDIVIDUAL,
   SEND_PHONE_VERIFICATION,
@@ -36,7 +36,7 @@ import {
   selectUserCredential,
 } from 'redux/user/user.selectors';
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
-import Spinner from 'components/spinner/spinner.component';
+import Spinner from 'components/ui/spinner/spinner.component';
 
 const Register = ({ history }) => {
   const {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
-import CustomButton from 'components/custom-button/custom-button.component';
+import CustomButton from 'components/ui/custom-button/custom-button.component';
 
 import { signOutStart } from 'redux/user/user.actions';
 

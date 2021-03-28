@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
 import { useDispatch } from 'react-redux';
 
-import CustomButton from 'components/custom-button/custom-button.component';
-import usePhoneNumber from 'custom-hooks/usePhoneNumber';
+import CustomButton from 'components/ui/custom-button/custom-button.component';
+import usePhoneNumber from 'shared/hooks/usePhoneNumber';
 
 import { setUserPhoneNumber } from 'redux/user/user.actions';
 

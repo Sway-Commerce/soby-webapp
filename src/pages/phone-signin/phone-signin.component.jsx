@@ -5,8 +5,8 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import FormInput from 'components/form-input/form-input.component';
-import CustomButton from 'components/custom-button/custom-button.component';
-import passwordValidation from 'utils/passwordValidation';
+import CustomButton from 'components/ui/custom-button/custom-button.component';
+import passwordValidation from 'shared/utils/passwordValidation';
 import {
   getHashPassword,
   LOGIN_WITH_PHONE_AND_PASSWORD,
@@ -27,8 +27,8 @@ import {
   ForgotPass,
 } from './phone-signin.styles';
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
-import usePhoneNumber from 'custom-hooks/usePhoneNumber';
-import Spinner from 'components/spinner/spinner.component';
+import usePhoneNumber from 'shared/hooks/usePhoneNumber';
+import Spinner from 'components/ui/spinner/spinner.component';
 
 const PhoneSignin = () => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');

@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { mainColor } from 'css-variable/variable';
+import { mainColor } from 'shared/css-variable/variable';
 
 const buttonStyles = css`
   background-color: ${mainColor};

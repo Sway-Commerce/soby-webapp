@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
-import { mainColor, subColor } from './css-variable/variable';
+import { mainColor, subColor } from './shared/css-variable/variable';
 
 export const GlobalStyle = createGlobalStyle`
 	body {

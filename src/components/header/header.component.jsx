@@ -9,7 +9,7 @@ import {
   SignInLink,
   SignOut,
 } from './header.styles';
-import { ReactComponent as Logo } from 'assets/logo.svg';
+import { ReactComponent as Logo } from 'shared/assets/logo.svg';
 import { signOutStart } from 'redux/user/user.actions';
 
 export const Header = ({ history }) => {

@@ -6,12 +6,12 @@ import {
   FormContainer,
 } from './payment-result.styles';
 import PaymentStatus from 'components/payment-status/payment-status.component';
-import { currencyFormatter } from 'utils/formatCurrency';
-import { timestampToDate } from 'utils/getDate';
+import { currencyFormatter } from 'shared/utils/formatCurrency';
+import { timestampToDate } from 'shared/utils/getDate';
 
-import { ReactComponent as MasterCard } from 'assets/master-card.svg';
-import { ReactComponent as VisaCard } from 'assets/visa-card.svg';
-import { getBankLogo } from 'utils/getBankLogo';
+import { ReactComponent as MasterCard } from 'shared/assets/master-card.svg';
+import { ReactComponent as VisaCard } from 'shared/assets/visa-card.svg';
+import { getBankLogo } from 'shared/utils/getBankLogo';
 
 const PaymentResult = () => {
   const url = new URL(
