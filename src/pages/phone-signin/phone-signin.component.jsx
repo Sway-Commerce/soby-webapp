@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { connect } from 'react-redux';
 import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import FormInput from 'components/form-input/form-input.component';
 import CustomButton from 'components/custom-button/custom-button.component';
@@ -27,10 +28,9 @@ import {
 } from './phone-signin.styles';
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 import usePhoneNumber from 'custom-hooks/usePhoneNumber';
-import { Link } from 'react-router-dom';
 import Spinner from 'components/spinner/spinner.component';
 
-const PhoneSignin = ({ phoneSignInStart, signInFailure, signInSuccess }) => {
+const PhoneSignin = () => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
 
   const [password, setPassword] = useState('');
@@ -46,9 +46,15 @@ const PhoneSignin = ({ phoneSignInStart, signInFailure, signInSuccess }) => {
     }
   );
 
+  const dispatch = useDispatch();
+  const dispatchPhoneSignInStart = (phoneAndPassword) =>
+    dispatch(phoneSignInStart(phoneAndPassword));
+  const dispatchSignInFailure = (error) => dispatch(signInFailure(error));
+  const dispatchSignInSuccess = (payload) => dispatch(signInSuccess(payload));
+
   if (loading) return <Spinner />;
   if (error) {
-    signInFailure(error);
+    dispatchSignInFailure(error);
     return `Error! ${error}`;
   }
 
@@ -59,8 +65,8 @@ const PhoneSignin = ({ phoneSignInStart, signInFailure, signInSuccess }) => {
     );
     const redirectUrl = localStorage.getItem('redirectUrl');
     localStorage.removeItem('redirectUrl');
+    dispatchSignInSuccess();
     window.location = redirectUrl || '';
-    signInSuccess();
   }
 
   const { isPasswordValid, isPhoneValid } = inputValidation;
@@ -77,7 +83,7 @@ const PhoneSignin = ({ phoneSignInStart, signInFailure, signInSuccess }) => {
     });
 
     if (isPasswordValid && isPhoneValid) {
-      phoneSignInStart();
+      dispatchPhoneSignInStart();
       phoneSignin({
         variables: {
           cmd: {
@@ -152,11 +158,4 @@ const PhoneSignin = ({ phoneSignInStart, signInFailure, signInSuccess }) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  phoneSignInStart: (phoneAndPassword) =>
-    dispatch(phoneSignInStart(phoneAndPassword)),
-  signInFailure: (error) => dispatch(signInFailure(error)),
-  signInSuccess: (payload) => dispatch(signInSuccess(payload)),
-});
-
-export default connect(null, mapDispatchToProps)(PhoneSignin);
+export default PhoneSignin;

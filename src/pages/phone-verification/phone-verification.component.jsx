@@ -1,15 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import { useDispatch, useSelector } from 'react-redux';
 
 import CustomButton from 'components/custom-button/custom-button.component';
 
-import {
-  sendPhoneVerification,
-  verifyPhone,
-} from 'redux/user/user.actions';
-import { selectPhoneNumber } from 'redux/user/user.selectors';
+import { sendPhoneVerification, verifyPhone } from 'redux/user/user.actions';
 
 import {
   SignUpContainer,
@@ -28,16 +23,24 @@ import {
 } from 'graphQL/repository/individual.repository';
 import { useMutation } from '@apollo/client';
 
-const PhoneVerification = ({ history, phone, verify, sendVerification }) => {
-  const { phoneNumber, phoneCountryCode } = phone;
+const PhoneVerification = ({ history, phone }) => {
+  const { phoneNumber, phoneCountryCode } = useSelector((state) => {
+    return {
+      phoneNumber: state.user.phoneCountryCode,
+      phoneCountryCode: state.user.phoneNumber,
+    };
+  });
   const [verificationCode, setVerificationCode] = useState(null);
   const [isCodeValid, setIsCodeValid] = useState(true);
-  const [sendPhoneVerification] = useMutation(SEND_PHONE_VERIFICATION, {
+  const [sendPhoneVerifyMutation] = useMutation(SEND_PHONE_VERIFICATION, {
     errorPolicy: 'all',
   });
-  const [verifyPhone, { data }] = useMutation(VERIFY_PHONE, {
+  const [verifyPhoneMutation, { data }] = useMutation(VERIFY_PHONE, {
     errorPolicy: 'all',
   });
+  const dispatch = useDispatch();
+  const dispatchVerify = () => dispatch(verifyPhone());
+  const dispatchSendVerification = () => dispatch(sendPhoneVerification());
 
   useEffect(() => {
     if (data?.verifyPhone?.success) {
@@ -49,8 +52,8 @@ const PhoneVerification = ({ history, phone, verify, sendVerification }) => {
     event.preventDefault();
     if (`${verificationCode}`.length === 6) {
       setIsCodeValid(true);
-      verify();
-      verifyPhone({
+      dispatchVerify();
+      verifyPhoneMutation({
         variables: {
           cmd: { phoneCountryCode, phoneNumber, verificationCode },
         },
@@ -65,8 +68,8 @@ const PhoneVerification = ({ history, phone, verify, sendVerification }) => {
   };
 
   const sendAgain = () => {
-    sendVerification();
-    sendPhoneVerification({
+    dispatchSendVerification();
+    sendPhoneVerifyMutation({
       variables: {
         cmd: { phoneCountryCode, phoneNumber },
       },
@@ -100,13 +103,4 @@ const PhoneVerification = ({ history, phone, verify, sendVerification }) => {
   );
 };
 
-const mapStateToProps = createStructuredSelector({
-  phone: selectPhoneNumber,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  verify: () => dispatch(verifyPhone()),
-  sendVerification: () => dispatch(sendPhoneVerification()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(PhoneVerification);
+export default PhoneVerification;

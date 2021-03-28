@@ -5,13 +5,13 @@ import {
   getSignature,
   LOGIN_WITH_SIGNATURE,
 } from 'graphQL/repository/individual.repository';
-import { createStructuredSelector } from 'reselect';
-import { selectUserCredential } from 'redux/user/user.selectors';
-import { connect, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 function JwtRoute({ history, component: Component, ...rest }) {
-  const auth = useSelector((state) => state.auth);
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const signingSecret = useSelector((state) => {
+    return state.user.signingSecret;
+  });
 
   const [signinWithSignature, { data: signatureData }] = useMutation(
     LOGIN_WITH_SIGNATURE,
@@ -55,9 +55,9 @@ function JwtRoute({ history, component: Component, ...rest }) {
     //   history.push('/phone-signin');
     //   return;
     // }
-  }, [auth]);
+  }, []);
 
-  if(isAuthenticated === null){
+  if (isAuthenticated === null) {
     return <></>;
   }
 
@@ -75,8 +75,4 @@ function JwtRoute({ history, component: Component, ...rest }) {
   );
 }
 
-const mapStateToProps = createStructuredSelector({
-  userKeyPair: selectUserCredential,
-});
-
-export default connect(mapStateToProps, null)(withRouter(JwtRoute));
+export default withRouter(JwtRoute);

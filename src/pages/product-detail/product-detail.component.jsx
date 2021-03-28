@@ -1,9 +1,8 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
 import { Container } from './product-detail.styles';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
+
 import {
   GET_PRODUCT,
   SEARCH_PRODUCT,
@@ -15,11 +14,10 @@ import SkuChip from 'components/sku-chip/sku-chip.component';
 import ShopCategory from 'components/shop-category/shop-category.component';
 import { GET_SHOP_BY_ID } from 'graphQL/repository/shop.repository';
 import ProductListCard from 'components/product-listcard/product-listcard.component';
-import KybStatus from 'components/kyb-status/kyb-status.component';
 import ShopNameCard from 'components/shop-name-card/shop-name-card.component';
 import KybCard from 'components/kyb-card/kyb-card.component';
 
-const ProductDetail = ({}) => {
+const ProductDetail = () => {
   const { productId } = useParams();
 
   const { loading, error, data: productData } = useQuery(GET_PRODUCT, {
@@ -146,6 +144,4 @@ const ProductDetail = ({}) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({});
-
-export default connect(null, mapDispatchToProps)(ProductDetail);
+export default ProductDetail;

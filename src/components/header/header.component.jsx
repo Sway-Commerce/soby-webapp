@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import {
   HeaderContainer,
   OptionsContainer,
-  OptionLink,
   LogoContainer,
   SignInLink,
-  CartContainer,
   SignOut,
 } from './header.styles';
 import { ReactComponent as Logo } from 'assets/logo.svg';
-import { ReactComponent as Cart } from 'assets/cart.svg';
 import { signOutStart } from 'redux/user/user.actions';
-import { withRouter } from 'react-router-dom';
 
-export const Header = ({ signOutStart, history }) => {
+export const Header = ({ history }) => {
   const [isSignIn, setIsSignin] = useState(!!localStorage.getItem('token'));
+  const dispatch = useDispatch();
+  const dispatchSignOutStart = (payload) => dispatch(signOutStart());
 
   return (
     <HeaderContainer>
@@ -27,7 +26,7 @@ export const Header = ({ signOutStart, history }) => {
         {isSignIn ? (
           <SignOut
             onClick={() => {
-              signOutStart();
+              dispatchSignOutStart();
               localStorage.removeItem('token');
               setIsSignin(false);
               history.push('');
@@ -43,8 +42,4 @@ export const Header = ({ signOutStart, history }) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  signOutStart: () => dispatch(signOutStart()),
-});
-
-export default connect(null, mapDispatchToProps)(withRouter(Header));
+export default withRouter(Header);

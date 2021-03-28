@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import FormInput from 'components/form-input/form-input.component';
@@ -38,14 +38,25 @@ import {
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 import Spinner from 'components/spinner/spinner.component';
 
-const Register = ({
-  history,
-  signUpSuccess,
-  signUpFailure,
-  signUpStart,
-  phone,
-  userKeyPair,
-}) => {
+const Register = ({ history }) => {
+  const {
+    phoneNumber,
+    phoneCountryCode,
+    signingSecret,
+    encryptionSecret,
+    signingPublicKey,
+    encryptionPublicKey,
+  } = useSelector((state) => {
+    return {
+      phoneNumber: state.user.phoneCountryCode,
+      phoneCountryCode: state.user.phoneNumber,
+      signingSecret: state.user.signingSecret,
+      encryptionSecret: state.user.encryptionSecret,
+      signingPublicKey: state.user.signingPublicKey,
+      encryptionPublicKey: state.user.encryptionPublicKey,
+    };
+  });
+
   const [userCredentials, setUserCredentials] = useState({
     password: '',
     firstName: '',
@@ -64,6 +75,14 @@ const Register = ({
   });
   const [isLoading, setIsLoading] = useState(false);
 
+  const dispatch = useDispatch();
+  const dispatchSignUpStart = (userCredentials) =>
+    dispatch(signUpStart(userCredentials));
+  const dispatchSignUpFailure = (error) => dispatch(signUpFailure(error));
+  const dispatchSignUpSuccess = (keyPair) => dispatch(signUpSuccess(keyPair));
+
+  const dispatchSendPhoneVerification = () => dispatch(sendPhoneVerification());
+
   const { firstName, lastName, email, password } = userCredentials;
 
   const {
@@ -72,11 +91,13 @@ const Register = ({
     isFirstNameValid,
     isLastNameValid,
   } = inputValidation;
-  const { phoneNumber, phoneCountryCode } = phone;
 
-  const [register, { data: registerData, errors }] = useMutation(CREATE_INDIVIDUAL, {
-    errorPolicy: 'all',
-  });
+  const [register, { data: registerData, errors }] = useMutation(
+    CREATE_INDIVIDUAL,
+    {
+      errorPolicy: 'all',
+    }
+  );
 
   const [signinWithSignature, { data: signatureData }] = useMutation(
     LOGIN_WITH_SIGNATURE,
@@ -85,7 +106,7 @@ const Register = ({
     }
   );
 
-  const [sendPhoneVerification] = useMutation(SEND_PHONE_VERIFICATION, {
+  const [sendPhoneVerificationMutation] = useMutation(SEND_PHONE_VERIFICATION, {
     errorPolicy: 'all',
   });
 
@@ -96,7 +117,7 @@ const Register = ({
         signatureData?.loginWithSignature?.data?.accessToken
       );
 
-      sendPhoneVerification({
+      sendPhoneVerificationMutation({
         variables: {
           cmd: { phoneCountryCode, phoneNumber },
         },
@@ -113,11 +134,7 @@ const Register = ({
     if (registerData?.register?.data?.id) {
       localStorage.setItem('token', '');
 
-      const signature = getSignature(
-        userKeyPair?.signingPublicKey,
-        userKeyPair?.signingSecret,
-        password
-      );
+      const signature = getSignature(signingPublicKey, signingSecret, password);
       signinWithSignature({
         variables: {
           cmd: { signature },
@@ -128,7 +145,7 @@ const Register = ({
   }, [registerData?.register?.data]);
 
   if (errors) {
-    signUpFailure(errors);
+    dispatchSignUpFailure(errors);
     setIsLoading(false);
   }
 
@@ -153,7 +170,6 @@ const Register = ({
     });
 
     if (isPasswordValid && isEmailValid) {
-
       setIsLoading(true);
 
       setUserCredentials({
@@ -171,13 +187,13 @@ const Register = ({
         phoneNumber,
         phoneCountryCode,
       };
-      signUpStart();
+      dispatchSignUpStart();
       register({
         variables: {
           cmd,
         },
       });
-      signUpSuccess({
+      dispatchSignUpSuccess({
         signingSecret: signingSecretKey,
         encryptionSecret,
         signingPublicKey,
@@ -195,10 +211,9 @@ const Register = ({
     setUserCredentials({ ...userCredentials, [name]: value });
   };
 
-  return (
-    isLoading ?
-      <Spinner/>
-    :
+  return isLoading ? (
+    <Spinner />
+  ) : (
     <RegisterContainer>
       <CardWrapper>
         <SignUpContainer>
@@ -277,16 +292,4 @@ const Register = ({
   );
 };
 
-const mapStateToProps = createStructuredSelector({
-  phone: selectPhoneNumber,
-  userKeyPair: selectUserCredential,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  signUpStart: (userCredentials) => dispatch(signUpStart(userCredentials)),
-  signUpFailure: (error) => dispatch(signUpFailure(error)),
-  signUpSuccess: (keyPair) => dispatch(signUpSuccess(keyPair)),
-  sendPhoneVerification: () => dispatch(sendPhoneVerification()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default Register;

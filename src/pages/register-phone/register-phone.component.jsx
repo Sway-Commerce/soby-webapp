@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import CustomButton from 'components/custom-button/custom-button.component';
 import usePhoneNumber from 'custom-hooks/usePhoneNumber';
@@ -17,12 +17,16 @@ import {
 
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 
-const RegisterPhone = ({ history, setUserPhoneNumber }) => {
+const RegisterPhone = ({ history }) => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
 
   const [isPhoneValid, setIsPhoneValid] = useState(true);
 
   const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
+
+  const dispatch = useDispatch();
+  const dispatchSetUserPhoneNumber = (phone) =>
+    dispatch(setUserPhoneNumber(phone));
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,7 +36,7 @@ const RegisterPhone = ({ history, setUserPhoneNumber }) => {
     setIsPhoneValid(isPhoneValid);
 
     if (isPhoneValid) {
-      setUserPhoneNumber({ phoneCountryCode, phoneNumber });
+      dispatchSetUserPhoneNumber({ phoneCountryCode, phoneNumber });
       history.push('/signup-info');
     }
   };
@@ -67,8 +71,4 @@ const RegisterPhone = ({ history, setUserPhoneNumber }) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  setUserPhoneNumber: (payload) => dispatch(setUserPhoneNumber(payload)),
-});
-
-export default connect(null, mapDispatchToProps)(RegisterPhone);
+export default RegisterPhone;

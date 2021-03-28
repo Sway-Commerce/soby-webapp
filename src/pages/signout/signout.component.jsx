@@ -1,11 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import CustomButton from 'components/custom-button/custom-button.component';
 
-import {
-  signOutStart,
-} from 'redux/user/user.actions';
+import { signOutStart } from 'redux/user/user.actions';
 
 import {
   SignoutContainer,
@@ -15,13 +13,13 @@ import {
 } from './signout.styles';
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 
-const SignOut = ({
-  signOutStart,
-}) => {
+const SignOut = () => {
+  const dispatch = useDispatch();
+  const dispatchSignOutStart = () => dispatch(signOutStart());
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    signOutStart();
+    dispatchSignOutStart();
   };
 
   return (
@@ -41,8 +39,4 @@ const SignOut = ({
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  signOutStart: () => dispatch(signOutStart()),
-});
-
-export default connect(null, mapDispatchToProps)(SignOut);
+export default SignOut;
