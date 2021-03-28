@@ -17,7 +17,7 @@ import './index.css';
 import App from './App';
 
 const httpLink = createHttpLink({
-  uri: 'https://api-dev.soby.vn/graphql',
+  uri: process.env.REACT_APP_SERVER_URL,
 });
 
 const authLink = setContext((_, { headers }) => {

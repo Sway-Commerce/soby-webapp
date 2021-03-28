@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams , withRouter} from 'react-router-dom';
 import PhoneInput from 'react-phone-number-input';
 
 import { Container } from './your-transactions.styles';
@@ -15,7 +15,7 @@ import {
   WARD_LIST,
 } from 'shared/constants/vietnamstate.constant';
 
-const YourTransaction = ({ name }) => {
+const YourTransaction = ({ history, name }) => {
   const { invoiceId } = useParams();
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
 
@@ -25,7 +25,6 @@ const YourTransaction = ({ name }) => {
     isPhoneValid: true,
   });
 
-  // mock
   const [province, setProvince] = useState('71');
   const [district, setDistrict] = useState('');
   const [ward, setWard] = useState('');
@@ -39,7 +38,14 @@ const YourTransaction = ({ name }) => {
     wardList = WARD_LIST.filter((x) => x.parentId == district);
   };
 
+  // /transaction/checkout/:invoiceId
+
   const { isPhoneValid } = inputValidation;
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    history.push(`/transaction/checkout/${invoiceId}`);
+  };
 
   return (
     <Container>
@@ -47,45 +53,47 @@ const YourTransaction = ({ name }) => {
         <p className="title">
           <b>Thông tin giao hàng</b>
         </p>
-        <label htmlFor="">Tên người nhận</label>
-        <input type="text" placeholder="Brian Nguyen" />
-        <label htmlFor="">Địa chỉ</label>
-        <input type="text" placeholder="H3 buidling ... HCMcity" />
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="">Tên người nhận</label>
+          <input type="text" placeholder="Brian Nguyen" />
+          <label htmlFor="">Địa chỉ</label>
+          <input type="text" placeholder="Hồ Chí Minh city" />
 
-        <div className="select-wrapper">
-          <Dropdown
-            options={provinceList}
-            onChange={setProvince}
-            value={province}
-          />
-          <Dropdown
-            options={districtList}
-            onChange={onSelectDistrictChange}
-            value={district}
-          />
-          <Dropdown options={wardList} onChange={setWard} value={ward} />
-        </div>
+          <div className="select-wrapper">
+            <Dropdown
+              options={provinceList}
+              onChange={setProvince}
+              value={province}
+            />
+            <Dropdown
+              options={districtList}
+              onChange={onSelectDistrictChange}
+              value={district}
+            />
+            <Dropdown options={wardList} onChange={setWard} value={ward} />
+          </div>
 
-        <label htmlFor="">Số điện thoại</label>
-        <PhoneInput
-          country="US"
-          international
-          withCountryCallingCode
-          initialValueFormat="national"
-          countryCallingCodeEditable={false}
-          defaultCountry="VN"
-          name="phoneNumber"
-          value={phoneNumberIntl}
-          onChange={(value) => setPhoneNumberIntl(value)}
-        />
-        {!isPhoneValid ? (
-          <ErrorTitle>Your phone number is not correct</ErrorTitle>
-        ) : null}
-        <button>Check out</button>
+          <label htmlFor="">Số điện thoại</label>
+          <PhoneInput
+            country="US"
+            international
+            withCountryCallingCode
+            initialValueFormat="national"
+            countryCallingCodeEditable={false}
+            defaultCountry="VN"
+            name="phoneNumber"
+            value={phoneNumberIntl}
+            onChange={(value) => setPhoneNumberIntl(value)}
+          />
+          {!isPhoneValid ? (
+            <ErrorTitle>Your phone number is not correct</ErrorTitle>
+          ) : null}
+          <button>Next</button>
+        </form>
       </div>
       <ReceiveInvoice hideCheckout />
     </Container>
   );
 };
 
-export default YourTransaction;
+export default withRouter(YourTransaction);

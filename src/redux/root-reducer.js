@@ -3,6 +3,7 @@ import { persistReducer } from 'redux-persist';
 import userReducer from './user/user.reducer';
 
 import storage from 'redux-persist/lib/storage';
+import transactionReducer from './transaction/transaction.reducer';
 
 const persistConfig = {
   key: 'root',
@@ -12,6 +13,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   user: userReducer,
+  transaction: transactionReducer,
 });
 
 export default persistReducer(persistConfig, rootReducer);
