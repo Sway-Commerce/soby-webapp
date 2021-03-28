@@ -6,6 +6,7 @@ import { GlobalStyle } from './global.styles';
 import Header from 'components/header/header.component';
 import Spinner from 'components/spinner/spinner.component';
 import ErrorBoundary from 'components/error-boundary/error-boundary.component';
+import JwtRoute from './jwt-route';
 
 const HomePage = lazy(() => import('pages/homepage/homepage.component'));
 const SignUp = lazy(() =>
@@ -60,11 +61,11 @@ const App = () => {
                 path="/invoice/:invoiceId"
                 component={ReceiveInvoice}
               />
-              <Route
+              <JwtRoute
                 path="/your-transaction/:invoiceId"
                 component={YourTransaction}
               />
-              <Route path="/phone-signin/:invoiceId?"  component={PhoneSignin} />
+              <Route path="/phone-signin"  component={PhoneSignin} />
             </Suspense>
           </ErrorBoundary>
         </Switch>

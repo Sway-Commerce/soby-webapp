@@ -50,9 +50,9 @@ const YourTransaction = ({ name }) => {
         <p className="title">
           <b>Thông tin giao hàng</b>
         </p>
-        <label for="">Tên người nhận</label>
+        <label htmlFor="">Tên người nhận</label>
         <input type="text" placeholder="Brian Nguyen" />
-        <label for="">Địa chỉ</label>
+        <label htmlFor="">Địa chỉ</label>
         <input type="text" placeholder="H3 buidling ... HCMcity" />
 
         <div className="select-wrapper ">
@@ -101,7 +101,7 @@ const YourTransaction = ({ name }) => {
           </FormControl>
         </div>
 
-        <label for="">Số điện thoại</label>
+        <label htmlFor="">Số điện thoại</label>
         <PhoneInput
           country="US"
           international

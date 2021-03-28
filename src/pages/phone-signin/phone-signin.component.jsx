@@ -27,18 +27,10 @@ import {
 } from './phone-signin.styles';
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 import usePhoneNumber from 'custom-hooks/usePhoneNumber';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Spinner from 'components/spinner/spinner.component';
-import { ACCEPT_INVOICE } from 'graphQL/repository/invoice.repository';
 
-const PhoneSignin = ({
-  history,
-  phone,
-  phoneSignInStart,
-  signInFailure,
-  signInSuccess,
-  userKeyPair,
-}) => {
+const PhoneSignin = ({ phoneSignInStart, signInFailure, signInSuccess }) => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
 
   const [password, setPassword] = useState('');
@@ -47,41 +39,28 @@ const PhoneSignin = ({
     isPhoneValid: true,
   });
   const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
-  const [phoneSignin, { data, error, loading }] = useMutation(LOGIN_WITH_PHONE_AND_PASSWORD, {
-    errorPolicy: 'all',
-  });
-  // invoice
-  const [acceptInvoice, { data: invoiceData, error: acceptErrors }] = useMutation(
-    ACCEPT_INVOICE,
+  const [phoneSignin, { data, error, loading }] = useMutation(
+    LOGIN_WITH_PHONE_AND_PASSWORD,
     {
       errorPolicy: 'all',
     }
   );
 
-  const { invoiceId } = useParams();
-
   if (loading) return <Spinner />;
-  if (error)  {
+  if (error) {
     signInFailure(error);
     return `Error! ${error}`;
   }
 
-  if(!!invoiceData?.acceptInvoice?.success) {
-    history.push(`/your-transaction/${invoiceId}`);
-  }
-
   if (!!data?.loginWithPhoneAndPassword?.data) {
-    localStorage.setItem('token', data?.loginWithPhoneAndPassword?.data?.accessToken)
-
-    if (invoiceId) {
-      acceptInvoice({
-        variables: {
-          cmd: {
-            invoiceId,
-          },
-        },
-      });
-    }
+    localStorage.setItem(
+      'token',
+      data?.loginWithPhoneAndPassword?.data?.accessToken
+    );
+    const redirectUrl = localStorage.getItem('redirectUrl');
+    localStorage.removeItem('redirectUrl');
+    window.location = redirectUrl || '';
+    signInSuccess();
   }
 
   const { isPasswordValid, isPhoneValid } = inputValidation;
