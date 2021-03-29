@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { useParams , withRouter} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, withRouter } from 'react-router-dom';
 import PhoneInput from 'react-phone-number-input';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 
 import { Container } from './your-transactions.styles';
 import ReceiveInvoice from '../receive-invoice/receive-invoice.component';
@@ -8,34 +9,86 @@ import ReceiveInvoice from '../receive-invoice/receive-invoice.component';
 import usePhoneNumber from 'shared/hooks/usePhoneNumber';
 import { ErrorTitle } from './your-transactions.styles';
 import Dropdown from 'components/ui/dropdown/dropdown.component';
-
 import {
-  PROVINCE_LIST,
-  DISTRICT_LIST,
-  WARD_LIST,
-} from 'shared/constants/vietnamstate.constant';
+  GET_DISTRICT_LIST,
+  GET_PROVINCE_LIST,
+  GET_WARD_LIST,
+} from 'graphQL/repository/invoice.repository';
+import { CREATE_SHOP_SHIPPING_LOCATION } from 'graphQL/repository/shipping.repository';
+import FormInput from 'components/form-input/form-input.component';
 
 const YourTransaction = ({ history, name }) => {
   const { invoiceId } = useParams();
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
-
-  const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
-  const [inputValidation, setInputValidation] = useState({
-    isPasswordValid: true,
-    isPhoneValid: true,
-  });
-
   const [province, setProvince] = useState('71');
   const [district, setDistrict] = useState('');
   const [ward, setWard] = useState('');
-  const provinceList = PROVINCE_LIST;
-  const districtList = DISTRICT_LIST.filter((x) => x.parentId == '71');
-  let wardList = WARD_LIST.filter((x) => x.parentId == district);
+
+  const { error, data: provinceData } = useQuery(GET_PROVINCE_LIST);
+  const [
+    loadDistrictList,
+    { error: districtError, data: districtData },
+  ] = useLazyQuery(GET_DISTRICT_LIST);
+  const [loadWardList, { error: wardError, data: wardData }] = useLazyQuery(
+    GET_WARD_LIST
+  );
+  const [
+    createShippingLocation,
+    { data: createShippingLocationData, error: createShippingLocationError },
+  ] = useMutation(CREATE_SHOP_SHIPPING_LOCATION, {
+    errorPolicy: 'all',
+  });
+
+  const [shippingInfo, setShippingInfo] = useState({
+    addressLine: '',
+  });
+  const [inputValidation, setInputValidation] = useState({
+    isPhoneValid: true
+  });
+
+  useEffect(() => {
+    loadDistrictList({
+      variables: { provinceId: province },
+    });
+  }, []);
+
+  const provinceList =
+    provinceData?.getProvinceList?.data?.map((x) => ({
+      value: x.id,
+      label: x.name,
+    })) ?? [];
+
+  const districtList =
+    districtData?.getDistrictList?.data?.map((x) => ({
+      value: x.id,
+      label: x.name,
+    })) ?? [];
+  let wardList =
+    wardData?.getWardList?.data?.map((x) => ({ value: x.id, label: x.name })) ??
+    [];
+
+  const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
 
   const onSelectDistrictChange = (value) => {
     setDistrict(value);
+    if (value) {
+      loadWardList({
+        variables: { districtId: value },
+      });
+    }
+    wardList = [];
     setWard('');
-    wardList = WARD_LIST.filter((x) => x.parentId == district);
+  };
+
+  const onSelectProvinceChange = (value) => {
+    setProvince(value);
+    if (value) {
+      loadDistrictList({
+        variables: { provinceId: value },
+      });
+    }
+    setDistrict('');
+    setWard('');
   };
 
   // /transaction/checkout/:invoiceId
@@ -44,7 +97,38 @@ const YourTransaction = ({ history, name }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    history.push(`/transaction/checkout/${invoiceId}`);
+
+    createShippingLocation({
+      variables: {
+        cmd: {
+          locationName: shippingInfo.addressLine,
+          phoneCountryCode,
+          phoneNumber,
+          country: 'VN',
+          province,
+          district,
+          ward,
+          addressLine: shippingInfo.addressLine,
+          defaultLocation: true,
+        },
+      },
+    })
+  };
+
+  if (error || districtError || wardError || createShippingLocationError)
+    return `Error! ${error || districtError || wardError}`;
+
+  if (createShippingLocationData?.createShopShippingLocation?.data) {
+    console.log(createShippingLocationData?.createShopShippingLocation?.data);
+  }
+
+  const handleChange = (event) => {
+    if (!event) {
+      return;
+    }
+    const { name, value } = event?.target;
+
+    setShippingInfo({ ...shippingInfo, [name]: value });
   };
 
   return (
@@ -55,16 +139,24 @@ const YourTransaction = ({ history, name }) => {
         </p>
         <form onSubmit={handleSubmit}>
           <label htmlFor="">Tên người nhận</label>
-          <input type="text" placeholder="Brian Nguyen" />
+          <FormInput
+            type="text"
+            name="addressLine"
+            value={shippingInfo.addressLine}
+            onChange={handleChange}
+            label="Tên người nhận"
+          />
           <label htmlFor="">Địa chỉ</label>
           <input type="text" placeholder="Hồ Chí Minh city" />
 
           <div className="select-wrapper">
-            <Dropdown
-              options={provinceList}
-              onChange={setProvince}
-              value={province}
-            />
+            {provinceList?.length ? (
+              <Dropdown
+                options={provinceList}
+                onChange={onSelectProvinceChange}
+                value={province}
+              />
+            ) : null}
             <Dropdown
               options={districtList}
               onChange={onSelectDistrictChange}

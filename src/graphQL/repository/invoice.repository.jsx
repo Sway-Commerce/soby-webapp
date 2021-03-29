@@ -228,3 +228,42 @@ export const GET_DETAILED_INVOICE_FOR_SHOP = gql`
     }
   }
 `;
+
+export const GET_PROVINCE_LIST = gql`
+  query GetProvinceList {
+    getProvinceList {
+      success
+      message
+      data {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const GET_DISTRICT_LIST = gql`
+  query GetDistrictList($provinceId: String!) {
+    getDistrictList(provinceId: $provinceId) {
+      success
+      message
+      data {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const GET_WARD_LIST = gql`
+  query GetWardList($districtId: String!) {
+    getWardList(districtId: $districtId) {
+      success
+      message
+      data {
+        id
+        name
+      }
+    }
+  }
+`;

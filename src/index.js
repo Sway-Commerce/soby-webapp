@@ -10,6 +10,7 @@ import {
   createHttpLink,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { createBrowserHistory } from 'history';
 
 import { store, persistor } from './redux/store';
 
@@ -35,6 +36,16 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
   connectToDevTools: true
 });
+
+const history = createBrowserHistory();
+
+history.listen(location => {
+  debugger
+  const path = (/#!(\/.*)$/.exec(location.hash) || [])[1];
+  if (path) {
+      history.replace(path);
+   }
+ });
 
 ReactDOM.render(
   <ApolloProvider client={client}>

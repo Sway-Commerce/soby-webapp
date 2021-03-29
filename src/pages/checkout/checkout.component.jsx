@@ -8,9 +8,10 @@ import Dropdown from 'components/ui/dropdown/dropdown.component';
 import { BANK_LIST } from 'shared/constants/bank.constant';
 import { useSelector } from 'react-redux';
 import dateFormat from 'dateformat';
-import { sha256 } from 'credify-crypto';
+
 import { sortObject } from 'shared/utils/sortObject';
 import QueryString from 'qs';
+import sha256 from 'sha256';
 
 const Checkout = () => {
   const { invoiceId } = useParams();
@@ -68,8 +69,8 @@ const Checkout = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     // window.location.assign(`http://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Amount=1000000&vnp_BankCode=NCB&vnp_Command=pay&vnp_CreateDate=${vnpUrl}&vnp_CurrCode=VND&vnp_IpAddr=%3A%3A1&vnp_Locale=vn&vnp_OrderInfo=Thanh%20toan%20don%20hang%20thoi%20gian%3A%202021-03-28%2022%3A03%3A08&vnp_OrderType=billpayment&vnp_ReturnUrl=http%3A%2F%2Flocalhost%3A3000%2Ftransaction%2Fvnpay_return&vnp_TmnCode=H2AM4RHG&vnp_TxnRef=220337&vnp_Version=2&vnp_SecureHashType=SHA256&vnp_SecureHash=6bddec2e4d41fc425960aa839ab137c34b570429b8d6df197b63db08132a4025`);
-    window.location.assign(vnpUrl);
-    console.log({ vnpay_site });
+    window.location.assign(vnpay_site);
+
 
     // http://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Amount=1000000&vnp_Command=pay&
     // vnp_CreateDate=20210328220321&vnp_CurrCode=VND&vnp_IpAddr=%3A%3A1&vnp_Locale=vn&

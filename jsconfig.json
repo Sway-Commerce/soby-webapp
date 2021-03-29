@@ -3,7 +3,7 @@
     "baseUrl": "./src",
     "paths": {
       "utils/*": ["utils/*"],
-      "graphql/*": ["graphQL/*"],
+      "graphQL/*": ["graphQL/*"],
       "assets/*": ["assets/*"],
       "redux/*": ["redux/*"],
       "css-variable/*": ["css-variable/*"],

@@ -3,8 +3,8 @@ import TransactionActionTypes from './transaction.types';
 const INITIAL_STATE = {
   vnpTmnCode: 'H2AM4RHG',
   vnpHashSecret: 'VXFMNTLQJOGNENNSLBHXRHAIHAWIEHNK',
-  vnpUrl: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
-  vnpReturnUrl: 'https://localhost:3000/transaction/vnpay_return',
+  vnpUrl: 'http://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
+  vnpReturnUrl: 'http://localhost:3000/transaction/vnpay_return',
 };
 
 const transactionReducer = (state = INITIAL_STATE, action) => {
