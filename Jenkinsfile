@@ -21,7 +21,6 @@ pipeline {
         GIT_URL            = 'git@github.com:SOBY-JSC/soby-webapp.git'
         GIT_CREDS          = 'github-jenkins'
         AWS_S3_BUCKET      = "soby-${params.DEPLOY_ENV}-webapp"
-        DISTRIBUTION_ID    = "E1LVHEUJ0L82ET"
         DISTRIBUTION_ID_DEV   = "E1LVHEUJ0L82ET"
         DISTRIBUTION_ID_PROD  = "E1LVHEUJ0L82Exxx"
     }
@@ -39,9 +38,9 @@ pipeline {
                 ])
                 script {
                     if ("${params.DEPLOY_ENV}" == 'dev') {
-                        "${env.DISTRIBUTION_ID}" == "${env.DISTRIBUTION_ID_DEV}"
+                        DISTRIBUTION_ID = "${env.DISTRIBUTION_ID_DEV}"
                     } else if ("${params.DEPLOY_ENV}" == 'prod') {
-                        "${env.DISTRIBUTION_ID}" == "${env.DISTRIBUTION_ID_PROD}"
+                        DISTRIBUTION_ID = "${env.DISTRIBUTION_ID_PROD}"
                     }
                 }
             }
@@ -92,7 +91,7 @@ pipeline {
 
             steps {
                     sh """
-                    aws cloudfront create-invalidation --distribution-id ${env.DISTRIBUTION_ID} --paths "/*"
+                    aws cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/*"
                     """
             }
         }
