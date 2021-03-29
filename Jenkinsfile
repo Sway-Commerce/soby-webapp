@@ -22,7 +22,7 @@ pipeline {
         GIT_CREDS          = 'github-jenkins'
         AWS_S3_BUCKET      = "soby-${params.DEPLOY_ENV}-webapp"
         DISTRIBUTION_ID_DEV   = "E1LVHEUJ0L82ET"
-        DISTRIBUTION_ID_PROD  = "E1LVHEUJ0L82Exxx"
+        DISTRIBUTION_ID_PROD  = "E18YWXPXB0MF8F"
     }
 
     stages {
