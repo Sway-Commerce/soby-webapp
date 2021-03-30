@@ -17,6 +17,7 @@ export default function Dropdown({
       onChange={(option) => onChange(option.value)}
       value={value}
       onSubmit={() => validate()}
+      className="Soby__dropdown"
     />
   );
 }

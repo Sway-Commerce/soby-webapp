@@ -101,12 +101,9 @@ const ShippingInfo = ({ invoiceId }) => {
     locationNameValid: true,
     addressLineValid: true,
   });
-  const [checkboxs, setCheckboxs] = useState({
-    cod: true,
-    bank: false,
-    credit: false,
-  });
-  const [checked, setChecked] = useState(true);
+  const [codChecked, setCod] = useState(true);
+  const [bankChecked, setBank] = useState(false);
+  const [creditChecked, setCredit] = useState(false);
 
   const { error, data: provinceData } = useQuery(GET_PROVINCE_LIST);
 
@@ -191,15 +188,37 @@ const ShippingInfo = ({ invoiceId }) => {
     setShippingInfo({ ...shippingInfo, [name]: value });
   };
 
-  const checkBoxChange = (event) => {
+  const handleCheckbox = (event) => {
     if (!event) {
       return;
     }
-    let orthers = {};
-    const { name, value } = event?.target;
-    // let {name,...orthers} = checkboxs;
 
-    setCheckboxs({ ...checkboxs, [name]: value });
+    const { name, checked: value } = event?.target;
+
+    switch (name) {
+      case 'cod':
+        setCod(value);
+        if (value) {
+          setBank(false);
+          setCredit(false);
+        }
+        break;
+      case 'bank':
+        setBank(value);
+        if (value) {
+          setCod(false);
+          setCredit(false);
+        }
+        break;
+      case 'credit':
+        setCredit(value);
+        if (value) {
+          setCod(false);
+          setBank(false);
+        }
+        break;
+      default:
+    }
   };
 
   if (error || districtError || wardError || createShippingLocationError)
@@ -218,21 +237,21 @@ const ShippingInfo = ({ invoiceId }) => {
         </p>
         <div className="checkbox-wrapper">
           <Checkbox
-            handleChange={checkBoxChange}
+            handleChange={handleCheckbox}
             name="cod"
-            defaultChecked={checkboxs.cod}
+            checked={codChecked}
             label="COD"
           />
           <Checkbox
-            handleChange={checkBoxChange}
+            handleChange={handleCheckbox}
             name="bank"
-            defaultChecked={checkboxs.bank}
+            checked={bankChecked}
             label="Bank transfer"
           />
           <Checkbox
-            handleChange={checkBoxChange}
+            handleChange={handleCheckbox}
             name="credit"
-            defaultChecked={checkboxs.credit}
+            checked={creditChecked}
             label="Credit card"
           />
         </div>

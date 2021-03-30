@@ -15,7 +15,6 @@ export const Container = styled.div`
     -ms-user-select: none;
     user-select: none;
     width: 34px;
-    top: -3px;
 
     input {
       position: absolute;
@@ -26,7 +25,7 @@ export const Container = styled.div`
 
     .checkmark {
       position: absolute;
-      top: 0;
+      top: -15px;
       left: 0;
       height: 16px;
       width: 16px;
@@ -86,20 +85,16 @@ export const Container = styled.div`
   }
 `;
 
-const Checkbox = ({ handleChange, label, defaultChecked, name, ...props }) => {
+const Checkbox = ({ handleChange, label, ...props }) => {
   return (
     <Container>
       <label
-        onClick={() =>
-          handleChange({ target: { name, value: !defaultChecked } })
-        }
         className="checkbox-container"
       >
         <input
           type="checkbox"
           {...props}
-          defaultChecked={defaultChecked}
-          onChange={() => handleChange()}
+          onChange={handleChange}
         />
         <span className="checkmark"></span>
       </label>
@@ -109,14 +104,3 @@ const Checkbox = ({ handleChange, label, defaultChecked, name, ...props }) => {
 };
 
 export default Checkbox;
-//  <input
-// type="checkbox"
-// {...props}
-// checked={checked}
-// onChange={() => handleChange}
-// />
-// <label
-// onClick={() => handleChange({ target: { name, value: !checked } })}
-// >
-// <span className="name">{label}</span>
-// </label>

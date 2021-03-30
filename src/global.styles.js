@@ -107,4 +107,10 @@ export const GlobalStyle = createGlobalStyle`
 		font-size: 20px;
 		line-height: 26px;
 	}
+
+	.Soby__dropdown {
+		border: 1px solid rgb(112,112,112,0.5);
+		box-sizing: border-box;
+		border-radius: 8px;
+	}
 `;
