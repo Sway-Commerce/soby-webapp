@@ -9,6 +9,8 @@ export const ModalContainer = styled.div`
   transform: translate(-50%, -50%);
   background: #ffffff;
   border-radius: 8px;
+  min-height: 500px;
+  min-width: 500px;
   display: none;
   &.show {
     display: block;

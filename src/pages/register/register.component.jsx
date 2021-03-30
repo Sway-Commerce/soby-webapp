@@ -31,10 +31,6 @@ import {
   FormContainer,
   InputGroup,
 } from './register.styles';
-import {
-  selectPhoneNumber,
-  selectUserCredential,
-} from 'redux/user/user.selectors';
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 
@@ -43,17 +39,13 @@ const Register = ({ history }) => {
     phoneNumber,
     phoneCountryCode,
     signingSecret,
-    encryptionSecret,
     signingPublicKey,
-    encryptionPublicKey,
   } = useSelector((state) => {
     return {
-      phoneNumber: state.user.phoneCountryCode,
-      phoneCountryCode: state.user.phoneNumber,
+      phoneNumber: state.user.phoneNumber,
+      phoneCountryCode: state.user.phoneCountryCode,
       signingSecret: state.user.signingSecret,
-      encryptionSecret: state.user.encryptionSecret,
       signingPublicKey: state.user.signingPublicKey,
-      encryptionPublicKey: state.user.encryptionPublicKey,
     };
   });
 
@@ -133,6 +125,8 @@ const Register = ({ history }) => {
   useEffect(() => {
     if (registerData?.register?.data?.id) {
       localStorage.setItem('token', '');
+
+      debugger
 
       const signature = getSignature(signingPublicKey, signingSecret, password);
       signinWithSignature({

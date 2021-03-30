@@ -5,7 +5,6 @@ import 'react-phone-number-input/style.css';
 import { GlobalStyle } from './global.styles';
 import Header from 'components/header/header.component';
 import Spinner from 'components/ui/spinner/spinner.component';
-import ErrorBoundary from 'components/error-boundary/error-boundary.component';
 import JwtRoute from './jwt-route';
 
 const HomePage = lazy(() => import('pages/homepage/homepage.component'));
@@ -44,33 +43,34 @@ const App = () => {
       <GlobalStyle />
       <div className="body-container">
         <Switch>
-          <ErrorBoundary>
-            <Suspense fallback={<Spinner />}>
-              <Route exact path="/" component={HomePage} />
-              <Route
-                exact
-                path="/phone-verification"
-                component={PhoneVerification}
-              />
-              <Route exact path="/signup" component={SignUp} />
-              <Route exact path="/signup-info" component={SignUpInfo} />
-              <Route exact path="/signout" component={SignOut} />
+          <Suspense fallback={<Spinner />}>
+            <Route exact path="/" component={HomePage} />
+            <Route
+              exact
+              path="/phone-verification"
+              component={PhoneVerification}
+            />
+            <Route exact path="/signup" component={SignUp} />
+            <Route exact path="/signup-info" component={SignUpInfo} />
+            <Route exact path="/signout" component={SignOut} />
 
-              <Route path="/shop-profile/:shopId" component={ShopProfile} />
-              <Route path="/product/:productId" component={ProductDetail} />
-              <Route path="/invoice/:invoiceId" component={ReceiveInvoice} />
-              <JwtRoute
-                path="/your-transaction/:invoiceId"
-                component={YourTransaction}
-              />
-              <JwtRoute
-                path="/transaction/vnpay_return"
-                component={PaymentResult}
-              />
-              <JwtRoute path="/transaction/checkout/:invoiceId" component={Checkout} />
-              <Route path="/phone-signin" component={PhoneSignin} />
-            </Suspense>
-          </ErrorBoundary>
+            <Route path="/shop-profile/:shopId" component={ShopProfile} />
+            <Route path="/product/:productId" component={ProductDetail} />
+            <Route path="/invoice/:invoiceId" component={ReceiveInvoice} />
+            <JwtRoute
+              path="/your-transaction/:invoiceId"
+              component={YourTransaction}
+            />
+            <JwtRoute
+              path="/transaction/vnpay_return"
+              component={PaymentResult}
+            />
+            <JwtRoute
+              path="/transaction/checkout/:invoiceId"
+              component={Checkout}
+            />
+            <Route path="/phone-signin" component={PhoneSignin} />
+          </Suspense>
         </Switch>
       </div>
     </div>

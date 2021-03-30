@@ -26,8 +26,8 @@ import { useMutation } from '@apollo/client';
 const PhoneVerification = ({ history, phone }) => {
   const { phoneNumber, phoneCountryCode } = useSelector((state) => {
     return {
-      phoneNumber: state.user.phoneCountryCode,
-      phoneCountryCode: state.user.phoneNumber,
+      phoneNumber: state.user.phoneNumber,
+      phoneCountryCode: state.user.phoneCountryCode,
     };
   });
   const [verificationCode, setVerificationCode] = useState(null);

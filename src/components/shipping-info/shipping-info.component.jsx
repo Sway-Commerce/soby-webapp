@@ -9,7 +9,7 @@ import {
   GET_PROVINCE_LIST,
   GET_WARD_LIST,
 } from 'graphQL/repository/invoice.repository';
-import { CREATE_SHOP_SHIPPING_LOCATION } from 'graphQL/repository/shipping.repository';
+import { CREATE_INDIVIDUAL_SHIPPING_LOCATION } from 'graphQL/repository/shipping.repository';
 import usePhoneNumber from 'shared/hooks/usePhoneNumber';
 import FormInput from 'components/form-input/form-input.component';
 import Dropdown from 'components/ui/dropdown/dropdown.component';
@@ -118,7 +118,7 @@ const ShippingInfo = ({ invoiceId }) => {
   const [
     createShippingLocation,
     { data: createShippingLocationData, error: createShippingLocationError },
-  ] = useMutation(CREATE_SHOP_SHIPPING_LOCATION, {
+  ] = useMutation(CREATE_INDIVIDUAL_SHIPPING_LOCATION, {
     errorPolicy: 'all',
   });
 
@@ -161,6 +161,16 @@ const ShippingInfo = ({ invoiceId }) => {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    console.log({locationName: shippingInfo.addressLine,
+      phoneCountryCode,
+      phoneNumber,
+      country: 'VN',
+      province,
+      district,
+      ward,
+      addressLine: shippingInfo.addressLine,
+      defaultLocation: true,})
 
     createShippingLocation({
       variables: {
