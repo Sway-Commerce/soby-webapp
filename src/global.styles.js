@@ -15,6 +15,11 @@ export const GlobalStyle = createGlobalStyle`
 				box-sizing: border-box;
 			}
 		}
+		@media screen and (max-width: 800px) {
+			.body-container {
+				width: auto;
+			}
+		}
 	}
 
 	a {
