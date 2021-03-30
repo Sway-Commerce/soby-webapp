@@ -23,9 +23,6 @@ export const Container = styled.div`
     }
     .row {
       display: flex;
-      .checkbox {
-        width: 50%;
-      }
     }
     .mar-left {
       margin-left: 60px;
@@ -40,67 +37,6 @@ export const Container = styled.div`
       padding: 6px 0;
       font-size: 18px;
       margin: 8px 0 24px 0;
-    }
-    .checkbox {
-      width: 100%;
-      margin: 0 auto 18px;
-      position: relative;
-      display: flex;
-      align-items: center;
-
-      label {
-        position: relative;
-        cursor: pointer;
-
-        padding-left: 20px;
-        span {
-          margin-left: 12px;
-        }
-        &:before {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 10px;
-          transform: translate(-50%, -50%);
-          width: 15px;
-          height: 15px;
-          transition: transform 0.28s ease;
-          border-radius: 3px;
-          background-color: rgb(0, 0, 0, 0.2);
-        }
-        &:after {
-          content: '';
-          display: block;
-          width: 9px;
-          height: 4.5px;
-          border-bottom: 2px solid #fff;
-          border-left: 2px solid #fff;
-          transform: rotate(-45deg) scale(0) translate(-50%, -50%);
-          transition: transform ease 0.25s;
-          position: absolute;
-          top: 7px;
-          left: 5px;
-        }
-      }
-      input[type='checkbox'] {
-        width: auto;
-        opacity: 0.00000001;
-        position: absolute;
-        left: 0;
-        margin-left: -20px;
-        &:checked ~ label {
-          &:before {
-            background-color: ${mainColor};
-            border: 2px solid ${mainColor};
-          }
-          &:after {
-            transform: rotate(-45deg) scale(1);
-          }
-        }
-        &:focus + label::before {
-          outline: 0;
-        }
-      }
     }
 
     .PhoneInput {

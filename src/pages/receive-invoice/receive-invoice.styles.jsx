@@ -18,6 +18,7 @@ export const Container = styled.div`
         background: #f1f1f1;
         height: 335px;
         border-radius: 0px 0px 30px 30px;
+        min-width: 461px;
 
         .item-wrapper {
           margin-top: 16px;

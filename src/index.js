@@ -40,7 +40,6 @@ const client = new ApolloClient({
 const history = createBrowserHistory();
 
 history.listen(location => {
-  debugger
   const path = (/#!(\/.*)$/.exec(location.hash) || [])[1];
   if (path) {
       history.replace(path);
