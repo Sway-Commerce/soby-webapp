@@ -7,64 +7,82 @@ import ReceiveInvoice from '../receive-invoice/receive-invoice.component';
 
 import { ReactComponent as OrderIcon } from 'shared/assets/order-icon.svg';
 import { ReactComponent as BillIcon } from 'shared/assets/bill-icon.svg';
-import { ReactComponent as DisputeIcon } from 'shared/assets/dispute-icon.svg';
 import { ReactComponent as ClockIcon } from 'shared/assets/clock.svg';
+import { ReactComponent as TickIcon } from 'shared/assets/tick-icon.svg';
+import { ReactComponent as DollasIcon } from 'shared/assets/dollas-icon.svg';
+import { ReactComponent as TruckIcon } from 'shared/assets/truck-icon.svg';
+import HorizontalList from 'components/horizontal-list/horizontal-list.component';
 
-const YourTransaction = ({ history, name }) => {
-
-  // /transaction/checkout/:invoiceId
+const YourTransaction = ({ name }) => {
+  const mainFilters = ['Orders', 'Invoices'];
+  const subFilters = [
+    'Accepted',
+    'Paid',
+    'Shipping',
+    'Delivery',
+    'Completed',
+    'Canceled',
+  ];
+  const subIcons = [
+    <ClockIcon />,
+    <DollasIcon />,
+    <TruckIcon />,
+    <TruckIcon />,
+    <TickIcon />,
+    <TickIcon />,
+  ];
+  const [mainFilter, setMainFilter] = useState(mainFilters[1]);
+  const [subFilter, setSubFilter] = useState(subFilters[0]);
 
   return (
     <Container>
       <div className="box-left">
-        <div className="navigate-tab">
-          <div className="tab-wrapper">
-            <OrderIcon className="shopping-bag" />
-            <p className="order">Orders</p>
-            <p className="amount">65</p>
-          </div>
-          <div className="tab-wrapper opacity">
-            <BillIcon className="shopping-bag" />
-            <p className="order">Invoices</p>
-            <p className="amount">65</p>
-          </div>
-          <div className="tab-wrapper opacity">
-            <DisputeIcon className="shopping-bag" />
-            <p className="order">Dispute</p>
-            <p className="amount">65</p>
-          </div>
-        </div>
+        <HorizontalList
+          items={mainFilters}
+          renderItem={(item) => (
+            <div
+              className={`tab-wrapper ${mainFilter === item ? '' : 'opacity'}`}
+              key={item}
+              onClick={() => setMainFilter(item)}
+            >
+              <OrderIcon className="shopping-bag" />
+              <p className="order">{item}</p>
+              <p className="amount">65</p>
+            </div>
+            // <span
+            //   key={item}
+            //   className={mainFilter === item ? 'active' : ''}
+            //   onClick={() => setMainFilter(item)}
+            // >
+            //   {item}
+            // </span>
+          )}
+        />
+        <div className="sub-filter">
+          <HorizontalList
+            items={subFilters}
+            renderItem={(item, index) => (
+              // const [subFilter, setSubFilter] = useState(subFilters[0]);
 
-        <div className="container-status">
-          <div className="tab-status">
-            <img className="clock" src="./clock.png" alt="" />
-            <p className="status">Waiting</p>
-            <p className="line">|</p>
-          </div>
-          <div className="tab-status opacity">
-            <img className="clock" src="./tick.png" alt="" />
-            <p className="status">Completed</p>
-            <p className="line">|</p>
-          </div>
-          <div className="tab-status opacity">
-            <img className="clock" src="./dollar.png" alt="" />
-            <p className="status">Deposited</p>
-            <p className="line">|</p>
-          </div>
-          <div className="tab-status opacity">
-            <img className="clock" src="./truck.png" alt="" />
-            <p className="status">On Delivery</p>
-            <p className="line">|</p>
-          </div>
+              <div
+                className={`tab-status ${subFilter === item ? '' : 'opacity'}`}
+                key={item}
+                onClick={() => setSubFilter(item)}
+              >
+                {subIcons[index]}
+                <p className="status">{item}</p>
+              </div>
+            )}
+          />
         </div>
       </div>
-
-      <ReceiveInvoice hideCheckout />
     </Container>
   );
 };
 
-export default withRouter(YourTransaction);
+export default YourTransaction;
+
+// <ReceiveInvoice hideCheckout />
 
 // <div className="box-left">
 //         <p className="title">
@@ -116,3 +134,57 @@ export default withRouter(YourTransaction);
 //           <button>Next</button>
 //         </form>
 //       </div>
+
+// <div className="tab-wrapper opacity">
+//             <DisputeIcon className="shopping-bag" />
+//             <p className="order">Dispute</p>
+//             <p className="amount">65</p>
+//           </div>
+//           <div className="tab-wrapper opacity">
+//             <OrderIcon className="shopping-bag" />
+//             <p className="order">Delivered</p>
+//             <p className="amount">65</p>
+//           </div>
+//           <div className="tab-wrapper opacity">
+//             <BillIcon className="shopping-bag" />
+//             <p className="order">Completed</p>
+//             <p className="amount">65</p>
+//           </div>
+//           <div className="tab-wrapper opacity">
+//             <BillIcon className="shopping-bag" />
+//             <p className="order">Cancelled</p>
+//             <p className="amount">65</p>
+//           </div>
+
+// <div className="container-status">
+//   <div className="tab-status">
+//     <ClockIcon className="clock" />
+//     <p className="status">Accepted</p>
+//     <p className="line">|</p>
+//   </div>
+//   <div className="tab-status opacity">
+//     <DollasIcon className="clock" />
+//     <p className="status">Paid</p>
+//     <p className="line">|</p>
+//   </div>
+//   <div className="tab-status opacity">
+//     <TruckIcon className="clock" />
+//     <p className="status">Shipping</p>
+//     <p className="line">|</p>
+//   </div>
+//   <div className="tab-status opacity">
+//     <TruckIcon className="clock" />
+//     <p className="status">Delivery</p>
+//     <p className="line">|</p>
+//   </div>
+//   <div className="tab-status opacity">
+//     <TickIcon className="clock" />
+//     <p className="status">Completed</p>
+//     <p className="line">|</p>
+//   </div>
+//   <div className="tab-status opacity">
+//     <TickIcon className="clock" />
+//     <p className="status">Canceled</p>
+//     <p className="line">|</p>
+//   </div>
+// </div>

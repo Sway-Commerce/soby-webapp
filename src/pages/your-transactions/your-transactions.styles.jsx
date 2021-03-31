@@ -4,7 +4,6 @@ import { mainColor } from 'shared/css-variable/variable';
 export const Container = styled.div`
   display: flex;
   .box-left {
-    width: 655px;
     border-radius: 5px;
     padding: 0 24px 0 0;
     margin-top: 48px;
@@ -97,7 +96,7 @@ export const Container = styled.div`
 
     .container-order {
       display: flex;
-      margin-top: 32px;
+      margin-top: 28px;
     }
 
     .box {
@@ -107,78 +106,10 @@ export const Container = styled.div`
       border-radius: 8px;
     }
 
-    .line {
-      font-family: Work Sans;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 20px;
-      line-height: 26px;
-      color: #000000;
-      opacity: 0.25;
-      margin: auto 16px auto 16px;
-    }
-
     .container-status {
       display: flex;
       margin-top: 32px;
-      .tab-status {
-        display: flex;
-        .clock {
-          margin: auto 8px auto 0px;
-        }
-        .status {
-          font-family: Work Sans;
-          font-style: normal;
-          font-weight: normal;
-          font-size: 20px;
-          line-height: 26px;
-          color: #000000;
-        }
-      }
-    }
 
-    .opacity {
-      opacity: 0.25;
-    }
-
-    .navigate-tab {
-      display: flex;
-      * + * {
-        margin-left: 24px;
-      }
-      .tab-wrapper {
-        width: 202.33px;
-        height: 60px;
-        background: #f1f1f1;
-        border-radius: 8px;
-        display: flex;
-        padding: 0 16px;
-        .shopping-bag {
-          height: 20px;
-          margin: auto 4px auto 0px;
-        }
-
-        .order {
-          font-family: Work Sans;
-          font-style: normal;
-          font-weight: normal;
-          font-size: 16px;
-          line-height: 26px;
-          color: #000000;
-          margin: auto 0;
-          flex: 2;
-        }
-
-        .amount {
-          font-family: Work Sans;
-          font-style: normal;
-          font-weight: normal;
-          font-size: 32px;
-          line-height: 38px;
-          color: #000000;
-          margin: auto 0;
-        }
-      }
     }
   }
 
@@ -191,6 +122,10 @@ export const Container = styled.div`
     grid-gap: 16px;
     grid-template-columns: repeat(2, 1fr);
     margin: 0 0 20px;
+  }
+
+  .sub-filter {
+    margin-top: 32px;
   }
 `;
 
