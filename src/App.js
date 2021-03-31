@@ -34,7 +34,6 @@ const ReceiveInvoice = lazy(() =>
 const YourTransaction = lazy(() =>
   import('pages/your-transactions/your-transactions.component')
 );
-const Checkout = lazy(() => import('pages/checkout/checkout.component'));
 
 const App = () => {
   return (
@@ -58,16 +57,12 @@ const App = () => {
             <Route path="/product/:productId" component={ProductDetail} />
             <Route path="/invoice/:invoiceId" component={ReceiveInvoice} />
             <JwtRoute
-              path="/your-transaction/:invoiceId"
+              path="/your-transaction"
               component={YourTransaction}
             />
             <Route
               path="/transaction/vnpay_return"
               component={PaymentResult}
-            />
-            <JwtRoute
-              path="/transaction/checkout/:invoiceId"
-              component={Checkout}
             />
             <Route path="/phone-signin" component={PhoneSignin} />
           </Suspense>

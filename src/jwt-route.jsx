@@ -30,25 +30,25 @@ function JwtRoute({ history, component: Component, ...rest }) {
       setIsAuthenticated(true);
     }
     // handle refresh token
-    if (signature) {
-      signinWithSignature({
+    // if (signature) {
+    //   signinWithSignature({
 
-        variables: {
-          cmd: { signature },
-        },
-      }).then(({data}) => {
-        localStorage.setItem(
-          'token',
-          data?.loginWithSignature?.data?.accessToken
-        );
-      });
-    } else if (!signature) {
-      // verify server response
-      localStorage.clear();
-      localStorage.setItem('redirectUrl', prevPath);
-      history.push('/phone-signin');
-      return;
-    }
+    //     variables: {
+    //       cmd: { signature },
+    //     },
+    //   }).then(({data}) => {
+    //     localStorage.setItem(
+    //       'token',
+    //       data?.loginWithSignature?.data?.accessToken
+    //     );
+    //   });
+    // } else if (!signature) {
+    //   // verify server response
+    //   localStorage.clear();
+    //   localStorage.setItem('redirectUrl', prevPath);
+    //   history.push('/phone-signin');
+    //   return;
+    // }
   }, []);
 
   if (isAuthenticated === null) {

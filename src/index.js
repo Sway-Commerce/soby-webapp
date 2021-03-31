@@ -8,8 +8,10 @@ import {
   InMemoryCache,
   ApolloProvider,
   createHttpLink,
+  ApolloLink,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { onError } from '@apollo/client/link/error';
 import { createBrowserHistory } from 'history';
 
 import { store, persistor } from './redux/store';
@@ -17,9 +19,21 @@ import { store, persistor } from './redux/store';
 import './index.css';
 import App from './App';
 
-const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_SERVER_URL,
-});
+const link = ApolloLink.from([
+  onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors) {
+      console.log('[graphQLErrors]', graphQLErrors);
+    }
+    if (networkError) {
+      console.log('[networkError]', networkError);
+    }
+  }),
+  createHttpLink({
+    uri: process.env.REACT_APP_SERVER_URL,
+    // For server with deifferent domain use "include"
+    credentials: 'include',
+  }),
+]);
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('token');
@@ -32,7 +46,7 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: authLink.concat(link),
   cache: new InMemoryCache(),
   connectToDevTools: true
 });
