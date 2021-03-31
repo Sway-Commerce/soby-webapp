@@ -6,6 +6,7 @@ import {
   AGGREGATED_INVOICE_FRAGMENT,
   AGGREGATED_INVOICE_INDIVIDUAL,
   ASSESS_FRAGMENT,
+  INVOICE_INDIVIDUAL_FRAGMENT,
 } from '../common.fragment';
 
 export const CREATE_INVOICE = gql`
@@ -263,6 +264,19 @@ export const GET_WARD_LIST = gql`
       data {
         id
         name
+      }
+    }
+  }
+`;
+
+export const UPDATE_INVOICE_INDIVIDUAL_INFO = gql`
+  ${INVOICE_INDIVIDUAL_FRAGMENT}
+  mutation UpdateInvoiceIndividualInfo($cmd: UpdateInvoiceIndividualInfoCmd!) {
+    updateInvoiceIndividualInfo(cmd: $cmd) {
+      success
+      message
+      data {
+        ...InvoiceIndividualFragment
       }
     }
   }

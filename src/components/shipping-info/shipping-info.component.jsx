@@ -8,6 +8,7 @@ import {
   GET_DISTRICT_LIST,
   GET_PROVINCE_LIST,
   GET_WARD_LIST,
+  UPDATE_INVOICE_INDIVIDUAL_INFO,
 } from 'graphQL/repository/invoice.repository';
 import { CREATE_INDIVIDUAL_SHIPPING_LOCATION } from 'graphQL/repository/shipping.repository';
 import usePhoneNumber from 'shared/hooks/usePhoneNumber';
@@ -89,9 +90,9 @@ export const Container = styled.div`
 
 const ShippingInfo = ({ invoiceId }) => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
-  const [province, setProvince] = useState('71');
-  const [district, setDistrict] = useState('');
-  const [ward, setWard] = useState('');
+  const [provinceId, setProvince] = useState('71');
+  const [districtId, setDistrict] = useState('');
+  const [wardId, setWard] = useState('');
   const [shippingInfo, setShippingInfo] = useState({
     addressLine: '',
     locationName: '',
@@ -124,7 +125,7 @@ const ShippingInfo = ({ invoiceId }) => {
 
   useEffect(() => {
     loadDistrictList({
-      variables: { provinceId: province },
+      variables: { provinceId: provinceId },
     });
   }, []);
 
@@ -161,6 +162,10 @@ const ShippingInfo = ({ invoiceId }) => {
   };
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    const province = provinceList?.find(x => x.value === provinceId)?.label;
+    const district = districtList?.find(x => x.value === districtId)?.label;
+    const ward = wardList?.find(x => x.value === wardId)?.label;
 
     console.log({locationName: shippingInfo.addressLine,
       phoneCountryCode,
@@ -288,15 +293,15 @@ const ShippingInfo = ({ invoiceId }) => {
             <Dropdown
               options={provinceList}
               onChange={onSelectProvinceChange}
-              value={province}
+              value={provinceId}
             />
           ) : null}
           <Dropdown
             options={districtList}
             onChange={onSelectDistrictChange}
-            value={district}
+            value={districtId}
           />
-          <Dropdown options={wardList} onChange={setWard} value={ward} />
+          <Dropdown options={wardList} onChange={setWard} value={wardId} />
         </div>
 
         <label htmlFor="">Số điện thoại</label>

@@ -375,3 +375,27 @@ export const AGGREGATED_ORDER_FRAGMENT = gql`
     }
   }
 `;
+
+export const INVOICE_INDIVIDUAL_FRAGMENT = gql`
+  ${INVOICE_FRAGMENT}
+  fragment InvoiceIndividualFragment on InvoiceIndividual {
+    id
+    invoice {
+      ...InvoiceFragment
+    }
+    individualId
+    shippingLocationId
+    shippingFee
+    individualTrackingUrl
+    shopTrackingUrl
+    orderFee
+    voucherCodes
+    voucherDiscount
+    paymentMethod
+    status
+    reason
+    totalPrice
+    createdAt
+    updatedAt
+  }
+`;

@@ -46,4 +46,23 @@ export const typeDefs = gql`
     id: String
     name: String
   }
+
+  export type InvoiceIndividual {
+    id: String
+    invoice: Invoice
+    individualId: String
+    shippingLocationId: String
+    shippingFee: String
+    individualTrackingUrl: String
+    shopTrackingUrl: String
+    orderFee: String
+    voucherCodes: [String]
+    voucherDiscount: String
+    paymentMethod: OrderPaymentMethod
+    status: InvoiceStatus
+    reason: String
+    totalPrice: String
+    createdAt: String
+    updatedAt: String
+  }
 `;

@@ -61,7 +61,7 @@ const App = () => {
               path="/your-transaction/:invoiceId"
               component={YourTransaction}
             />
-            <JwtRoute
+            <Route
               path="/transaction/vnpay_return"
               component={PaymentResult}
             />
