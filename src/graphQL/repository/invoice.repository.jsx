@@ -21,10 +21,14 @@ export const CREATE_INVOICE = gql`
   }
 `;
 export const ACCEPT_INVOICE = gql`
+  ${INVOICE_INDIVIDUAL_FRAGMENT}
   mutation AcceptInvoice($cmd: AcceptInvoiceCmd!) {
     acceptInvoice(cmd: $cmd) {
       message
       success
+      data {
+        ...InvoiceIndividualFragment
+      }
     }
   }
 `;
@@ -75,7 +79,7 @@ export const REMOVE_INVOICE_ITEM = gql`
 `;
 export const UPDATE_INVOICE = gql`
   ${INVOICE_FRAGMENT}
-  mutation updateInvoice($cmd: UpdateInvoiceCmd!) {
+  mutation UpdateInvoice($cmd: UpdateInvoiceCmd!) {
     updateInvoice(cmd: $cmd) {
       message
       data {
@@ -195,7 +199,7 @@ export const GET_DETAILED_INVOICE_BY_ID = gql`
 `;
 export const GET_SHOP_INVOICE_INDIVIDUAL_LIST = gql`
   ${INDIVIDUAL_INVOICE_FRAGMENT}
-  query getShopInvoiceIndividualList($query: ShopInvoiceIndividualQuery!) {
+  query GetShopInvoiceIndividualList($query: ShopInvoiceIndividualQuery!) {
     getShopInvoiceIndividualList(query: $query) {
       message
       data {
@@ -208,8 +212,8 @@ export const GET_SHOP_INVOICE_INDIVIDUAL_LIST = gql`
   }
 `;
 export const GET_DETAILED_INVOICE_FOR_INDIVIDUAL = gql`
-  ${AGGREGATED_INVOICE_FRAGMENT}
-  query getDetailedInvoiceForIndividual($id: String!) {
+  ${AGGREGATED_INVOICE_INDIVIDUAL}
+  query GetDetailedInvoiceForIndividual($id: String!) {
     getAggregatedInvoiceIndividualForIndividual(id: $id) {
       message
       data {
@@ -220,7 +224,7 @@ export const GET_DETAILED_INVOICE_FOR_INDIVIDUAL = gql`
 `;
 export const GET_DETAILED_INVOICE_FOR_SHOP = gql`
   ${AGGREGATED_INVOICE_INDIVIDUAL}
-  query getDetailedInvoiceForShop($id: String!) {
+  query GetDetailedInvoiceForShop($id: String!) {
     getAggregatedInvoiceIndividualForShop(id: $id) {
       message
       data {

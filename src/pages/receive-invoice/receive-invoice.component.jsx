@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
+import React, { useEffect, useState } from 'react';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 
 import { Container } from './receive-invoice.styles';
 import { useParams } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { ReactComponent as Extra } from 'shared/assets/extra.svg';
 import {
   ACCEPT_INVOICE,
   GET_DETAILED_INVOICE_BY_ID,
+  GET_DETAILED_INVOICE_FOR_INDIVIDUAL,
 } from 'graphQL/repository/invoice.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { timestampToDate } from 'shared/utils/getDate';
@@ -18,25 +19,64 @@ import ShippingInfo from 'components/shipping-info/shipping-info.component';
 const ReceiveInvoice = ({ history, hideCheckout }) => {
   const { invoiceId } = useParams();
   const [open, setOpen] = useState(false);
+  const [shopData, setShopData] = useState({
+    name: '',
+    shippingType: '',
+    expiredAt: '',
+    price: '',
+    items: [],
+    shop: { logoUrl: '', name: '' },
+  });
 
-  const { loading, error, data: invoiceData } = useQuery(
-    GET_DETAILED_INVOICE_BY_ID,
-    {
-      variables: {
-        id: invoiceId,
+  const [
+    loadDetailInvoice,
+    { loading, error, data: invoiceData },
+  ] = useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
+    variables: {
+      id: invoiceId,
+    },
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
+  });
+
+  const [
+    acceptInvoice,
+    { data: acceptInvoiceData, error: acceptErrors, loading: acceptLoading },
+  ] = useMutation(ACCEPT_INVOICE, {
+    errorPolicy: 'all',
+    variables: {
+      cmd: {
+        invoiceId,
       },
-    }
-  );
+    },
+  });
 
-  const [acceptInvoice, { data, error: acceptErrors }] = useMutation(
-    ACCEPT_INVOICE,
-    {
-      errorPolicy: 'all',
-    }
-  );
+  useEffect(() => {
+    loadDetailInvoice();
+  }, []);
 
-  if (loading) return <Spinner />;
-  if (error) return `Error! ${error}`;
+  useEffect(() => {
+    if (invoiceData?.getAggregatedInvoice?.data) {
+      const {
+        name,
+        shippingType,
+        expiredAt,
+        price,
+        items,
+        shop,
+      } = invoiceData?.getAggregatedInvoice?.data;
+      setShopData({ name, shippingType, expiredAt, price, items, shop });
+    }
+  }, [invoiceData?.getAggregatedInvoice?.data]);
+
+  useEffect(() => {
+    if (acceptInvoiceData?.acceptInvoice?.data) {
+      setOpen(true);
+    }
+  }, [acceptInvoiceData?.acceptInvoice?.data]);
+
+  if (loading || acceptLoading) return <Spinner />;
+  if (error || acceptErrors) return `Error! ${error}`;
 
   if (!!acceptErrors) {
     acceptErrors?.graphQLErrors?.map((x) => {
@@ -47,31 +87,8 @@ const ReceiveInvoice = ({ history, hideCheckout }) => {
     });
   }
 
-  const {
-    name,
-    shippingType,
-    expiredAt,
-    price,
-    items,
-    shop,
-  } = invoiceData?.getAggregatedInvoice?.data;
-  const { logoUrl, name: shopName } = shop;
-
   const handleNavigate = () => {
-    // acceptInvoice({
-    //   variables: {
-    //     cmd: {
-    //       invoiceId,
-    //     },
-    //   },
-    // });
-
-    setOpen(true);
-
-    // if (!!localStorage.getItem('token')) {
-    //   return;
-    // }
-    // history.push(`/phone-signin/invoice/${invoiceId}`);
+    acceptInvoice();
   };
 
   return (
@@ -82,25 +99,27 @@ const ReceiveInvoice = ({ history, hideCheckout }) => {
             <div className="box-top">
               <div className="header-group">
                 <div className="shop-name">
-                  <img src={logoUrl} alt="" />
-                  <p className="h2">{shopName}</p>
+                  <img src={shopData.shop.logoUrl} alt="" />
+                  <p className="h2">{shopData.shop.name}</p>
                 </div>
                 <Extra />
               </div>
 
               <p>
-                <b>{name}</b>
+                <b>{shopData.name}</b>
               </p>
               <div className="item-wrapper">
                 <p>Expriration date</p>
-                <p>{timestampToDate(expiredAt)}</p>
+                <p>{timestampToDate(shopData.expiredAt)}</p>
               </div>
 
               <div className="item-wrapper">
                 <p className="auto-fit">Hình thức giao hàng</p>
                 <div>
                   <div className="option-chip">
-                    {shippingType === 'BY_SOBY' ? 'Soby ship' : 'Seller ship'}
+                    {shopData.shippingType === 'BY_SOBY'
+                      ? 'Soby ship'
+                      : 'Seller ship'}
                   </div>
                 </div>
               </div>
@@ -109,14 +128,14 @@ const ReceiveInvoice = ({ history, hideCheckout }) => {
                 <div>Check out</div>
                 <div className="last"></div>
                 <div>
-                  <b>{currencyFormatter(price)}</b>
+                  <b>{currencyFormatter(shopData.price)}</b>
                 </div>
               </div>
 
               <div className="circle"></div>
             </div>
 
-            <InvoiceProductList items={items} />
+            <InvoiceProductList items={shopData.items} />
             {hideCheckout ? null : (
               <button onClick={handleNavigate}>Check out</button>
             )}
@@ -124,8 +143,11 @@ const ReceiveInvoice = ({ history, hideCheckout }) => {
         </div>
       </Container>
       <SobyModal open={open} setOpen={setOpen}>
-        <ShippingInfo invoiceId={invoiceId} />
+        <ShippingInfo
+          invoiceIndividualId={acceptInvoiceData?.acceptInvoice?.data?.id}
+        />
       </SobyModal>
+      )
     </React.Fragment>
   );
 };

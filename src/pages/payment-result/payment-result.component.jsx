@@ -55,7 +55,7 @@ const PaymentResult = () => {
           <FormContainer>
             <form onSubmit={handleSubmit}>
               <div className="amount-info">
-                <div id="amount">{vnp_Amount}</div>
+                <div id="amount">{vnp_Amount / 100}</div>
                 <div>
                   <div className="pay-info">Pay date</div>
                   <div className="pay-info">{vnp_PayDate}</div>

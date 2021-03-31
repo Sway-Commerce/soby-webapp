@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -9,6 +10,9 @@ import CustomButton from 'components/ui/custom-button/custom-button.component';
 import passwordValidation from 'shared/utils/passwordValidation';
 import {
   getHashPassword,
+  getSignature,
+  GETSECRET,
+  GET_INDIVIDUAL_BASIC_INFO,
   LOGIN_WITH_PHONE_AND_PASSWORD,
 } from 'graphQL/repository/individual.repository';
 import {
@@ -46,27 +50,76 @@ const PhoneSignin = () => {
     }
   );
 
+  const [
+    getBasicInfo,
+    {
+      error: loadIndividualBasicInfoError,
+      data: loadIndividualBasicInfoData,
+      loading: loadIndividualBasicInfoLoading,
+    },
+  ] = useLazyQuery(GET_INDIVIDUAL_BASIC_INFO);
+  const [
+    getSecret,
+    { error: getSecretError, data: getSecretData, loading: getSecretLoading },
+  ] = useLazyQuery(GETSECRET);
+
   const dispatch = useDispatch();
   const dispatchPhoneSignInStart = (phoneAndPassword) =>
     dispatch(phoneSignInStart(phoneAndPassword));
   const dispatchSignInFailure = (error) => dispatch(signInFailure(error));
-  const dispatchSignInSuccess = (payload) => dispatch(signInSuccess(payload));
 
-  if (loading) return <Spinner />;
-  if (error) {
-    dispatchSignInFailure(error);
-    return `Error! ${error}`;
-  }
+  useEffect(() => {
+    if (loadIndividualBasicInfoData?.getIndividual?.data) {
+      getSecret();
+    }
+  }, [loadIndividualBasicInfoData?.getIndividual?.data]);
 
-  if (!!data?.loginWithPhoneAndPassword?.data) {
-    localStorage.setItem(
-      'token',
-      data?.loginWithPhoneAndPassword?.data?.accessToken
+  useEffect(() => {
+    if (
+      loadIndividualBasicInfoData?.getIndividual?.data &&
+      getSecretData?.getSecret?.data
+    ) {
+      const dispatchSignInSuccess = (payload) =>
+        dispatch(signInSuccess(payload));
+
+      const signature = getSignature(
+        loadIndividualBasicInfoData?.getIndividual?.data?.signingPublicKey,
+        getSecretData?.getSecret?.data?.signingSecret,
+        password
+      );
+
+      dispatchSignInSuccess(signature);
+      const redirectUrl = localStorage.getItem('redirectUrl');
+      localStorage.removeItem('redirectUrl');
+      if (redirectUrl) {
+        window.location = redirectUrl;
+      } else {
+        window.location.href = '/';
+      }
+    }
+  }, [
+    loadIndividualBasicInfoData?.getIndividual?.data,
+    getSecretData?.getSecret?.data,
+  ]);
+
+  useEffect(() => {
+    if (!!data?.loginWithPhoneAndPassword?.data) {
+      localStorage.setItem(
+        'token',
+        data?.loginWithPhoneAndPassword?.data?.accessToken
+      );
+
+      getBasicInfo();
+    }
+  }, [!!data?.loginWithPhoneAndPassword?.data]);
+
+  if (loading || loadIndividualBasicInfoLoading || getSecretLoading)
+    return <Spinner />;
+  if (error || loadIndividualBasicInfoError || getSecretError) {
+    dispatchSignInFailure(
+      error || loadIndividualBasicInfoError || getSecretError
     );
-    const redirectUrl = localStorage.getItem('redirectUrl');
-    localStorage.removeItem('redirectUrl');
-    dispatchSignInSuccess();
-    window.location = redirectUrl || '';
+    return `Error! ${error || loadIndividualBasicInfoError || getSecretError}`;
   }
 
   const { isPasswordValid, isPhoneValid } = inputValidation;

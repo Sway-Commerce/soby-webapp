@@ -31,6 +31,10 @@ export const GlobalStyle = createGlobalStyle`
 		scroll-behavior: smooth;
 	}
 
+	button:hover {
+		cursor: pointer;
+	}
+
 	::-webkit-scrollbar {
 		width: 0;
 		height: 0;

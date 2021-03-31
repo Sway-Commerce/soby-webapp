@@ -126,8 +126,6 @@ const Register = ({ history }) => {
     if (registerData?.register?.data?.id) {
       localStorage.setItem('token', '');
 
-      debugger
-
       const signature = getSignature(signingPublicKey, signingSecret, password);
       signinWithSignature({
         variables: {

@@ -12,6 +12,8 @@ import dateFormat from 'dateformat';
 import { sortObject } from 'shared/utils/sortObject';
 import QueryString from 'qs';
 import sha256 from 'sha256';
+import { useMutation } from '@apollo/client';
+import { UPDATE_INVOICE_INDIVIDUAL_INFO } from 'graphQL/repository/invoice.repository';
 
 const Checkout = () => {
   const { invoiceId } = useParams();
@@ -66,11 +68,26 @@ const Checkout = () => {
   const vnpay_site =
     vnpUrl + '?' + QueryString.stringify(vnp_params, { encode: true });
 
+  const [updateInvoiceIndividualInfo, { data, error }] = useMutation(
+    UPDATE_INVOICE_INDIVIDUAL_INFO,
+    {
+      errorPolicy: 'all',
+    }
+  );
+
   const handleSubmit = (event) => {
     event.preventDefault();
     // window.location.assign(`http://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Amount=1000000&vnp_BankCode=NCB&vnp_Command=pay&vnp_CreateDate=${vnpUrl}&vnp_CurrCode=VND&vnp_IpAddr=%3A%3A1&vnp_Locale=vn&vnp_OrderInfo=Thanh%20toan%20don%20hang%20thoi%20gian%3A%202021-03-28%2022%3A03%3A08&vnp_OrderType=billpayment&vnp_ReturnUrl=http%3A%2F%2Flocalhost%3A3000%2Ftransaction%2Fvnpay_return&vnp_TmnCode=H2AM4RHG&vnp_TxnRef=220337&vnp_Version=2&vnp_SecureHashType=SHA256&vnp_SecureHash=6bddec2e4d41fc425960aa839ab137c34b570429b8d6df197b63db08132a4025`);
-    window.location.assign(vnpay_site);
-
+    // window.location.assign(vnpay_site);
+    updateInvoiceIndividualInfo({
+      variables: {
+        cmd: {
+          shippingLocationId: 'd5cad2df-201a-4ef9-b8ab-4fd09114a4b3',
+          invoiceIndividualId: '1d3491cc-8e61-41c0-a618-be80774291e3',
+          paymentMethod: 'CREDIT',
+        },
+      },
+    });
 
     // http://sandbox.vnpayment.vn/paymentv2/vpcpay.html?vnp_Amount=1000000&vnp_Command=pay&
     // vnp_CreateDate=20210328220321&vnp_CurrCode=VND&vnp_IpAddr=%3A%3A1&vnp_Locale=vn&
@@ -88,13 +105,7 @@ const Checkout = () => {
         <p className="title">
           <b>Thanh toán</b>
         </p>
-        <div className="select-wrapper">
-          <Dropdown
-            options={bankList}
-            onChange={setBankCode}
-            value={bankCode}
-          />
-        </div>
+        <div className="select-wrapper"></div>
         <button onClick={handleSubmit}>Thanh toán</button>
       </div>
       <ReceiveInvoice hideCheckout />

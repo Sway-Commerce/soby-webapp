@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   phoneNumber: null,
   phoneCountryCode: null,
   error: null,
+  signature: null,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -16,7 +17,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case UserActionTypes.SIGN_IN_SUCCESS:
       return {
         ...state,
-        accessToken: action.payload,
+        signature: action.payload,
         error: null,
       };
     case UserActionTypes.SIGN_OUT_START:
@@ -29,13 +30,20 @@ const userReducer = (state = INITIAL_STATE, action) => {
         error: action.payload,
       };
     case UserActionTypes.SIGN_UP_SUCCESS:
-      const { signingSecret, encryptionSecret, signingPublicKey, encryptionPublicKey } = action.payload;
+      const {
+        signingSecret,
+        encryptionSecret,
+        signingPublicKey,
+        encryptionPublicKey,
+        signature,
+      } = action.payload;
       return {
         ...state,
         signingSecret,
         encryptionSecret,
         signingPublicKey,
-        encryptionPublicKey
+        encryptionPublicKey,
+        signature,
       };
     case UserActionTypes.SET_USER_PHONE_NUMBER:
       const { phoneNumber, phoneCountryCode } = action.payload;

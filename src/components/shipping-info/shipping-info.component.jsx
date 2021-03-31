@@ -1,5 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { mainColor } from 'shared/css-variable/variable';
@@ -10,12 +10,20 @@ import {
   GET_WARD_LIST,
   UPDATE_INVOICE_INDIVIDUAL_INFO,
 } from 'graphQL/repository/invoice.repository';
-import { CREATE_INDIVIDUAL_SHIPPING_LOCATION } from 'graphQL/repository/shipping.repository';
+import {
+  CREATE_INDIVIDUAL_SHIPPING_LOCATION,
+  GET_INDIVIDUAL_SHIPPING_LOCATION_LIST,
+} from 'graphQL/repository/shipping.repository';
+import { CREATE_INVOICE_PAYMENT } from 'graphQL/repository/transaction.repository';
+
 import usePhoneNumber from 'shared/hooks/usePhoneNumber';
 import FormInput from 'components/form-input/form-input.component';
 import Dropdown from 'components/ui/dropdown/dropdown.component';
 import PhoneInput from 'react-phone-number-input';
 import Checkbox from 'components/ui/checkbox/checkbox.component';
+import Spinner from 'components/ui/spinner/spinner.component';
+import { useSelector } from 'react-redux';
+import dateFormat from 'dateformat';
 
 export const ErrorTitle = styled.h5`
   color: red;
@@ -65,6 +73,10 @@ export const Container = styled.div`
     margin-top: 40px;
     border-radius: 3px;
     box-shadow: 0 0 8px rgba(196, 196, 196, 0.2);
+    &.disable {
+      pointer-events: none;
+      color: white;
+    }
   }
 
   .select-wrapper {
@@ -88,7 +100,7 @@ export const Container = styled.div`
   }
 `;
 
-const ShippingInfo = ({ invoiceId }) => {
+const ShippingInfo = ({ invoiceIndividualId }) => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
   const [provinceId, setProvince] = useState('71');
   const [districtId, setDistrict] = useState('');
@@ -105,29 +117,98 @@ const ShippingInfo = ({ invoiceId }) => {
   const [codChecked, setCod] = useState(true);
   const [bankChecked, setBank] = useState(false);
   const [creditChecked, setCredit] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('COD');
+  const [provinceList, setProvinceList] = useState([]);
+  const [districtList, setDistrictList] = useState([]);
+  const [wardList, setWardList] = useState([]);
+  const [shippingLocationId, setShippingLocationId] = useState('');
+  const signature = useSelector((state) => {
+    return state.user.signature;
+  });
 
-  const { error, data: provinceData } = useQuery(GET_PROVINCE_LIST);
+  const [
+    loadProvince,
+    { error, data: provinceData, loading: provinceLoading },
+  ] = useLazyQuery(GET_PROVINCE_LIST);
+
+  const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
 
   const [
     loadDistrictList,
-    { error: districtError, data: districtData },
+    {
+      error: districtError,
+      data: districtData,
+      loading: loadDistrictListLoading,
+    },
   ] = useLazyQuery(GET_DISTRICT_LIST);
   const [loadWardList, { error: wardError, data: wardData }] = useLazyQuery(
     GET_WARD_LIST
   );
 
+  const {
+    error: getIndividualShippingListError,
+    data: getIndividualShippingListData,
+  } = useQuery(GET_INDIVIDUAL_SHIPPING_LOCATION_LIST);
+
   const [
     createShippingLocation,
-    { data: createShippingLocationData, error: createShippingLocationError },
+    {
+      data: createShippingLocationData,
+      error: createShippingLocationError,
+      loading: createShippingLocationLoading,
+    },
   ] = useMutation(CREATE_INDIVIDUAL_SHIPPING_LOCATION, {
     errorPolicy: 'all',
   });
 
+  const [
+    updateInvoiceIndividualInfo,
+    {
+      data: updateInvoiceIndividualInfoData,
+      error: updateInvoiceIndividualInfoError,
+      loading: updateInvoiceIndividualInfoLoading,
+    },
+  ] = useMutation(UPDATE_INVOICE_INDIVIDUAL_INFO, {
+    errorPolicy: 'all',
+  });
+
+  const [
+    createInvoicePayment,
+    {
+      data: createInvoicePaymentData,
+      error: createInvoicePaymentError,
+      loading: createInvoicePaymentLoading,
+    },
+  ] = useMutation(CREATE_INVOICE_PAYMENT, {
+    errorPolicy: 'all',
+  });
+
   useEffect(() => {
-    loadDistrictList({
-      variables: { provinceId: provinceId },
-    });
-  }, []);
+    if (invoiceIndividualId) {
+      loadProvince();
+      loadDistrictList({
+        variables: { provinceId: provinceId },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invoiceIndividualId]);
+
+  useEffect(() => {
+    if (createShippingLocationData?.createIndividualShippingLocation?.data) {
+      const shippingLocationId =
+        createShippingLocationData?.createIndividualShippingLocation?.data?.id;
+      updateInvoiceIndividualInfo({
+        variables: {
+          cmd: {
+            shippingLocationId,
+            invoiceIndividualId,
+            paymentMethod,
+          },
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createShippingLocationData?.createIndividualShippingLocation?.data]);
 
   const mapData = (data) =>
     data?.map((x) => ({
@@ -135,14 +216,76 @@ const ShippingInfo = ({ invoiceId }) => {
       label: x.name,
     })) ?? [];
 
-  let wardList = mapData(wardData?.getWardList?.data);
-  const provinceList = mapData(provinceData?.getProvinceList?.data);
-  const districtList = mapData(districtData?.getDistrictList?.data);
-  const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
+  const mapShippingData = (data) =>
+    data?.map((x) => ({
+      value: x.id,
+      label: x.locationName,
+    })) ?? [];
+
+  useEffect(() => {
+    setWardList(
+      wardData?.getWardList?.data ? mapData(wardData?.getWardList?.data) : []
+    );
+  }, [wardData?.getWardList?.data]);
+
+  useEffect(() => {
+    setProvinceList(
+      provinceData?.getProvinceList?.data
+        ? mapData(provinceData?.getProvinceList?.data)
+        : []
+    );
+  }, [provinceData?.getProvinceList?.data]);
+
+  useEffect(() => {
+    setDistrictList(
+      districtData?.getDistrictList?.data
+        ? mapData(districtData?.getDistrictList?.data)
+        : []
+    );
+  }, [districtData?.getDistrictList?.data]);
+
+  useEffect(() => {
+    if (updateInvoiceIndividualInfoData?.updateInvoiceIndividualInfo?.data) {
+      const date = new Date();
+      const requestedAt = dateFormat(date, 'yyyymmddHHmmss');
+      // : Math.round(Date.now().toExponential()),
+      createInvoicePayment({
+        variables: {
+          cmd: {
+            invoiceIndividualId,
+            requestedAt,
+            signature,
+          },
+        },
+      });
+    }
+  }, [updateInvoiceIndividualInfoData?.updateInvoiceIndividualInfo?.data]);
+
   const { isPhoneValid } = inputValidation;
+
+  if (
+    updateInvoiceIndividualInfoLoading ||
+    provinceLoading ||
+    loadDistrictListLoading ||
+    createShippingLocationLoading
+  ) {
+    return <Spinner />;
+  }
+
+  if (
+    error ||
+    districtError ||
+    wardError ||
+    createShippingLocationError ||
+    updateInvoiceIndividualInfoError
+  )
+    return `Error! ${
+      error || districtError || wardError || updateInvoiceIndividualInfoError
+    }`;
+
   const onSelectDistrictChange = (value) => {
     setDistrict(value);
-    wardList = [];
+    setWardList([]);
     setWard('');
     if (value) {
       loadWardList({
@@ -163,11 +306,14 @@ const ShippingInfo = ({ invoiceId }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const province = provinceList?.find(x => x.value === provinceId)?.label;
-    const district = districtList?.find(x => x.value === districtId)?.label;
-    const ward = wardList?.find(x => x.value === wardId)?.label;
+    const province = provinceList?.find((x) => x.value === provinceId)?.label;
+    const district = districtList?.find((x) => x.value === districtId)?.label;
+    const ward = wardList?.find((x) => x.value === wardId)?.label;
 
-    console.log({locationName: shippingInfo.addressLine,
+    // d5cad2df-201a-4ef9-b8ab-4fd09114a4b3
+
+    console.log({
+      locationName: shippingInfo.addressLine,
       phoneCountryCode,
       phoneNumber,
       country: 'VN',
@@ -175,7 +321,8 @@ const ShippingInfo = ({ invoiceId }) => {
       district,
       ward,
       addressLine: shippingInfo.addressLine,
-      defaultLocation: true,})
+      defaultLocation: true,
+    });
 
     createShippingLocation({
       variables: {
@@ -216,6 +363,7 @@ const ShippingInfo = ({ invoiceId }) => {
         if (value) {
           setBank(false);
           setCredit(false);
+          setPaymentMethod('COD');
         }
         break;
       case 'bank':
@@ -223,6 +371,7 @@ const ShippingInfo = ({ invoiceId }) => {
         if (value) {
           setCod(false);
           setCredit(false);
+          setPaymentMethod('BANK');
         }
         break;
       case 'credit':
@@ -230,23 +379,52 @@ const ShippingInfo = ({ invoiceId }) => {
         if (value) {
           setCod(false);
           setBank(false);
+          setPaymentMethod('CREDIT');
         }
         break;
       default:
     }
   };
 
-  if (error || districtError || wardError || createShippingLocationError)
-    return `Error! ${error || districtError || wardError}`;
-
   if (createShippingLocationData?.createShopShippingLocation?.data) {
     console.log(createShippingLocationData?.createShopShippingLocation?.data);
   }
 
+  if (createShippingLocationData?.createIndividualShippingLocation?.data) {
+    // invoiceIndividualId: String!
+    // shippingLocationId: String!
+    // paymentMethod: OrderPaymentMethod!
+    const shippingLocationId =
+      createShippingLocationData?.createIndividualShippingLocation?.data?.id;
+    updateInvoiceIndividualInfo({
+      variables: {
+        cmd: {
+          shippingLocationId,
+          invoiceIndividualId,
+          paymentMethod,
+        },
+      },
+    });
+  }
+
+  const handleSubmitHadShipping = () => {
+    updateInvoiceIndividualInfo({
+      variables: {
+        cmd: {
+          shippingLocationId,
+          invoiceIndividualId,
+          paymentMethod,
+        },
+      },
+    });
+  };
+
   return (
     <Container>
       <h2>Shipping information</h2>
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={invoiceIndividualId ? handleSubmitHadShipping : handleSubmit}
+      >
         <p className="title">
           <b>Hình thức thanh toán</b>
         </p>
@@ -273,53 +451,77 @@ const ShippingInfo = ({ invoiceId }) => {
         <p className="title">
           <b>Thông tin giao hàng</b>
         </p>
-        <label htmlFor="">Tên người nhận</label>
-        <FormInput
-          type="text"
-          name="locationName"
-          value={shippingInfo.locationName}
-          onChange={handleChange}
-        />
-        <label htmlFor="">Địa chỉ</label>
-        <FormInput
-          type="text"
-          name="addressLine"
-          value={shippingInfo.addressLine}
-          onChange={handleChange}
-        />
-
-        <div className="select-wrapper">
-          {provinceList?.length ? (
-            <Dropdown
-              options={provinceList}
-              onChange={onSelectProvinceChange}
-              value={provinceId}
-            />
-          ) : null}
+        {getIndividualShippingListData?.getIndividualShippingLocationList
+          ?.data ? (
           <Dropdown
-            options={districtList}
-            onChange={onSelectDistrictChange}
-            value={districtId}
+            options={mapShippingData(
+              getIndividualShippingListData?.getIndividualShippingLocationList
+                ?.data
+            )}
+            onChange={setShippingLocationId}
+            value={shippingLocationId}
           />
-          <Dropdown options={wardList} onChange={setWard} value={wardId} />
-        </div>
+        ) : (
+          <React.Fragment>
+            <label htmlFor="">Tên người nhận</label>
+            <FormInput
+              type="text"
+              name="locationName"
+              value={shippingInfo.locationName}
+              onChange={handleChange}
+            />
+            <label htmlFor="">Địa chỉ</label>
+            <FormInput
+              type="text"
+              name="addressLine"
+              value={shippingInfo.addressLine}
+              onChange={handleChange}
+            />
 
-        <label htmlFor="">Số điện thoại</label>
-        <PhoneInput
-          country="US"
-          international
-          withCountryCallingCode
-          initialValueFormat="national"
-          countryCallingCodeEditable={false}
-          defaultCountry="VN"
-          name="phoneNumber"
-          value={phoneNumberIntl}
-          onChange={(value) => setPhoneNumberIntl(value)}
-        />
+            <div className="select-wrapper">
+              {provinceList?.length ? (
+                <Dropdown
+                  options={provinceList}
+                  onChange={onSelectProvinceChange}
+                  value={provinceId}
+                />
+              ) : null}
+              <Dropdown
+                options={districtList}
+                onChange={onSelectDistrictChange}
+                value={districtId}
+              />
+              <Dropdown options={wardList} onChange={setWard} value={wardId} />
+            </div>
+
+            <label htmlFor="">Số điện thoại</label>
+            <PhoneInput
+              country="US"
+              international
+              withCountryCallingCode
+              initialValueFormat="national"
+              countryCallingCodeEditable={false}
+              defaultCountry="VN"
+              name="phoneNumber"
+              value={phoneNumberIntl}
+              onChange={(value) => setPhoneNumberIntl(value)}
+            />
+          </React.Fragment>
+        )}
+
         {!isPhoneValid ? (
           <ErrorTitle>Your phone number is not correct</ErrorTitle>
         ) : null}
-        <button>Next</button>
+        <button
+          className={
+            getIndividualShippingListData?.getIndividualShippingLocationList
+              ?.data && !shippingLocationId
+              ? 'disable'
+              : null
+          }
+        >
+          Next
+        </button>
       </form>
     </Container>
   );

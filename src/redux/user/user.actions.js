@@ -1,8 +1,8 @@
 import UserActionTypes from './user.types';
 
-export const signInSuccess = accessToken => ({
+export const signInSuccess = signature => ({
   type: UserActionTypes.SIGN_IN_SUCCESS,
-  payload: accessToken
+  payload: signature
 });
 
 export const signInFailure = error => ({
