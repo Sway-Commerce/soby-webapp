@@ -4,7 +4,6 @@ import { mainColor } from 'shared/css-variable/variable';
 
 export const HeaderContainer = styled.div`
   height: 80px;
-  width: 1140px;
   display: flex;
   justify-content: space-between;
   padding: 0 calc((100vw - 1140px) / 2);
