@@ -22,24 +22,26 @@ export const Header = ({ history }) => {
       <LogoContainer to="/">
         <Logo />
       </LogoContainer>
-      <OptionsContainer>
-        {isSignIn ? (
-          <SignOut
-            onClick={() => {
-              dispatchSignOutStart();
-              localStorage.removeItem('token');
-              setIsSignin(false);
-              history.push('');
-            }}
-          >
-            Đăng xuất
-          </SignOut>
-        ) : (
-          <SignInLink to="/phone-signin">Đăng nhập</SignInLink>
-        )}
-      </OptionsContainer>
+
     </HeaderContainer>
   );
 };
 
 export default withRouter(Header);
+
+// <OptionsContainer>
+//         {isSignIn ? (
+//           <SignOut
+//             onClick={() => {
+//               dispatchSignOutStart();
+//               localStorage.removeItem('token');
+//               setIsSignin(false);
+//               history.push('');
+//             }}
+//           >
+//             Đăng xuất
+//           </SignOut>
+//         ) : (
+//           <SignInLink to="/phone-signin">Đăng nhập</SignInLink>
+//         )}
+//       </OptionsContainer>
