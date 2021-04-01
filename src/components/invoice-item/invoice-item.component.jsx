@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { ReactComponent as BillIcon } from 'shared/assets/bill-icon.svg';
 import { ReactComponent as ClockIcon } from 'shared/assets/clock.svg';
+import { currencyFormatter } from 'shared/utils/formatCurrency';
 
 export const Container = styled.div`
   display: flex;
   margin-top: 32px;
+  cursor: pointer;
+
+  &.active {
+    background: #f1f1f1;
+  }
 
   .icon-container {
     width: 83px;
@@ -61,20 +67,30 @@ export const Container = styled.div`
   }
 `;
 
-const InvoiceItem = () => {
+const InvoiceItem = ({
+  price,
+  status,
+  name,
+  id,
+  setActiveInvoice,
+  activeInvoice,
+}) => {
   return (
-    <Container>
+    <Container
+      onClick={() => setActiveInvoice(id)}
+      className={`${activeInvoice === id ? 'active' : ''}`}
+    >
       <div className="icon-container">
         <BillIcon />
       </div>
       <div className="detail-wrapper">
         <div className="details-order">
-          <p className="sort">#Order numbers</p>
-          <p className="cost">480,000 vnđ</p>
+          <p className="sort">{name}</p>
+          <p className="cost">{currencyFormatter(price)}</p>
         </div>
         <div className="details-status">
           <ClockIcon className="order-image" />
-          <p className="order-status">Waiting</p>
+          <p className="order-status">{status}</p>
         </div>
       </div>
     </Container>

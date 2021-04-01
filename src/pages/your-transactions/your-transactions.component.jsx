@@ -37,6 +37,8 @@ const YourTransaction = ({ name }) => {
   ];
   const [mainFilter, setMainFilter] = useState(mainFilters[1]);
   const [subFilter, setSubFilter] = useState(subFilters[0]);
+  const [invoiceList, setInvoiceList] = useState([]);
+  const [activeInvoice, setActiveInvoice] = useState('');
 
   const [
     getIndividualInvoiceList,
@@ -63,7 +65,12 @@ const YourTransaction = ({ name }) => {
 
   useEffect(() => {
     if (getIndividualInvoiceListData?.getIndividualInvoiceList?.data) {
-      debugger;
+      console.log(
+        getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records
+      );
+      setInvoiceList(
+        getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records
+      );
     }
   }, [getIndividualInvoiceListData?.getIndividualInvoiceList?.data]);
 
@@ -105,16 +112,27 @@ const YourTransaction = ({ name }) => {
             )}
           />
         </div>
-        <InvoiceItem />
+        {invoiceList.map((x) => (
+          <InvoiceItem
+            key={x?.id}
+            price={x?.totalPrice}
+            status={x?.status}
+            name={x?.invoice?.name}
+            id={x?.id}
+            setActiveInvoice={setActiveInvoice}
+            activeInvoice={activeInvoice}
+          />
+        ))}
         {getIndividualInvoiceListLoading ? <Spinner /> : null}
       </div>
+      {activeInvoice ? (
+        <ReceiveInvoice invoiceIndividualId={activeInvoice} />
+      ) : null}
     </Container>
   );
 };
 
 export default YourTransaction;
-
-// <ReceiveInvoice hideCheckout />
 
 // <div className="box-left">
 //         <p className="title">

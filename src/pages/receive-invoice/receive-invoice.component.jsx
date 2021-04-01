@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 
@@ -16,7 +17,7 @@ import InvoiceProductList from 'components/invoice-product-list/invoice-product-
 import SobyModal from 'components/ui/modal/modal.component';
 import ShippingInfo from 'components/shipping-info/shipping-info.component';
 
-const ReceiveInvoice = ({ history, hideCheckout }) => {
+const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
   const { invoiceId } = useParams();
   const [open, setOpen] = useState(false);
   const [shopData, setShopData] = useState({
@@ -40,6 +41,21 @@ const ReceiveInvoice = ({ history, hideCheckout }) => {
   });
 
   const [
+    getAggregatedInvoiceIndividualForIndividual,
+    {
+      loading: getAggregatedInvoiceIndividualForIndividualLoading,
+      error: getAggregatedInvoiceIndividualForIndividualError,
+      data: getAggregatedInvoiceIndividualForIndividualData,
+    },
+  ] = useLazyQuery(GET_DETAILED_INVOICE_FOR_INDIVIDUAL, {
+    variables: {
+      id: invoiceIndividualId,
+    },
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
+  });
+
+  const [
     acceptInvoice,
     { data: acceptInvoiceData, error: acceptErrors, loading: acceptLoading },
   ] = useMutation(ACCEPT_INVOICE, {
@@ -52,8 +68,16 @@ const ReceiveInvoice = ({ history, hideCheckout }) => {
   });
 
   useEffect(() => {
-    loadDetailInvoice();
-  }, []);
+    if (invoiceId) {
+      loadDetailInvoice();
+    }
+  }, [invoiceId]);
+
+  useEffect(() => {
+    if (invoiceIndividualId) {
+      getAggregatedInvoiceIndividualForIndividual();
+    }
+  }, [invoiceIndividualId]);
 
   useEffect(() => {
     if (invoiceData?.getAggregatedInvoice?.data) {
@@ -70,22 +94,40 @@ const ReceiveInvoice = ({ history, hideCheckout }) => {
   }, [invoiceData?.getAggregatedInvoice?.data]);
 
   useEffect(() => {
+    if (
+      getAggregatedInvoiceIndividualForIndividualData
+        ?.getAggregatedInvoiceIndividualForIndividual?.data
+    ) {
+      debugger;
+      const {
+        name,
+        shippingType,
+        expiredAt,
+        price,
+        items,
+        shop,
+      } = getAggregatedInvoiceIndividualForIndividualData?.getAggregatedInvoiceIndividualForIndividual?.data?.invoice;
+      setShopData({ name, shippingType, expiredAt, price, items, shop });
+    }
+  }, [
+    getAggregatedInvoiceIndividualForIndividualData
+      ?.getAggregatedInvoiceIndividualForIndividual?.data,
+  ]);
+
+  useEffect(() => {
     if (acceptInvoiceData?.acceptInvoice?.data) {
       setOpen(true);
     }
   }, [acceptInvoiceData?.acceptInvoice?.data]);
 
-  if (loading || acceptLoading) return <Spinner />;
-  if (error || acceptErrors) return `Error! ${error}`;
-
-  if (!!acceptErrors) {
-    acceptErrors?.graphQLErrors?.map((x) => {
-      if (x?.extensions?.code === 401) {
-        history.push(`/phone-signin/${invoiceId}`);
-      }
-      return null;
-    });
-  }
+  if (
+    loading ||
+    acceptLoading ||
+    getAggregatedInvoiceIndividualForIndividualLoading
+  )
+    return <Spinner />;
+  if (error || acceptErrors || getAggregatedInvoiceIndividualForIndividualError)
+    return `Error! ${error}`;
 
   const handleNavigate = () => {
     acceptInvoice();
@@ -147,7 +189,6 @@ const ReceiveInvoice = ({ history, hideCheckout }) => {
           invoiceIndividualId={acceptInvoiceData?.acceptInvoice?.data?.id}
         />
       </SobyModal>
-      )
     </React.Fragment>
   );
 };

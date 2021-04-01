@@ -71,6 +71,8 @@ export const Container = styled.div`
 
   .sub-filter {
     margin-top: 32px;
+    max-width: 656px;
+    overflow: auto;
   }
 `;
 
