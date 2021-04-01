@@ -18,7 +18,7 @@ export const Container = styled.h5`
     display: flex;
     padding: 0 16px;
     cursor: pointer;
-    .shopping-bag {
+    svg {
       height: 20px;
       margin: auto 4px auto 0px;
     }
@@ -72,11 +72,13 @@ export const Container = styled.h5`
   }
 `;
 
-const HorizontalList = ({ items, renderItem, active = null }) => {
+const HorizontalList = ({ items, renderItem }) => {
   return (
     <Container>
       {items.map((item, index) => (
-        <>{renderItem(item, index)}</>
+        <React.Fragment key={item + index}>
+          {renderItem(item, index)}
+        </React.Fragment>
       ))}
     </Container>
   );

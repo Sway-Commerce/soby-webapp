@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, withRouter } from 'react-router-dom';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 
-import { Container } from './your-transactions.styles';
+import { Container, ProductContainer } from './your-transactions.styles';
 import ReceiveInvoice from '../receive-invoice/receive-invoice.component';
 
 import { ReactComponent as OrderIcon } from 'shared/assets/order-icon.svg';
@@ -12,6 +12,9 @@ import { ReactComponent as TickIcon } from 'shared/assets/tick-icon.svg';
 import { ReactComponent as DollasIcon } from 'shared/assets/dollas-icon.svg';
 import { ReactComponent as TruckIcon } from 'shared/assets/truck-icon.svg';
 import HorizontalList from 'components/horizontal-list/horizontal-list.component';
+import { GET_INDIVIDUAL_INVOICE_LIST } from '../../graphQL/repository/invoice.repository';
+import Spinner from 'components/ui/spinner/spinner.component';
+import InvoiceItem from 'components/invoice-item/invoice-item.component';
 
 const YourTransaction = ({ name }) => {
   const mainFilters = ['Orders', 'Invoices'];
@@ -19,10 +22,11 @@ const YourTransaction = ({ name }) => {
     'Accepted',
     'Paid',
     'Shipping',
-    'Delivery',
+    'Delivered',
     'Completed',
-    'Canceled',
+    'Cancelled',
   ];
+  const mainIcons = [<OrderIcon />, <BillIcon />];
   const subIcons = [
     <ClockIcon />,
     <DollasIcon />,
@@ -34,36 +38,62 @@ const YourTransaction = ({ name }) => {
   const [mainFilter, setMainFilter] = useState(mainFilters[1]);
   const [subFilter, setSubFilter] = useState(subFilters[0]);
 
+  const [
+    getIndividualInvoiceList,
+    {
+      error: getIndividualInvoiceListError,
+      data: getIndividualInvoiceListData,
+      loading: getIndividualInvoiceListLoading,
+    },
+  ] = useLazyQuery(GET_INDIVIDUAL_INVOICE_LIST);
+
+  useEffect(() => {
+    if (mainFilter === 'Invoices') {
+      getIndividualInvoiceList({
+        variables: {
+          query: {
+            statuses: [subFilter.toUpperCase()],
+            page: 0,
+            pageSize: 5,
+          },
+        },
+      });
+    }
+  }, [mainFilter, subFilter, getIndividualInvoiceList]);
+
+  useEffect(() => {
+    if (getIndividualInvoiceListData?.getIndividualInvoiceList?.data) {
+      debugger;
+    }
+  }, [getIndividualInvoiceListData?.getIndividualInvoiceList?.data]);
+
+  if (getIndividualInvoiceListError) {
+    return getIndividualInvoiceListError;
+  }
+
   return (
     <Container>
       <div className="box-left">
         <HorizontalList
+          key={JSON.stringify(mainFilters)}
           items={mainFilters}
-          renderItem={(item) => (
+          renderItem={(item, index) => (
             <div
               className={`tab-wrapper ${mainFilter === item ? '' : 'opacity'}`}
               key={item}
               onClick={() => setMainFilter(item)}
             >
-              <OrderIcon className="shopping-bag" />
+              {mainIcons[index]}
               <p className="order">{item}</p>
               <p className="amount">65</p>
             </div>
-            // <span
-            //   key={item}
-            //   className={mainFilter === item ? 'active' : ''}
-            //   onClick={() => setMainFilter(item)}
-            // >
-            //   {item}
-            // </span>
           )}
         />
         <div className="sub-filter">
           <HorizontalList
+            key={JSON.stringify(subFilters)}
             items={subFilters}
             renderItem={(item, index) => (
-              // const [subFilter, setSubFilter] = useState(subFilters[0]);
-
               <div
                 className={`tab-status ${subFilter === item ? '' : 'opacity'}`}
                 key={item}
@@ -75,6 +105,8 @@ const YourTransaction = ({ name }) => {
             )}
           />
         </div>
+        <InvoiceItem />
+        {getIndividualInvoiceListLoading ? <Spinner /> : null}
       </div>
     </Container>
   );

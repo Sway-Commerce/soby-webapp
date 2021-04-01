@@ -110,15 +110,22 @@ export const SKU_FRAGMENT = gql`
 export const PRODUCT_FRAGMENT = gql`
   ${SKU_FRAGMENT}
   fragment ProductFragment on Product {
-    categories
     createdAt
     description
     id
     imageUrls
+    category {
+        id
+        name
+    }
+    level2Category {
+        id
+        name
+    }
     name
     shopId
     skus {
-      ...SkuFragment
+        ...SkuFragment
     }
     updatedAt
   }

@@ -56,61 +56,6 @@ export const Container = styled.div`
       border-radius: 3px;
       box-shadow: 0 0 8px rgba(196, 196, 196, 0.2);
     }
-
-    .border {
-      border-bottom: 1px solid rgb(201, 201, 201, 0.5);
-    }
-
-    .details-status {
-      display: flex;
-      margin: 31px 0 31px 284px;
-    }
-
-    .status-img {
-      height: 20px;
-      margin-right: 8px;
-    }
-
-    .details-order {
-      margin-left: 40px;
-    }
-
-    .cost {
-      font-family: Work Sans;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 24px;
-      line-height: 28px;
-      color: #000000;
-      margin-top: 8px;
-    }
-
-    .sort {
-      font-family: Work Sans;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 20px;
-      line-height: 26px;
-      color: #000000;
-    }
-
-    .container-order {
-      display: flex;
-      margin-top: 28px;
-    }
-
-    .box {
-      width: 83px;
-      height: 83px;
-      background: #c4c4c4;
-      border-radius: 8px;
-    }
-
-    .container-status {
-      display: flex;
-      margin-top: 32px;
-
-    }
   }
 
   .title {
@@ -132,4 +77,61 @@ export const Container = styled.div`
 export const ErrorTitle = styled.h5`
   color: red;
   margin: 5px 0;
+`;
+
+export const ProductContainer = styled.div`
+  display: flex;
+  margin-top: 32px;
+
+  .icon-container {
+    width: 83px;
+    height: 78px;
+    background: #f1f1f1;
+    border-radius: 5px;
+    display: flex;
+    svg {
+      width: 35px;
+      height: 35px;
+      margin: auto;
+    }
+  }
+
+  .detail-wrapper {
+    margin-left: 40px;
+    border-bottom: 1px solid rgb(112, 112, 112, 0.5);
+    min-width: 532px;
+    display: flex;
+    .details-order {
+      flex: 1;
+      .cost {
+        font-family: Work Sans;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 24px;
+        line-height: 28px;
+        color: #000000;
+        margin-top: 8px;
+      }
+
+      .sort {
+        font-family: Work Sans;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 20px;
+        line-height: 26px;
+        color: #000000;
+      }
+    }
+
+    .details-status {
+      display: flex;
+      .order-image {
+        height: 20px;
+        margin: auto 8px;
+      }
+      .order-status {
+        margin: auto 0;
+      }
+    }
+  }
 `;

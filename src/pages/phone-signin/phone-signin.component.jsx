@@ -88,6 +88,8 @@ const PhoneSignin = () => {
         password
       );
 
+      localStorage.setItem('signature', signature);
+
       const {
         signingSecret,
         encryptionSecret,
