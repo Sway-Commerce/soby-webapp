@@ -31,6 +31,7 @@ export const Container = styled.div`
     margin-left: 40px;
     border-bottom: 1px solid rgb(112, 112, 112, 0.5);
     min-width: 532px;
+    width: 100%;
     display: flex;
     .details-order {
       flex: 1;

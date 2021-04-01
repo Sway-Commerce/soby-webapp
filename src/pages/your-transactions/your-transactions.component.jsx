@@ -47,9 +47,14 @@ const YourTransaction = ({ name }) => {
       data: getIndividualInvoiceListData,
       loading: getIndividualInvoiceListLoading,
     },
-  ] = useLazyQuery(GET_INDIVIDUAL_INVOICE_LIST);
+  ] = useLazyQuery(GET_INDIVIDUAL_INVOICE_LIST, {
+    fetchPolicy: 'network-only',
+  });
 
   useEffect(() => {
+    setActiveInvoice(null);
+    setInvoiceList([]);
+    debugger;
     if (mainFilter === 'Invoices') {
       getIndividualInvoiceList({
         variables: {
@@ -64,7 +69,7 @@ const YourTransaction = ({ name }) => {
   }, [mainFilter, subFilter, getIndividualInvoiceList]);
 
   useEffect(() => {
-    if (getIndividualInvoiceListData?.getIndividualInvoiceList?.data) {
+    if (getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records) {
       console.log(
         getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records
       );
@@ -72,7 +77,7 @@ const YourTransaction = ({ name }) => {
         getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records
       );
     }
-  }, [getIndividualInvoiceListData?.getIndividualInvoiceList?.data]);
+  }, [getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records]);
 
   if (getIndividualInvoiceListError) {
     return getIndividualInvoiceListError;

@@ -10,18 +10,22 @@ const INITIAL_STATE = {
   phoneCountryCode: null,
   error: null,
   signature: null,
+  signing: null,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case UserActionTypes.SIGN_UP_SUCCESS:
-    case UserActionTypes.SIGN_IN_SUCCESS:
+    case UserActionTypes.SIGN_IN_SUCCESS: {
       const {
         signingSecret,
         encryptionSecret,
         signingPublicKey,
         encryptionPublicKey,
         signature,
+        signing,
+        phoneNumber,
+        phoneCountryCode,
       } = action.payload;
       return {
         ...state,
@@ -30,7 +34,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
         signingPublicKey,
         encryptionPublicKey,
         signature,
+        signing,
+        phoneNumber,
+        phoneCountryCode,
       };
+    }
     case UserActionTypes.SIGN_OUT_START:
       return INITIAL_STATE;
     case UserActionTypes.SIGN_IN_FAILURE:
@@ -40,13 +48,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         error: action.payload,
       };
-    case UserActionTypes.SET_USER_PHONE_NUMBER:
+    case UserActionTypes.SET_USER_PHONE_NUMBER: {
       const { phoneNumber, phoneCountryCode } = action.payload;
       return {
         ...state,
         phoneNumber,
         phoneCountryCode,
       };
+    }
     default:
       return state;
   }

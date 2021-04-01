@@ -7,6 +7,7 @@ export const Container = styled.div`
     border-radius: 5px;
     padding: 0 24px 0 0;
     margin-top: 48px;
+    flex: 1;
     .h2 {
       font-size: 18px;
       font-weight: 500;
@@ -71,7 +72,6 @@ export const Container = styled.div`
 
   .sub-filter {
     margin-top: 32px;
-    max-width: 656px;
     overflow: auto;
   }
 `;

@@ -82,7 +82,7 @@ const PhoneSignin = () => {
       const dispatchSignInSuccess = (payload) =>
         dispatch(signInSuccess(payload));
 
-      const signature = getSignature(
+      const {signature, signing} = getSignature(
         loadIndividualBasicInfoData?.getIndividual?.data?.signingPublicKey,
         getSecretData?.getSecret?.data?.signingSecret,
         password
@@ -105,6 +105,9 @@ const PhoneSignin = () => {
         encryptionSecret,
         signingPublicKey,
         encryptionPublicKey,
+        signing,
+        phoneNumber,
+        phoneCountryCode
       });
       const redirectUrl = localStorage.getItem('redirectUrl');
       localStorage.removeItem('redirectUrl');

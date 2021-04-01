@@ -126,7 +126,7 @@ const Register = ({ history }) => {
     if (registerData?.register?.data?.id) {
       localStorage.setItem('token', '');
 
-      const signature = getSignature(signingPublicKey, signingSecret, password);
+      const {signature} = getSignature(signingPublicKey, signingSecret, password);
       signinWithSignature({
         variables: {
           cmd: { signature },

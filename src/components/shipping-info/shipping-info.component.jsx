@@ -122,11 +122,8 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
   const [shippingLocationId, setShippingLocationId] = useState('');
-  const { signingSecret, signingPublicKey } = useSelector((state) => {
-    return {
-      signingSecret: state.user.signingSecret,
-      signingPublicKey: state.user.signingPublicKey,
-    };
+  const signing = useSelector((state) => {
+    return state.user.signing;
   });
 
   const [
@@ -252,11 +249,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
       debugger;
       const requestedAt = Date.now();
       const jsonString = JSON.stringify({ invoiceIndividualId, requestedAt });
-      const signature = signSignature(
-        signingPublicKey,
-        signingSecret,
-        jsonString
-      );
+      const signature = signSignature(signing, jsonString);
       createInvoicePayment({
         variables: {
           cmd: {
