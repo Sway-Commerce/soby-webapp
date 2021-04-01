@@ -88,7 +88,22 @@ const PhoneSignin = () => {
         password
       );
 
-      dispatchSignInSuccess(signature);
+      const {
+        signingSecret,
+        encryptionSecret,
+      } = getSecretData?.getSecret?.data;
+      const {
+        signingPublicKey,
+        encryptionPublicKey,
+      } = loadIndividualBasicInfoData?.getIndividual?.data;
+
+      dispatchSignInSuccess({
+        signature,
+        signingSecret,
+        encryptionSecret,
+        signingPublicKey,
+        encryptionPublicKey,
+      });
       const redirectUrl = localStorage.getItem('redirectUrl');
       localStorage.removeItem('redirectUrl');
       if (redirectUrl) {

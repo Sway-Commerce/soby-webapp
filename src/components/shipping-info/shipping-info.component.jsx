@@ -23,7 +23,6 @@ import PhoneInput from 'react-phone-number-input';
 import Checkbox from 'components/ui/checkbox/checkbox.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { useSelector } from 'react-redux';
-import dateFormat from 'dateformat';
 
 export const ErrorTitle = styled.h5`
   color: red;
@@ -122,8 +121,8 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
   const [shippingLocationId, setShippingLocationId] = useState('');
-  const signature = useSelector((state) => {
-    return state.user.signature;
+  const signingSecret = useSelector((state) => {
+    return state.user.signingSecret;
   });
 
   const [
@@ -246,15 +245,15 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
 
   useEffect(() => {
     if (updateInvoiceIndividualInfoData?.updateInvoiceIndividualInfo?.data) {
-      const date = new Date();
-      const requestedAt = dateFormat(date, 'yyyymmddHHmmss');
-      // : Math.round(Date.now().toExponential()),
+      const requestedAt = Date.now();
+      const jsonString = JSON.stringify({ invoiceIndividualId, requestedAt });
+      // signingSecret
       createInvoicePayment({
         variables: {
           cmd: {
             invoiceIndividualId,
             requestedAt,
-            signature,
+            signature: '',
           },
         },
       });

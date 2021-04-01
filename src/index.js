@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import { Provider , useSelector} from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import {
   ApolloClient,
@@ -19,9 +19,13 @@ import { store, persistor } from './redux/store';
 import './index.css';
 import App from './App';
 
+const loginAgain = () => {
+
+}
+
 const link = ApolloLink.from([
   onError(({ graphQLErrors, networkError }) => {
-    if (graphQLErrors) {
+    if (graphQLErrors.length) {
       console.log('[graphQLErrors]', graphQLErrors);
     }
     if (networkError) {
