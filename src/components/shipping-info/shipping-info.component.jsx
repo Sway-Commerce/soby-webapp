@@ -23,6 +23,7 @@ import PhoneInput from 'react-phone-number-input';
 import Checkbox from 'components/ui/checkbox/checkbox.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { useSelector } from 'react-redux';
+import { signSignature } from 'graphQL/repository/individual.repository';
 
 export const ErrorTitle = styled.h5`
   color: red;
@@ -121,8 +122,11 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
   const [shippingLocationId, setShippingLocationId] = useState('');
-  const signingSecret = useSelector((state) => {
-    return state.user.signingSecret;
+  const { signingSecret, signingPublicKey } = useSelector((state) => {
+    return {
+      signingSecret: state.user.signingSecret,
+      signingPublicKey: state.user.signingPublicKey,
+    };
   });
 
   const [
@@ -245,15 +249,20 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
 
   useEffect(() => {
     if (updateInvoiceIndividualInfoData?.updateInvoiceIndividualInfo?.data) {
+      debugger;
       const requestedAt = Date.now();
       const jsonString = JSON.stringify({ invoiceIndividualId, requestedAt });
-      // signingSecret
+      const signature = signSignature(
+        signingPublicKey,
+        signingSecret,
+        jsonString
+      );
       createInvoicePayment({
         variables: {
           cmd: {
             invoiceIndividualId,
             requestedAt,
-            signature: '',
+            signature,
           },
         },
       });

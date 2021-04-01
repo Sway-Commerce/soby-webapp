@@ -3858,7 +3858,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.4, create-hmac@^1.1.7:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-credify-crypto@^0.32.9:
+credify-crypto@^0.32.10:
   version "0.32.10"
   resolved "https://registry.yarnpkg.com/credify-crypto/-/credify-crypto-0.32.10.tgz#0aa0839581db2eef13f26b27d225e9937fd5c023"
   integrity sha512-nBS9J0RWBF01WqabWx4ynHdg72XiUlzvKZ0yjWvIqqdsbaX1WWnNwrNN5EHVonDzW4TLWzJCtj1K4iRdFXJ8Hg==
