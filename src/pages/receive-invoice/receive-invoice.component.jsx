@@ -98,7 +98,6 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
       getAggregatedInvoiceIndividualForIndividualData
         ?.getAggregatedInvoiceIndividualForIndividual?.data
     ) {
-      debugger;
       const {
         name,
         shippingType,

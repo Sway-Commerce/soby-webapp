@@ -177,8 +177,16 @@ export const getSignature = (signingPublicKey, signingSecret, password) => {
   return { signature: generateJwt(signing), signing };
 };
 
-export const signSignature = (signing, jsonString) => {
-  return signing.sign(jsonString, { output: 'base64' });
+export const signSignature = (
+  signingSecret,
+  jsonString,
+  password
+) => {
+  const signing = new Signing();
+
+  // signing.importPublicKey(signingPublicKey);
+  signing.importPrivateKey(signingSecret, password);
+  return signing.sign(jsonString, { input: 'utf8', output: 'base64Url' });
 };
 
 export const getHashPassword = (password) => {

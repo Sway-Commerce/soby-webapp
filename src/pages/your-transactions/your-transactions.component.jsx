@@ -54,7 +54,6 @@ const YourTransaction = ({ name }) => {
   useEffect(() => {
     setActiveInvoice(null);
     setInvoiceList([]);
-    debugger;
     if (mainFilter === 'Invoices') {
       getIndividualInvoiceList({
         variables: {

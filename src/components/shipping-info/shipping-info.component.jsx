@@ -19,11 +19,12 @@ import { CREATE_INVOICE_PAYMENT } from 'graphQL/repository/transaction.repositor
 import usePhoneNumber from 'shared/hooks/usePhoneNumber';
 import FormInput from 'components/form-input/form-input.component';
 import Dropdown from 'components/ui/dropdown/dropdown.component';
-import PhoneInput from 'react-phone-number-input';
+import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
 import Checkbox from 'components/ui/checkbox/checkbox.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { useSelector } from 'react-redux';
 import { signSignature } from 'graphQL/repository/individual.repository';
+import passwordValidation from 'shared/utils/passwordValidation';
 
 export const ErrorTitle = styled.h5`
   color: red;
@@ -100,6 +101,10 @@ export const Container = styled.div`
   }
 `;
 
+export const InputGroup = styled.div`
+  margin-top: 32px;
+`;
+
 const ShippingInfo = ({ invoiceIndividualId }) => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
   const [provinceId, setProvince] = useState('71');
@@ -113,6 +118,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     isPhoneValid: true,
     locationNameValid: true,
     addressLineValid: true,
+    isPasswordValid: true,
   });
   const [codChecked, setCod] = useState(true);
   const [bankChecked, setBank] = useState(false);
@@ -122,9 +128,15 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
   const [shippingLocationId, setShippingLocationId] = useState('');
-  const signing = useSelector((state) => {
-    return state.user.signing;
-  });
+  const [password, setPassword] = useState('');
+  const signingSecret = useSelector((state) => state.user.signingSecret);
+
+  const {
+    isPhoneValid,
+    locationNameValid,
+    addressLineValid,
+    isPasswordValid,
+  } = inputValidation;
 
   const [
     loadProvince,
@@ -245,11 +257,21 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   }, [districtData?.getDistrictList?.data]);
 
   useEffect(() => {
+    if (createInvoicePaymentData?.createInvoicePayment?.data?.payUrl) {
+      window.location.assign(
+        createInvoicePaymentData?.createInvoicePayment?.data?.payUrl
+      );
+    }
+  }, [createInvoicePaymentData?.createInvoicePayment?.data?.payUrl]);
+
+  useEffect(() => {
     if (updateInvoiceIndividualInfoData?.updateInvoiceIndividualInfo?.data) {
-      debugger;
       const requestedAt = Date.now();
-      const jsonString = JSON.stringify({ invoiceIndividualId, requestedAt });
-      const signature = signSignature(signing, jsonString);
+      const jsonString = JSON.stringify({
+        invoiceIndividualId,
+        requestedAt: requestedAt?.toString(),
+      });
+      const signature = signSignature(signingSecret, jsonString, password);
       createInvoicePayment({
         variables: {
           cmd: {
@@ -262,13 +284,12 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     }
   }, [updateInvoiceIndividualInfoData?.updateInvoiceIndividualInfo?.data]);
 
-  const { isPhoneValid } = inputValidation;
-
   if (
     updateInvoiceIndividualInfoLoading ||
     provinceLoading ||
     loadDistrictListLoading ||
-    createShippingLocationLoading
+    createShippingLocationLoading ||
+    createInvoicePaymentLoading
   ) {
     return <Spinner />;
   }
@@ -278,7 +299,8 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     districtError ||
     wardError ||
     createShippingLocationError ||
-    updateInvoiceIndividualInfoError
+    updateInvoiceIndividualInfoError ||
+    createInvoicePaymentError
   )
     return `Error! ${
       error || districtError || wardError || updateInvoiceIndividualInfoError
@@ -304,8 +326,25 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
       });
     }
   };
+
+  const checkValidate = () => {
+    const isPasswordValid = passwordValidation(password);
+    const isPhoneValid = isPossiblePhoneNumber(phoneNumberIntl);
+
+    setInputValidation({
+      ...inputValidation,
+      isPasswordValid,
+      isPhoneValid,
+    });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    checkValidate();
+    if (!isPasswordValid && !isPhoneValid) {
+      return;
+    }
 
     const province = provinceList?.find((x) => x.value === provinceId)?.label;
     const district = districtList?.find((x) => x.value === districtId)?.label;
@@ -408,7 +447,17 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     });
   }
 
-  const handleSubmitHadShipping = () => {
+  const handleSubmitHadShipping = (event) => {
+    event.preventDefault();
+    const isPasswordValid = passwordValidation(password);
+
+    setInputValidation({
+      ...inputValidation,
+      isPasswordValid,
+    });
+    if (!isPasswordValid) {
+      return;
+    }
     updateInvoiceIndividualInfo({
       variables: {
         cmd: {
@@ -418,6 +467,15 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
         },
       },
     });
+  };
+
+  const handleChangePassword = (event) => {
+    if (!event) {
+      return;
+    }
+
+    const { value } = event?.target;
+    setPassword(value);
   };
 
   return (
@@ -509,6 +567,23 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
             />
           </React.Fragment>
         )}
+
+        <InputGroup>
+          <div className="form-label">Password</div>
+          <FormInput
+            type="password"
+            value={password}
+            onChange={handleChangePassword}
+            label="*******"
+            required
+          />
+          {!isPasswordValid ? (
+            <ErrorTitle>
+              Your password must be between 8 to 20 characters which contain at
+              least one numeric digit, one uppercase and one lowercase letter
+            </ErrorTitle>
+          ) : null}
+        </InputGroup>
 
         {!isPhoneValid ? (
           <ErrorTitle>Your phone number is not correct</ErrorTitle>
