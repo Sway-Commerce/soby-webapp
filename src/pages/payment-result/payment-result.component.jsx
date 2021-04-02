@@ -25,7 +25,7 @@ const PaymentResult = () => {
   const vnp_OrderInfo = params.get('vnp_OrderInfo');
   const vnp_PayDate = timestampToDate(+params.get('vnp_PayDate'));
   const vnp_ResponseCode = params.get('vnp_ResponseCode');
-  const vnp_Amount = currencyFormatter(+params.get('vnp_Amount'));
+  const vnp_Amount = currencyFormatter(+params.get('vnp_Amount') / 100);
 
   console.log({ params });
 
@@ -46,6 +46,7 @@ const PaymentResult = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
   };
+  debugger
 
   return (
     <Container>
@@ -55,7 +56,7 @@ const PaymentResult = () => {
           <FormContainer>
             <form onSubmit={handleSubmit}>
               <div className="amount-info">
-                <div id="amount">{vnp_Amount / 100}</div>
+                <div id="amount">{vnp_Amount}</div>
                 <div>
                   <div className="pay-info">Pay date</div>
                   <div className="pay-info">{vnp_PayDate}</div>
