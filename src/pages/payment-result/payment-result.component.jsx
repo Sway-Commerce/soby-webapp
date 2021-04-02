@@ -13,9 +13,9 @@ import { ReactComponent as MasterCard } from 'shared/assets/master-card.svg';
 import { ReactComponent as VisaCard } from 'shared/assets/visa-card.svg';
 import { getBankLogo } from 'shared/utils/getBankLogo';
 import Spinner from 'components/ui/spinner/spinner.component';
+import { Link } from 'react-router-dom';
 
 const PaymentResult = () => {
-
   const url = new URL(window.location.href);
   const params = new URLSearchParams(url.search);
 
@@ -26,8 +26,6 @@ const PaymentResult = () => {
   const vnp_PayDate = timestampToDate(+params.get('vnp_PayDate'));
   const vnp_ResponseCode = params.get('vnp_ResponseCode');
   const vnp_Amount = currencyFormatter(+params.get('vnp_Amount') / 100);
-
-  console.log({ params });
 
   if (
     !vnp_BankCode ||
@@ -46,7 +44,7 @@ const PaymentResult = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
   };
-  debugger
+  debugger;
 
   return (
     <Container>
@@ -95,7 +93,9 @@ const PaymentResult = () => {
           </FormContainer>
         </TransactionContainer>
       </CardWrapper>
-      <div className="back-btn">Back</div>
+      <Link to="/your-transaction">
+        <div className="back-btn">Back</div>
+      </Link>
     </Container>
   );
 };

@@ -54,9 +54,12 @@ export const Container = styled.div`
   justify-content: center;
   flex-direction: column;
   margin: 40px 0;
-  .back-btn {
-    margin: auto;
-    margin-top: 85px;
+  a {
+    display: flex;
+    div.back-btn {
+      margin: auto;
+      margin-top: 85px;
+    }
   }
 `;
 
