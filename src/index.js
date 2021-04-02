@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { Provider, useSelector } from 'react-redux';
+import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import {
   ApolloClient,
@@ -9,7 +9,6 @@ import {
   ApolloProvider,
   createHttpLink,
   ApolloLink,
-  useMutation,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
@@ -19,6 +18,7 @@ import { store, persistor } from './redux/store';
 
 import './index.css';
 import App from './App';
+import { LOGIN_WITH_SIGNATURE } from 'graphQL/repository/individual.repository';
 // import { LOGIN_WITH_SIGNATURE } from 'graphQL/repository/individual.repository';
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -37,8 +37,27 @@ import App from './App';
 //   });
 // };
 
+const getNewToken = () => {
+  const signature = store.getState().user.signature;
+  client
+    .mutate({
+      mutation: LOGIN_WITH_SIGNATURE,
+      variables: { cmd: { signature } },
+    })
+    .then(({ data }) => {
+      localStorage.setItem(
+        'token',
+        data?.loginWithSignature?.data?.accessToken
+      );
+    });
+};
+
 const link = ApolloLink.from([
   onError(({ graphQLErrors, networkError }) => {
+    debugger;
+    if (graphQLErrors.some((x) => x.extensions.code === 401)) {
+      getNewToken();
+    }
     if (graphQLErrors.length) {
       console.log('[graphQLErrors]', graphQLErrors);
     }

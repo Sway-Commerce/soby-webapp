@@ -38,7 +38,7 @@ export const CardWrapper = styled.div`
 export const RegisterContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin: 210px 0;
+  margin: 40px 0;
 `;
 
 export const FormContainer = styled.div`

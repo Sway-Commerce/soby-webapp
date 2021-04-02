@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { ReactComponent as BillIcon } from 'shared/assets/bill-icon.svg';
 import { ReactComponent as ClockIcon } from 'shared/assets/clock.svg';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
+import InvoiceStatus from 'components/invoice-status/invoice-status.component';
 
 export const Container = styled.div`
   display: flex;
@@ -57,13 +58,8 @@ export const Container = styled.div`
 
     .details-status {
       display: flex;
-      .order-image {
-        height: 20px;
-        margin: auto 8px;
-      }
-      .order-status {
-        margin: auto 0;
-      }
+      margin: auto 0;
+      padding-right: 14px;
     }
   }
 `;
@@ -90,8 +86,7 @@ const InvoiceItem = ({
           <p className="cost">{currencyFormatter(price)}</p>
         </div>
         <div className="details-status">
-          <ClockIcon className="order-image" />
-          <p className="order-status">{status}</p>
+          <InvoiceStatus status={status} />
         </div>
       </div>
     </Container>

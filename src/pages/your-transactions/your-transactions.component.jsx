@@ -7,36 +7,19 @@ import ReceiveInvoice from '../receive-invoice/receive-invoice.component';
 
 import { ReactComponent as OrderIcon } from 'shared/assets/order-icon.svg';
 import { ReactComponent as BillIcon } from 'shared/assets/bill-icon.svg';
-import { ReactComponent as ClockIcon } from 'shared/assets/clock.svg';
-import { ReactComponent as TickIcon } from 'shared/assets/tick-icon.svg';
-import { ReactComponent as DollasIcon } from 'shared/assets/dollas-icon.svg';
-import { ReactComponent as TruckIcon } from 'shared/assets/truck-icon.svg';
+
 import HorizontalList from 'components/horizontal-list/horizontal-list.component';
 import { GET_INDIVIDUAL_INVOICE_LIST } from '../../graphQL/repository/invoice.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import InvoiceItem from 'components/invoice-item/invoice-item.component';
+import InvoiceStatus from 'components/invoice-status/invoice-status.component';
+import { mainInvoiceFilters, subInvoiceFilters, subInvoiceIcons } from 'shared/constants/invoice.constant';
 
 const YourTransaction = ({ name }) => {
-  const mainFilters = ['Orders', 'Invoices'];
-  const subFilters = [
-    'Accepted',
-    'Paid',
-    'Shipping',
-    'Delivered',
-    'Completed',
-    'Cancelled',
-  ];
   const mainIcons = [<OrderIcon />, <BillIcon />];
-  const subIcons = [
-    <ClockIcon />,
-    <DollasIcon />,
-    <TruckIcon />,
-    <TruckIcon />,
-    <TickIcon />,
-    <TickIcon />,
-  ];
-  const [mainFilter, setMainFilter] = useState(mainFilters[1]);
-  const [subFilter, setSubFilter] = useState(subFilters[0]);
+
+  const [mainFilter, setMainFilter] = useState(mainInvoiceFilters[1]);
+  const [subFilter, setSubFilter] = useState(subInvoiceFilters[0]);
   const [invoiceList, setInvoiceList] = useState([]);
   const [activeInvoice, setActiveInvoice] = useState('');
 
@@ -86,8 +69,8 @@ const YourTransaction = ({ name }) => {
     <Container>
       <div className="box-left">
         <HorizontalList
-          key={JSON.stringify(mainFilters)}
-          items={mainFilters}
+          key={JSON.stringify(mainInvoiceFilters)}
+          items={mainInvoiceFilters}
           renderItem={(item, index) => (
             <div
               className={`tab-wrapper ${mainFilter === item ? '' : 'opacity'}`}
@@ -102,15 +85,15 @@ const YourTransaction = ({ name }) => {
         />
         <div className="sub-filter">
           <HorizontalList
-            key={JSON.stringify(subFilters)}
-            items={subFilters}
+            key={JSON.stringify(subInvoiceFilters)}
+            items={subInvoiceFilters}
             renderItem={(item, index) => (
               <div
                 className={`tab-status ${subFilter === item ? '' : 'opacity'}`}
                 key={item}
                 onClick={() => setSubFilter(item)}
               >
-                {subIcons[index]}
+                {subInvoiceIcons[index]}
                 <p className="status">{item}</p>
               </div>
             )}

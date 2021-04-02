@@ -5,6 +5,7 @@ import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { Container } from './receive-invoice.styles';
 import { useParams } from 'react-router-dom';
 import { ReactComponent as Extra } from 'shared/assets/extra.svg';
+import { ReactComponent as ClockIcon } from 'shared/assets/clock.svg';
 import {
   ACCEPT_INVOICE,
   GET_DETAILED_INVOICE_BY_ID,
@@ -16,6 +17,7 @@ import { currencyFormatter } from 'shared/utils/formatCurrency';
 import InvoiceProductList from 'components/invoice-product-list/invoice-product-list.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import ShippingInfo from 'components/shipping-info/shipping-info.component';
+import InvoiceStatus from 'components/invoice-status/invoice-status.component';
 
 const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
   const { invoiceId } = useParams();
@@ -27,6 +29,7 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
     price: '',
     items: [],
     shop: { logoUrl: '', name: '' },
+    status: '',
   });
 
   const [
@@ -94,10 +97,12 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
   }, [invoiceData?.getAggregatedInvoice?.data]);
 
   useEffect(() => {
-    if (
+    const invoiceData =
       getAggregatedInvoiceIndividualForIndividualData
-        ?.getAggregatedInvoiceIndividualForIndividual?.data
-    ) {
+        ?.getAggregatedInvoiceIndividualForIndividual?.data;
+    if (invoiceData) {
+      debugger;
+      const { status } = invoiceData;
       const {
         name,
         shippingType,
@@ -105,8 +110,16 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
         price,
         items,
         shop,
-      } = getAggregatedInvoiceIndividualForIndividualData?.getAggregatedInvoiceIndividualForIndividual?.data?.invoice;
-      setShopData({ name, shippingType, expiredAt, price, items, shop });
+      } = invoiceData?.invoice;
+      setShopData({
+        name,
+        shippingType,
+        expiredAt,
+        price,
+        items,
+        shop,
+        status,
+      });
     }
   }, [
     getAggregatedInvoiceIndividualForIndividualData
@@ -153,6 +166,10 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
                 <p>Expriration date</p>
                 <p>{timestampToDate(shopData.expiredAt)}</p>
               </div>
+              <div className="item-wrapper">
+                <p>Status</p>
+                <InvoiceStatus status={shopData.status} />
+              </div>
 
               <div className="item-wrapper">
                 <p className="auto-fit">Hình thức giao hàng</p>
@@ -193,11 +210,3 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
 };
 
 export default ReceiveInvoice;
-
-// <div className="item-wrapper">
-//               <p>Status</p>
-//               <div className="status">
-//                 <Clock />
-//                 <p>Waiting</p>
-//               </div>
-//             </div>

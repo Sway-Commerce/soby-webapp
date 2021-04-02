@@ -27,12 +27,7 @@ export const Container = styled.div`
 
           .status {
             display: flex;
-            svg {
-              margin: 5px 8px auto 0;
-            }
-            p {
-              margin: auto 0;
-            }
+
           }
 
           .auto-fit {

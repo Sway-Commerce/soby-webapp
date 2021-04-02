@@ -53,7 +53,7 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
-  margin: 210px 0;
+  margin: 40px 0;
   .back-btn {
     margin: auto;
     margin-top: 85px;
