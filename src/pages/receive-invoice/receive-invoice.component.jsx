@@ -18,6 +18,7 @@ import InvoiceProductList from 'components/invoice-product-list/invoice-product-
 import SobyModal from 'components/ui/modal/modal.component';
 import ShippingInfo from 'components/shipping-info/shipping-info.component';
 import InvoiceStatus from 'components/invoice-status/invoice-status.component';
+import Accordion from 'components/ui/accordion/accordion.component';
 
 const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
   const { invoiceId } = useParams();
@@ -31,6 +32,7 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
     shop: { logoUrl: '', name: '' },
     status: '',
   });
+  const [productMargin, setProductMargin] = useState(0);
 
   const [
     loadDetailInvoice,
@@ -101,7 +103,6 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
       getAggregatedInvoiceIndividualForIndividualData
         ?.getAggregatedInvoiceIndividualForIndividual?.data;
     if (invoiceData) {
-      debugger;
       const { status } = invoiceData;
       const {
         name,
@@ -166,10 +167,12 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
                 <p>Expriration date</p>
                 <p>{timestampToDate(shopData.expiredAt)}</p>
               </div>
-              <div className="item-wrapper">
-                <p>Status</p>
-                <InvoiceStatus status={shopData.status} />
-              </div>
+              {shopData.status ? (
+                <div className="item-wrapper">
+                  <p>Status</p>
+                  <InvoiceStatus status={shopData.status} />
+                </div>
+              ) : null}
 
               <div className="item-wrapper">
                 <p className="auto-fit">Hình thức giao hàng</p>
@@ -183,20 +186,42 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
               </div>
 
               <div className="box-tag">
-                <div>Check out</div>
-                <div className="last"></div>
-                <div>
-                  <b>{currencyFormatter(shopData.price)}</b>
-                </div>
+                <Accordion
+                  title="Payment details"
+                  setBelowGap={setProductMargin}
+                >
+                  <div className="payinfo-wrapper">
+                    <p>Subtotal</p>
+                    <p>0 vnđ</p>
+                  </div>
+                  <div className="payinfo-wrapper">
+                    <p>Safebuy Fee</p>
+                    <p>0 vnđ</p>
+                  </div>
+                  <div className="payinfo-wrapper">
+                    <p>Discount</p>
+                    <p>0 vnđ</p>
+                  </div>
+                  <div className="payinfo-wrapper">
+                    <p>Shipping Fee</p>
+                    <p>0 vnđ</p>
+                  </div>
+                  <div className="payinfo-wrapper">
+                    <h4>Total</h4>
+                    <h4>{currencyFormatter(shopData.price)}</h4>
+                  </div>
+                </Accordion>
               </div>
-
-              <div className="circle"></div>
             </div>
-
-            <InvoiceProductList items={shopData.items} />
-            {hideCheckout ? null : (
-              <button onClick={handleNavigate}>Check out</button>
-            )}
+            <div style={{ marginTop: `${productMargin}` }}>
+              <InvoiceProductList items={shopData.items} />
+            </div>
+            <div className="check-out">
+              <div>Check out</div>
+              <div className="price">
+                <b>{currencyFormatter(shopData.price)}</b>
+              </div>
+            </div>
           </div>
         </div>
       </Container>
@@ -210,3 +235,7 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
 };
 
 export default ReceiveInvoice;
+
+// {hideCheckout ? null : (
+//   <button className="" onClick={handleNavigate}>Check out</button>
+// )}

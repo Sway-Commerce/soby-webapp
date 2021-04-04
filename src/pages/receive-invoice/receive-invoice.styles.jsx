@@ -27,7 +27,6 @@ export const Container = styled.div`
 
           .status {
             display: flex;
-
           }
 
           .auto-fit {
@@ -59,22 +58,24 @@ export const Container = styled.div`
 
         .box-tag {
           position: absolute;
-          top: 100%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          background-image: url('/images/subtract.png');
-          width: 398px;
-          height: 80px;
-          border-radius: 12px;
-          padding: 30px 21px 25px 17px;
-          color: #fff;
-          display: flex;
-          justify-content: space-between;
-
-          .last {
-            border-left: 3px solid #fff;
-            position: relative;
-            top: 3px;
+          top: calc(100% - 40px);
+          left: 20px;
+          width: 421px;
+          background: #ffffff;
+          /* Drop Shadow */
+          box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.07);
+          border-radius: 8px;
+          padding: 12px;
+          .payinfo-wrapper {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 16px;
+            & + .payinfo-wrapper {
+              margin-top: 4px;
+            }
+            &:last-child {
+              margin-top: 16px;
+            }
           }
         }
 
@@ -108,7 +109,7 @@ export const Container = styled.div`
         }
       }
 
-      button {
+      /* button {
         width: 461px;
         height: 60px;
         box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.07);
@@ -117,6 +118,27 @@ export const Container = styled.div`
         color: ${mainColor};
         font-size: 20px;
         line-height: 26px;
+      } */
+
+      .check-out {
+        width: 461px;
+        height: 60px;
+        border-radius: 12px;
+        padding: 17px 24px;
+        color: #fff;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        background-color: ${mainColor};
+        position: relative;
+        cursor: pointer;
+        .price {
+          border-left: 3px solid #fff;
+          text-align: right;
+        }
+      }
+
+      .invoice-list {
+        margin-top: 192px;
       }
     }
   }

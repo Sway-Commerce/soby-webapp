@@ -26,7 +26,6 @@ export const Container = styled.div`
 const InvoiceStatus = ({ status }) => {
   const index =
     subInvoiceFilters?.findIndex((x) => x.toUpperCase() === status) ?? 0;
-    debugger
 
   return (
     <Container>

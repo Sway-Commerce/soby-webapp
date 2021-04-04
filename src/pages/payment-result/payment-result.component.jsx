@@ -44,7 +44,6 @@ const PaymentResult = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
   };
-  debugger;
 
   return (
     <Container>

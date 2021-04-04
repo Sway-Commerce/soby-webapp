@@ -54,9 +54,8 @@ const getNewToken = () => {
 
 const link = ApolloLink.from([
   onError(({ graphQLErrors, networkError }) => {
-    debugger;
     if (graphQLErrors.some((x) => x.extensions.code === 401)) {
-      getNewToken();
+      // getNewToken();
     }
     if (graphQLErrors.length) {
       console.log('[graphQLErrors]', graphQLErrors);
