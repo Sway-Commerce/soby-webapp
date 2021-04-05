@@ -29,9 +29,8 @@ export const signInFailure = (error) => ({
   payload: error,
 });
 
-export const phoneSignInStart = (phoneAndPassword) => ({
-  type: UserActionTypes.PHONE_SIGN_IN_START,
-  payload: phoneAndPassword,
+export const phoneSignInStart = () => ({
+  type: UserActionTypes.PHONE_SIGN_IN_START
 });
 
 export const checkUserSession = () => ({

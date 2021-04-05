@@ -35,9 +35,17 @@ export const GlobalStyle = createGlobalStyle`
 		cursor: pointer;
 	}
 
-	::-webkit-scrollbar {
-		width: 0;
-		height: 0;
+	body::-webkit-scrollbar {
+		width: 12px;
+	}
+
+	body::-webkit-scrollbar-track {
+		box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+	}
+
+	body::-webkit-scrollbar-thumb {
+		background-color: darkgrey;
+		outline: 1px solid slategrey;
 	}
 
 	* {

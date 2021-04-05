@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, withRouter } from 'react-router-dom';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 
 import { Container, ProductContainer } from './your-transactions.styles';
@@ -13,15 +12,25 @@ import { GET_INDIVIDUAL_INVOICE_LIST } from '../../graphQL/repository/invoice.re
 import Spinner from 'components/ui/spinner/spinner.component';
 import InvoiceItem from 'components/invoice-item/invoice-item.component';
 import InvoiceStatus from 'components/invoice-status/invoice-status.component';
-import { mainInvoiceFilters, subInvoiceFilters, subInvoiceIcons } from 'shared/constants/invoice.constant';
+import {
+  mainInvoiceFilters,
+  subInvoiceFilters,
+  subInvoiceIcons,
+} from 'shared/constants/invoice.constant';
 
 const YourTransaction = ({ name }) => {
   const mainIcons = [<OrderIcon />, <BillIcon />];
 
-  const [mainFilter, setMainFilter] = useState(mainInvoiceFilters[1]);
-  const [subFilter, setSubFilter] = useState(subInvoiceFilters[0]);
   const [invoiceList, setInvoiceList] = useState([]);
   const [activeInvoice, setActiveInvoice] = useState('');
+  const [invoiceListQuery, setInvoiceListQuery] = useState({
+    page: 0,
+    pageSize: 10,
+    mainFilter: mainInvoiceFilters[1],
+    subFilter: subInvoiceFilters[0],
+  });
+
+  const { mainFilter, subFilter, page, pageSize } = invoiceListQuery;
 
   const [
     getIndividualInvoiceList,
@@ -42,19 +51,16 @@ const YourTransaction = ({ name }) => {
         variables: {
           query: {
             statuses: [subFilter.toUpperCase()],
-            page: 0,
-            pageSize: 5,
+            page,
+            pageSize,
           },
         },
       });
     }
-  }, [mainFilter, subFilter, getIndividualInvoiceList]);
+  }, [mainFilter, subFilter, page, pageSize, getIndividualInvoiceList]);
 
   useEffect(() => {
     if (getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records) {
-      console.log(
-        getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records
-      );
       setInvoiceList(
         getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records
       );
@@ -62,12 +68,12 @@ const YourTransaction = ({ name }) => {
   }, [getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records]);
 
   if (getIndividualInvoiceListError) {
-    return getIndividualInvoiceListError;
+    return console.log(getIndividualInvoiceListError);
   }
 
   return (
     <Container>
-      <div className="box-left">
+      <div className={`box-left ${activeInvoice ? 'width-limit' : ''}`}>
         <HorizontalList
           key={JSON.stringify(mainInvoiceFilters)}
           items={mainInvoiceFilters}
@@ -75,7 +81,9 @@ const YourTransaction = ({ name }) => {
             <div
               className={`tab-wrapper ${mainFilter === item ? '' : 'opacity'}`}
               key={item}
-              onClick={() => setMainFilter(item)}
+              onClick={() =>
+                setInvoiceListQuery({ ...invoiceListQuery, mainFilter: item })
+              }
             >
               {mainIcons[index]}
               <p className="order">{item}</p>
@@ -91,7 +99,9 @@ const YourTransaction = ({ name }) => {
               <div
                 className={`tab-status ${subFilter === item ? '' : 'opacity'}`}
                 key={item}
-                onClick={() => setSubFilter(item)}
+                onClick={() =>
+                  setInvoiceListQuery({ ...invoiceListQuery, subFilter: item })
+                }
               >
                 {subInvoiceIcons[index]}
                 <p className="status">{item}</p>
@@ -99,17 +109,19 @@ const YourTransaction = ({ name }) => {
             )}
           />
         </div>
-        {invoiceList.map((x) => (
-          <InvoiceItem
-            key={x?.id}
-            price={x?.totalPrice}
-            status={x?.status}
-            name={x?.invoice?.name}
-            id={x?.id}
-            setActiveInvoice={setActiveInvoice}
-            activeInvoice={activeInvoice}
-          />
-        ))}
+        <div className="invoice-list">
+          {invoiceList.map((x) => (
+            <InvoiceItem
+              key={x?.id}
+              price={x?.totalPrice}
+              status={x?.status}
+              name={x?.invoice?.name}
+              id={x?.id}
+              setActiveInvoice={setActiveInvoice}
+              activeInvoice={activeInvoice}
+            />
+          ))}
+        </div>
         {getIndividualInvoiceListLoading ? <Spinner /> : null}
       </div>
       {activeInvoice ? (

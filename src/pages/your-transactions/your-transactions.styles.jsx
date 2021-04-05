@@ -57,6 +57,9 @@ export const Container = styled.div`
       border-radius: 3px;
       box-shadow: 0 0 8px rgba(196, 196, 196, 0.2);
     }
+    &.width-limit {
+      max-width: 655px;
+    }
   }
 
   .title {
@@ -73,6 +76,13 @@ export const Container = styled.div`
   .sub-filter {
     margin-top: 32px;
     overflow: auto;
+    padding-bottom: 8px;
+  }
+
+  .invoice-list {
+    max-height: calc(100vh - 280px);
+    overflow: auto;
+    padding-right: 10px;
   }
 `;
 

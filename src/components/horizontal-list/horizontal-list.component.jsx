@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export const Container = styled.h5`
+export const Container = styled.div`
   margin: 0;
   padding: 0;
   display: flex;

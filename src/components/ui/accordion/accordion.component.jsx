@@ -68,7 +68,7 @@ const Accordion = ({ children, setBelowGap, ...props }) => {
     setRotateState(
       setActive === 'active' ? 'accordion__icon' : 'accordion__icon rotate'
     );
-    setBelowGap( setActive === 'active' ? '0px' : '192px');
+    setBelowGap( setActive === 'active' ? '0px' : '145px');
   };
 
   return (

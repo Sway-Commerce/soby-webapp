@@ -136,10 +136,6 @@ export const Container = styled.div`
           text-align: right;
         }
       }
-
-      .invoice-list {
-        margin-top: 192px;
-      }
     }
   }
 `;

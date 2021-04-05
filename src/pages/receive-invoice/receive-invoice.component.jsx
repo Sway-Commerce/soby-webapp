@@ -31,6 +31,7 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
     items: [],
     shop: { logoUrl: '', name: '' },
     status: '',
+    shippingFee: 0
   });
   const [productMargin, setProductMargin] = useState(0);
 
@@ -103,7 +104,7 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
       getAggregatedInvoiceIndividualForIndividualData
         ?.getAggregatedInvoiceIndividualForIndividual?.data;
     if (invoiceData) {
-      const { status } = invoiceData;
+      const { status, shippingFee } = invoiceData;
       const {
         name,
         shippingType,
@@ -120,6 +121,7 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
         items,
         shop,
         status,
+        shippingFee
       });
     }
   }, [
@@ -142,8 +144,8 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
   if (error || acceptErrors || getAggregatedInvoiceIndividualForIndividualError)
     return `Error! ${error}`;
 
-  const handleNavigate = () => {
-    acceptInvoice();
+  const handleCheckout = () => {
+    invoiceIndividualId ? setOpen(true) : acceptInvoice();
   };
 
   return (
@@ -199,12 +201,8 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
                     <p>0 vnđ</p>
                   </div>
                   <div className="payinfo-wrapper">
-                    <p>Discount</p>
-                    <p>0 vnđ</p>
-                  </div>
-                  <div className="payinfo-wrapper">
                     <p>Shipping Fee</p>
-                    <p>0 vnđ</p>
+                    <p>{currencyFormatter(shopData.shippingFee)}</p>
                   </div>
                   <div className="payinfo-wrapper">
                     <h4>Total</h4>
@@ -216,19 +214,25 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
             <div style={{ marginTop: `${productMargin}` }}>
               <InvoiceProductList items={shopData.items} />
             </div>
-            <div className="check-out">
-              <div>Check out</div>
-              <div className="price">
-                <b>{currencyFormatter(shopData.price)}</b>
+            {shopData.status === 'ACCEPTED' || !shopData.status ? (
+              <div className="check-out" onClick={handleCheckout}>
+                <div>Check out</div>
+                <div className="price">
+                  <b>{currencyFormatter(shopData.price)}</b>
+                </div>
               </div>
-            </div>
+            ) : null}
           </div>
         </div>
       </Container>
       <SobyModal open={open} setOpen={setOpen}>
-        <ShippingInfo
-          invoiceIndividualId={acceptInvoiceData?.acceptInvoice?.data?.id}
-        />
+        {acceptInvoiceData?.acceptInvoice?.data?.id || invoiceIndividualId ? (
+          <ShippingInfo
+            invoiceIndividualId={
+              acceptInvoiceData?.acceptInvoice?.data?.id ?? invoiceIndividualId
+            }
+          />
+        ) : null}
       </SobyModal>
     </React.Fragment>
   );
@@ -236,6 +240,3 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
 
 export default ReceiveInvoice;
 
-// {hideCheckout ? null : (
-//   <button className="" onClick={handleNavigate}>Check out</button>
-// )}

@@ -350,20 +350,6 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     const district = districtList?.find((x) => x.value === districtId)?.label;
     const ward = wardList?.find((x) => x.value === wardId)?.label;
 
-    // d5cad2df-201a-4ef9-b8ab-4fd09114a4b3
-
-    console.log({
-      locationName: shippingInfo.addressLine,
-      phoneCountryCode,
-      phoneNumber,
-      country: 'VN',
-      province,
-      district,
-      ward,
-      addressLine: shippingInfo.addressLine,
-      defaultLocation: true,
-    });
-
     createShippingLocation({
       variables: {
         cmd: {
@@ -425,10 +411,6 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
       default:
     }
   };
-
-  if (createShippingLocationData?.createShopShippingLocation?.data) {
-    console.log(createShippingLocationData?.createShopShippingLocation?.data);
-  }
 
   if (createShippingLocationData?.createIndividualShippingLocation?.data) {
     // invoiceIndividualId: String!
