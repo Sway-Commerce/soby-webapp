@@ -89,3 +89,8 @@ export const sendPhoneVerification = () => ({
 export const verifyPhone = () => ({
   type: UserActionTypes.VERIFY_PHONE,
 });
+
+export const setAccessToken = (accessToken) => ({
+  type: UserActionTypes.SET_ACCESS_TOKEN,
+  payload: accessToken
+})

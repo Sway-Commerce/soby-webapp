@@ -17,6 +17,7 @@ import {
 } from 'graphQL/repository/individual.repository';
 import {
   phoneSignInStart,
+  setAccessToken,
   signInFailure,
   signInSuccess,
 } from 'redux/user/user.actions';
@@ -67,6 +68,7 @@ const PhoneSignin = () => {
   const dispatchPhoneSignInStart = (phoneAndPassword) =>
     dispatch(phoneSignInStart(phoneAndPassword));
   const dispatchSignInFailure = (error) => dispatch(signInFailure(error));
+  const dispatchSetAccessToken = (accessToken) => dispatch(setAccessToken());
 
   useEffect(() => {
     if (loadIndividualBasicInfoData?.getIndividual?.data) {
@@ -87,8 +89,6 @@ const PhoneSignin = () => {
         getSecretData?.getSecret?.data?.signingSecret,
         password
       );
-
-      localStorage.setItem('signature', signature);
 
       const {
         signingSecret,
@@ -124,10 +124,7 @@ const PhoneSignin = () => {
 
   useEffect(() => {
     if (!!data?.loginWithPhoneAndPassword?.data) {
-      localStorage.setItem(
-        'token',
-        data?.loginWithPhoneAndPassword?.data?.accessToken
-      );
+      dispatchSetAccessToken( data?.loginWithPhoneAndPassword?.data?.accessToken);
 
       getBasicInfo();
     }

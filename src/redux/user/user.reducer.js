@@ -56,6 +56,13 @@ const userReducer = (state = INITIAL_STATE, action) => {
         phoneCountryCode,
       };
     }
+    case UserActionTypes.SET_ACCESS_TOKEN: {
+      const accessToken = action.payload;
+      return {
+        ...state,
+        accessToken
+      };
+    }
     default:
       return state;
   }

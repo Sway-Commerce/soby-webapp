@@ -16,26 +16,9 @@ import { createBrowserHistory } from 'history';
 
 import { store, persistor } from './redux/store';
 
-import './index.css';
 import App from './App';
 import { LOGIN_WITH_SIGNATURE } from 'graphQL/repository/individual.repository';
-// import { LOGIN_WITH_SIGNATURE } from 'graphQL/repository/individual.repository';
-
-// eslint-disable-next-line react-hooks/rules-of-hooks
-// const [signinWithSignature] = useMutation(LOGIN_WITH_SIGNATURE, {
-//   errorPolicy: 'all',
-// });
-
-// const loginAgain = () => {
-//   const signature = localStorage.getItem('signature');
-//   signinWithSignature({
-//     variables: {
-//       cmd: { signature },
-//     },
-//   }).then(({ data }) => {
-//     localStorage.setItem('token', data?.loginWithSignature?.data?.accessToken);
-//   });
-// };
+import { setAccessToken } from 'redux/user/user.actions';
 
 const getNewToken = () => {
   const signature = store.getState().user.signature;
@@ -45,9 +28,8 @@ const getNewToken = () => {
       variables: { cmd: { signature } },
     })
     .then(({ data }) => {
-      localStorage.setItem(
-        'token',
-        data?.loginWithSignature?.data?.accessToken
+      store.dispatch(
+        setAccessToken(data?.loginWithSignature?.data?.accessToken)
       );
     });
 };
@@ -72,7 +54,7 @@ const link = ApolloLink.from([
 ]);
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('token');
+  const token = store.getState().user.accessToken;
   return {
     headers: {
       ...headers,
