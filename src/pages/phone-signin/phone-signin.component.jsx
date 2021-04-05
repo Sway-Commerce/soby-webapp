@@ -68,7 +68,7 @@ const PhoneSignin = () => {
   const dispatchPhoneSignInStart = (phoneAndPassword) =>
     dispatch(phoneSignInStart(phoneAndPassword));
   const dispatchSignInFailure = (error) => dispatch(signInFailure(error));
-  const dispatchSetAccessToken = (accessToken) => dispatch(setAccessToken());
+  const dispatchSetAccessToken = (accessToken) => dispatch(setAccessToken(accessToken));
 
   useEffect(() => {
     if (loadIndividualBasicInfoData?.getIndividual?.data) {
