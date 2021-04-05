@@ -28,9 +28,10 @@ const YourTransaction = ({ name }) => {
     pageSize: 10,
     mainFilter: mainInvoiceFilters[1],
     subFilter: subInvoiceFilters[0],
+    total: 0,
   });
 
-  const { mainFilter, subFilter, page, pageSize } = invoiceListQuery;
+  const { mainFilter, subFilter, page, pageSize, total } = invoiceListQuery;
 
   const [
     getIndividualInvoiceList,
@@ -46,6 +47,7 @@ const YourTransaction = ({ name }) => {
   useEffect(() => {
     setActiveInvoice(null);
     setInvoiceList([]);
+    setInvoiceListQuery({...invoiceListQuery, total: 0})
     if (mainFilter === 'Invoices') {
       getIndividualInvoiceList({
         variables: {
@@ -64,6 +66,11 @@ const YourTransaction = ({ name }) => {
       setInvoiceList(
         getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records
       );
+      setInvoiceListQuery({
+        ...invoiceListQuery,
+        total:
+          getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.total,
+      });
     }
   }, [getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records]);
 
@@ -87,7 +94,7 @@ const YourTransaction = ({ name }) => {
             >
               {mainIcons[index]}
               <p className="order">{item}</p>
-              <p className="amount">65</p>
+              {mainFilter === item ? <p className="amount">{total}</p> : null}
             </div>
           )}
         />
@@ -132,108 +139,3 @@ const YourTransaction = ({ name }) => {
 };
 
 export default YourTransaction;
-
-// <div className="box-left">
-//         <p className="title">
-//           <b>Thông tin giao hàng</b>
-//         </p>
-//         <form onSubmit={handleSubmit}>
-//           <label htmlFor="">Tên người nhận</label>
-//           <FormInput
-//             type="text"
-//             name="addressLine"
-//             value={shippingInfo.addressLine}
-//             onChange={handleChange}
-//             label="Tên người nhận"
-//           />
-//           <label htmlFor="">Địa chỉ</label>
-//           <input type="text" placeholder="Hồ Chí Minh city" />
-
-//           <div className="select-wrapper">
-//             {provinceList?.length ? (
-//               <Dropdown
-//                 options={provinceList}
-//                 onChange={onSelectProvinceChange}
-//                 value={province}
-//               />
-//             ) : null}
-//             <Dropdown
-//               options={districtList}
-//               onChange={onSelectDistrictChange}
-//               value={district}
-//             />
-//             <Dropdown options={wardList} onChange={setWard} value={ward} />
-//           </div>
-
-//           <label htmlFor="">Số điện thoại</label>
-//           <PhoneInput
-//             country="US"
-//             international
-//             withCountryCallingCode
-//             initialValueFormat="national"
-//             countryCallingCodeEditable={false}
-//             defaultCountry="VN"
-//             name="phoneNumber"
-//             value={phoneNumberIntl}
-//             onChange={(value) => setPhoneNumberIntl(value)}
-//           />
-//           {!isPhoneValid ? (
-//             <ErrorTitle>Your phone number is not correct</ErrorTitle>
-//           ) : null}
-//           <button>Next</button>
-//         </form>
-//       </div>
-
-// <div className="tab-wrapper opacity">
-//             <DisputeIcon className="shopping-bag" />
-//             <p className="order">Dispute</p>
-//             <p className="amount">65</p>
-//           </div>
-//           <div className="tab-wrapper opacity">
-//             <OrderIcon className="shopping-bag" />
-//             <p className="order">Delivered</p>
-//             <p className="amount">65</p>
-//           </div>
-//           <div className="tab-wrapper opacity">
-//             <BillIcon className="shopping-bag" />
-//             <p className="order">Completed</p>
-//             <p className="amount">65</p>
-//           </div>
-//           <div className="tab-wrapper opacity">
-//             <BillIcon className="shopping-bag" />
-//             <p className="order">Cancelled</p>
-//             <p className="amount">65</p>
-//           </div>
-
-// <div className="container-status">
-//   <div className="tab-status">
-//     <ClockIcon className="clock" />
-//     <p className="status">Accepted</p>
-//     <p className="line">|</p>
-//   </div>
-//   <div className="tab-status opacity">
-//     <DollasIcon className="clock" />
-//     <p className="status">Paid</p>
-//     <p className="line">|</p>
-//   </div>
-//   <div className="tab-status opacity">
-//     <TruckIcon className="clock" />
-//     <p className="status">Shipping</p>
-//     <p className="line">|</p>
-//   </div>
-//   <div className="tab-status opacity">
-//     <TruckIcon className="clock" />
-//     <p className="status">Delivery</p>
-//     <p className="line">|</p>
-//   </div>
-//   <div className="tab-status opacity">
-//     <TickIcon className="clock" />
-//     <p className="status">Completed</p>
-//     <p className="line">|</p>
-//   </div>
-//   <div className="tab-status opacity">
-//     <TickIcon className="clock" />
-//     <p className="status">Canceled</p>
-//     <p className="line">|</p>
-//   </div>
-// </div>

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 
-import { Container } from './receive-invoice.styles';
+import { Container, ShippingCard } from './receive-invoice.styles';
 import { useParams } from 'react-router-dom';
 import { ReactComponent as Extra } from 'shared/assets/extra.svg';
 import { ReactComponent as ClockIcon } from 'shared/assets/clock.svg';
@@ -31,7 +31,14 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
     items: [],
     shop: { logoUrl: '', name: '' },
     status: '',
-    shippingFee: 0
+    shippingFee: 0,
+    shippingLocation: {
+      addressLine: '',
+      district: '',
+      province: '',
+      ward: '',
+    },
+    individualTrackingUrl: '',
   });
   const [productMargin, setProductMargin] = useState(0);
 
@@ -104,7 +111,12 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
       getAggregatedInvoiceIndividualForIndividualData
         ?.getAggregatedInvoiceIndividualForIndividual?.data;
     if (invoiceData) {
-      const { status, shippingFee } = invoiceData;
+      const {
+        status,
+        shippingFee,
+        shippingLocation,
+        individualTrackingUrl,
+      } = invoiceData;
       const {
         name,
         shippingType,
@@ -121,7 +133,9 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
         items,
         shop,
         status,
-        shippingFee
+        shippingFee,
+        shippingLocation,
+        individualTrackingUrl,
       });
     }
   }, [
@@ -165,10 +179,10 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
               <p>
                 <b>{shopData.name}</b>
               </p>
-              <div className="item-wrapper">
-                <p>Expriration date</p>
-                <p>{timestampToDate(shopData.expiredAt)}</p>
-              </div>
+
+              {
+                // Status
+              }
               {shopData.status ? (
                 <div className="item-wrapper">
                   <p>Status</p>
@@ -176,42 +190,128 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
                 </div>
               ) : null}
 
-              <div className="item-wrapper">
-                <p className="auto-fit">Hình thức giao hàng</p>
-                <div>
-                  <div className="option-chip">
-                    {shopData.shippingType === 'BY_SOBY'
-                      ? 'Soby ship'
-                      : 'Seller ship'}
+              {
+                // Expriration date
+              }
+              {shopData.status === 'ACCEPTED' ? (
+                <React.Fragment>
+                  <div className="item-wrapper">
+                    <p>Expriration date</p>
+                    <p>{timestampToDate(shopData.expiredAt)}</p>
                   </div>
-                </div>
-              </div>
+                  <div className="item-wrapper">
+                    <p className="auto-fit">Shipping option</p>
+                    <div>
+                      <div className="option-chip">
+                        {shopData.shippingType === 'BY_SOBY'
+                          ? 'Soby ship'
+                          : 'Seller ship'}
+                      </div>
+                    </div>
+                  </div>
 
-              <div className="box-tag">
-                <Accordion
-                  title="Payment details"
-                  setBelowGap={setProductMargin}
-                >
-                  <div className="payinfo-wrapper">
-                    <p>Subtotal</p>
-                    <p>0 vnđ</p>
+                  {
+                    // Payment info
+                  }
+                  <div className="box-tag">
+                    <Accordion
+                      title="Payment details"
+                      setBelowGap={setProductMargin}
+                    >
+                      <div className="payinfo-wrapper">
+                        <p>Subtotal</p>
+                        <p>0 vnđ</p>
+                      </div>
+                      <div className="payinfo-wrapper">
+                        <p>Safebuy Fee</p>
+                        <p>0 vnđ</p>
+                      </div>
+                      <div className="payinfo-wrapper">
+                        <p>Shipping Fee</p>
+                        <p>{currencyFormatter(shopData.shippingFee)}</p>
+                      </div>
+                    </Accordion>
+                    <div className="payinfo-wrapper total">
+                      <h4>Total</h4>
+                      <h4>{currencyFormatter(shopData.price)}</h4>
+                    </div>
                   </div>
-                  <div className="payinfo-wrapper">
-                    <p>Safebuy Fee</p>
-                    <p>0 vnđ</p>
-                  </div>
-                  <div className="payinfo-wrapper">
-                    <p>Shipping Fee</p>
-                    <p>{currencyFormatter(shopData.shippingFee)}</p>
-                  </div>
-                  <div className="payinfo-wrapper">
+                </React.Fragment>
+              ) : null}
+
+              {
+                // Payment info
+              }
+              {shopData.status !== 'ACCEPTED' && shopData.status ? (
+                <div className="accordion-wrapper">
+                  <Accordion title="Payment details">
+                    <div className="payinfo-wrapper">
+                      <p>Subtotal</p>
+                      <p>0 vnđ</p>
+                    </div>
+                    <div className="payinfo-wrapper">
+                      <p>Safebuy Fee</p>
+                      <p>0 vnđ</p>
+                    </div>
+                    <div className="payinfo-wrapper">
+                      <p>Shipping Fee</p>
+                      <p>{currencyFormatter(shopData.shippingFee)}</p>
+                    </div>
+                  </Accordion>
+                  <div className="payinfo-wrapper total">
                     <h4>Total</h4>
                     <h4>{currencyFormatter(shopData.price)}</h4>
                   </div>
-                </Accordion>
-              </div>
+                </div>
+              ) : null}
+
+              {
+                // Shipping option
+              }
+
+              {shopData.status !== 'ACCEPTED' ? (
+                <ShippingCard>
+                  <div className="shipping-wrapper">
+                    <p>Shipping option</p>
+                    <div>
+                      <div className="option-chip">
+                        {shopData.shippingType === 'BY_SOBY'
+                          ? 'Soby ship'
+                          : 'Seller ship'}
+                      </div>
+                    </div>
+                  </div>
+                  {shopData.shippingLocation?.addressLine ? (
+                    <p className="text-truncation shipping-location">{`${shopData?.shippingLocation?.addressLine}, ${shopData?.shippingLocation?.ward}, ${shopData?.shippingLocation?.district}, ${shopData?.shippingLocation?.province}`}</p>
+                  ) : null}
+                  {shopData?.individualTrackingUrl ? (
+                    <div className="shipping-wrapper">
+                      <p className="tracking-code text-truncation">
+                        {shopData.individualTrackingUrl}
+                      </p>
+                      <div
+                        className="method"
+                        onClick={() => {
+                          navigator.clipboard.writeText(
+                            shopData.individualTrackingUrl
+                          );
+                          window.alert('Shipping tracking url is copied');
+                        }}
+                      >
+                        Copy
+                      </div>
+                    </div>
+                  ) : null}
+                </ShippingCard>
+              ) : null}
             </div>
-            <div style={{ marginTop: `${productMargin}` }}>
+            <div
+              style={{
+                marginTop: `${productMargin}`,
+                paddingTop: `${shopData.status === 'ACCEPTED' ? '40px' : 0}`,
+              }}
+              className={shopData.status === 'ACCEPTED'}
+            >
               <InvoiceProductList items={shopData.items} />
             </div>
             {shopData.status === 'ACCEPTED' || !shopData.status ? (
@@ -239,4 +339,3 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
 };
 
 export default ReceiveInvoice;
-

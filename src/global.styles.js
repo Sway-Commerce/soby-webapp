@@ -125,4 +125,11 @@ export const GlobalStyle = createGlobalStyle`
 		box-sizing: border-box;
 		border-radius: 8px;
 	}
+
+	.text-truncation {
+		padding: 0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 `;

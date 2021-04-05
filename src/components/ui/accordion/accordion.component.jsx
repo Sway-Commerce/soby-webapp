@@ -17,7 +17,7 @@ export const Container = styled.div`
     align-items: center;
     border: none;
     outline: none;
-    background-color: white;
+    background-color: inherit;
   }
 
   /* Style the accordion content title */
@@ -40,7 +40,6 @@ export const Container = styled.div`
 
   /* Style the accordion content panel. Note: hidden by default */
   .accordion__content {
-    background-color: white;
     overflow: auto;
     transition: height 0.4s ease;
   }
@@ -68,7 +67,9 @@ const Accordion = ({ children, setBelowGap, ...props }) => {
     setRotateState(
       setActive === 'active' ? 'accordion__icon' : 'accordion__icon rotate'
     );
-    setBelowGap( setActive === 'active' ? '0px' : '145px');
+    if(setBelowGap) {
+      setBelowGap( setActive === 'active' ? '0px' : '115px');
+    }
   };
 
   return (
