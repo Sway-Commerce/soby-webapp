@@ -29,8 +29,8 @@ const ShopProfile = lazy(() =>
 const ProductDetail = lazy(() =>
   import('pages/product-detail/product-detail.component')
 );
-const ReceiveInvoice = lazy(() =>
-  import('pages/receive-invoice/receive-invoice.component')
+const Invoice = lazy(() =>
+  import('pages/invoice/invoice.component')
 );
 const YourTransaction = lazy(() =>
   import('pages/your-transactions/your-transactions.component')
@@ -57,7 +57,7 @@ const App = () => {
 
               <Route path="/shop-profile/:shopId" component={ShopProfile} />
               <Route path="/product/:productId" component={ProductDetail} />
-              <Route path="/invoice/:invoiceId" component={ReceiveInvoice} />
+              <Route path="/invoice/:invoiceId" component={Invoice} />
               <JwtRoute path="/your-transaction" component={YourTransaction} />
               <Route
                 path="/transaction/vnpay_return"

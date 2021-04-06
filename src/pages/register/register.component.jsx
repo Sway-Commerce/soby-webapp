@@ -21,6 +21,7 @@ import {
   signUpSuccess,
   signUpFailure,
   sendPhoneVerification,
+  setAccessToken,
 } from 'redux/user/user.actions';
 
 import {
@@ -72,8 +73,8 @@ const Register = ({ history }) => {
     dispatch(signUpStart(userCredentials));
   const dispatchSignUpFailure = (error) => dispatch(signUpFailure(error));
   const dispatchSignUpSuccess = (keyPair) => dispatch(signUpSuccess(keyPair));
-
-  const dispatchSendPhoneVerification = () => dispatch(sendPhoneVerification());
+  const dispatchSetAccessToken = (accessToken) =>
+    dispatch(setAccessToken(accessToken));
 
   const { firstName, lastName, email, password } = userCredentials;
 
@@ -104,8 +105,7 @@ const Register = ({ history }) => {
 
   useEffect(() => {
     if (signatureData?.loginWithSignature?.data?.accessToken) {
-      localStorage.setItem(
-        'token',
+      dispatchSetAccessToken(
         signatureData?.loginWithSignature?.data?.accessToken
       );
 
@@ -124,9 +124,11 @@ const Register = ({ history }) => {
 
   useEffect(() => {
     if (registerData?.register?.data?.id) {
-      localStorage.setItem('token', '');
-
-      const {signature} = getSignature(signingPublicKey, signingSecret, password);
+      const { signature } = getSignature(
+        signingPublicKey,
+        signingSecret,
+        password
+      );
       signinWithSignature({
         variables: {
           cmd: { signature },

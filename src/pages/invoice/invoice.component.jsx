@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 
-import { Container, ShippingCard } from './receive-invoice.styles';
+import { Container, ShippingCard } from './invoice.styles';
 import { useParams } from 'react-router-dom';
 import { ReactComponent as Extra } from 'shared/assets/extra.svg';
 import { ReactComponent as ClockIcon } from 'shared/assets/clock.svg';
@@ -20,7 +20,7 @@ import ShippingInfo from 'components/shipping-info/shipping-info.component';
 import InvoiceStatus from 'components/invoice-status/invoice-status.component';
 import Accordion from 'components/ui/accordion/accordion.component';
 
-const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
+const Invoice = ({ history, hideCheckout, invoiceIndividualId }) => {
   const { invoiceId } = useParams();
   const [open, setOpen] = useState(false);
   const [shopData, setShopData] = useState({
@@ -39,6 +39,9 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
       ward: '',
     },
     individualTrackingUrl: '',
+    totalPrice: '',
+    orderFee: '',
+    escrowFee: '',
   });
   const [productMargin, setProductMargin] = useState(0);
 
@@ -116,6 +119,8 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
         shippingFee,
         shippingLocation,
         individualTrackingUrl,
+        totalPrice,
+        orderFee,
       } = invoiceData;
       const {
         name,
@@ -124,6 +129,7 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
         price,
         items,
         shop,
+        escrowFee,
       } = invoiceData?.invoice;
       setShopData({
         name,
@@ -136,6 +142,9 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
         shippingFee,
         shippingLocation,
         individualTrackingUrl,
+        totalPrice,
+        orderFee,
+        escrowFee,
       });
     }
   }, [
@@ -220,11 +229,11 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
                     >
                       <div className="payinfo-wrapper">
                         <p>Subtotal</p>
-                        <p>0 vnđ</p>
+                        <p>{currencyFormatter(shopData.price)}</p>
                       </div>
                       <div className="payinfo-wrapper">
-                        <p>Safebuy Fee</p>
-                        <p>0 vnđ</p>
+                        <p>Order Fee</p>
+                        <p>{currencyFormatter(shopData.orderFee)}</p>
                       </div>
                       <div className="payinfo-wrapper">
                         <p>Shipping Fee</p>
@@ -233,7 +242,7 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
                     </Accordion>
                     <div className="payinfo-wrapper total">
                       <h4>Total</h4>
-                      <h4>{currencyFormatter(shopData.price)}</h4>
+                      <h4>{currencyFormatter(shopData.totalPrice)}</h4>
                     </div>
                   </div>
                 </React.Fragment>
@@ -247,11 +256,15 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
                   <Accordion title="Payment details">
                     <div className="payinfo-wrapper">
                       <p>Subtotal</p>
-                      <p>0 vnđ</p>
+                      <p>{currencyFormatter(shopData.price)}</p>
                     </div>
                     <div className="payinfo-wrapper">
-                      <p>Safebuy Fee</p>
-                      <p>0 vnđ</p>
+                      <p>Escrow Fee</p>
+                      <p>{currencyFormatter(shopData.escrowFee)}</p>
+                    </div>
+                    <div className="payinfo-wrapper">
+                      <p>Order Fee</p>
+                      <p>{currencyFormatter(shopData.orderFee)}</p>
                     </div>
                     <div className="payinfo-wrapper">
                       <p>Shipping Fee</p>
@@ -260,7 +273,7 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
                   </Accordion>
                   <div className="payinfo-wrapper total">
                     <h4>Total</h4>
-                    <h4>{currencyFormatter(shopData.price)}</h4>
+                    <h4>{currencyFormatter(shopData.totalPrice)}</h4>
                   </div>
                 </div>
               ) : null}
@@ -338,4 +351,4 @@ const ReceiveInvoice = ({ history, hideCheckout, invoiceIndividualId }) => {
   );
 };
 
-export default ReceiveInvoice;
+export default Invoice;

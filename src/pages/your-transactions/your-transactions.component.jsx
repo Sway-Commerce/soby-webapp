@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 
 import { Container, ProductContainer } from './your-transactions.styles';
-import ReceiveInvoice from '../receive-invoice/receive-invoice.component';
+import Invoice from '../invoice/invoice.component';
 
 import { ReactComponent as OrderIcon } from 'shared/assets/order-icon.svg';
 import { ReactComponent as BillIcon } from 'shared/assets/bill-icon.svg';
@@ -132,7 +132,7 @@ const YourTransaction = ({ name }) => {
         {getIndividualInvoiceListLoading ? <Spinner /> : null}
       </div>
       {activeInvoice ? (
-        <ReceiveInvoice invoiceIndividualId={activeInvoice} />
+        <Invoice invoiceIndividualId={activeInvoice} />
       ) : null}
     </Container>
   );

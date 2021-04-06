@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Container } from './checkout.styles';
-import ReceiveInvoice from '../receive-invoice/receive-invoice.component';
+import Invoice from '../invoice/invoice.component';
 
 import Dropdown from 'components/ui/dropdown/dropdown.component';
 import { BANK_LIST } from 'shared/constants/bank.constant';
@@ -108,7 +108,7 @@ const Checkout = () => {
         <div className="select-wrapper"></div>
         <button onClick={handleSubmit}>Thanh toán</button>
       </div>
-      <ReceiveInvoice hideCheckout />
+      <Invoice hideCheckout />
     </Container>
   );
 };

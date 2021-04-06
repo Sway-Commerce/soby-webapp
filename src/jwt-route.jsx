@@ -10,8 +10,6 @@ function JwtRoute({ history, component: Component, ...rest }) {
   });
 
   useEffect(() => {
-    const prevPath = window.location.pathname;
-    localStorage.setItem('redirectUrl', prevPath);
     // get the token
     const jwt = accessToken;
     if (!jwt) {
