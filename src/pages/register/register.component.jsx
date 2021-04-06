@@ -129,11 +129,13 @@ const Register = ({ history }) => {
         signingSecret,
         password
       );
-      signinWithSignature({
-        variables: {
-          cmd: { signature },
-        },
-      });
+      setTimeout(() => {
+        signinWithSignature({
+          variables: {
+            cmd: { signature },
+          },
+        });
+      }, 0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [registerData?.register?.data]);

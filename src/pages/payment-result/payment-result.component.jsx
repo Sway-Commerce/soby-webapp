@@ -7,7 +7,7 @@ import {
 } from './payment-result.styles';
 import PaymentStatus from 'components/payment-status/payment-status.component';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
-import { timestampToDate } from 'shared/utils/getDate';
+import { timestampToDate, vnpayFormatToDate } from 'shared/utils/getDate';
 
 import { ReactComponent as MasterCard } from 'shared/assets/master-card.svg';
 import { ReactComponent as VisaCard } from 'shared/assets/visa-card.svg';
@@ -23,7 +23,7 @@ const PaymentResult = () => {
   const vnp_BankTranNo = params.get('vnp_BankTranNo');
   const vnp_CardType = params.get('vnp_CardType');
   const vnp_OrderInfo = params.get('vnp_OrderInfo');
-  const vnp_PayDate = timestampToDate(+params.get('vnp_PayDate'));
+  const vnp_PayDate = vnpayFormatToDate(params.get('vnp_PayDate'));
   const vnp_ResponseCode = params.get('vnp_ResponseCode');
   const vnp_Amount = currencyFormatter(+params.get('vnp_Amount') / 100);
 

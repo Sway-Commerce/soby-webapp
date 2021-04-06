@@ -464,7 +464,8 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     <Container>
       <h2>Shipping information</h2>
       <form
-        onSubmit={invoiceIndividualId ? handleSubmitHadShipping : handleSubmit}
+        onSubmit={!!getIndividualShippingListData?.getIndividualShippingLocationList
+          ?.data?.length ? handleSubmitHadShipping : handleSubmit}
       >
         <p className="title">
           <b>Hình thức thanh toán</b>
@@ -492,8 +493,8 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
         <p className="title">
           <b>Thông tin giao hàng</b>
         </p>
-        {getIndividualShippingListData?.getIndividualShippingLocationList
-          ?.data ? (
+        {!!getIndividualShippingListData?.getIndividualShippingLocationList
+          ?.data?.length ? (
           <Dropdown
             options={mapShippingData(
               getIndividualShippingListData?.getIndividualShippingLocationList
@@ -572,8 +573,9 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
         ) : null}
         <button
           className={
-            getIndividualShippingListData?.getIndividualShippingLocationList
-              ?.data && !shippingLocationId
+            (!!getIndividualShippingListData?.getIndividualShippingLocationList
+              ?.data?.length &&
+              !shippingLocationId)
               ? 'disable'
               : null
           }

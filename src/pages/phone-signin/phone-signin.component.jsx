@@ -85,7 +85,7 @@ const PhoneSignin = () => {
       const dispatchSignInSuccess = (payload) =>
         dispatch(signInSuccess(payload));
 
-      const { signature, signing } = getSignature(
+      const signature = getSignature(
         loadIndividualBasicInfoData?.getIndividual?.data?.signingPublicKey,
         getSecretData?.getSecret?.data?.signingSecret,
         password
@@ -106,7 +106,6 @@ const PhoneSignin = () => {
         encryptionSecret,
         signingPublicKey,
         encryptionPublicKey,
-        signing,
         phoneNumber,
         phoneCountryCode,
       });

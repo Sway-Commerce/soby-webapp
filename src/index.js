@@ -42,6 +42,7 @@ const link = ApolloLink.from([
         (x) => x.extensions.code === HttpStatusCode.Unauthorized
       )
     ) {
+      localStorage.setItem("redirectUrl", window.location.pathname);
       window.location.href = '/phone-signin';
     }
     if (graphQLErrors.length) {
@@ -53,7 +54,7 @@ const link = ApolloLink.from([
   }),
   createHttpLink({
     uri: process.env.REACT_APP_SERVER_URL,
-    // For server with deifferent domain use "include"
+    // For server with different domain use "include"
     credentials: 'include',
   }),
 ]);

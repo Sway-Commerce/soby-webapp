@@ -1,11 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 
 import { Container, ShippingCard } from './invoice.styles';
 import { useParams } from 'react-router-dom';
 import { ReactComponent as Extra } from 'shared/assets/extra.svg';
-import { ReactComponent as ClockIcon } from 'shared/assets/clock.svg';
 import {
   ACCEPT_INVOICE,
   GET_DETAILED_INVOICE_BY_ID,
@@ -20,7 +19,7 @@ import ShippingInfo from 'components/shipping-info/shipping-info.component';
 import InvoiceStatus from 'components/invoice-status/invoice-status.component';
 import Accordion from 'components/ui/accordion/accordion.component';
 
-const Invoice = ({ history, hideCheckout, invoiceIndividualId }) => {
+const Invoice = ({ invoiceIndividualId }) => {
   const { invoiceId } = useParams();
   const [open, setOpen] = useState(false);
   const [shopData, setShopData] = useState({
@@ -73,7 +72,7 @@ const Invoice = ({ history, hideCheckout, invoiceIndividualId }) => {
 
   const [
     acceptInvoice,
-    { data: acceptInvoiceData, error: acceptErrors, loading: acceptLoading },
+    { data: acceptInvoiceData, loading: acceptLoading },
   ] = useMutation(ACCEPT_INVOICE, {
     errorPolicy: 'all',
     variables: {
@@ -164,8 +163,6 @@ const Invoice = ({ history, hideCheckout, invoiceIndividualId }) => {
     getAggregatedInvoiceIndividualForIndividualLoading
   )
     return <Spinner />;
-  if (error || acceptErrors || getAggregatedInvoiceIndividualForIndividualError)
-    return `Error! ${error}`;
 
   const handleCheckout = () => {
     invoiceIndividualId ? setOpen(true) : acceptInvoice();
@@ -202,7 +199,7 @@ const Invoice = ({ history, hideCheckout, invoiceIndividualId }) => {
               {
                 // Expriration date
               }
-              {shopData.status === 'ACCEPTED' ? (
+              {shopData.status === 'ACCEPTED' || !shopData.status ? (
                 <React.Fragment>
                   <div className="item-wrapper">
                     <p>Expriration date</p>
@@ -229,7 +226,49 @@ const Invoice = ({ history, hideCheckout, invoiceIndividualId }) => {
                     >
                       <div className="payinfo-wrapper">
                         <p>Subtotal</p>
+                        <p>
+                          {currencyFormatter(
+                            invoiceIndividualId ? shopData.price : 0
+                          )}
+                        </p>
+                      </div>
+                      <div className="payinfo-wrapper">
+                        <p>Order Fee</p>
+                        <p>{currencyFormatter(shopData.orderFee)}</p>
+                      </div>
+                      <div className="payinfo-wrapper">
+                        <p>Shipping Fee</p>
+                        <p>{currencyFormatter(shopData.shippingFee)}</p>
+                      </div>
+                    </Accordion>
+                    <div className="payinfo-wrapper total">
+                      <h4>Total</h4>
+                      <h4>
+                        {currencyFormatter(
+                          invoiceIndividualId
+                            ? shopData.totalPrice
+                            : shopData.price
+                        )}
+                      </h4>
+                    </div>
+                  </div>
+                </React.Fragment>
+              ) : null}
+
+              {
+                // Payment info
+              }
+              {shopData.status !== 'ACCEPTED' && shopData.status ? (
+                <React.Fragment>
+                  <div className="accordion-wrapper">
+                    <Accordion title="Payment details">
+                      <div className="payinfo-wrapper">
+                        <p>Subtotal</p>
                         <p>{currencyFormatter(shopData.price)}</p>
+                      </div>
+                      <div className="payinfo-wrapper">
+                        <p>Escrow Fee</p>
+                        <p>{currencyFormatter(shopData.escrowFee)}</p>
                       </div>
                       <div className="payinfo-wrapper">
                         <p>Order Fee</p>
@@ -245,85 +284,51 @@ const Invoice = ({ history, hideCheckout, invoiceIndividualId }) => {
                       <h4>{currencyFormatter(shopData.totalPrice)}</h4>
                     </div>
                   </div>
-                </React.Fragment>
-              ) : null}
-
-              {
-                // Payment info
-              }
-              {shopData.status !== 'ACCEPTED' && shopData.status ? (
-                <div className="accordion-wrapper">
-                  <Accordion title="Payment details">
-                    <div className="payinfo-wrapper">
-                      <p>Subtotal</p>
-                      <p>{currencyFormatter(shopData.price)}</p>
-                    </div>
-                    <div className="payinfo-wrapper">
-                      <p>Escrow Fee</p>
-                      <p>{currencyFormatter(shopData.escrowFee)}</p>
-                    </div>
-                    <div className="payinfo-wrapper">
-                      <p>Order Fee</p>
-                      <p>{currencyFormatter(shopData.orderFee)}</p>
-                    </div>
-                    <div className="payinfo-wrapper">
-                      <p>Shipping Fee</p>
-                      <p>{currencyFormatter(shopData.shippingFee)}</p>
-                    </div>
-                  </Accordion>
-                  <div className="payinfo-wrapper total">
-                    <h4>Total</h4>
-                    <h4>{currencyFormatter(shopData.totalPrice)}</h4>
-                  </div>
-                </div>
-              ) : null}
-
-              {
-                // Shipping option
-              }
-
-              {shopData.status !== 'ACCEPTED' ? (
-                <ShippingCard>
-                  <div className="shipping-wrapper">
-                    <p>Shipping option</p>
-                    <div>
-                      <div className="option-chip">
-                        {shopData.shippingType === 'BY_SOBY'
-                          ? 'Soby ship'
-                          : 'Seller ship'}
-                      </div>
-                    </div>
-                  </div>
-                  {shopData.shippingLocation?.addressLine ? (
-                    <p className="text-truncation shipping-location">{`${shopData?.shippingLocation?.addressLine}, ${shopData?.shippingLocation?.ward}, ${shopData?.shippingLocation?.district}, ${shopData?.shippingLocation?.province}`}</p>
-                  ) : null}
-                  {shopData?.individualTrackingUrl ? (
+                  <ShippingCard>
                     <div className="shipping-wrapper">
-                      <p className="tracking-code text-truncation">
-                        {shopData.individualTrackingUrl}
-                      </p>
-                      <div
-                        className="method"
-                        onClick={() => {
-                          navigator.clipboard.writeText(
-                            shopData.individualTrackingUrl
-                          );
-                          window.alert('Shipping tracking url is copied');
-                        }}
-                      >
-                        Copy
+                      <p>Shipping option</p>
+                      <div>
+                        <div className="option-chip">
+                          {shopData.shippingType === 'BY_SOBY'
+                            ? 'Soby ship'
+                            : 'Seller ship'}
+                        </div>
                       </div>
                     </div>
-                  ) : null}
-                </ShippingCard>
+                    {shopData.shippingLocation?.addressLine ? (
+                      <p className="text-truncation shipping-location">{`${shopData?.shippingLocation?.addressLine}, ${shopData?.shippingLocation?.ward}, ${shopData?.shippingLocation?.district}, ${shopData?.shippingLocation?.province}`}</p>
+                    ) : null}
+                    {shopData?.individualTrackingUrl ? (
+                      <div className="shipping-wrapper">
+                        <p className="tracking-code text-truncation">
+                          {shopData.individualTrackingUrl}
+                        </p>
+                        <div
+                          className="method"
+                          onClick={() => {
+                            navigator.clipboard.writeText(
+                              shopData.individualTrackingUrl
+                            );
+                            window.alert('Shipping tracking url is copied');
+                          }}
+                        >
+                          Copy
+                        </div>
+                      </div>
+                    ) : null}
+                  </ShippingCard>
+                </React.Fragment>
               ) : null}
             </div>
             <div
               style={{
                 marginTop: `${productMargin}`,
-                paddingTop: `${shopData.status === 'ACCEPTED' ? '40px' : 0}`,
+                paddingTop: `${
+                  shopData.status === 'ACCEPTED' || !shopData.status
+                    ? '40px'
+                    : 0
+                }`,
               }}
-              className={shopData.status === 'ACCEPTED'}
             >
               <InvoiceProductList items={shopData.items} />
             </div>

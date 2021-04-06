@@ -17,7 +17,7 @@ const InvoiceProductList = ({ items }) => (
       return (
         <InvoiceProduct
           imageUrl={imageUrl}
-          key={id}
+          key={id + Math.random()}
           price={currentPrice}
           quantity={x.quantity}
           name={name}
