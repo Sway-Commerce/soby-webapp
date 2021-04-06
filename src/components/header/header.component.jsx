@@ -31,20 +31,3 @@ export const Header = ({ history }) => {
 };
 
 export default withRouter(Header);
-
-// <OptionsContainer>
-//         {isSignIn ? (
-//           <SignOut
-//             onClick={() => {
-//               dispatchSignOutStart();
-//               localStorage.removeItem('token');
-//               setIsSignin(false);
-//               history.push('');
-//             }}
-//           >
-//             Đăng xuất
-//           </SignOut>
-//         ) : (
-//           <SignInLink to="/phone-signin">Đăng nhập</SignInLink>
-//         )}
-//       </OptionsContainer>

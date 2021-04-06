@@ -14,9 +14,8 @@ export const Container = styled.div`
       box-shadow: 0 2px 8px rgb(0, 0, 0 0.1);
       .box-top {
         position: relative;
-        padding: 47px 32px;
+        padding: 40px 32px;
         background: #f1f1f1;
-        height: 335px;
         border-radius: 0px 0px 30px 30px;
         min-width: 461px;
 
@@ -58,7 +57,7 @@ export const Container = styled.div`
 
         .box-tag {
           position: absolute;
-          top: calc(100% - 40px);
+          top: calc(100% - 30px);
           left: 20px;
           width: 421px;
           background: #ffffff;
@@ -66,16 +65,17 @@ export const Container = styled.div`
           box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.07);
           border-radius: 8px;
           padding: 12px;
-          .payinfo-wrapper {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 16px;
-            & + .payinfo-wrapper {
-              margin-top: 4px;
-            }
-            &:last-child {
-              margin-top: 16px;
-            }
+        }
+        .payinfo-wrapper {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 16px;
+          & + .payinfo-wrapper {
+            margin-top: 4px;
+          }
+
+          &.total {
+            margin-top: 20px;
           }
         }
 
@@ -90,8 +90,8 @@ export const Container = styled.div`
               margin: auto 0 auto 22px;
             }
             img {
-              width: 50px;
-              height: 50px;
+              width: 40px;
+              height: 40px;
               border-radius: 8px;
             }
           }
@@ -106,6 +106,10 @@ export const Container = styled.div`
           border-radius: 8px;
           padding: 8px 12px;
           font-size: 14px;
+        }
+
+        .accordion-wrapper {
+          margin-top: 16px;
         }
       }
 
@@ -136,10 +140,38 @@ export const Container = styled.div`
           text-align: right;
         }
       }
+    }
+  }
+`;
 
-      .invoice-list {
-        margin-top: 192px;
-      }
+export const ShippingCard = styled.div`
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 21px 16px 16px;
+  margin-top: 16px;
+  .shipping-wrapper {
+    display: flex;
+    justify-content: space-between;
+    * {
+      margin: auto 0;
+    }
+    .tracking-code {
+      max-width: 200px;
+    }
+    .method {
+      font-size: 12px;
+      cursor: pointer;
+    }
+  }
+
+  .shipping-location {
+    max-width: 360px;
+    font-size: 14px;
+    margin-top: 16px;
+    & + .shipping-wrapper {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgb(0, 0, 0, 0.5);
     }
   }
 `;

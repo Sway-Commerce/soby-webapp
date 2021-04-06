@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import { ReactComponent as BillIcon } from 'shared/assets/bill-icon.svg';
-import { ReactComponent as ClockIcon } from 'shared/assets/clock.svg';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
 import InvoiceStatus from 'components/invoice-status/invoice-status.component';
 
@@ -16,7 +15,7 @@ export const Container = styled.div`
   }
 
   .icon-container {
-    width: 83px;
+    min-width: 83px;
     height: 78px;
     background: #f1f1f1;
     border-radius: 5px;
@@ -31,11 +30,10 @@ export const Container = styled.div`
   .detail-wrapper {
     margin-left: 40px;
     border-bottom: 1px solid rgb(112, 112, 112, 0.5);
-    min-width: 532px;
     width: 100%;
     display: flex;
+    justify-content: space-between;
     .details-order {
-      flex: 1;
       .cost {
         font-family: Work Sans;
         font-style: normal;

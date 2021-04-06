@@ -14,7 +14,6 @@ const InvoiceProductList = ({ items }) => (
         },
         sku: { properties, currentPrice },
       } = x;
-      console.log(x);
       return (
         <InvoiceProduct
           imageUrl={imageUrl}

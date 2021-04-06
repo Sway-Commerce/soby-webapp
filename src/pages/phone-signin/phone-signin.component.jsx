@@ -68,7 +68,8 @@ const PhoneSignin = () => {
   const dispatchPhoneSignInStart = (phoneAndPassword) =>
     dispatch(phoneSignInStart(phoneAndPassword));
   const dispatchSignInFailure = (error) => dispatch(signInFailure(error));
-  const dispatchSetAccessToken = (accessToken) => dispatch(setAccessToken(accessToken));
+  const dispatchSetAccessToken = (accessToken) =>
+    dispatch(setAccessToken(accessToken));
 
   useEffect(() => {
     if (loadIndividualBasicInfoData?.getIndividual?.data) {
@@ -84,7 +85,7 @@ const PhoneSignin = () => {
       const dispatchSignInSuccess = (payload) =>
         dispatch(signInSuccess(payload));
 
-      const {signature, signing} = getSignature(
+      const { signature, signing } = getSignature(
         loadIndividualBasicInfoData?.getIndividual?.data?.signingPublicKey,
         getSecretData?.getSecret?.data?.signingSecret,
         password
@@ -107,15 +108,9 @@ const PhoneSignin = () => {
         encryptionPublicKey,
         signing,
         phoneNumber,
-        phoneCountryCode
+        phoneCountryCode,
       });
-      const redirectUrl = localStorage.getItem('redirectUrl');
-      localStorage.removeItem('redirectUrl');
-      if (redirectUrl) {
-        window.location = redirectUrl;
-      } else {
-        window.location.href = '/';
-      }
+      window.location.href = '/your-transaction';
     }
   }, [
     loadIndividualBasicInfoData?.getIndividual?.data,
@@ -124,7 +119,9 @@ const PhoneSignin = () => {
 
   useEffect(() => {
     if (!!data?.loginWithPhoneAndPassword?.data) {
-      dispatchSetAccessToken( data?.loginWithPhoneAndPassword?.data?.accessToken);
+      dispatchSetAccessToken(
+        data?.loginWithPhoneAndPassword?.data?.accessToken
+      );
 
       getBasicInfo();
     }

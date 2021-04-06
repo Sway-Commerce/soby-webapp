@@ -273,6 +273,9 @@ export const AGGREGATED_INVOICE_INDIVIDUAL = gql`
     totalPrice
     createdAt
     updatedAt
+    individualTrackingUrl
+    shopTrackingUrl
+    orderFee
     assess {
       ...AssessFragment
     }
