@@ -19,6 +19,7 @@ import { store, persistor } from './redux/store';
 import App from './App';
 import { LOGIN_WITH_SIGNATURE } from 'graphQL/repository/individual.repository';
 import { setAccessToken } from 'redux/user/user.actions';
+import { HttpStatusCode } from 'shared/model/shared.model';
 
 const getNewToken = () => {
   const signature = store.getState().user.signature;
@@ -36,8 +37,12 @@ const getNewToken = () => {
 
 const link = ApolloLink.from([
   onError(({ graphQLErrors, networkError }) => {
-    if (graphQLErrors.some((x) => x.extensions.code === 401)) {
-      // getNewToken();
+    if (
+      graphQLErrors.some(
+        (x) => x.extensions.code === HttpStatusCode.Unauthorized
+      )
+    ) {
+      window.location.href = '/phone-signin';
     }
     if (graphQLErrors.length) {
       console.log('[graphQLErrors]', graphQLErrors);
