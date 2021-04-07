@@ -105,7 +105,7 @@ export const SEND_PHONE_VERIFICATION = gql`
 `;
 
 export const VERIFY_PHONE = gql`
-  mutation verifyPhone($cmd: VerifyPhoneCmd) {
+  mutation VerifyPhone($cmd: VerifyPhoneCmd) {
     verifyPhone(cmd: $cmd) {
       success
       message
@@ -174,14 +174,10 @@ export const getSignature = (signingPublicKey, signingSecret, password) => {
   signing.importPublicKey(signingPublicKey);
   signing.importPrivateKey(signingSecret, password);
 
-  return { signature: generateJwt(signing), signing };
+  return generateJwt(signing);
 };
 
-export const signSignature = (
-  signingSecret,
-  jsonString,
-  password
-) => {
+export const signSignature = (signingSecret, jsonString, password) => {
   const signing = new Signing();
 
   // signing.importPublicKey(signingPublicKey);

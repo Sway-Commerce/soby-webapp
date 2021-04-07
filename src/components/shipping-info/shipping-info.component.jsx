@@ -140,7 +140,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
 
   const [
     loadProvince,
-    { error, data: provinceData, loading: provinceLoading },
+    { data: provinceData, loading: provinceLoading },
   ] = useLazyQuery(GET_PROVINCE_LIST);
 
   const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
@@ -148,17 +148,15 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   const [
     loadDistrictList,
     {
-      error: districtError,
       data: districtData,
       loading: loadDistrictListLoading,
     },
   ] = useLazyQuery(GET_DISTRICT_LIST);
-  const [loadWardList, { error: wardError, data: wardData }] = useLazyQuery(
+  const [loadWardList, { data: wardData }] = useLazyQuery(
     GET_WARD_LIST
   );
 
   const {
-    error: getIndividualShippingListError,
     data: getIndividualShippingListData,
   } = useQuery(GET_INDIVIDUAL_SHIPPING_LOCATION_LIST);
 
@@ -166,7 +164,6 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     createShippingLocation,
     {
       data: createShippingLocationData,
-      error: createShippingLocationError,
       loading: createShippingLocationLoading,
     },
   ] = useMutation(CREATE_INDIVIDUAL_SHIPPING_LOCATION, {
@@ -177,7 +174,6 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     updateInvoiceIndividualInfo,
     {
       data: updateInvoiceIndividualInfoData,
-      error: updateInvoiceIndividualInfoError,
       loading: updateInvoiceIndividualInfoLoading,
     },
   ] = useMutation(UPDATE_INVOICE_INDIVIDUAL_INFO, {
@@ -188,7 +184,6 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     createInvoicePayment,
     {
       data: createInvoicePaymentData,
-      error: createInvoicePaymentError,
       loading: createInvoicePaymentLoading,
     },
   ] = useMutation(CREATE_INVOICE_PAYMENT, {
@@ -293,18 +288,6 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   ) {
     return <Spinner />;
   }
-
-  if (
-    error ||
-    districtError ||
-    wardError ||
-    createShippingLocationError ||
-    updateInvoiceIndividualInfoError ||
-    createInvoicePaymentError
-  )
-    return `Error! ${
-      error || districtError || wardError || updateInvoiceIndividualInfoError
-    }`;
 
   const onSelectDistrictChange = (value) => {
     setDistrict(value);
@@ -464,7 +447,8 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     <Container>
       <h2>Shipping information</h2>
       <form
-        onSubmit={invoiceIndividualId ? handleSubmitHadShipping : handleSubmit}
+        onSubmit={!!getIndividualShippingListData?.getIndividualShippingLocationList
+          ?.data?.length ? handleSubmitHadShipping : handleSubmit}
       >
         <p className="title">
           <b>Hình thức thanh toán</b>
@@ -492,8 +476,8 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
         <p className="title">
           <b>Thông tin giao hàng</b>
         </p>
-        {getIndividualShippingListData?.getIndividualShippingLocationList
-          ?.data ? (
+        {!!getIndividualShippingListData?.getIndividualShippingLocationList
+          ?.data?.length ? (
           <Dropdown
             options={mapShippingData(
               getIndividualShippingListData?.getIndividualShippingLocationList
@@ -572,8 +556,9 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
         ) : null}
         <button
           className={
-            getIndividualShippingListData?.getIndividualShippingLocationList
-              ?.data && !shippingLocationId
+            (!!getIndividualShippingListData?.getIndividualShippingLocationList
+              ?.data?.length &&
+              !shippingLocationId)
               ? 'disable'
               : null
           }

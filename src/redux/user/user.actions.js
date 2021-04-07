@@ -1,5 +1,4 @@
 import UserActionTypes from './user.types';
-import {Signing} from 'credify-crypto';
 
 export const signInSuccess = ({
   signature,
@@ -7,7 +6,6 @@ export const signInSuccess = ({
   encryptionSecret,
   signingPublicKey,
   encryptionPublicKey,
-  signing,
   phoneNumber,
   phoneCountryCode
 }) => ({
@@ -18,7 +16,6 @@ export const signInSuccess = ({
     encryptionSecret,
     signingPublicKey,
     encryptionPublicKey,
-    signing,
     phoneNumber,
     phoneCountryCode
   },
@@ -59,7 +56,6 @@ export const signUpSuccess = ({
   encryptionSecret,
   signingPublicKey,
   encryptionPublicKey,
-  signature,
 }) => ({
   type: UserActionTypes.SIGN_UP_SUCCESS,
   payload: {
@@ -67,7 +63,6 @@ export const signUpSuccess = ({
     encryptionSecret,
     signingPublicKey,
     encryptionPublicKey,
-    signature,
   },
 });
 

@@ -50,6 +50,8 @@ const Register = ({ history }) => {
     };
   });
 
+  const [signature, setSignature] = useState('')
+
   const [userCredentials, setUserCredentials] = useState({
     password: '',
     firstName: '',
@@ -104,6 +106,17 @@ const Register = ({ history }) => {
   });
 
   useEffect(() => {
+    if (signature) {
+      debugger
+      signinWithSignature({
+        variables: {
+          cmd: { signature },
+        },
+      });
+    }
+  }, [signature]);
+
+  useEffect(() => {
     if (signatureData?.loginWithSignature?.data?.accessToken) {
       dispatchSetAccessToken(
         signatureData?.loginWithSignature?.data?.accessToken
@@ -124,16 +137,13 @@ const Register = ({ history }) => {
 
   useEffect(() => {
     if (registerData?.register?.data?.id) {
-      const { signature } = getSignature(
+      const signature = getSignature(
         signingPublicKey,
         signingSecret,
         password
       );
-      signinWithSignature({
-        variables: {
-          cmd: { signature },
-        },
-      });
+      debugger;
+      setSignature(signature);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [registerData?.register?.data]);

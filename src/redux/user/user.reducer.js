@@ -15,7 +15,6 @@ const INITIAL_STATE = {
 
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case UserActionTypes.SIGN_UP_SUCCESS:
     case UserActionTypes.SIGN_IN_SUCCESS: {
       const {
         signingSecret,
@@ -23,7 +22,6 @@ const userReducer = (state = INITIAL_STATE, action) => {
         signingPublicKey,
         encryptionPublicKey,
         signature,
-        signing,
         phoneNumber,
         phoneCountryCode,
       } = action.payload;
@@ -34,9 +32,23 @@ const userReducer = (state = INITIAL_STATE, action) => {
         signingPublicKey,
         encryptionPublicKey,
         signature,
-        signing,
         phoneNumber,
         phoneCountryCode,
+      };
+    }
+    case UserActionTypes.SIGN_UP_SUCCESS: {
+      const {
+        signingSecret,
+        encryptionSecret,
+        signingPublicKey,
+        encryptionPublicKey,
+      } = action.payload;
+      return {
+        ...state,
+        signingSecret,
+        encryptionSecret,
+        signingPublicKey,
+        encryptionPublicKey,
       };
     }
     case UserActionTypes.SIGN_OUT_START:

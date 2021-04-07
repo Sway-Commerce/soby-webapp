@@ -19,6 +19,7 @@ import { store, persistor } from './redux/store';
 import App from './App';
 import { LOGIN_WITH_SIGNATURE } from 'graphQL/repository/individual.repository';
 import { setAccessToken } from 'redux/user/user.actions';
+import { HttpStatusCode } from 'shared/model/shared.model';
 
 const getNewToken = () => {
   const signature = store.getState().user.signature;
@@ -36,8 +37,13 @@ const getNewToken = () => {
 
 const link = ApolloLink.from([
   onError(({ graphQLErrors, networkError }) => {
-    if (graphQLErrors.some((x) => x.extensions.code === 401)) {
-      // getNewToken();
+    if (
+      graphQLErrors.some(
+        (x) => x.extensions.code === HttpStatusCode.Unauthorized
+      )
+    ) {
+      localStorage.setItem("redirectUrl", window.location.pathname);
+      window.location.href = '/phone-signin';
     }
     if (graphQLErrors.length) {
       console.log('[graphQLErrors]', graphQLErrors);
@@ -48,7 +54,7 @@ const link = ApolloLink.from([
   }),
   createHttpLink({
     uri: process.env.REACT_APP_SERVER_URL,
-    // For server with deifferent domain use "include"
+    // For server with different domain use "include"
     credentials: 'include',
   }),
 ]);

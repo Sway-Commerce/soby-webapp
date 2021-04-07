@@ -44,7 +44,9 @@ const PhoneVerification = ({ history, phone }) => {
 
   useEffect(() => {
     if (data?.verifyPhone?.success) {
-      history.push('/signout');
+      const redirectUrl = localStorage.getItem("redirectUrl");
+      localStorage.removeItem("redirectUrl");
+      window.location = redirectUrl || "/your-transaction";
     }
   }, [data?.verifyPhone?.success]);
 
