@@ -34,9 +34,13 @@ import {
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 import usePhoneNumber from 'shared/hooks/usePhoneNumber';
 import Spinner from 'components/ui/spinner/spinner.component';
+import SobyModal from 'components/ui/modal/modal.component';
+import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
 const PhoneSignin = () => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
+  const [open, setOpen] = useState(false);
+  const [formError, setFormError] = useState('');
 
   const [password, setPassword] = useState('');
   const [inputValidation, setInputValidation] = useState({
@@ -54,14 +58,14 @@ const PhoneSignin = () => {
   const [
     getBasicInfo,
     {
-      error: loadIndividualBasicInfoError,
       data: loadIndividualBasicInfoData,
       loading: loadIndividualBasicInfoLoading,
+      error: loadIndividualBasicInfoError,
     },
   ] = useLazyQuery(GET_INDIVIDUAL_BASIC_INFO);
   const [
     getSecret,
-    { error: getSecretError, data: getSecretData, loading: getSecretLoading },
+    { data: getSecretData, loading: getSecretLoading, error: getSecretError },
   ] = useLazyQuery(GETSECRET);
 
   const dispatch = useDispatch();
@@ -109,9 +113,9 @@ const PhoneSignin = () => {
         phoneNumber,
         phoneCountryCode,
       });
-      const redirectUrl = localStorage.getItem("redirectUrl");
-      localStorage.removeItem("redirectUrl");
-      window.location = redirectUrl || "/your-transaction";
+      const redirectUrl = localStorage.getItem('redirectUrl');
+      localStorage.removeItem('redirectUrl');
+      window.location = redirectUrl || '/your-transaction';
     }
   }, [
     loadIndividualBasicInfoData?.getIndividual?.data,
@@ -128,14 +132,21 @@ const PhoneSignin = () => {
     }
   }, [!!data?.loginWithPhoneAndPassword?.data]);
 
-  if (loading || loadIndividualBasicInfoLoading || getSecretLoading)
-    return <Spinner />;
-  if (error || loadIndividualBasicInfoError || getSecretError) {
-    dispatchSignInFailure(
-      error || loadIndividualBasicInfoError || getSecretError
-    );
-    return `Error! ${error || loadIndividualBasicInfoError || getSecretError}`;
-  }
+  useEffect(() => {
+    if (error) {
+      setFormError(
+        error.message ??
+          loadIndividualBasicInfoError.message ??
+          getSecretError.message
+      );
+      setOpen(true);
+    }
+  }, [error]);
+  useEffect(() => {
+    if (loading || loadIndividualBasicInfoLoading || getSecretLoading) {
+      return <Spinner />;
+    }
+  }, [loading || loadIndividualBasicInfoLoading || getSecretLoading]);
 
   const { isPasswordValid, isPhoneValid } = inputValidation;
 
@@ -222,6 +233,11 @@ const PhoneSignin = () => {
         </SigninContainer>
         <PolicyNavigate />
       </CardWrapper>
+      <SobyModal open={open} setOpen={setOpen}>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpen} />
+        ) : null}
+      </SobyModal>
     </RegisterContainer>
   );
 };

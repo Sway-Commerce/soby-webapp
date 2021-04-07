@@ -107,7 +107,6 @@ const Register = ({ history }) => {
 
   useEffect(() => {
     if (signature) {
-      debugger
       signinWithSignature({
         variables: {
           cmd: { signature },
@@ -142,7 +141,6 @@ const Register = ({ history }) => {
         signingSecret,
         password
       );
-      debugger;
       setSignature(signature);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
