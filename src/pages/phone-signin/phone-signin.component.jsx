@@ -109,7 +109,9 @@ const PhoneSignin = () => {
         phoneNumber,
         phoneCountryCode,
       });
-      window.location.href = '/your-transaction';
+      const redirectUrl = localStorage.getItem("redirectUrl");
+      localStorage.removeItem("redirectUrl");
+      window.location = redirectUrl || "/your-transaction";
     }
   }, [
     loadIndividualBasicInfoData?.getIndividual?.data,

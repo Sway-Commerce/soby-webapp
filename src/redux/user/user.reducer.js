@@ -37,7 +37,6 @@ const userReducer = (state = INITIAL_STATE, action) => {
       };
     }
     case UserActionTypes.SIGN_UP_SUCCESS: {
-      debugger
       const {
         signingSecret,
         encryptionSecret,

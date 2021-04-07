@@ -46,7 +46,7 @@ const Invoice = ({ invoiceIndividualId }) => {
 
   const [
     loadDetailInvoice,
-    { loading, error, data: invoiceData },
+    { loading, data: invoiceData },
   ] = useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
     variables: {
       id: invoiceId,
