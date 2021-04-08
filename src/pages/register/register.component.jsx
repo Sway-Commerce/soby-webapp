@@ -55,6 +55,7 @@ const Register = ({ history }) => {
   const [signature, setSignature] = useState('');
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
+  const [operationLoading, setOperationLoading] = useState(false)
 
   const [userCredentials, setUserCredentials] = useState({
     password: '',
@@ -90,16 +91,16 @@ const Register = ({ history }) => {
     isLastNameValid,
   } = inputValidation;
 
-  const [register, { data: registerData, error: registerError, loading: registerLoading }] = useMutation(
-    CREATE_INDIVIDUAL,
-    {
-      errorPolicy: 'all',
-    }
-  );
+  const [
+    register,
+    { data: registerData, error: registerError, loading: registerLoading },
+  ] = useMutation(CREATE_INDIVIDUAL, {
+    errorPolicy: 'all',
+  });
 
   const [
     signinWithSignature,
-    { data: signatureData, error: signinWithSignatureError, loading: signinWithSignatureLoading },
+    { data: signatureData, loading: signinWithSignatureLoading },
   ] = useMutation(LOGIN_WITH_SIGNATURE, {
     errorPolicy: 'all',
   });
@@ -110,16 +111,21 @@ const Register = ({ history }) => {
 
   useEffect(() => {
     if (signature) {
-      signinWithSignature({
-        variables: {
-          cmd: { signature },
-        },
-      });
+      setOperationLoading(true);
+      setTimeout(() => {
+        signinWithSignature({
+          variables: {
+            cmd: { signature },
+          },
+        });
+      }, 4000);
     }
   }, [signature]);
 
   useEffect(() => {
     if (signatureData?.loginWithSignature?.data?.accessToken) {
+      setOperationLoading(false);
+
       dispatchSetAccessToken(
         signatureData?.loginWithSignature?.data?.accessToken
       );
@@ -144,11 +150,11 @@ const Register = ({ history }) => {
   }, [registerData?.register?.data]);
 
   useEffect(() => {
-    if (registerError?.message || signinWithSignatureError?.message) {
-      setFormError(registerError?.message ?? signinWithSignatureError?.message);
+    if (registerError?.message) {
+      setFormError(registerError?.message);
       setOpen(true);
     }
-  }, [signinWithSignatureError, registerError]);
+  }, [registerError]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -171,7 +177,6 @@ const Register = ({ history }) => {
     });
 
     if (isPasswordValid && isEmailValid) {
-
       setUserCredentials({
         ...userCredentials,
         encryptionSecret,
@@ -211,7 +216,7 @@ const Register = ({ history }) => {
     setUserCredentials({ ...userCredentials, [name]: value });
   };
 
-  return signinWithSignatureLoading || registerLoading ? (
+  return signinWithSignatureLoading || registerLoading || operationLoading ? (
     <Spinner />
   ) : (
     <RegisterContainer>

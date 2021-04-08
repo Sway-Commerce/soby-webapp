@@ -21,7 +21,6 @@ const userReducer = (state = INITIAL_STATE, action) => {
         encryptionSecret,
         signingPublicKey,
         encryptionPublicKey,
-        signature,
         phoneNumber,
         phoneCountryCode,
       } = action.payload;
@@ -31,7 +30,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         encryptionSecret,
         signingPublicKey,
         encryptionPublicKey,
-        signature,
+        signature: null,
         phoneNumber,
         phoneCountryCode,
       };
