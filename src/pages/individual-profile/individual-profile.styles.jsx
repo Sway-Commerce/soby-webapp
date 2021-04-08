@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { mainColor } from 'shared/css-variable/variable';
 
-export const ShopContainer = styled.div`
+export const Container = styled.div`
   padding: 0 240px;
   min-height: 150vh;
   font-family: 'Work Sans', sans-serif;
@@ -12,141 +12,16 @@ export const ShopContainer = styled.div`
   }
 `;
 
-export const CardShadow = styled.div`
-  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.07);
-  border: 1px solid rgba(194, 194, 194, 0.5);
-  border-radius: 8px;
-  transition: 0.3s;
-  width: 453px;
-
-  &.shop-name {
-    height: 154px;
-    display: flex;
-    margin: 0 40px 32px 0;
-    .info {
-      margin: auto 0 auto 16px;
-      .title {
-        color: ${mainColor};
-        line-height: 0;
-      }
-      .rank {
-        font-style: normal;
-        font-weight: normal;
-        font-size: 18px;
-        line-height: 26px;
-        margin: 0;
-      }
-    }
-
-    img {
-      width: 100px;
-      height: 100px;
-      margin: auto 0 auto 40px;
-    }
-  }
-
-  &.shop-feedback {
-    height: 276px;
-    padding: 56px 48px;
-    h3 {
-      font-weight: 600;
-      font-size: 24px;
-      line-height: 28px;
-      color: black;
-      margin: 0 0 32px;
-      padding: 0;
-    }
-
-    .info-group {
-      display: flex;
-      justify-content: space-between;
-      p {
-        font-weight: normal;
-        font-size: 14px;
-        margin: 0;
-      }
-    }
-  }
-`;
-
-export const Card = styled.div`
-  border: 1px solid rgba(194, 194, 194, 0.2);
-  width: 453px;
-  margin-bottom: 32px;
-  padding: 24px;
-
-  &.business-kyb {
-    height: 402px;
-    .title {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-
-    .info-group {
-      border-bottom: 1px solid rgba(194, 194, 194, 0.5);
-      padding-bottom: 8px;
-      p + p {
-        margin-top: 4px;
-      }
-
-      & + .info-group {
-        margin-top: 16px;
-      }
-    }
-  }
-  &.personal-kyb {
-    height: 82px;
-    .title {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      .status {
-        padding: 4px 12px;
-        background: #f53535;
-        border-radius: 4px;
-        font-size: 20px;
-        color: white;
-      }
-    }
-  }
-
-  h4 {
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 23px;
-    margin: 0;
-  }
-
-  p {
-    margin: 0;
-    padding: 0;
-    font-weight: normal;
-    font-size: 18px;
-  }
-`;
-
 export const MainContent = styled.div`
   flex: 2;
-  h3 {
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 28px;
-    color: black;
-    margin: 0 0 32px;
-    padding: 0;
-  }
+  width: 1140px;
 
   p {
-    margin: 0 0 56px;
     padding: 0;
     font-weight: normal;
     font-size: 20px;
   }
-  .category-list {
-    display: flex;
-    margin-bottom: 56px;
-  }
+
 
   .shop-info {
     display: flex;
@@ -175,5 +50,249 @@ export const MainContent = styled.div`
 
   .product-group {
     display: flex;
+  }
+
+  .info-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .error {
+    margin-left: 16px;
+  }
+
+  .edit-img {
+    margin-right: 8px;
+  }
+
+  .sample {
+    margin-top: 8px;
+    font-family: Work Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 26px;
+    color: #000000;
+  }
+
+  .edit {
+    font-family: Work Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 26px;
+    color: #000000;
+  }
+
+  .email {
+    font-family: Work Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 26px;
+    color: #000000;
+  }
+
+  .email-info {
+    border-bottom: 1px solid rgb(201, 201, 201, 0.5);
+    padding-bottom: 8px;
+  }
+
+  .email-number {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 24px;
+  }
+
+  .number-info {
+    border-bottom: 1px solid rgb(201, 201, 201, 0.5);
+    padding-bottom: 8px;
+  }
+
+  .title-info {
+    display: flex;
+  }
+
+  .title-info span {
+    margin: auto 0;
+  }
+
+  .ship-title {
+    font-family: Work Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 26px;
+    color: #333333;
+  }
+
+  .ship-info {
+    margin-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgb(201, 201, 201, 0.5);
+    padding-bottom: 8px;
+  }
+
+  .notify {
+    margin-top: 34px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgb(201, 201, 201, 0.5);
+    padding-bottom: 8px;
+  }
+
+  .notify-title {
+    font-family: Work Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 20px;
+    line-height: 26px;
+    color: #000000;
+  }
+
+  .notify-info {
+    display: flex;
+  }
+
+  .notify-info span {
+    margin: auto 0;
+  }
+
+  .bell {
+    margin-right: 16px;
+  }
+
+  @media screen and (max-width: 800px) {
+    body {
+      width: auto;
+    }
+
+    .container {
+      width: 329px;
+      margin: auto;
+    }
+
+    .email-number {
+      grid-template-columns: repeat(1, 1fr);
+    }
+    .info-wrapper {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .error {
+      margin-left: 8px;
+      height: 14.5px;
+      width: 14.5px;
+    }
+
+    .edit-img {
+      margin: auto 8px auto 0;
+      width: 10px;
+    }
+
+    .sample {
+      margin-top: 4px;
+      font-family: Work Sans;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 24px;
+      color: #000000;
+    }
+
+    .edit {
+      font-family: Work Sans;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 24px;
+      text-align: right;
+      color: #000000;
+    }
+
+    .email {
+      font-family: Work Sans;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 24px;
+      text-align: right;
+      color: #000000;
+    }
+
+    .email-info {
+      border-bottom: 1px solid rgb(201, 201, 201, 0.5);
+      padding-bottom: 2px;
+    }
+
+    .number-info {
+      border-bottom: 1px solid rgb(201, 201, 201, 0.5);
+      padding-bottom: 2px;
+      margin-top: 16px;
+    }
+
+    .title-info {
+      display: flex;
+    }
+
+    .title-info span {
+      margin: auto 0;
+    }
+
+    .ship-title {
+      font-family: Work Sans;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 24px;
+      text-align: right;
+      color: #000000;
+    }
+
+    .ship-info {
+      margin-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid rgb(201, 201, 201, 0.5);
+      padding-bottom: 2px;
+    }
+
+    .notify {
+      margin-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid rgb(201, 201, 201, 0.5);
+      padding-bottom: 2px;
+    }
+
+    .notify-title {
+      font-family: Work Sans;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 24px;
+      text-align: right;
+      color: #000000;
+    }
+
+    .notify-info {
+      display: flex;
+    }
+
+    .notify-info span {
+      margin: auto 0;
+    }
+
+    .bell {
+      margin: auto 8px auto 0;
+      height: 14.5px;
+      width: 14.5px;
+    }
+
+    .arrow {
+      height: 10px;
+    }
   }
 `;

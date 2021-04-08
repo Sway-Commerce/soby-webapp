@@ -34,6 +34,8 @@ import {
 } from './register.styles';
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 import Spinner from 'components/ui/spinner/spinner.component';
+import SobyModal from 'components/ui/modal/modal.component';
+import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
 const Register = ({ history }) => {
   const {
@@ -50,7 +52,10 @@ const Register = ({ history }) => {
     };
   });
 
-  const [signature, setSignature] = useState('')
+  const [signature, setSignature] = useState('');
+  const [open, setOpen] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [operationLoading, setOperationLoading] = useState(false)
 
   const [userCredentials, setUserCredentials] = useState({
     password: '',
@@ -68,7 +73,6 @@ const Register = ({ history }) => {
     isFirstNameValid: true,
     isLastNameValid: true,
   });
-  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
   const dispatchSignUpStart = (userCredentials) =>
@@ -87,19 +91,19 @@ const Register = ({ history }) => {
     isLastNameValid,
   } = inputValidation;
 
-  const [register, { data: registerData, errors }] = useMutation(
-    CREATE_INDIVIDUAL,
-    {
-      errorPolicy: 'all',
-    }
-  );
+  const [
+    register,
+    { data: registerData, error: registerError, loading: registerLoading },
+  ] = useMutation(CREATE_INDIVIDUAL, {
+    errorPolicy: 'all',
+  });
 
-  const [signinWithSignature, { data: signatureData }] = useMutation(
-    LOGIN_WITH_SIGNATURE,
-    {
-      errorPolicy: 'all',
-    }
-  );
+  const [
+    signinWithSignature,
+    { data: signatureData, loading: signinWithSignatureLoading },
+  ] = useMutation(LOGIN_WITH_SIGNATURE, {
+    errorPolicy: 'all',
+  });
 
   const [sendPhoneVerificationMutation] = useMutation(SEND_PHONE_VERIFICATION, {
     errorPolicy: 'all',
@@ -107,17 +111,21 @@ const Register = ({ history }) => {
 
   useEffect(() => {
     if (signature) {
-      debugger
-      signinWithSignature({
-        variables: {
-          cmd: { signature },
-        },
-      });
+      setOperationLoading(true);
+      setTimeout(() => {
+        signinWithSignature({
+          variables: {
+            cmd: { signature },
+          },
+        });
+      }, 4000);
     }
   }, [signature]);
 
   useEffect(() => {
     if (signatureData?.loginWithSignature?.data?.accessToken) {
+      setOperationLoading(false);
+
       dispatchSetAccessToken(
         signatureData?.loginWithSignature?.data?.accessToken
       );
@@ -128,8 +136,6 @@ const Register = ({ history }) => {
         },
       });
 
-      setIsLoading(false);
-
       history.push('/phone-verification');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,21 +143,18 @@ const Register = ({ history }) => {
 
   useEffect(() => {
     if (registerData?.register?.data?.id) {
-      const signature = getSignature(
-        signingPublicKey,
-        signingSecret,
-        password
-      );
-      debugger;
+      const signature = getSignature(signingPublicKey, signingSecret, password);
       setSignature(signature);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [registerData?.register?.data]);
 
-  if (errors) {
-    dispatchSignUpFailure(errors);
-    setIsLoading(false);
-  }
+  useEffect(() => {
+    if (registerError?.message) {
+      setFormError(registerError?.message);
+      setOpen(true);
+    }
+  }, [registerError]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -174,8 +177,6 @@ const Register = ({ history }) => {
     });
 
     if (isPasswordValid && isEmailValid) {
-      setIsLoading(true);
-
       setUserCredentials({
         ...userCredentials,
         encryptionSecret,
@@ -215,7 +216,7 @@ const Register = ({ history }) => {
     setUserCredentials({ ...userCredentials, [name]: value });
   };
 
-  return isLoading ? (
+  return signinWithSignatureLoading || registerLoading || operationLoading ? (
     <Spinner />
   ) : (
     <RegisterContainer>
@@ -292,6 +293,11 @@ const Register = ({ history }) => {
         </SignUpContainer>
         <PolicyNavigate isSignIn />
       </CardWrapper>
+      <SobyModal open={open} setOpen={setOpen}>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpen} />
+        ) : null}
+      </SobyModal>
     </RegisterContainer>
   );
 };
