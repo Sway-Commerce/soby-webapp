@@ -49,6 +49,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         encryptionSecret,
         signingPublicKey,
         encryptionPublicKey,
+        accessToken: null
       };
     }
     case UserActionTypes.SIGN_OUT_START:

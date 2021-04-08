@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { ShopContainer, Card, MainContent } from './individual-profile.styles';
+import { Container, Card, MainContent } from './individual-profile.styles';
 import { useParams } from 'react-router-dom';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -28,6 +28,14 @@ import {
   UPDATE_PASSWORD,
 } from 'graphQL/repository/individual.repository';
 
+import { ReactComponent as BellIcon } from 'shared/assets/bell.svg';
+import { ReactComponent as EditIcon } from 'shared/assets/edit.svg';
+import { ReactComponent as ErrorIcon } from 'shared/assets/error.svg';
+import { ReactComponent as HandIcon } from 'shared/assets/hand.svg';
+import { ReactComponent as KeyIcon } from 'shared/assets/key.svg';
+import { ReactComponent as TickIcon } from 'shared/assets/tick.svg';
+import { ReactComponent as UnionIcon } from 'shared/assets/union.svg';
+
 const IndividualProfile = () => {
   const [individualInfo, setIndividualInfo] = useState({
     name: null,
@@ -38,7 +46,7 @@ const IndividualProfile = () => {
     categories: null,
     shopUrls: null,
     kycStatus: null,
-  })
+  });
 
   // GET_INDIVIDUAL_BASIC_INFO
   const [
@@ -65,7 +73,7 @@ const IndividualProfile = () => {
         categories,
         shopUrls,
         kycStatus,
-      })
+      });
     }
   }, [getIndividualData?.getIndividual?.data, getIndividual]);
 
@@ -155,11 +163,10 @@ const IndividualProfile = () => {
     }
   }, [updatePasswordData?.updatePassword?.data, updatePasswordMutation]);
 
-
   // Init
   useEffect(() => {
     getIndividual();
-  }, [])
+  }, []);
 
   if (
     getIndividualLoading ||
@@ -174,28 +181,92 @@ const IndividualProfile = () => {
   )
     return <Spinner />;
 
-
-
   return (
-    <ShopContainer>
-      <div className="left-panel">
-        <ShopNameCard name={individualInfo.name} logoUrl={individualInfo.imageUrl} />
-        <KybCard status={individualInfo?.kyb?.status} />
-      </div>
-
+    <Container>
       <MainContent>
-        <h3>Information</h3>
+        <h1>Information</h1>
+        <div className="main-info">
+        <div></div>
+        <img src={individualInfo.imageUrl} alt="logo" />
+        </div>
 
-
-
+        <KybCard status={individualInfo.kycStatus} />
+        <div className="container">
+          <div className="email-number">
+            <div className="email-info">
+              <div className="info-wrapper">
+                <div className="title-info">
+                  <span className="email">Email</span>
+                  <ErrorIcon className="error" />
+                </div>
+                <div className="title-info">
+                  <EditIcon className="edit-img" />
+                  <span className="edit">Edit</span>
+                </div>
+              </div>
+              <p className="sample">Sample@email.com</p>
+            </div>
+            <div className="number-info">
+              <div className="info-wrapper">
+                <div className="title-info">
+                  <span className="email">Số điện thoại</span>
+                  <TickIcon className="error" />
+                </div>
+                <div className="title-info">
+                  <EditIcon className="edit-img" />
+                  <span className="edit">Edit</span>
+                </div>
+              </div>
+              <p className="sample">+84 90 123 456 789</p>
+            </div>
+          </div>
+          <div className="ship-info">
+            <p className="ship-title">Thông tin giao hàng</p>
+            <img className="arrow" src="./arrow.svg" alt="" />
+          </div>
+          <div className="notify">
+            <div className="notify-info">
+              <BellIcon className="bell" />
+              <span className="notify-title">Notification Settings</span>
+            </div>
+            <div className="title-info">
+              <EditIcon className="edit-img" />
+              <span className="edit">Edit</span>
+            </div>
+          </div>
+          <div className="notify">
+            <div className="notify-info">
+              <KeyIcon className="bell" />
+              <span className="notify-title">Password or Upload your Pin</span>
+            </div>
+            <div className="title-info">
+              <EditIcon className="edit-img" />
+              <span className="edit">Edit</span>
+            </div>
+          </div>
+          <div className="notify">
+            <div className="notify-info">
+              <UnionIcon className="bell" />
+              <span className="notify-title">Soby Policies & About</span>
+            </div>
+            <img className="arrow" src="./arrow.svg" alt="" />
+          </div>
+          <div className="notify">
+            <div className="notify-info">
+              <HandIcon className="bell" />
+              <span className="notify-title">Help center</span>
+            </div>
+            <img className="arrow" src="./arrow.svg" alt="" />
+          </div>
+        </div>
       </MainContent>
-    </ShopContainer>
+    </Container>
   );
 };
 
 export default IndividualProfile;
-// <div className="shop-info">
-//           <div className="wrapper">
+// <div classNameName="shop-info">
+//           <div classNameName="wrapper">
 //             <Phone />
 //             <p>{formatPhoneNumberIntl(`${phoneCountryCode}${phoneNumber}`)}</p>
 //           </div>
