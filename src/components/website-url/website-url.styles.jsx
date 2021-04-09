@@ -1,34 +1,41 @@
 import styled from 'styled-components';
 
 export const WebsiteGroup = styled.div`
-    .wrapper {
+  .wrapper {
+    display: flex;
+    justify-content: space-between;
+    .sub-wrapper {
       display: flex;
-      justify-content: space-between;
-      .sub-wrapper {
-        display: flex;
-      }
-      p {
-        margin: auto 0;
-        &.url {
-          font-size: 18px;
-        }
+    }
+    p {
+      margin: auto 0;
+      font-size: 16px;
+      &.url {
+        font-size: 14px;
+        max-width: 162px;
+        cursor: pointer;
       }
     }
+  }
 
+  svg {
+    margin-right: 16px;
+    &.temp {
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  .icon-wrapper {
+    padding: 15px;
+    height: 50px;
+    width: 50px;
+    margin-right: 16px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.07);
+    border-radius: 8px;
     svg {
-      margin-right: 16px;
-      &.temp {
-        width: 60px;
-        height: 60px;
-      }
+      width: 25px;
+      height: 25px;
     }
-
-    .icon-wrapper {
-      padding: 15px;
-      height: 60px;
-      width: 60px;
-      margin-right: 16px;
-      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.07);
-      border-radius: 8px;
-    }
+  }
 `;

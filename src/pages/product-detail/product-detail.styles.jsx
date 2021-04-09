@@ -148,10 +148,7 @@ export const Container = styled.div`
   }
 
   .content-bottom {
-    margin-top: 40px;
     display: flex;
-    overflow: hidden;
-    overflow-y: scroll;
 
     .card {
       height: auto;

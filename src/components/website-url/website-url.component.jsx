@@ -24,7 +24,15 @@ const WebsiteUrl = ({ url }) => {
             </>
           )}
         </div>
-        <p className="url">{url}</p>
+        <p
+          className="url text-truncation"
+          onClick={() => {
+            navigator.clipboard.writeText(`${url}`);
+            window.alert('Url is copied');
+          }}
+        >
+          {url}
+        </p>
       </div>
     </WebsiteGroup>
   );

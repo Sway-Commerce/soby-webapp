@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   height: auto;
-  width: 250px;
+  width: 170px;
 
   .carousel .thumb.selected,
   .carousel .thumb:hover {
@@ -14,8 +14,8 @@ export const Container = styled.div`
     ul.thumbs {
       transform: none !important;
       li.thumb {
-        height: 50px;
-        width: 50px !important;
+        height: 45px;
+        width: 45px !important;
         img {
           height: inherit;
           width: inherit;
@@ -27,8 +27,11 @@ export const Container = styled.div`
   }
 
   ul.slider li.slide {
-    width: 250px;
-    height: 250px;
+    width: 170px;
+    height: 170px;
+    image {
+      width: 170px;
+    }
   }
 
   .large {

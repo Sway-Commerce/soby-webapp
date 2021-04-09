@@ -1,15 +1,15 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  width: 207px;
+  width: 170px;
   .card {
     img {
-      width: 207px;
-      height: 286px;
+      width: 170px;
+      height: 229px;
 
       &.main-image {
-        width: 360px;
-        height: 500px;
+        width: 170px;
+        height: 325px;
       }
     }
   }

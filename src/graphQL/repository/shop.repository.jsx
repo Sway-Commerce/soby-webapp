@@ -14,7 +14,7 @@ export const GET_SHOP_BY_ID = gql`
         phoneNumber
         description
         logoUrl
-        categories
+        categoryIds
         shopUrls
         signingPublicKey
         encryptionPublicKey
@@ -143,6 +143,19 @@ export const SEARCH = gql`
           createdAt
           updatedAt
         }
+      }
+    }
+  }
+`;
+export const GET_ALL_SHOP_CATEGORIES = gql`
+  query GetAllShopCategories {
+    getAllShopCategories {
+      success
+      message
+      data {
+        id
+        name
+        description
       }
     }
   }

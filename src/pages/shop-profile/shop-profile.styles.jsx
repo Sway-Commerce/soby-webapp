@@ -2,13 +2,15 @@ import styled from 'styled-components';
 import { mainColor } from 'shared/css-variable/variable';
 
 export const ShopContainer = styled.div`
-  padding: 0 240px;
   min-height: 150vh;
   font-family: 'Work Sans', sans-serif;
   margin-top: 80px;
   display: flex;
   .left-panel {
     margin-right: 40px;
+    * + .kyb {
+      margin-top: 32px;
+    }
   }
 `;
 
@@ -17,7 +19,7 @@ export const CardShadow = styled.div`
   border: 1px solid rgba(194, 194, 194, 0.5);
   border-radius: 8px;
   transition: 0.3s;
-  width: 453px;
+  width: 364px;
 
   &.shop-name {
     height: 154px;
@@ -39,8 +41,8 @@ export const CardShadow = styled.div`
     }
 
     img {
-      width: 100px;
-      height: 100px;
+      width: 74px;
+      height: 74px;
       margin: auto 0 auto 40px;
     }
   }
@@ -53,7 +55,7 @@ export const CardShadow = styled.div`
       font-size: 24px;
       line-height: 28px;
       color: black;
-      margin: 0 0 32px;
+      margin: 0 0 16px;
       padding: 0;
     }
 
@@ -71,7 +73,7 @@ export const CardShadow = styled.div`
 
 export const Card = styled.div`
   border: 1px solid rgba(194, 194, 194, 0.2);
-  width: 453px;
+  width: 364px;
   margin-bottom: 32px;
   padding: 24px;
 
@@ -133,7 +135,7 @@ export const MainContent = styled.div`
     font-size: 24px;
     line-height: 28px;
     color: black;
-    margin: 0 0 32px;
+    margin: 0 0 16px;
     padding: 0;
   }
 
@@ -157,7 +159,7 @@ export const MainContent = styled.div`
 
     .wrapper {
       display: flex;
-      width: 453px;
+      width: 364px;
     }
 
     svg {

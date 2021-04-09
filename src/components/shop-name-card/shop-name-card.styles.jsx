@@ -6,10 +6,9 @@ export const Container = styled.div`
   border: 1px solid rgba(194, 194, 194, 0.5);
   border-radius: 8px;
   transition: 0.3s;
-  width: 453px;
+  width: 364px;
   height: 154px;
   display: flex;
-  margin: 0 40px 32px 0;
   .info {
     margin: auto 0 auto 16px;
     .title {
