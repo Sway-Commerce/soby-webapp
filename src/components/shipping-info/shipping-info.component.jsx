@@ -64,7 +64,7 @@ export const Container = styled.div`
     margin: 10px 0 24px 0;
   }
 
-  button {
+  button.shipping-button {
     width: 100%;
     color: ${mainColor};
     font-size: 18px;
@@ -201,13 +201,15 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
       loadProvinceError ||
       loadDistrictListError ||
       updateInvoiceIndividualInfoError ||
+      createShippingLocationError ||
       createInvoicePaymentError
     ) {
       setFormError(
         loadProvinceError?.message ??
           loadDistrictListError?.message ??
           updateInvoiceIndividualInfoError?.message ??
-          createInvoicePaymentError?.message
+          createInvoicePaymentError?.message ??
+          createShippingLocationError?.message
       );
       setOpen(true);
     }
@@ -216,6 +218,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     loadDistrictListError,
     updateInvoiceIndividualInfoError,
     createInvoicePaymentError,
+    createShippingLocationError
   ]);
 
   useEffect(() => {
@@ -288,23 +291,27 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   }, [createInvoicePaymentData?.createInvoicePayment?.data?.payUrl]);
 
   useEffect(() => {
-    debugger;
     if (updateInvoiceIndividualInfoData?.updateInvoiceIndividualInfo?.data) {
       const requestedAt = Date.now();
       const jsonString = JSON.stringify({
         invoiceIndividualId,
         requestedAt: requestedAt?.toString(),
       });
-      const signature = signSignature(signingSecret, jsonString, password);
-      createInvoicePayment({
-        variables: {
-          cmd: {
-            invoiceIndividualId,
-            requestedAt,
-            signature,
+      const {signature, error} = signSignature(signingSecret, jsonString, password);
+      if(error) {
+        setFormError(error);
+        setOpen(true);
+      } else {
+        createInvoicePayment({
+          variables: {
+            cmd: {
+              invoiceIndividualId,
+              requestedAt,
+              signature,
+            },
           },
-        },
-      });
+        });
+      }
     }
   }, [updateInvoiceIndividualInfoData?.updateInvoiceIndividualInfo?.data]);
 
@@ -591,8 +598,8 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
           className={
             !!getIndividualShippingListData?.getIndividualShippingLocationList
               ?.data?.length && !shippingLocationId
-              ? 'disable'
-              : null
+              ? 'disable shipping-button'
+              : 'shipping-button'
           }
         >
           Next
