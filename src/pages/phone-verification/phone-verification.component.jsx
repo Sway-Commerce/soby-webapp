@@ -22,6 +22,9 @@ import {
   VERIFY_PHONE,
 } from 'graphQL/repository/individual.repository';
 import { useMutation } from '@apollo/client';
+import SobyModal from 'components/ui/modal/modal.component';
+import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import Spinner from 'components/ui/spinner/spinner.component';
 
 const PhoneVerification = ({ history, phone }) => {
   const { phoneNumber, phoneCountryCode } = useSelector((state) => {
@@ -32,10 +35,22 @@ const PhoneVerification = ({ history, phone }) => {
   });
   const [verificationCode, setVerificationCode] = useState(null);
   const [isCodeValid, setIsCodeValid] = useState(true);
-  const [sendPhoneVerifyMutation] = useMutation(SEND_PHONE_VERIFICATION, {
+  const [open, setOpen] = useState(false);
+  const [formError, setFormError] = useState('');
+
+  const [
+    sendPhoneVerifyMutation,
+    {
+      loading: sendPhoneVerificationLoading,
+      error: sendPhoneVerificationError,
+    },
+  ] = useMutation(SEND_PHONE_VERIFICATION, {
     errorPolicy: 'all',
   });
-  const [verifyPhoneMutation, { data }] = useMutation(VERIFY_PHONE, {
+  const [
+    verifyPhoneMutation,
+    { data, loading: verifyPhoneLoading, error: verifyPhoneError },
+  ] = useMutation(VERIFY_PHONE, {
     errorPolicy: 'all',
   });
   const dispatch = useDispatch();
@@ -43,10 +58,19 @@ const PhoneVerification = ({ history, phone }) => {
   const dispatchSendVerification = () => dispatch(sendPhoneVerification());
 
   useEffect(() => {
+    if (verifyPhoneError?.message || sendPhoneVerificationError?.message) {
+      setFormError(
+        verifyPhoneError?.message ?? sendPhoneVerificationError?.message
+      );
+      setOpen(true);
+    }
+  }, [verifyPhoneError, sendPhoneVerificationError]);
+
+  useEffect(() => {
     if (data?.verifyPhone?.success) {
-      const redirectUrl = localStorage.getItem("redirectUrl");
-      localStorage.removeItem("redirectUrl");
-      window.location = redirectUrl || "/your-transaction";
+      const redirectUrl = localStorage.getItem('redirectUrl');
+      localStorage.removeItem('redirectUrl');
+      window.location = redirectUrl || '/your-transaction';
     }
   }, [data?.verifyPhone?.success]);
 
@@ -67,6 +91,14 @@ const PhoneVerification = ({ history, phone }) => {
 
   const collectVerifyCode = (code) => {
     setVerificationCode(+code);
+    if(`${code}`.length == 6) {
+      dispatchVerify();
+      verifyPhoneMutation({
+        variables: {
+          cmd: { phoneCountryCode, phoneNumber, verificationCode: +code },
+        },
+      });
+    }
   };
 
   const sendAgain = () => {
@@ -78,7 +110,9 @@ const PhoneVerification = ({ history, phone }) => {
     });
   };
 
-  return (
+  return sendPhoneVerificationLoading || verifyPhoneLoading ? (
+    <Spinner />
+  ) : (
     <RegisterContainer>
       <CardWrapper>
         <SignUpContainer>
@@ -101,6 +135,11 @@ const PhoneVerification = ({ history, phone }) => {
           </FormContainer>
         </SignUpContainer>
       </CardWrapper>
+      <SobyModal open={open} setOpen={setOpen}>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpen} />
+        ) : null}
+      </SobyModal>
     </RegisterContainer>
   );
 };

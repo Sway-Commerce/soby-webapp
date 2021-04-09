@@ -17,6 +17,8 @@ import {
   subInvoiceFilters,
   subInvoiceIcons,
 } from 'shared/constants/invoice.constant';
+import SobyModal from 'components/ui/modal/modal.component';
+import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
 const YourTransaction = ({ name }) => {
   const mainIcons = [<OrderIcon />, <BillIcon />];
@@ -30,6 +32,8 @@ const YourTransaction = ({ name }) => {
     subFilter: subInvoiceFilters[0],
     total: 0,
   });
+  const [open, setOpen] = useState(false);
+  const [formError, setFormError] = useState('');
 
   const { mainFilter, subFilter, page, pageSize, total } = invoiceListQuery;
 
@@ -45,9 +49,16 @@ const YourTransaction = ({ name }) => {
   });
 
   useEffect(() => {
+    if (getIndividualInvoiceListError) {
+      setFormError(getIndividualInvoiceListError?.message);
+      setOpen(true);
+    }
+  }, [getIndividualInvoiceListError]);
+
+  useEffect(() => {
     setActiveInvoice(null);
     setInvoiceList([]);
-    setInvoiceListQuery({...invoiceListQuery, total: 0})
+    setInvoiceListQuery({ ...invoiceListQuery, total: 0 });
     if (mainFilter === 'Invoices') {
       getIndividualInvoiceList({
         variables: {
@@ -74,9 +85,11 @@ const YourTransaction = ({ name }) => {
     }
   }, [getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records]);
 
-  if (getIndividualInvoiceListError) {
-    return console.log(getIndividualInvoiceListError);
-  }
+  useEffect(() => {
+    if (getIndividualInvoiceListError) {
+      setFormError(getIndividualInvoiceListError.message);
+    }
+  }, [getIndividualInvoiceListError]);
 
   return (
     <Container>
@@ -131,9 +144,12 @@ const YourTransaction = ({ name }) => {
         </div>
         {getIndividualInvoiceListLoading ? <Spinner /> : null}
       </div>
-      {activeInvoice ? (
-        <Invoice invoiceIndividualId={activeInvoice} />
-      ) : null}
+      {activeInvoice ? <Invoice invoiceIndividualId={activeInvoice} /> : null}
+      <SobyModal open={open} setOpen={setOpen}>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpen} />
+        ) : null}
+      </SobyModal>
     </Container>
   );
 };
