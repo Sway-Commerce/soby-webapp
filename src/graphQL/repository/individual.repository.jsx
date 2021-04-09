@@ -180,9 +180,15 @@ export const getSignature = (signingPublicKey, signingSecret, password) => {
 export const signSignature = (signingSecret, jsonString, password) => {
   const signing = new Signing();
 
-  // signing.importPublicKey(signingPublicKey);
-  signing.importPrivateKey(signingSecret, password);
-  return signing.sign(jsonString, { input: 'utf8', output: 'base64Url' });
+  try {
+    signing.importPrivateKey(signingSecret, password);
+  } catch (error) {
+    return { signature: null, error: "Wrong password" };
+  }
+  return {
+    signature: signing.sign(jsonString, { input: 'utf8', output: 'base64Url' }),
+    error: null,
+  };
 };
 
 export const getHashPassword = (password) => {
