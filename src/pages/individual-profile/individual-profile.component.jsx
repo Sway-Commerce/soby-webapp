@@ -35,8 +35,13 @@ import { ReactComponent as HandIcon } from 'shared/assets/hand.svg';
 import { ReactComponent as KeyIcon } from 'shared/assets/key.svg';
 import { ReactComponent as TickIcon } from 'shared/assets/tick.svg';
 import { ReactComponent as UnionIcon } from 'shared/assets/union.svg';
+import { useSelector } from 'react-redux';
 
 const IndividualProfile = () => {
+  const accessToken = useSelector((state) => {
+    return state.user.accessToken;
+  });
+
   const [individualInfo, setIndividualInfo] = useState({
     name: null,
     phoneCountryCode: null,
@@ -47,6 +52,7 @@ const IndividualProfile = () => {
     shopUrls: null,
     kycStatus: null,
   });
+  const [picture, setPicture] = useState({});
 
   // GET_INDIVIDUAL_BASIC_INFO
   const [
@@ -181,13 +187,57 @@ const IndividualProfile = () => {
   )
     return <Spinner />;
 
+  const uploadPicture = (e) => {
+    setPicture({
+      picturePreview: URL.createObjectURL(e.target.files[0]),
+      pictureAsFile: e.target.files[0],
+    });
+  };
+
+  const setImageAction = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append('files', picture.pictureAsFile);
+
+    console.log(picture.pictureAsFile);
+
+    for (var key of formData.entries()) {
+      console.log(key[0] + ', ' + key[1]);
+    }
+
+    const data = await fetch('http://localhost:3000/upload/post', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Category: 'AVATAR',
+        Authorization: accessToken ? `Bearer ${accessToken}` : '',
+      },
+      body: formData,
+    });
+    const uploadedImage = await data.json();
+    if (uploadedImage) {
+      console.log('Successfully uploaded image');
+    } else {
+      console.log('Error Found');
+    }
+  };
+
   return (
     <Container>
       <MainContent>
         <h1>Information</h1>
         <div className="main-info">
-        <div></div>
-        <img src={individualInfo.imageUrl} alt="logo" />
+          <div></div>
+          <img src={individualInfo.imageUrl} alt="logo" />
+          <form onSubmit={setImageAction}>
+            <input type="file" name="image" onChange={uploadPicture} />
+            <br />
+            <br />
+            <button type="submit" name="upload">
+              Upload
+            </button>
+          </form>
         </div>
 
         <KybCard status={individualInfo.kycStatus} />

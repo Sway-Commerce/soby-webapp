@@ -135,9 +135,9 @@ const PhoneSignin = () => {
   useEffect(() => {
     if (error) {
       setFormError(
-        error.message ??
-          loadIndividualBasicInfoError.message ??
-          getSecretError.message
+        error?.message ??
+          loadIndividualBasicInfoError?.message ??
+          getSecretError?.message
       );
       setOpen(true);
     }
