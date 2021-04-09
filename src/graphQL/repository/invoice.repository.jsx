@@ -172,7 +172,7 @@ export const GET_SHOP_INVOICE_LIST = gql`
 `;
 export const GET_INDIVIDUAL_INVOICE_LIST = gql`
   ${INDIVIDUAL_INVOICE_FRAGMENT}
-  query GetIndividualInvoiceList($query: IndividualInvoiceQuery!) {
+  query GetIndividualInvoiceList($query: IndividualInvoiceOrderQuery!) {
     getIndividualInvoiceList(query: $query) {
       message
       data {

@@ -7,18 +7,19 @@ const InvoiceProductList = ({ items }) => (
   <Container>
     {items.map((x) => {
       const {
+        price,
         product: {
           name,
           id,
           imageUrls: [imageUrl],
         },
-        sku: { properties, currentPrice },
+        sku: { properties },
       } = x;
       return (
         <InvoiceProduct
           imageUrl={imageUrl}
           key={id + Math.random()}
-          price={currentPrice}
+          price={price}
           quantity={x.quantity}
           name={name}
           properties={properties}

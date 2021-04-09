@@ -25,6 +25,8 @@ import Spinner from 'components/ui/spinner/spinner.component';
 import { useSelector } from 'react-redux';
 import { signSignature } from 'graphQL/repository/individual.repository';
 import passwordValidation from 'shared/utils/passwordValidation';
+import SobyModal from 'components/ui/modal/modal.component';
+import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
 export const ErrorTitle = styled.h5`
   color: red;
@@ -130,6 +132,8 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   const [shippingLocationId, setShippingLocationId] = useState('');
   const [password, setPassword] = useState('');
   const signingSecret = useSelector((state) => state.user.signingSecret);
+  const [open, setOpen] = useState(false);
+  const [formError, setFormError] = useState('');
 
   const {
     isPhoneValid,
@@ -140,7 +144,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
 
   const [
     loadProvince,
-    { data: provinceData, loading: provinceLoading },
+    { data: provinceData, loading: provinceLoading, error: loadProvinceError },
   ] = useLazyQuery(GET_PROVINCE_LIST);
 
   const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
@@ -150,21 +154,21 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     {
       data: districtData,
       loading: loadDistrictListLoading,
+      error: loadDistrictListError,
     },
   ] = useLazyQuery(GET_DISTRICT_LIST);
-  const [loadWardList, { data: wardData }] = useLazyQuery(
-    GET_WARD_LIST
-  );
+  const [loadWardList, { data: wardData }] = useLazyQuery(GET_WARD_LIST);
 
-  const {
-    data: getIndividualShippingListData,
-  } = useQuery(GET_INDIVIDUAL_SHIPPING_LOCATION_LIST);
+  const { data: getIndividualShippingListData } = useQuery(
+    GET_INDIVIDUAL_SHIPPING_LOCATION_LIST
+  );
 
   const [
     createShippingLocation,
     {
       data: createShippingLocationData,
       loading: createShippingLocationLoading,
+      error: createShippingLocationError,
     },
   ] = useMutation(CREATE_INDIVIDUAL_SHIPPING_LOCATION, {
     errorPolicy: 'all',
@@ -175,6 +179,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     {
       data: updateInvoiceIndividualInfoData,
       loading: updateInvoiceIndividualInfoLoading,
+      error: updateInvoiceIndividualInfoError,
     },
   ] = useMutation(UPDATE_INVOICE_INDIVIDUAL_INFO, {
     errorPolicy: 'all',
@@ -185,10 +190,33 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     {
       data: createInvoicePaymentData,
       loading: createInvoicePaymentLoading,
+      error: createInvoicePaymentError,
     },
   ] = useMutation(CREATE_INVOICE_PAYMENT, {
     errorPolicy: 'all',
   });
+
+  useEffect(() => {
+    if (
+      loadProvinceError ||
+      loadDistrictListError ||
+      updateInvoiceIndividualInfoError ||
+      createInvoicePaymentError
+    ) {
+      setFormError(
+        loadProvinceError?.message ??
+          loadDistrictListError?.message ??
+          updateInvoiceIndividualInfoError?.message ??
+          createInvoicePaymentError?.message
+      );
+      setOpen(true);
+    }
+  }, [
+    loadProvinceError,
+    loadDistrictListError,
+    updateInvoiceIndividualInfoError,
+    createInvoicePaymentError,
+  ]);
 
   useEffect(() => {
     if (invoiceIndividualId) {
@@ -260,6 +288,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   }, [createInvoicePaymentData?.createInvoicePayment?.data?.payUrl]);
 
   useEffect(() => {
+    debugger;
     if (updateInvoiceIndividualInfoData?.updateInvoiceIndividualInfo?.data) {
       const requestedAt = Date.now();
       const jsonString = JSON.stringify({
@@ -447,8 +476,12 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     <Container>
       <h2>Shipping information</h2>
       <form
-        onSubmit={!!getIndividualShippingListData?.getIndividualShippingLocationList
-          ?.data?.length ? handleSubmitHadShipping : handleSubmit}
+        onSubmit={
+          !!getIndividualShippingListData?.getIndividualShippingLocationList
+            ?.data?.length
+            ? handleSubmitHadShipping
+            : handleSubmit
+        }
       >
         <p className="title">
           <b>Hình thức thanh toán</b>
@@ -556,9 +589,8 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
         ) : null}
         <button
           className={
-            (!!getIndividualShippingListData?.getIndividualShippingLocationList
-              ?.data?.length &&
-              !shippingLocationId)
+            !!getIndividualShippingListData?.getIndividualShippingLocationList
+              ?.data?.length && !shippingLocationId
               ? 'disable'
               : null
           }
@@ -566,6 +598,11 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
           Next
         </button>
       </form>
+      <SobyModal open={open} setOpen={setOpen}>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpen} />
+        ) : null}
+      </SobyModal>
     </Container>
   );
 };
