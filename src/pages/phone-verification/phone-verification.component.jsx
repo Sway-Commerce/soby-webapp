@@ -62,6 +62,7 @@ const PhoneVerification = ({ history, phone }) => {
       setFormError(
         verifyPhoneError?.message ?? sendPhoneVerificationError?.message
       );
+      setOpen(true);
     }
   }, [verifyPhoneError, sendPhoneVerificationError]);
 
@@ -94,7 +95,7 @@ const PhoneVerification = ({ history, phone }) => {
       dispatchVerify();
       verifyPhoneMutation({
         variables: {
-          cmd: { phoneCountryCode, phoneNumber, verificationCode },
+          cmd: { phoneCountryCode, phoneNumber, verificationCode: +code },
         },
       });
     }
