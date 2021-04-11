@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { mainColor } from 'shared/css-variable/variable';
 
 export const Container = styled.div`
-  padding: 0 240px;
   min-height: 150vh;
   font-family: 'Work Sans', sans-serif;
   margin-top: 80px;
@@ -32,7 +31,7 @@ export const MainContent = styled.div`
 
     .wrapper {
       display: flex;
-      width: 453px;
+      width: 364px;
     }
 
     svg {

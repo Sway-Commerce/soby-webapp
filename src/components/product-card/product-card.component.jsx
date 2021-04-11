@@ -1,29 +1,58 @@
 import React from 'react';
 import ImageGallery from '../ui/carousel/carousel.component';
+import styled from 'styled-components';
 
-import { Container } from './product-card.styles';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
 import { Link } from 'react-router-dom';
 
-const ProductCard = ({ id, imageUrls, currentPrice, description, isMain }) => {
+const Container = styled.div`
+  width: 170px;
+  .card {
+    img {
+      width: 170px;
+      height: 229px;
+      object-fit: cover;
+
+      &.main-image {
+        width: 170px;
+        height: 325px;
+      }
+    }
+  }
+`;
+
+const ImageItem = styled.img`
+  width: 170px;
+  height: ${(props) => (props.isMain ? '229px' : '325px')};
+  object-fit: cover;
+`;
+
+const Price = styled.h3`
+  line-height: 28px;
+`;
+
+const Name = styled.p`
+  font-size: 16px;
+  line-height: 24px;
+`;
+
+const ProductCard = ({ id, imageUrls, currentPrice, name, isMain }) => {
   return (
     <Container>
-      <div className="card" key={id}>
+      <React.Fragment key={id}>
         {imageUrls.length > 1 ? (
           <ImageGallery imageUrls={imageUrls} isLarge={isMain} />
         ) : (
-          <img src={imageUrls[0]} alt="" key={imageUrls[0]} className={`${isMain ? "main-image" : null}`} />
+          <ImageItem src={imageUrls[0]} key={imageUrls[0]} isMain />
         )}
 
         {!isMain ? (
           <Link to={`/product/${id}`}>
-            <div className="card-infor">
-              <div className="h3">{currencyFormatter(currentPrice)}</div>
-              <p>{description}</p>
-            </div>
+            <Price>{currencyFormatter(currentPrice)}</Price>
+            <Name className="text-truncation-second-line">{name}</Name>
           </Link>
         ) : null}
-      </div>
+      </React.Fragment>
     </Container>
   );
 };
