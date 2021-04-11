@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 
-import { ShopContainer, Card, MainContent } from './shop-profile.styles';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
@@ -22,6 +22,72 @@ import ShopNameCard from 'components/shop-name-card/shop-name-card.component';
 import KybCard from 'components/kyb-card/kyb-card.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+
+const ShopContainer = styled.div`
+  min-height: 150vh;
+  font-family: 'Work Sans', sans-serif;
+  margin-top: 80px;
+  display: flex;
+  * + * {
+    margin-right: 24px;
+  }
+`;
+
+const BoxLeft = styled.div``;
+const KycWrapper = styled.div`
+  margin-top: 32px;
+`;
+
+const TitleInfo = styled.h3`
+  margin-bottom: 16px;
+`;
+
+const ShopDescription = styled.p`
+  margin-bottom: 56px;
+`;
+
+const CategoryList = styled.div`
+  display: flex;
+  margin-bottom: 56px;
+`;
+
+//         <div className="shop-info">
+//           <div className="wrapper">
+//             <Phone />
+//             <p>
+//               {formatPhoneNumberIntl(
+//                 `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
+//               )}
+//             </p>
+//           </div>
+//         </div>
+
+export const MainContent = styled.div`
+  .shop-info {
+    display: flex;
+
+    p {
+      font-size: 18px;
+    }
+
+    .wrapper {
+      display: flex;
+      width: 364px;
+    }
+
+    svg {
+      margin-right: 16px;
+    }
+  }
+`;
+
+const WebsiteWrapper = styled.div`
+  margin: 56px 0;
+  display: grid;
+  grid-column-gap: 40px;
+  grid-row-gap: 24px;
+  grid-template-columns: repeat(2, 1fr);
+`;
 
 const ShopProfile = () => {
   const { shopId } = useParams();
@@ -86,7 +152,6 @@ const ShopProfile = () => {
       shopData?.getShopById?.data &&
       getAllShopCategoriesData?.getAllShopCategories?.data
     ) {
-      debugger;
       const {
         name,
         phoneCountryCode,
@@ -130,22 +195,22 @@ const ShopProfile = () => {
     <Spinner />
   ) : (
     <ShopContainer>
-      <div className="left-panel">
+      <BoxLeft>
         <ShopNameCard name={shopInfo.name} logoUrl={shopInfo.logoUrl} />
-        <div className="kyb">
+        <KycWrapper>
           <KybCard status={shopInfo.kyb?.status} />
-        </div>
-      </div>
+        </KycWrapper>
+      </BoxLeft>
 
       <MainContent>
-        <h3>Shop Decripsiton</h3>
-        <p>{shopInfo.description}</p>
-        <h3>Shop Categories</h3>
-        <div className="category-list">
+        <TitleInfo>Shop Description</TitleInfo>
+        <ShopDescription>{shopInfo.description}</ShopDescription>
+        <TitleInfo>Shop Categories</TitleInfo>
+        <CategoryList>
           {shopInfo.categories.map((category) => (
             <ShopCategory category={category} key={category} />
           ))}
-        </div>
+        </CategoryList>
 
         <div className="shop-info">
           <div className="wrapper">
@@ -158,16 +223,14 @@ const ShopProfile = () => {
           </div>
         </div>
 
-        <div className="website-group">
+        <WebsiteWrapper>
           {shopInfo.shopUrls.map((x) => (
             <WebsiteUrl url={x} key={x} />
           ))}
-        </div>
+        </WebsiteWrapper>
 
-        <h3>Product</h3>
-        <div className="product-group">
-          <ProductListCard records={shopInfo.records} />
-        </div>
+        <TitleInfo>Product</TitleInfo>
+        <ProductListCard records={shopInfo.records} />
       </MainContent>
       <SobyModal open={open} setOpen={setOpen}>
         {formError ? (

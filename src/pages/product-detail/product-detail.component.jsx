@@ -1,7 +1,8 @@
-import React from 'react';
-import { Container } from './product-detail.styles';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
+import styled from 'styled-components';
 
 import {
   GET_PRODUCT,
@@ -16,130 +17,271 @@ import { GET_SHOP_BY_ID } from 'graphQL/repository/shop.repository';
 import ProductListCard from 'components/product-listcard/product-listcard.component';
 import ShopNameCard from 'components/shop-name-card/shop-name-card.component';
 import KybCard from 'components/kyb-card/kyb-card.component';
+import SobyModal from 'components/ui/modal/modal.component';
+import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+
+const Container = styled.div`
+  margin: 20px auto;
+  display: grid;
+  grid-template-columns: 364px 1fr;
+  grid-column-gap: 23px;
+`;
+
+const ShopCard = styled.div`
+  margin: 80px 0 32px;
+`;
+
+const ProductName = styled.h2`
+  margin-bottom: 16px;
+  line-height: 38px;
+`;
+
+const ProductPrice = styled.h1`
+  margin-bottom: 16px;
+  line-height: 56px;
+`;
+
+const ProductDescription = styled.p`
+  margin-bottom: 16px;
+  line-height: 24px;
+`;
+
+const SkusWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+`;
+
+const SkuName = styled.h3`
+  margin-bottom: 24px;
+`;
+
+const SkuItem = styled.div``;
+
+const CategoryTitle = styled.h3`
+  margin-top: 32px;
+`;
+
+const Option = styled.h3`
+  display: flex;
+
+  * + * {
+    margin-left: 16px;
+  }
+`;
+
+const ListCardWrapper = styled.div`
+  margin-top: 152px;
+`;
 
 const ProductDetail = () => {
   const { productId } = useParams();
+  const [open, setOpen] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [productData, setProductData] = useState({
+    skus: [],
+    id: null,
+    imageUrls: [],
+    description: '',
+    name: '',
+    category: { id: '', name: '' },
+    shopId: '',
+    productsRelate: [],
+    shopInfo: {
+      name: '',
+      logoUrl: '',
+      id: '',
+    },
+    sizes: [],
+    colors: [],
+    weights: [],
+    status: null,
+    sku: { currentPrice: 0 },
+  });
 
-  const { loading, error, data: productData } = useQuery(GET_PRODUCT, {
+  const {
+    loading: getProductLoading,
+    error: getProductError,
+    data: getProductData,
+  } = useQuery(GET_PRODUCT, {
     variables: { id: productId },
   });
 
-  const { data } = productData?.getProduct || { data: {} };
-  const { shopId } = data;
+  useEffect(() => {
+    if (getProductData?.getProduct?.data) {
+      const {
+        skus,
+        id,
+        imageUrls,
+        description,
+        name,
+        category,
+        shopId,
+      } = getProductData?.getProduct?.data;
 
-  const {
-    loading: productsLoading,
-    error: productsError,
-    data: productsData,
-  } = useQuery(SEARCH_PRODUCT, {
-    variables: {
-      searchInput: {
-        page: 0,
-        pageSize: 5,
-        filters: null,
-        queries: `shopId:${shopId}`,
-        sorts: null,
-      },
-    },
-  });
+      setProductData({
+        ...productData,
+        skus,
+        id,
+        imageUrls,
+        description,
+        name,
+        category,
+        shopId,
+      });
 
-  const { loading: shopLoading, error: shopError, data: shopData } = useQuery(
-    GET_SHOP_BY_ID,
-    {
-      variables: { id: shopId },
+      searchProduct({
+        variables: {
+          searchInput: {
+            page: 0,
+            pageSize: 5,
+            filters: null,
+            queries: `shopId:${shopId}`,
+            sorts: null,
+          },
+        },
+      });
+
+      getShopById({ variables: { id: shopId } });
     }
-  );
+  }, [getProductData?.getProduct?.data]);
 
-  if (loading || productsLoading || shopLoading) return <Spinner />;
-  if (error || productsError || shopError)
-    return `Error! ${error || productsError}`;
+  const [
+    searchProduct,
+    {
+      loading: searchProductLoading,
+      error: searchProductError,
+      data: searchProductData,
+    },
+  ] = useLazyQuery(SEARCH_PRODUCT);
 
-  let sku = {};
-  const { skus, id, imageUrls, description, name, categories } = data;
-  const { records } = productsData?.searchProduct?.data || { records: [] };
-  const shopInfo = shopData?.getShopById?.data;
-  const { status } = shopInfo.kyb ?? { status: null };
-  let sizes = [];
-  let colors = [];
-  let weights = [];
-  skus.map((x) =>
-    x.properties.map((y) => {
-      switch (y.name) {
-        case 'SIZE':
-          sizes = [...sizes, y.value];
-          return null;
-        case 'WEIGHT':
-          weights = [...weights, y.value];
-          return null;
-        case 'COLOR':
-          colors = [...colors, y.value];
-          return null;
-        default:
-          return null;
-      }
-    })
-  );
+  const [
+    getShopById,
+    {
+      loading: getShopByIdLoading,
+      error: getShopByIdError,
+      data: getShopByIdData,
+    },
+  ] = useLazyQuery(GET_SHOP_BY_ID);
 
-  if (skus.length) {
-    sku = skus[skus.length - 1];
-  }
+  useEffect(() => {
+    if (
+      getProductError?.message ||
+      searchProductError?.message ||
+      getShopByIdError?.message
+    ) {
+      setFormError(
+        getProductError?.message ??
+          searchProductError?.message ??
+          getShopByIdError?.message
+      );
+    }
+  }, [getProductError, searchProductError, getShopByIdError]);
 
-  return (
+  useEffect(() => {
+    if (searchProductData?.searchProduct?.data?.records) {
+      const { records } = searchProductData?.searchProduct?.data;
+      setProductData({ ...productData, records });
+    }
+  }, [searchProductData?.searchProduct?.data]);
+
+  useEffect(() => {
+    if (getShopByIdData?.getShopById?.data) {
+      const shopInfo = getShopByIdData?.getShopById?.data;
+      const { status } = shopInfo.kyb ?? { status: null };
+
+      setProductData({ ...productData, shopInfo, status });
+    }
+  }, [getShopByIdData?.getShopById?.data]);
+
+  useEffect(() => {
+    if (productData.skus.length) {
+      let sizes = [];
+      let colors = [];
+      let weights = [];
+      productData.skus.map((x) =>
+        x.properties.map((y) => {
+          switch (y.name) {
+            case 'SIZE':
+              sizes = [...sizes, y.value];
+              return null;
+            case 'WEIGHT':
+              weights = [...weights, y.value];
+              return null;
+            case 'COLOR':
+              colors = [...colors, y.value];
+              return null;
+            default:
+              return null;
+          }
+        })
+      );
+
+      const sku = productData.skus[productData.skus.length - 1];
+
+      setProductData({ ...productData, sizes, colors, weights, sku });
+    }
+  }, [productData.skus]);
+
+  return searchProductLoading || getProductLoading || getShopByIdLoading ? (
+    <Spinner />
+  ) : (
     <Container>
-      <div className="content-top">
-        <div className="box-left">
-          <ProductCard
-            id={id}
-            imageUrls={imageUrls}
-            currentPrice={sku.currentPrice}
-            description={description}
-            isMain
+      <div>
+        <ProductCard
+          id={productData.id}
+          imageUrls={productData.imageUrls}
+          currentPrice={productData.sku.currentPrice}
+          description={productData.description}
+          isMain
+        />
+        <ShopCard>
+          <ShopNameCard
+            name={productData.shopInfo.name}
+            logoUrl={productData.shopInfo.logoUrl}
+            productView
+            id={productData.shopInfo.id}
           />
-          <div className="shop-card">
-            <ShopNameCard
-              name={shopInfo.name}
-              logoUrl={shopInfo.logoUrl}
-              productView
-              id={shopInfo.id}
-            />
-          </div>
-          <KybCard status={status} productView />
-        </div>
-
-        <div className="box-right">
-          <div className="tag"></div>
-          <h2>{name}</h2>
-          <h1>{currencyFormatter(sku.currentPrice)}</h1>
-          <p>{description}</p>
-          <h4>Colours</h4>
-          <div className="options">
-            {colors.map((x) => (
-              <SkuChip name={x} key={x} />
-            ))}
-          </div>
-          <h4 className="stretch">Size</h4>
-          <div className="options">
-            {sizes.map((x) => (
-              <SkuChip name={x} key={x} />
-            ))}
-          </div>
-          <h4 className="stretch">Weight</h4>
-          <div className="options">
-            {weights.map((x) => (
-              <SkuChip name={x} key={x} />
-            ))}
-          </div>
-
-          <h4 className="stretch">Show Categories</h4>
-          <div className="options">
-            {categories.map((x) => (
-              <ShopCategory category={x} key={x} noBorder />
-            ))}
-          </div>
-
-          <ProductListCard records={records} />
-        </div>
+        </ShopCard>
+        <KybCard status={productData.status} productView />
       </div>
+
+      <div>
+        <ProductName>{productData.name}</ProductName>
+        <ProductPrice>
+          {currencyFormatter(productData.sku.currentPrice)}
+        </ProductPrice>
+        <ProductDescription>{productData.description}</ProductDescription>
+        <SkusWrapper>
+          <SkuItem>
+            <SkuName>Colours</SkuName>
+            <Option>
+              {productData.colors.map((x) => (
+                <SkuChip name={x} key={x} />
+              ))}
+            </Option>
+          </SkuItem>
+          <SkuItem>
+            <SkuName>Size</SkuName>
+            <Option>
+              {productData.sizes.map((x) => (
+                <SkuChip name={x} key={x} />
+              ))}
+            </Option>
+          </SkuItem>
+        </SkusWrapper>
+
+        <CategoryTitle>Category</CategoryTitle>
+        <ShopCategory category={productData.category.name} noBorder />
+
+        <ListCardWrapper>
+          <ProductListCard records={productData.records} key={Math.random()} />
+        </ListCardWrapper>
+      </div>
+      <SobyModal open={open} setOpen={setOpen}>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpen} />
+        ) : null}
+      </SobyModal>
     </Container>
   );
 };

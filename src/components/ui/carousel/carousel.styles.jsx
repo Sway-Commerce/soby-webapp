@@ -19,6 +19,7 @@ export const Container = styled.div`
         img {
           height: inherit;
           width: inherit;
+          object-fit: scale-down;
         }
         margin-right: 5px !important;
         border: none !important;
@@ -35,19 +36,19 @@ export const Container = styled.div`
   }
 
   .large {
-    width: 360px;
+    width: 364px;
     ul.slider li.slide {
-      width: 360px;
-      height: 500px;
+      width: 364px;
+      height: 463px;
       img {
-        height: 500px;
+        height: inherit;
       }
     }
 
     div.thumbs-wrapper.axis-vertical {
       ul.thumbs li.thumb {
-        height: 110px;
-        width: 110px !important;
+        height: 90px;
+        width: 90px !important;
       }
     }
   }
