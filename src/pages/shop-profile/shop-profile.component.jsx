@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
 
 import { ReactComponent as Phone } from 'shared/assets/phone-icon.svg';
+import { ReactComponent as Location } from 'shared/assets/location.svg';
 
 import {
   GET_ALL_SHOP_CATEGORIES,
@@ -51,17 +52,6 @@ const CategoryList = styled.div`
   margin-bottom: 56px;
 `;
 
-//         <div className="shop-info">
-//           <div className="wrapper">
-//             <Phone />
-//             <p>
-//               {formatPhoneNumberIntl(
-//                 `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
-//               )}
-//             </p>
-//           </div>
-//         </div>
-
 export const MainContent = styled.div`
   .shop-info {
     display: flex;
@@ -77,6 +67,7 @@ export const MainContent = styled.div`
 
     svg {
       margin-right: 16px;
+      color: black;
     }
   }
 `;
@@ -91,33 +82,6 @@ const WebsiteWrapper = styled.div`
 
 const ShopProfile = () => {
   const { shopId } = useParams();
-  const { loading: shopLoading, error: shopError, data: shopData } = useQuery(
-    GET_SHOP_BY_ID,
-    {
-      variables: { id: shopId },
-    }
-  );
-  const {
-    loading: getAllShopCategoriesLoading,
-    error: getAllShopCategoriesError,
-    data: getAllShopCategoriesData,
-  } = useQuery(GET_ALL_SHOP_CATEGORIES);
-  const {
-    loading: productLoading,
-    error: productError,
-    data: productData,
-  } = useQuery(SEARCH_PRODUCT, {
-    variables: {
-      searchInput: {
-        page: 0,
-        pageSize: 5,
-        filters: null,
-        queries: `shopId:${shopId}`,
-        sorts: null,
-      },
-    },
-  });
-
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
   const [shopInfo, setShopInfo] = useState({
@@ -130,26 +94,57 @@ const ShopProfile = () => {
     shopUrls: [],
     kyb: { status: null },
     records: [],
+    email: ''
   });
+
+  const [
+    getShopById,
+    {
+      loading: getShopByIdLoading,
+      error: getShopByIdError,
+      data: getShopByIdData,
+    },
+  ] = useLazyQuery(GET_SHOP_BY_ID);
+  const [
+    getAllShopCategories,
+    {
+      loading: getAllShopCategoriesLoading,
+      error: getAllShopCategoriesError,
+      data: getAllShopCategoriesData,
+    },
+  ] = useLazyQuery(GET_ALL_SHOP_CATEGORIES);
+  const [
+    searchProduct,
+    { loading: productLoading, error: productError, data: productData },
+  ] = useLazyQuery(SEARCH_PRODUCT);
+
+  useEffect(() => {
+    if (shopId) {
+      getShopById({
+        variables: { id: shopId },
+      });
+      getAllShopCategories();
+    }
+  }, [shopId]);
 
   useEffect(() => {
     if (
-      shopError?.message ||
+      getShopByIdError?.message ||
       productError?.message ||
       getAllShopCategoriesError?.message
     ) {
       setFormError(
-        shopError?.message ??
+        getShopByIdError?.message ??
           productError?.message ??
           getAllShopCategoriesError?.message
       );
       setOpen(true);
     }
-  }, [shopError, productError, getAllShopCategoriesError]);
+  }, [getShopByIdError, productError, getAllShopCategoriesError]);
 
   useEffect(() => {
     if (
-      shopData?.getShopById?.data &&
+      getShopByIdData?.getShopById?.data &&
       getAllShopCategoriesData?.getAllShopCategories?.data
     ) {
       const {
@@ -161,12 +156,14 @@ const ShopProfile = () => {
         categoryIds,
         shopUrls,
         kyb,
-      } = shopData?.getShopById?.data;
+        email
+      } = getShopByIdData?.getShopById?.data;
       const categories = getAllShopCategoriesData?.getAllShopCategories?.data
         ?.filter((x) => categoryIds?.includes(x.id))
         ?.map((x) => x.name);
 
       setShopInfo({
+        ...shopInfo,
         name,
         phoneCountryCode,
         phoneNumber,
@@ -175,10 +172,23 @@ const ShopProfile = () => {
         categories,
         shopUrls,
         kyb,
+        email
+      });
+
+      searchProduct({
+        variables: {
+          searchInput: {
+            page: 0,
+            pageSize: 5,
+            filters: null,
+            queries: `shopId:${shopId}`,
+            sorts: null,
+          },
+        },
       });
     }
   }, [
-    shopData?.getShopById?.data,
+    getShopByIdData?.getShopById?.data,
     getAllShopCategoriesData?.getAllShopCategories?.data,
   ]);
 
@@ -191,12 +201,16 @@ const ShopProfile = () => {
     }
   }, [productData?.searchProduct?.data]);
 
-  return shopLoading || productLoading || getAllShopCategoriesLoading ? (
+  return getShopByIdLoading || productLoading || getAllShopCategoriesLoading ? (
     <Spinner />
   ) : (
     <ShopContainer>
       <BoxLeft>
-        <ShopNameCard name={shopInfo.name} logoUrl={shopInfo.logoUrl} />
+        <ShopNameCard
+          name={shopInfo.name}
+          logoUrl={shopInfo.logoUrl}
+          id={shopId}
+        />
         <KycWrapper>
           <KybCard status={shopInfo.kyb?.status} />
         </KycWrapper>
@@ -219,6 +233,12 @@ const ShopProfile = () => {
               {formatPhoneNumberIntl(
                 `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
               )}
+            </p>
+          </div>
+          <div className="wrapper">
+            <Location />
+            <p>
+                {shopInfo.email}
             </p>
           </div>
         </div>

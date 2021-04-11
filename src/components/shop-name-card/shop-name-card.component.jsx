@@ -46,7 +46,7 @@ const CardName = styled.h2`
   margin-right: 20px;
 `;
 
-const ShopNameCard = ({ logoUrl, name, productView, id }) => {
+const ShopNameCard = ({ logoUrl, name, productView = false, id }) => {
   return (
     <Link to={`/shop-profile/${id}`}>
       <Container productView={productView}>

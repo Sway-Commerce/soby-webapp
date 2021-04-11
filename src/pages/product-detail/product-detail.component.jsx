@@ -25,10 +25,7 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: 364px 1fr;
   grid-column-gap: 23px;
-`;
-
-const ShopCard = styled.div`
-  margin: 80px 0 32px;
+  margin-bottom: 110px;
 `;
 
 const ProductName = styled.h2`
@@ -69,8 +66,8 @@ const Option = styled.h3`
   }
 `;
 
-const ListCardWrapper = styled.div`
-  margin-top: 152px;
+const KycWrapper = styled.div`
+  margin-top: 32px;
 `;
 
 const ProductDetail = () => {
@@ -93,7 +90,6 @@ const ProductDetail = () => {
     },
     sizes: [],
     colors: [],
-    weights: [],
     status: null,
     sku: { currentPrice: 0 },
   });
@@ -197,19 +193,21 @@ const ProductDetail = () => {
     if (productData.skus.length) {
       let sizes = [];
       let colors = [];
-      let weights = [];
       productData.skus.map((x) =>
         x.properties.map((y) => {
           switch (y.name) {
-            case 'SIZE':
-              sizes = [...sizes, y.value];
+            case 'SIZE': {
+              if(!sizes.includes(y.value)) {
+                sizes = [...sizes, y.value];
+              }
               return null;
-            case 'WEIGHT':
-              weights = [...weights, y.value];
+            }
+            case 'COLOR': {
+              if(!colors.includes(y.value)) {
+                colors = [...colors, y.value];
+              }
               return null;
-            case 'COLOR':
-              colors = [...colors, y.value];
-              return null;
+            }
             default:
               return null;
           }
@@ -218,71 +216,74 @@ const ProductDetail = () => {
 
       const sku = productData.skus[productData.skus.length - 1];
 
-      setProductData({ ...productData, sizes, colors, weights, sku });
+      setProductData({ ...productData, sizes, colors, sku });
     }
   }, [productData.skus]);
 
   return searchProductLoading || getProductLoading || getShopByIdLoading ? (
     <Spinner />
   ) : (
-    <Container>
-      <div>
-        <ProductCard
-          id={productData.id}
-          imageUrls={productData.imageUrls}
-          currentPrice={productData.sku.currentPrice}
-          description={productData.description}
-          isMain
-        />
-        <ShopCard>
+    <React.Fragment>
+      <Container>
+        <div>
+          <ProductCard
+            id={productData.id}
+            imageUrls={productData.imageUrls}
+            currentPrice={productData.sku.currentPrice}
+            description={productData.description}
+            isMain
+          />
+        </div>
+
+        <div>
+          <ProductName>{productData.name}</ProductName>
+          <ProductPrice>
+            {currencyFormatter(productData.sku.currentPrice)}
+          </ProductPrice>
+          <ProductDescription>{productData.description}</ProductDescription>
+          <SkusWrapper>
+            <SkuItem>
+              <SkuName>Colours</SkuName>
+              <Option>
+                {productData.colors.map((x) => (
+                  <SkuChip name={x} key={x} />
+                ))}
+              </Option>
+            </SkuItem>
+            <SkuItem>
+              <SkuName>Size</SkuName>
+              <Option>
+                {productData.sizes.map((x) => (
+                  <SkuChip name={x} key={x} />
+                ))}
+              </Option>
+            </SkuItem>
+          </SkusWrapper>
+
+          <CategoryTitle>Category</CategoryTitle>
+          <ShopCategory category={productData.category.name} noBorder />
+        </div>
+      </Container>
+      <Container>
+        <div>
           <ShopNameCard
             name={productData.shopInfo.name}
             logoUrl={productData.shopInfo.logoUrl}
             productView
             id={productData.shopInfo.id}
           />
-        </ShopCard>
-        <KybCard status={productData.status} productView />
-      </div>
-
-      <div>
-        <ProductName>{productData.name}</ProductName>
-        <ProductPrice>
-          {currencyFormatter(productData.sku.currentPrice)}
-        </ProductPrice>
-        <ProductDescription>{productData.description}</ProductDescription>
-        <SkusWrapper>
-          <SkuItem>
-            <SkuName>Colours</SkuName>
-            <Option>
-              {productData.colors.map((x) => (
-                <SkuChip name={x} key={x} />
-              ))}
-            </Option>
-          </SkuItem>
-          <SkuItem>
-            <SkuName>Size</SkuName>
-            <Option>
-              {productData.sizes.map((x) => (
-                <SkuChip name={x} key={x} />
-              ))}
-            </Option>
-          </SkuItem>
-        </SkusWrapper>
-
-        <CategoryTitle>Category</CategoryTitle>
-        <ShopCategory category={productData.category.name} noBorder />
-
-        <ListCardWrapper>
-          <ProductListCard records={productData.records} key={Math.random()} />
-        </ListCardWrapper>
-      </div>
+          <KycWrapper>
+            <KybCard status={productData.status} productView />
+          </KycWrapper>
+        </div>
+        <ProductListCard records={productData.records} key={Math.random()} />
+      </Container>
       <SobyModal open={open} setOpen={setOpen}>
         {formError ? (
           <ErrorPopup content={formError} setOpen={setOpen} />
         ) : null}
       </SobyModal>
-    </Container>
+    </React.Fragment>
   );
 };
 

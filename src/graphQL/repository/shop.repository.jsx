@@ -21,6 +21,7 @@ export const GET_SHOP_BY_ID = gql`
         createdAt
         updatedAt
         shippingType
+        email
         kyb {
           status
           reason
@@ -78,7 +79,7 @@ export const GET_SHOP_DETAILED_INFO = gql`
         logoUrl
         phoneCountryCode
         phoneNumber
-        categories
+        categoryIds
         shopUrls
         shippingType
         shippingLocations {
