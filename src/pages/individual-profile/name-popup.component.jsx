@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
@@ -123,6 +124,7 @@ const NamePopup = ({
   addressLine,
   nationality,
   imageUrl,
+  setOpenNamePopup
 }) => {
   const [state, setstate] = useState({
     firstName,
@@ -157,6 +159,7 @@ const NamePopup = ({
   ] = useMutation(UPDATE_INDIVIDUAL);
   useEffect(() => {
     if (updateIndividualData?.updateIndividual?.data) {
+      setOpenNamePopup(false);
     }
   }, [updateIndividualData?.updateIndividual?.data, updateIndividual]);
 
@@ -248,6 +251,7 @@ const NamePopup = ({
     } else {
       submitData();
     }
+
   };
 
   const submitData = () => {

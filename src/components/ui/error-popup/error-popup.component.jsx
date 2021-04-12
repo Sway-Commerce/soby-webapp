@@ -30,6 +30,7 @@ export const CloseButton = styled.button`
   border-radius: 3px;
   box-shadow: 0 0 8px rgba(196, 196, 196, 0.2);
   margin: 20px;
+  z-index: 1000;
 `;
 export const Header = styled.div`
   height: 70px;

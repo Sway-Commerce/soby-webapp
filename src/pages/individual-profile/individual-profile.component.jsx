@@ -10,8 +10,6 @@ import {
   UPDATE_PHONE,
   VERIFY_EMAIL,
   SEND_EMAIL_VERIFICATION,
-  UPDATE_EMAIL,
-  UPDATE_PASSWORD,
 } from 'graphQL/repository/individual.repository';
 
 import { ReactComponent as BellIcon } from 'shared/assets/bell.svg';
@@ -25,6 +23,8 @@ import { ReactComponent as EditWhiteIcon } from 'shared/assets/edit-white.svg';
 import KybStatus from 'components/kyb-status/kyb-status.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import NamePopup from './name-popup.component';
+import PasswordPopup from './password-popup.component';
+import EmailPopup from './edit-mail-popup.component';
 
 const Page = styled.div`
   height: 100vh;
@@ -173,11 +173,6 @@ const Box = styled.div`
 `;
 
 const IndividualProfile = () => {
-
-  const userInfo = useSelector((state) => {
-    return state.user;
-  });
-
   const {
     signingSecret,
     encryptionSecret,
@@ -204,96 +199,15 @@ const IndividualProfile = () => {
     phoneStatus,
     pendingIdentities,
     accessToken,
-  } = userInfo;
+  } = useSelector((state) => {
+    return state.user;
+  });
 
-  const [picture, setPicture] = useState({});
   const [openNamePopup, setOpenNamePopup] = useState(false);
+  const [openPasswordPopup, setOpenPasswordPopup] = useState(false);
+  const [openEditMailPopup, setOpenEditMailPopup] = useState(false);
 
-  // VERIFY_PHONE
-  const [
-    verifyPhoneMutation,
-    { data: verifyPhoneData, loading: verifyPhoneLoading },
-  ] = useMutation(VERIFY_PHONE);
-  useEffect(() => {
-    if (verifyPhoneData?.verifyPhone?.data) {
-    }
-  }, [verifyPhoneData?.verifyPhone?.data, verifyPhoneMutation]);
-
-  // SEND_PHONE_VERIFICATION
-  const [
-    sendPhoneVerificationMutation,
-    { data: sendPhoneVerificationData, loading: sendPhoneVerificationLoading },
-  ] = useMutation(SEND_PHONE_VERIFICATION);
-  useEffect(() => {
-    if (sendPhoneVerificationData?.sendPhoneVerification?.data) {
-    }
-  }, [
-    sendPhoneVerificationData?.sendPhoneVerification?.data,
-    sendPhoneVerificationMutation,
-  ]);
-
-  // UPDATE_PHONE
-  const [
-    updatePhoneMutation,
-    { data: updatePhoneMutationData, loading: updatePhoneMutationLoading },
-  ] = useMutation(UPDATE_PHONE);
-  useEffect(() => {
-    if (updatePhoneMutationData?.updatePhone?.data) {
-    }
-  }, [updatePhoneMutationData?.updatePhone?.data, updatePhoneMutation]);
-
-  // VERIFY_EMAIL
-  const [
-    verifyEmailMutation,
-    { data: verifyEmailMutationData, loading: verifyEmailMutationLoading },
-  ] = useMutation(VERIFY_EMAIL);
-  useEffect(() => {
-    if (verifyEmailMutationData?.verifyEmail?.data) {
-    }
-  }, [verifyEmailMutationData?.verifyEmail?.data, verifyEmailMutation]);
-
-  // SEND_EMAIL_VERIFICATION
-  const [
-    sendEmailVerificationMutation,
-    { data: sendEmailVerificationData, loading: sendEmailVerificationLoading },
-  ] = useMutation(SEND_EMAIL_VERIFICATION);
-  useEffect(() => {
-    if (sendEmailVerificationData?.sendEmailVerification?.data) {
-    }
-  }, [
-    sendEmailVerificationData?.sendEmailVerification?.data,
-    sendEmailVerificationMutation,
-  ]);
-
-  // UPDATE_EMAIL
-  const [
-    updateEmailMutation,
-    { data: updateEmailData, loading: updateEmailLoading },
-  ] = useMutation(UPDATE_EMAIL);
-  useEffect(() => {
-    if (updateEmailData?.updateEmail?.data) {
-    }
-  }, [updateEmailData?.updateEmail?.data, updateEmailMutation]);
-
-  // UPDATE_PASSWORD
-  const [
-    updatePasswordMutation,
-    { data: updatePasswordData, loading: updatePasswordLoading },
-  ] = useMutation(UPDATE_PASSWORD);
-  useEffect(() => {
-    if (updatePasswordData?.updatePassword?.data) {
-    }
-  }, [updatePasswordData?.updatePassword?.data, updatePasswordMutation]);
-
-  return verifyEmailMutationLoading ||
-    verifyPhoneLoading ||
-    updatePhoneMutationLoading ||
-    sendEmailVerificationLoading ||
-    updateEmailLoading ||
-    updatePasswordLoading ||
-    sendPhoneVerificationLoading ? (
-    <Spinner />
-  ) : (
+  return (
     <Page>
       <Content>
         <h1>Information</h1>
@@ -307,9 +221,7 @@ const IndividualProfile = () => {
                   <EditWhiteIcon onClick={() => setOpenNamePopup(true)} />
                 </CircleIcon>
               </AvatarBox>
-              <Name>
-                {`${lastName} ${middleName} ${firstName}`}
-              </Name>
+              <Name>{`${lastName} ${middleName} ${firstName}`}</Name>
             </Row>
           </Wrapper>
 
@@ -332,7 +244,7 @@ const IndividualProfile = () => {
                   {emailStatus === 'CONFIRMED' ? <TickIcon /> : <ErrorIcon />}
                 </Icon>
               </Text>
-              <Text small pointer>
+              <Text small pointer onClick={() => setOpenEditMailPopup(true)}>
                 <Icon>
                   <EditIcon />
                 </Icon>
@@ -388,7 +300,7 @@ const IndividualProfile = () => {
             </Icon>
             Password or Upload your Pin
           </Text>
-          <Text small pointer>
+          <Text small pointer onClick={() => setOpenPasswordPopup(true)}>
             <Icon>
               <EditIcon />
             </Icon>
@@ -416,24 +328,104 @@ const IndividualProfile = () => {
           <Text>&gt;</Text>
         </Row>
       </Content>
+
       <SobyModal open={openNamePopup} setOpen={setOpenNamePopup}>
-        <NamePopup
-          firstName={firstName}
-          lastName={lastName}
-          middleName={middleName}
-          accessToken={accessToken}
-          dob={dob}
-          postalCode={postalCode}
-          country={country}
-          province={province}
-          city={city}
-          addressLine={addressLine}
-          nationality={nationality}
-          imageUrl={imageUrl}
-        />
+        {openNamePopup ? (
+          <NamePopup
+            firstName={firstName}
+            lastName={lastName}
+            middleName={middleName}
+            accessToken={accessToken}
+            dob={dob}
+            postalCode={postalCode}
+            country={country}
+            province={province}
+            city={city}
+            addressLine={addressLine}
+            nationality={nationality}
+            imageUrl={imageUrl}
+            setOpenNamePopup={setOpenNamePopup}
+          />
+        ) : null}
+      </SobyModal>
+
+      <SobyModal open={openPasswordPopup} setOpen={setOpenPasswordPopup}>
+        {openPasswordPopup ? (
+          <PasswordPopup
+            setOpenPasswordPopup={setOpenPasswordPopup}
+            signingSecret={signingSecret}
+            encryptionPublicKey={encryptionPublicKey}
+            encryptionSecret={encryptionSecret}
+          />
+        ) : null}
+      </SobyModal>
+
+      <SobyModal open={openEditMailPopup} setOpen={setOpenEditMailPopup}>
+        {openEditMailPopup ? (
+          <EmailPopup
+            setOpenEditMailPopup={setOpenEditMailPopup}
+            email={email}
+          />
+        ) : null}
       </SobyModal>
     </Page>
   );
 };
 
 export default IndividualProfile;
+
+// VERIFY_PHONE
+// const [
+//   verifyPhoneMutation,
+//   { data: verifyPhoneData, loading: verifyPhoneLoading },
+// ] = useMutation(VERIFY_PHONE);
+// useEffect(() => {
+//   if (verifyPhoneData?.verifyPhone?.data) {
+//   }
+// }, [verifyPhoneData?.verifyPhone?.data, verifyPhoneMutation]);
+
+// SEND_PHONE_VERIFICATION
+// const [
+//   sendPhoneVerificationMutation,
+//   { data: sendPhoneVerificationData, loading: sendPhoneVerificationLoading },
+// ] = useMutation(SEND_PHONE_VERIFICATION);
+// useEffect(() => {
+//   if (sendPhoneVerificationData?.sendPhoneVerification?.data) {
+//   }
+// }, [
+//   sendPhoneVerificationData?.sendPhoneVerification?.data,
+//   sendPhoneVerificationMutation,
+// ]);
+
+// UPDATE_PHONE
+// const [
+//   updatePhoneMutation,
+//   { data: updatePhoneMutationData, loading: updatePhoneMutationLoading },
+// ] = useMutation(UPDATE_PHONE);
+// useEffect(() => {
+//   if (updatePhoneMutationData?.updatePhone?.data) {
+//   }
+// }, [updatePhoneMutationData?.updatePhone?.data, updatePhoneMutation]);
+
+// VERIFY_EMAIL
+// const [
+//   verifyEmailMutation,
+//   { data: verifyEmailMutationData, loading: verifyEmailMutationLoading },
+// ] = useMutation(VERIFY_EMAIL);
+// useEffect(() => {
+//   if (verifyEmailMutationData?.verifyEmail?.data) {
+//   }
+// }, [verifyEmailMutationData?.verifyEmail?.data, verifyEmailMutation]);
+
+// SEND_EMAIL_VERIFICATION
+// const [
+//   sendEmailVerificationMutation,
+//   { data: sendEmailVerificationData, loading: sendEmailVerificationLoading },
+// ] = useMutation(SEND_EMAIL_VERIFICATION);
+// useEffect(() => {
+//   if (sendEmailVerificationData?.sendEmailVerification?.data) {
+//   }
+// }, [
+//   sendEmailVerificationData?.sendEmailVerification?.data,
+//   sendEmailVerificationMutation,
+// ]);
