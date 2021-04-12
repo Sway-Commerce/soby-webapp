@@ -1,0 +1,339 @@
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { useMutation } from '@apollo/client';
+
+import { ReactComponent as EditWhiteIcon } from 'shared/assets/edit-white.svg';
+
+import { UPDATE_INDIVIDUAL } from 'graphQL/repository/individual.repository';
+import SobyModal from 'components/ui/modal/modal.component';
+import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import Spinner from 'components/ui/spinner/spinner.component';
+
+import { setNameAndImage } from 'redux/user/user.actions';
+
+const Box = styled.form`
+  width: 700px;
+  padding: 48px 40px;
+  background-color: #fff;
+  border-radius: 8px;
+  @media (max-width: 700px) {
+    width: auto;
+  }
+`;
+
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+
+  @media (max-width: 700px) {
+    flex-direction: column;
+    margin-bottom: 0;
+  }
+`;
+
+const Button = styled.input.attrs((props) => ({
+  type: 'submit',
+  value: 'Save',
+}))`
+  width: 100%;
+  background-color: #f1f1f1;
+  color: #2b74e4;
+  font-weight: 700;
+  padding: 14px 10px 10px;
+  border: 0;
+  border-radius: 7px;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.07);
+  cursor: pointer;
+`;
+
+const InputContainer = styled.div`
+  width: ${(props) => props.width || '100%'};
+
+  @media (max-width: 700px) {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+`;
+
+const Input = styled.input.attrs((props) => ({
+  type: 'text',
+}))`
+  width: 100%;
+  padding: 8px 0;
+  outline: 0;
+  border: 0;
+  border-radius: 0;
+  border-bottom: 0.5px solid #c2c2c2;
+  font-size: 18px;
+`;
+
+const AvatarBox = styled.div`
+  position: relative;
+  height: 100px;
+  width: 100px;
+
+  @media (max-width: 700px) {
+    margin-bottom: 20px;
+  }
+`;
+
+const Avatar = styled.img`
+  height: 100px;
+  width: 100px;
+  border-radius: 8px;
+`;
+
+const EditIcon = styled.div`
+  label {
+    position: absolute;
+    bottom: -8px;
+    right: -15px;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: #2b74e4;
+    border: 2.5px solid #fff;
+    color: #fff;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  input {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+  }
+`;
+
+const NamePopup = ({
+  firstName,
+  lastName,
+  middleName,
+  accessToken,
+  dob,
+  postalCode,
+  country,
+  province,
+  city,
+  addressLine,
+  nationality,
+  imageUrl,
+}) => {
+  const [state, setstate] = useState({
+    firstName,
+    lastName,
+    middleName,
+    dob,
+    postalCode,
+    country,
+    province,
+    city,
+    addressLine,
+    nationality,
+    imageUrl,
+  });
+  const [picture, setPicture] = useState({
+    picturePreview: imageUrl,
+    pictureAsFile: null,
+  });
+  const [open, setOpen] = useState(false);
+  const [formError, setFormError] = useState('');
+  const dispatch = useDispatch();
+  const dispatchSignOutStart = (payload) => dispatch(setNameAndImage(payload));
+
+  // UPDATE_INDIVIDUAL
+  const [
+    updateIndividual,
+    {
+      data: updateIndividualData,
+      loading: updateIndividualLoading,
+      error: updateIndividualError,
+    },
+  ] = useMutation(UPDATE_INDIVIDUAL);
+  useEffect(() => {
+    if (updateIndividualData?.updateIndividual?.data) {
+    }
+  }, [updateIndividualData?.updateIndividual?.data, updateIndividual]);
+
+  useEffect(() => {
+    if (updateIndividualError?.message) {
+      setFormError(updateIndividualError?.message);
+      setOpen(true);
+    }
+  }, [updateIndividualError?.message]);
+
+  const uploadPicture = (e) => {
+    setPicture({
+      picturePreview: URL.createObjectURL(e.target.files[0]),
+      pictureAsFile: e.target.files[0],
+    });
+  };
+
+  const setImageAction = async () => {
+    const formData = new FormData();
+    formData.append('files', picture.pictureAsFile);
+
+    console.log(picture.pictureAsFile);
+
+    for (var key of formData.entries()) {
+      console.log(key[0] + ', ' + key[1]);
+    }
+
+    const data = await fetch('https://api-dev.soby.vn/individuals/images', {
+      method: 'POST',
+      headers: {
+        Category: 'AVATAR',
+        Authorization: accessToken ? `Bearer ${accessToken}` : '',
+      },
+      body: formData,
+    });
+    const uploadedImage = await data.json();
+
+    if (uploadedImage?.data) {
+      const { data } = uploadedImage;
+      const [imageUrl] = data?.urls;
+
+      dispatchSignOutStart({
+        imageUrl,
+        firstName: state.firstName,
+        lastName: state.lastName,
+        middleName: state.middleName,
+      });
+
+      updateIndividual({
+        variables: {
+          cmd: {
+            firstName: state.firstName,
+            lastName: state.lastName,
+            middleName: state.middleName,
+            imageUrl,
+            dob: state.dob,
+            postalCode: state.postalCode,
+            country: state.country,
+            province: state.province,
+            city: state.city,
+            addressLine: state.addressLine,
+            nationality: state.nationality,
+          },
+        },
+      });
+    } else {
+      setFormError("You need to login again!!!");
+      setOpen(true);
+    }
+  };
+
+  const handleChange = (event) => {
+    if (!event) {
+      return;
+    }
+    const { name, value } = event?.target;
+
+    setstate({ ...state, [name]: value });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!event) {
+      return;
+    }
+
+    if (picture?.pictureAsFile) {
+      setImageAction();
+    } else {
+      submitData();
+    }
+  };
+
+  const submitData = () => {
+    dispatchSignOutStart({
+      imageUrl,
+      firstName: state.firstName,
+      lastName: state.lastName,
+      middleName: state.middleName,
+    });
+
+    updateIndividual({
+      variables: {
+        cmd: {
+          firstName: state.firstName,
+          lastName: state.lastName,
+          middleName: state.middleName,
+          imageUrl,
+          dob: state.dob,
+          postalCode: state.postalCode,
+          country: state.country,
+          province: state.province,
+          city: state.city,
+          addressLine: state.addressLine,
+          nationality: state.nationality,
+        },
+      },
+    });
+  };
+
+  return updateIndividualLoading ? (
+    <Spinner />
+  ) : (
+    <Box onSubmit={handleSubmit}>
+      <Row>
+        <AvatarBox>
+          <Avatar src={picture.picturePreview} />
+          <EditIcon>
+            <label for="upload-photo">
+              <EditWhiteIcon />
+            </label>
+            <input
+              type="file"
+              name="photo"
+              id="upload-photo"
+              onChange={uploadPicture}
+            />
+          </EditIcon>
+        </AvatarBox>
+        <InputContainer width="80%">
+          <span>First name</span>
+          <Input
+            value={state.firstName}
+            name="firstName"
+            onChange={handleChange}
+          />
+        </InputContainer>
+      </Row>
+
+      <Row>
+        <InputContainer width="48%">
+          <span>Middle name</span>
+          <Input
+            value={state.middleName}
+            name="middleName"
+            onChange={handleChange}
+          />
+        </InputContainer>
+
+        <InputContainer width="48%">
+          <span>Last name</span>
+          <Input
+            value={state.lastName}
+            name="lastName"
+            onChange={handleChange}
+          />
+        </InputContainer>
+      </Row>
+      <Button />
+
+      <SobyModal open={open} setOpen={setOpen}>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpen} />
+        ) : null}
+      </SobyModal>
+    </Box>
+  );
+};
+
+export default NamePopup;

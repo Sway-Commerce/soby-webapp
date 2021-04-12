@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import { useDispatch, useSelector } from 'react-redux';
 
 import FormInput from 'components/form-input/form-input.component';
 import CustomButton from 'components/ui/custom-button/custom-button.component';
