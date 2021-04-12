@@ -1,16 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { useMutation } from '@apollo/client';
-
-import Spinner from 'components/ui/spinner/spinner.component';
-import {
-  VERIFY_PHONE,
-  SEND_PHONE_VERIFICATION,
-  UPDATE_PHONE,
-  VERIFY_EMAIL,
-  SEND_EMAIL_VERIFICATION,
-} from 'graphQL/repository/individual.repository';
 
 import { ReactComponent as BellIcon } from 'shared/assets/bell.svg';
 import { ReactComponent as EditIcon } from 'shared/assets/edit.svg';
