@@ -1,38 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useMutation } from '@apollo/client';
+import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { UPDATE_EMAIL } from 'graphQL/repository/individual.repository';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setEmail } from 'redux/user/user.actions';
+import emailValidation from 'shared/utils/emailValidation';
 import styled from 'styled-components';
+import { Box, ErrorTitle, PopupButton } from './shared-style.component';
 
-const Box = styled.form`
-  width: 700px;
-  padding: 48px 40px;
-  background-color: #fff;
-  border-radius: 8px;
-
-  h2 {
-    margin-bottom: 30px;
-  }
-
-  @media (max-width: 700px) {
-    width: auto;
-  }
-`;
-
-const Button = styled.input.attrs((props) => ({
-  type: 'submit',
-  value: 'Save',
-}))`
-  width: 100%;
-  background-color: #f1f1f1;
-  color: #2b74e4;
-  font-weight: 700;
-  padding: 14px 0 12px;
-  border: 0;
-  border-radius: 7px;
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.04);
-  cursor: pointer;
-`;
 
 const InputContainer = styled.div`
   width: 100%;
@@ -52,33 +30,89 @@ const Input = styled.input.attrs((props) => ({
 `;
 
 const EmailPopup = ({ setOpenEditMailPopup, email }) => {
+  const [newEmail, setNewEmail] = useState('');
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [formError, setFormError] = useState('');
+  const dispatch = useDispatch();
+  const dispatchSetEmail = (email) => dispatch(setEmail(email));
+
   // UPDATE_EMAIL
   const [
     updateEmailMutation,
-    { data: updateEmailData, loading: updateEmailLoading },
+    {
+      data: updateEmailData,
+      loading: updateEmailLoading,
+      error: updateEmailError,
+    },
   ] = useMutation(UPDATE_EMAIL);
   useEffect(() => {
-    if (updateEmailData?.updateEmail?.data) {
+    if (updateEmailData?.updateEmail?.success) {
+      dispatchSetEmail(newEmail);
+      setOpenEditMailPopup(false);
     }
-  }, [updateEmailData?.updateEmail?.data, updateEmailMutation]);
+  }, [updateEmailData?.updateEmail?.success, updateEmailMutation]);
+
+  useEffect(() => {
+    if (updateEmailError?.message) {
+      setFormError(updateEmailError?.message);
+      setOpen(true);
+    }
+  }, [updateEmailError?.message]);
+
+  const handleChange = (event) => {
+    if (!event) {
+      return;
+    }
+    const { value } = event?.target;
+
+    setNewEmail(value);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!newEmail) {
+      return;
+    }
+
+    const isEmailValid = emailValidation(newEmail);
+    setIsEmailValid(isEmailValid);
+
+    if (isEmailValid) {
+      updateEmailMutation({ variables: { cmd: { email: newEmail } } });
+    }
+  };
 
   return updateEmailLoading ? (
     <Spinner />
   ) : (
-    <Box>
-      <h2>Edit Email</h2>
-      <InputContainer>
-        <span>Your current email</span>
-        <Input value={email} />
-      </InputContainer>
+    <React.Fragment>
+      <Box onSubmit={handleSubmit}>
+        <h2>Edit Email</h2>
+        <InputContainer>
+          <span>Your current email</span>
+          <Input value={email} disabled />
+        </InputContainer>
 
-      <InputContainer>
-        <span>New email</span>
-        <Input placeholder="your-new@email.com" />
-      </InputContainer>
+        <InputContainer>
+          <span>New email</span>
+          <Input onChange={handleChange} />
+        </InputContainer>
 
-      <Button />
-    </Box>
+        {!isEmailValid ? (
+          <ErrorTitle>Your email is not correct</ErrorTitle>
+        ) : null}
+
+        <PopupButton />
+      </Box>
+
+      <SobyModal open={open} setOpen={setOpen}>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpen} />
+        ) : null}
+      </SobyModal>
+    </React.Fragment>
   );
 };
 

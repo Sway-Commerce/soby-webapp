@@ -15,6 +15,9 @@ import SobyModal from 'components/ui/modal/modal.component';
 import NamePopup from './name-popup.component';
 import PasswordPopup from './password-popup.component';
 import EmailPopup from './edit-mail-popup.component';
+import PhonePopup from './edit-phone-popup.component';
+import EmailCodePopup from './verify-email-popup.component';
+import PhoneCodePopup from './verify-phone-popup.component';
 
 const Page = styled.div`
   height: 100vh;
@@ -197,6 +200,9 @@ const IndividualProfile = () => {
   const [openNamePopup, setOpenNamePopup] = useState(false);
   const [openPasswordPopup, setOpenPasswordPopup] = useState(false);
   const [openEditMailPopup, setOpenEditMailPopup] = useState(false);
+  const [openEditPhonePopup, setOpenEditPhonePopup] = useState(false);
+  const [openVerifyPhonePopup, setOpenVerifyPhonePopup] = useState(false);
+  const [openVerifyEmailPopup, setOpenVerifyEmailPopup] = useState(false);
 
   return (
     <Page>
@@ -232,7 +238,11 @@ const IndividualProfile = () => {
               <Text>
                 Email
                 <Icon marginLeft>
-                  {emailStatus === 'CONFIRMED' ? <TickIcon /> : <ErrorIcon />}
+                  {emailStatus === 'CONFIRMED' ? (
+                    <TickIcon />
+                  ) : (
+                    <ErrorIcon onClick={() => setOpenVerifyEmailPopup(true)} />
+                  )}
                 </Icon>
               </Text>
               <Text small pointer onClick={() => setOpenEditMailPopup(true)}>
@@ -250,10 +260,14 @@ const IndividualProfile = () => {
               <Text>
                 Số điện thoại
                 <Icon marginLeft>
-                  {phoneStatus === 'CONFIRMED' ? <TickIcon /> : <ErrorIcon />}
+                  {phoneStatus === 'CONFIRMED' ? (
+                    <TickIcon />
+                  ) : (
+                    <ErrorIcon onClick={() => setOpenVerifyPhonePopup(true)} />
+                  )}
                 </Icon>
               </Text>
-              <Text small pointer>
+              <Text small pointer onClick={() => setOpenEditPhonePopup(true)}>
                 <Icon>
                   <EditIcon />
                 </Icon>
@@ -333,7 +347,6 @@ const IndividualProfile = () => {
           <Text>&gt;</Text>
         </Row>
       </Content>
-
       <SobyModal open={openNamePopup} setOpen={setOpenNamePopup}>
         {openNamePopup ? (
           <NamePopup
@@ -353,7 +366,6 @@ const IndividualProfile = () => {
           />
         ) : null}
       </SobyModal>
-
       <SobyModal open={openPasswordPopup} setOpen={setOpenPasswordPopup}>
         {openPasswordPopup ? (
           <PasswordPopup
@@ -364,11 +376,37 @@ const IndividualProfile = () => {
           />
         ) : null}
       </SobyModal>
-
       <SobyModal open={openEditMailPopup} setOpen={setOpenEditMailPopup}>
         {openEditMailPopup ? (
           <EmailPopup
             setOpenEditMailPopup={setOpenEditMailPopup}
+            email={email}
+          />
+        ) : null}
+      </SobyModal>
+      <SobyModal open={openEditPhonePopup} setOpen={setOpenEditPhonePopup}>
+        {openEditPhonePopup ? (
+          <PhonePopup
+            setOpenEditPhonePopup={setOpenEditPhonePopup}
+            currentPhoneCountryCode={phoneCountryCode}
+            currentPhoneNumber={phoneNumber}
+          />
+        ) : null}
+      </SobyModal>
+      <SobyModal open={openVerifyPhonePopup} setOpen={setOpenVerifyPhonePopup}>
+        {openVerifyPhonePopup ? (
+          <PhoneCodePopup
+            setOpenVerifyPhonePopup={setOpenVerifyPhonePopup}
+            phoneCountryCode={phoneCountryCode}
+            phoneNumber={phoneNumber}
+          />
+        ) : null}
+      </SobyModal>
+
+      <SobyModal open={openVerifyEmailPopup} setOpen={setOpenVerifyEmailPopup}>
+        {openVerifyEmailPopup ? (
+          <EmailCodePopup
+            setOpenVerifyEmailPopup={setOpenVerifyEmailPopup}
             email={email}
           />
         ) : null}
@@ -379,58 +417,3 @@ const IndividualProfile = () => {
 
 export default IndividualProfile;
 
-// VERIFY_PHONE
-// const [
-//   verifyPhoneMutation,
-//   { data: verifyPhoneData, loading: verifyPhoneLoading },
-// ] = useMutation(VERIFY_PHONE);
-// useEffect(() => {
-//   if (verifyPhoneData?.verifyPhone?.data) {
-//   }
-// }, [verifyPhoneData?.verifyPhone?.data, verifyPhoneMutation]);
-
-// SEND_PHONE_VERIFICATION
-// const [
-//   sendPhoneVerificationMutation,
-//   { data: sendPhoneVerificationData, loading: sendPhoneVerificationLoading },
-// ] = useMutation(SEND_PHONE_VERIFICATION);
-// useEffect(() => {
-//   if (sendPhoneVerificationData?.sendPhoneVerification?.data) {
-//   }
-// }, [
-//   sendPhoneVerificationData?.sendPhoneVerification?.data,
-//   sendPhoneVerificationMutation,
-// ]);
-
-// UPDATE_PHONE
-// const [
-//   updatePhoneMutation,
-//   { data: updatePhoneMutationData, loading: updatePhoneMutationLoading },
-// ] = useMutation(UPDATE_PHONE);
-// useEffect(() => {
-//   if (updatePhoneMutationData?.updatePhone?.data) {
-//   }
-// }, [updatePhoneMutationData?.updatePhone?.data, updatePhoneMutation]);
-
-// VERIFY_EMAIL
-// const [
-//   verifyEmailMutation,
-//   { data: verifyEmailMutationData, loading: verifyEmailMutationLoading },
-// ] = useMutation(VERIFY_EMAIL);
-// useEffect(() => {
-//   if (verifyEmailMutationData?.verifyEmail?.data) {
-//   }
-// }, [verifyEmailMutationData?.verifyEmail?.data, verifyEmailMutation]);
-
-// SEND_EMAIL_VERIFICATION
-// const [
-//   sendEmailVerificationMutation,
-//   { data: sendEmailVerificationData, loading: sendEmailVerificationLoading },
-// ] = useMutation(SEND_EMAIL_VERIFICATION);
-// useEffect(() => {
-//   if (sendEmailVerificationData?.sendEmailVerification?.data) {
-//   }
-// }, [
-//   sendEmailVerificationData?.sendEmailVerification?.data,
-//   sendEmailVerificationMutation,
-// ]);

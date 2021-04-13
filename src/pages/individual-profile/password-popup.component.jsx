@@ -11,21 +11,8 @@ import {
 import React, { useEffect, useState } from 'react';
 import passwordValidation from 'shared/utils/passwordValidation';
 import styled from 'styled-components';
+import { Box, ErrorTitle, PopupButton } from './shared-style.component';
 
-const Box = styled.form`
-  width: 700px;
-  padding: 48px 40px;
-  background-color: #fff;
-  border-radius: 8px;
-
-  h2 {
-    margin-bottom: 40px;
-  }
-
-  @media (max-width: 700px) {
-    width: auto;
-  }
-`;
 const Row = styled.div`
   display: flex;
   justify-content: space-between;
@@ -36,21 +23,6 @@ const Row = styled.div`
     flex-direction: column;
     margin-bottom: 0;
   }
-`;
-
-const Button = styled.input.attrs((props) => ({
-  type: 'submit',
-  value: 'Save',
-}))`
-  width: 100%;
-  background-color: #f1f1f1;
-  color: #2b74e4;
-  font-weight: 700;
-  padding: 14px 0 12px;
-  border: 0;
-  border-radius: 7px;
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.04);
-  cursor: pointer;
 `;
 
 const InputContainer = styled.div`
@@ -72,11 +44,6 @@ const Input = styled.input.attrs((props) => ({
   border-radius: 0;
   border-bottom: 0.5px solid #c2c2c2;
   font-size: 18px;
-`;
-
-export const ErrorTitle = styled.h5`
-  color: red;
-  margin: 5px 0;
 `;
 
 const PasswordPopup = ({
@@ -235,7 +202,7 @@ const PasswordPopup = ({
           ) : null}
         </Row>
 
-        <Button />
+        <PopupButton />
       </Box>
 
       <SobyModal open={open} setOpen={setOpen}>

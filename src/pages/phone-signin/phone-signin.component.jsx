@@ -10,7 +10,6 @@ import CustomButton from 'components/ui/custom-button/custom-button.component';
 import passwordValidation from 'shared/utils/passwordValidation';
 import {
   getHashPassword,
-  getSignature,
   GETSECRET,
   GET_INDIVIDUAL_BASIC_INFO,
   LOGIN_WITH_PHONE_AND_PASSWORD,

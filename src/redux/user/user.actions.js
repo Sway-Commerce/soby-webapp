@@ -114,8 +114,9 @@ export const sendPhoneVerification = () => ({
   type: UserActionTypes.SEND_PHONE_VERIFICATION,
 });
 
-export const verifyPhone = () => ({
+export const verifyPhone = (phoneStatus) => ({
   type: UserActionTypes.VERIFY_PHONE,
+  payload: phoneStatus,
 });
 
 export const setAccessToken = (accessToken) => ({
@@ -123,7 +124,27 @@ export const setAccessToken = (accessToken) => ({
   payload: accessToken,
 });
 
-export const setNameAndImage = ({imageUrl, firstName, lastName, middleName}) => ({
+export const setNameAndImage = ({
+  imageUrl,
+  firstName,
+  lastName,
+  middleName,
+}) => ({
   type: UserActionTypes.SET_NAME_AND_IMAGE,
-  payload: {imageUrl, firstName, lastName, middleName},
+  payload: { imageUrl, firstName, lastName, middleName },
+});
+
+export const setEmail = (email) => ({
+  type: UserActionTypes.SET_EMAIL,
+  payload: email,
+});
+
+export const setPhoneNumber = ({ phoneNumber, phoneCountryCode }) => ({
+  type: UserActionTypes.SET_PHONE_NUMBER,
+  payload: { phoneNumber, phoneCountryCode },
+});
+
+export const verifyEmail = (emailStatus) => ({
+  type: UserActionTypes.VERIFY_EMAIL,
+  payload: emailStatus,
 });

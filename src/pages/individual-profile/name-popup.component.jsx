@@ -12,16 +12,7 @@ import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 
 import { setNameAndImage } from 'redux/user/user.actions';
-
-const Box = styled.form`
-  width: 700px;
-  padding: 48px 40px;
-  background-color: #fff;
-  border-radius: 8px;
-  @media (max-width: 700px) {
-    width: auto;
-  }
-`;
+import { Box, PopupButton } from './shared-style.component';
 
 const Row = styled.div`
   display: flex;
@@ -33,21 +24,6 @@ const Row = styled.div`
     flex-direction: column;
     margin-bottom: 0;
   }
-`;
-
-const Button = styled.input.attrs((props) => ({
-  type: 'submit',
-  value: 'Save',
-}))`
-  width: 100%;
-  background-color: #f1f1f1;
-  color: #2b74e4;
-  font-weight: 700;
-  padding: 14px 10px 10px;
-  border: 0;
-  border-radius: 7px;
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.07);
-  cursor: pointer;
 `;
 
 const InputContainer = styled.div`
@@ -124,7 +100,7 @@ const NamePopup = ({
   addressLine,
   nationality,
   imageUrl,
-  setOpenNamePopup
+  setOpenNamePopup,
 }) => {
   const [state, setstate] = useState({
     firstName,
@@ -146,7 +122,7 @@ const NamePopup = ({
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
   const dispatch = useDispatch();
-  const dispatchSignOutStart = (payload) => dispatch(setNameAndImage(payload));
+  const dispatchSetNameAndImage = (payload) => dispatch(setNameAndImage(payload));
 
   // UPDATE_INDIVIDUAL
   const [
@@ -201,7 +177,7 @@ const NamePopup = ({
       const { data } = uploadedImage;
       const [imageUrl] = data?.urls;
 
-      dispatchSignOutStart({
+      dispatchSetNameAndImage({
         imageUrl,
         firstName: state.firstName,
         lastName: state.lastName,
@@ -226,7 +202,7 @@ const NamePopup = ({
         },
       });
     } else {
-      setFormError("You need to login again!!!");
+      setFormError('You need to login again!!!');
       setOpen(true);
     }
   };
@@ -251,11 +227,10 @@ const NamePopup = ({
     } else {
       submitData();
     }
-
   };
 
   const submitData = () => {
-    dispatchSignOutStart({
+    dispatchSetNameAndImage({
       imageUrl,
       firstName: state.firstName,
       lastName: state.lastName,
@@ -284,59 +259,61 @@ const NamePopup = ({
   return updateIndividualLoading ? (
     <Spinner />
   ) : (
-    <Box onSubmit={handleSubmit}>
-      <Row>
-        <AvatarBox>
-          <Avatar src={picture.picturePreview} />
-          <EditIcon>
-            <label for="upload-photo">
-              <EditWhiteIcon />
-            </label>
-            <input
-              type="file"
-              name="photo"
-              id="upload-photo"
-              onChange={uploadPicture}
+    <React.Fragment>
+      <Box onSubmit={handleSubmit}>
+        <Row>
+          <AvatarBox>
+            <Avatar src={picture.picturePreview} />
+            <EditIcon>
+              <label for="upload-photo">
+                <EditWhiteIcon />
+              </label>
+              <input
+                type="file"
+                name="photo"
+                id="upload-photo"
+                onChange={uploadPicture}
+              />
+            </EditIcon>
+          </AvatarBox>
+          <InputContainer width="80%">
+            <span>First name</span>
+            <Input
+              value={state.firstName}
+              name="firstName"
+              onChange={handleChange}
             />
-          </EditIcon>
-        </AvatarBox>
-        <InputContainer width="80%">
-          <span>First name</span>
-          <Input
-            value={state.firstName}
-            name="firstName"
-            onChange={handleChange}
-          />
-        </InputContainer>
-      </Row>
+          </InputContainer>
+        </Row>
 
-      <Row>
-        <InputContainer width="48%">
-          <span>Middle name</span>
-          <Input
-            value={state.middleName}
-            name="middleName"
-            onChange={handleChange}
-          />
-        </InputContainer>
+        <Row>
+          <InputContainer width="48%">
+            <span>Middle name</span>
+            <Input
+              value={state.middleName}
+              name="middleName"
+              onChange={handleChange}
+            />
+          </InputContainer>
 
-        <InputContainer width="48%">
-          <span>Last name</span>
-          <Input
-            value={state.lastName}
-            name="lastName"
-            onChange={handleChange}
-          />
-        </InputContainer>
-      </Row>
-      <Button />
+          <InputContainer width="48%">
+            <span>Last name</span>
+            <Input
+              value={state.lastName}
+              name="lastName"
+              onChange={handleChange}
+            />
+          </InputContainer>
+        </Row>
+        <PopupButton />
+      </Box>
 
       <SobyModal open={open} setOpen={setOpen}>
         {formError ? (
           <ErrorPopup content={formError} setOpen={setOpen} />
         ) : null}
       </SobyModal>
-    </Box>
+    </React.Fragment>
   );
 };
 

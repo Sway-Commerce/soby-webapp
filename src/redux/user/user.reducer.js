@@ -136,6 +136,37 @@ const userReducer = (state = INITIAL_STATE, action) => {
         middleName,
       };
     }
+    case UserActionTypes.SET_EMAIL: {
+      const email = action.payload;
+      return {
+        ...state,
+        email,
+        emailStatus: "NOT_CONFIRMED"
+      };
+    }
+    case UserActionTypes.SET_PHONE_NUMBER: {
+      const { phoneNumber, phoneCountryCode } = action.payload;
+      return {
+        ...state,
+        phoneNumber,
+        phoneCountryCode,
+        phoneStatus: "NOT_CONFIRMED"
+      };
+    }
+    case UserActionTypes.VERIFY_PHONE: {
+      const phoneStatus = action.payload;
+      return {
+        ...state,
+        phoneStatus
+      };
+    }
+    case UserActionTypes.VERIFY_EMAIL: {
+      const emailStatus = action.payload;
+      return {
+        ...state,
+        emailStatus
+      };
+    }
     default:
       return state;
   }
