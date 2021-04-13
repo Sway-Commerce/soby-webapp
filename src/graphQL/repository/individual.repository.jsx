@@ -183,7 +183,7 @@ export const signSignature = (signingSecret, jsonString, password) => {
   try {
     signing.importPrivateKey(signingSecret, password);
   } catch (error) {
-    return { signature: null, error: "Wrong password" };
+    return { signature: null, error: 'Wrong password' };
   }
   return {
     signature: signing.sign(jsonString, { input: 'utf8', output: 'base64Url' }),
@@ -193,4 +193,109 @@ export const signSignature = (signingSecret, jsonString, password) => {
 
 export const getHashPassword = (password) => {
   return sha256(password);
+};
+
+export const decryptIndividualModel = async (
+  encryptionSecret,
+  password,
+  individualInfo
+) => {
+  const encryption = new Encryption();
+
+  await encryption.importPrivateKey(encryptionSecret, password);
+
+  const firstName = individualInfo?.firstName
+    ? await encryption.decryptBase64UrlStringToString(individualInfo?.firstName)
+    : '';
+  const lastName = individualInfo?.lastName
+    ? await encryption.decryptBase64UrlStringToString(individualInfo?.lastName)
+    : '';
+  const middleName = individualInfo?.middleName
+    ? await encryption.decryptBase64UrlStringToString(
+        individualInfo?.middleName
+      )
+    : '';
+  const dob = individualInfo?.dob
+    ? await encryption.decryptBase64UrlStringToString(individualInfo?.dob)
+    : '';
+  const nationality = individualInfo?.nationality
+    ? await encryption.decryptBase64UrlStringToString(
+        individualInfo?.nationality
+      )
+    : '';
+  const addressLine = individualInfo?.addressLine
+    ? await encryption.decryptBase64UrlStringToString(
+        individualInfo?.addressLine
+      )
+    : '';
+  const city = individualInfo?.city
+    ? await encryption.decryptBase64UrlStringToString(individualInfo?.city)
+    : '';
+  const province = individualInfo?.province
+    ? await encryption.decryptBase64UrlStringToString(individualInfo?.province)
+    : '';
+  const country = individualInfo?.country
+    ? await encryption.decryptBase64UrlStringToString(individualInfo?.country)
+    : '';
+  const postalCode = individualInfo?.postalCode
+    ? await encryption.decryptBase64UrlStringToString(
+        individualInfo?.postalCode
+      )
+    : '';
+  const invitationCode = individualInfo?.invitationCode
+    ? await encryption.decryptBase64UrlStringToString(
+        individualInfo?.invitationCode
+      )
+    : '';
+  const email = individualInfo?.email
+    ? await encryption.decryptBase64UrlStringToString(individualInfo?.email)
+    : '';
+  const phoneCountryCode = individualInfo?.phoneCountryCode
+    ? await encryption.decryptBase64UrlStringToString(
+        individualInfo?.phoneCountryCode
+      )
+    : '';
+  const phoneNumber = individualInfo?.phoneNumber
+    ? await encryption.decryptBase64UrlStringToString(
+        individualInfo?.phoneNumber
+      )
+    : '';
+
+  return {
+    ...individualInfo,
+    firstName,
+    phoneNumber,
+    phoneCountryCode,
+    email,
+    invitationCode,
+    postalCode,
+    lastName,
+    middleName,
+    dob,
+    nationality,
+    addressLine,
+    city,
+    province,
+    country,
+  };
+};
+
+export const createKeyForNewPassword = async (
+  signingSecretCurrent,
+  encryptionSecretCurrent,
+  password,
+  newPassword
+) => {
+  const encryption = new Encryption();
+  const signing = new Signing();
+  debugger
+
+  signing.importPrivateKey(signingSecretCurrent, password);
+
+  await encryption.importPrivateKey(encryptionSecretCurrent, password);
+
+  const encryptionSecretNew = await encryption.exportPrivateKey(newPassword);
+  const signingSecretNew = signing.exportPrivateKey(newPassword);
+
+  return { encryptionSecretNew, signingSecretNew };
 };

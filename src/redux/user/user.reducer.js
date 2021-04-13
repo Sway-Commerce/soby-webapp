@@ -8,9 +8,25 @@ const INITIAL_STATE = {
   encryptionPublicKey: null,
   phoneNumber: null,
   phoneCountryCode: null,
+  email: null,
+  invitationCode: null,
+  postalCode: null,
+  lastName: null,
+  middleName: null,
+  dob: null,
+  nationality: null,
+  addressLine: null,
+  city: null,
+  province: null,
+  country: null,
+  firstName: null,
+  id: null,
+  imageUrl: null,
+  kycStatus: null,
+  emailStatus: null,
+  phoneStatus: null,
+  pendingIdentities: null,
   error: null,
-  signature: null,
-  signing: null,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -23,6 +39,24 @@ const userReducer = (state = INITIAL_STATE, action) => {
         encryptionPublicKey,
         phoneNumber,
         phoneCountryCode,
+        email,
+        invitationCode,
+        postalCode,
+        lastName,
+        middleName,
+        dob,
+        nationality,
+        addressLine,
+        city,
+        province,
+        country,
+        firstName,
+        id,
+        imageUrl,
+        kycStatus,
+        emailStatus,
+        phoneStatus,
+        pendingIdentities,
       } = action.payload;
       return {
         ...state,
@@ -30,9 +64,26 @@ const userReducer = (state = INITIAL_STATE, action) => {
         encryptionSecret,
         signingPublicKey,
         encryptionPublicKey,
-        signature: null,
         phoneNumber,
         phoneCountryCode,
+        email,
+        invitationCode,
+        postalCode,
+        lastName,
+        middleName,
+        dob,
+        nationality,
+        addressLine,
+        city,
+        province,
+        country,
+        firstName,
+        id,
+        imageUrl,
+        kycStatus,
+        emailStatus,
+        phoneStatus,
+        pendingIdentities,
       };
     }
     case UserActionTypes.SIGN_UP_SUCCESS: {
@@ -48,7 +99,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         encryptionSecret,
         signingPublicKey,
         encryptionPublicKey,
-        accessToken: null
+        accessToken: null,
       };
     }
     case UserActionTypes.SIGN_OUT_START:
@@ -72,7 +123,48 @@ const userReducer = (state = INITIAL_STATE, action) => {
       const accessToken = action.payload;
       return {
         ...state,
-        accessToken
+        accessToken,
+      };
+    }
+    case UserActionTypes.SET_NAME_AND_IMAGE: {
+      const { imageUrl, firstName, lastName, middleName } = action.payload;
+      return {
+        ...state,
+        imageUrl,
+        firstName,
+        lastName,
+        middleName,
+      };
+    }
+    case UserActionTypes.SET_EMAIL: {
+      const email = action.payload;
+      return {
+        ...state,
+        email,
+        emailStatus: "NOT_CONFIRMED"
+      };
+    }
+    case UserActionTypes.SET_PHONE_NUMBER: {
+      const { phoneNumber, phoneCountryCode } = action.payload;
+      return {
+        ...state,
+        phoneNumber,
+        phoneCountryCode,
+        phoneStatus: "NOT_CONFIRMED"
+      };
+    }
+    case UserActionTypes.VERIFY_PHONE: {
+      const phoneStatus = action.payload;
+      return {
+        ...state,
+        phoneStatus
+      };
+    }
+    case UserActionTypes.VERIFY_EMAIL: {
+      const emailStatus = action.payload;
+      return {
+        ...state,
+        emailStatus
       };
     }
     default:

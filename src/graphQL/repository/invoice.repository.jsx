@@ -241,7 +241,7 @@ export const GET_PROVINCE_LIST = gql`
       message
       data {
         id
-        name
+        fullName
       }
     }
   }
@@ -254,7 +254,7 @@ export const GET_DISTRICT_LIST = gql`
       message
       data {
         id
-        name
+        fullName
       }
     }
   }
@@ -267,7 +267,7 @@ export const GET_WARD_LIST = gql`
       message
       data {
         id
-        name
+        fullName
       }
     }
   }

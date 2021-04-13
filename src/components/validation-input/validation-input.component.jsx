@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 
-import { BoxContainer, NumberBox } from './validation-input.styles';
+import { BoxContainer, NumberBox, InputCode } from './validation-input.styles';
 
-const ValidationInput = ({ collectVerifyCode }) => {
+const ValidationInput = ({ collectVerifyCode, isIndividualProfile }) => {
   const firstRef = useRef();
   const secondRef = useRef();
   const thirdRef = useRef();
@@ -62,7 +62,16 @@ const ValidationInput = ({ collectVerifyCode }) => {
     }
   };
 
-  return (
+  return isIndividualProfile ? (
+    <React.Fragment>
+      <InputCode type="number" ref={firstRef} onKeyUp={onInputFirst} />
+      <InputCode type="number" ref={secondRef} onKeyUp={onInputSecond} />
+      <InputCode type="number" ref={thirdRef} onKeyUp={onInputThird} />
+      <InputCode type="number" ref={fourthRef} onKeyUp={onInputFourth} />
+      <InputCode type="number" ref={fifthRef} onKeyUp={onInputFifth} />
+      <InputCode type="number" ref={sixthRef} onKeyUp={onInputSixth} />
+    </React.Fragment>
+  ) : (
     <BoxContainer>
       <NumberBox type="number" ref={firstRef} onKeyUp={onInputFirst} />
       <NumberBox type="number" ref={secondRef} onKeyUp={onInputSecond} />

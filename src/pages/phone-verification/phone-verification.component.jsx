@@ -26,7 +26,7 @@ import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 
-const PhoneVerification = ({ history, phone }) => {
+const PhoneVerification = () => {
   const { phoneNumber, phoneCountryCode } = useSelector((state) => {
     return {
       phoneNumber: state.user.phoneNumber,
@@ -68,6 +68,7 @@ const PhoneVerification = ({ history, phone }) => {
 
   useEffect(() => {
     if (data?.verifyPhone?.success) {
+      dispatchVerify("CONFIRMED");
       const redirectUrl = localStorage.getItem('redirectUrl');
       localStorage.removeItem('redirectUrl');
       window.location = redirectUrl || '/your-transaction';
@@ -78,7 +79,6 @@ const PhoneVerification = ({ history, phone }) => {
     event.preventDefault();
     if (`${verificationCode}`.length === 6) {
       setIsCodeValid(true);
-      dispatchVerify();
       verifyPhoneMutation({
         variables: {
           cmd: { phoneCountryCode, phoneNumber, verificationCode },
@@ -92,7 +92,6 @@ const PhoneVerification = ({ history, phone }) => {
   const collectVerifyCode = (code) => {
     setVerificationCode(+code);
     if(`${code}`.length == 6) {
-      dispatchVerify();
       verifyPhoneMutation({
         variables: {
           cmd: { phoneCountryCode, phoneNumber, verificationCode: +code },

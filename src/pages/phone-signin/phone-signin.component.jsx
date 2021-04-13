@@ -10,10 +10,10 @@ import CustomButton from 'components/ui/custom-button/custom-button.component';
 import passwordValidation from 'shared/utils/passwordValidation';
 import {
   getHashPassword,
-  getSignature,
   GETSECRET,
   GET_INDIVIDUAL_BASIC_INFO,
   LOGIN_WITH_PHONE_AND_PASSWORD,
+  decryptIndividualModel,
 } from 'graphQL/repository/individual.repository';
 import {
   phoneSignInStart,
@@ -89,33 +89,76 @@ const PhoneSignin = () => {
       const dispatchSignInSuccess = (payload) =>
         dispatch(signInSuccess(payload));
 
-      const signature = getSignature(
-        loadIndividualBasicInfoData?.getIndividual?.data?.signingPublicKey,
-        getSecretData?.getSecret?.data?.signingSecret,
-        password
-      );
+      async function decryptData() {
+        const {
+          signingSecret,
+          encryptionSecret,
+        } = getSecretData?.getSecret?.data;
+        const {
+          signingPublicKey,
+          encryptionPublicKey,
+        } = loadIndividualBasicInfoData?.getIndividual?.data;
 
-      const {
-        signingSecret,
-        encryptionSecret,
-      } = getSecretData?.getSecret?.data;
-      const {
-        signingPublicKey,
-        encryptionPublicKey,
-      } = loadIndividualBasicInfoData?.getIndividual?.data;
+        const {
+          firstName,
+          phoneNumber,
+          phoneCountryCode,
+          email,
+          invitationCode,
+          postalCode,
+          lastName,
+          middleName,
+          dob,
+          nationality,
+          addressLine,
+          city,
+          province,
+          country,
+          id,
+          imageUrl,
+          kycStatus,
+          emailStatus,
+          phoneStatus,
+          pendingIdentities,
+        } = await decryptIndividualModel(
+          encryptionSecret,
+          password,
+          loadIndividualBasicInfoData?.getIndividual?.data
+        );
 
-      dispatchSignInSuccess({
-        signature,
-        signingSecret,
-        encryptionSecret,
-        signingPublicKey,
-        encryptionPublicKey,
-        phoneNumber,
-        phoneCountryCode,
-      });
-      const redirectUrl = localStorage.getItem('redirectUrl');
-      localStorage.removeItem('redirectUrl');
-      window.location = redirectUrl || '/your-transaction';
+        dispatchSignInSuccess({
+          signingSecret,
+          encryptionSecret,
+          signingPublicKey,
+          encryptionPublicKey,
+          phoneNumber,
+          phoneCountryCode,
+          email,
+          invitationCode,
+          postalCode,
+          lastName,
+          middleName,
+          dob,
+          nationality,
+          addressLine,
+          city,
+          province,
+          country,
+          firstName,
+          id,
+          imageUrl,
+          kycStatus,
+          emailStatus,
+          phoneStatus,
+          pendingIdentities,
+        });
+
+        const redirectUrl = localStorage.getItem('redirectUrl');
+        localStorage.removeItem('redirectUrl');
+        window.location = redirectUrl || '/individual-profile';
+      }
+
+      decryptData();
     }
   }, [
     loadIndividualBasicInfoData?.getIndividual?.data,

@@ -1,23 +1,57 @@
 import UserActionTypes from './user.types';
 
 export const signInSuccess = ({
-  signature,
   signingSecret,
   encryptionSecret,
   signingPublicKey,
   encryptionPublicKey,
   phoneNumber,
-  phoneCountryCode
+  phoneCountryCode,
+  email,
+  invitationCode,
+  postalCode,
+  lastName,
+  middleName,
+  dob,
+  nationality,
+  addressLine,
+  city,
+  province,
+  country,
+  firstName,
+  id,
+  imageUrl,
+  kycStatus,
+  emailStatus,
+  phoneStatus,
+  pendingIdentities,
 }) => ({
   type: UserActionTypes.SIGN_IN_SUCCESS,
   payload: {
-    signature,
     signingSecret,
     encryptionSecret,
     signingPublicKey,
     encryptionPublicKey,
     phoneNumber,
-    phoneCountryCode
+    phoneCountryCode,
+    email,
+    invitationCode,
+    postalCode,
+    lastName,
+    middleName,
+    dob,
+    nationality,
+    addressLine,
+    city,
+    province,
+    country,
+    firstName,
+    id,
+    imageUrl,
+    kycStatus,
+    emailStatus,
+    phoneStatus,
+    pendingIdentities,
   },
 });
 
@@ -27,7 +61,7 @@ export const signInFailure = (error) => ({
 });
 
 export const phoneSignInStart = () => ({
-  type: UserActionTypes.PHONE_SIGN_IN_START
+  type: UserActionTypes.PHONE_SIGN_IN_START,
 });
 
 export const checkUserSession = () => ({
@@ -80,11 +114,37 @@ export const sendPhoneVerification = () => ({
   type: UserActionTypes.SEND_PHONE_VERIFICATION,
 });
 
-export const verifyPhone = () => ({
+export const verifyPhone = (phoneStatus) => ({
   type: UserActionTypes.VERIFY_PHONE,
+  payload: phoneStatus,
 });
 
 export const setAccessToken = (accessToken) => ({
   type: UserActionTypes.SET_ACCESS_TOKEN,
-  payload: accessToken
-})
+  payload: accessToken,
+});
+
+export const setNameAndImage = ({
+  imageUrl,
+  firstName,
+  lastName,
+  middleName,
+}) => ({
+  type: UserActionTypes.SET_NAME_AND_IMAGE,
+  payload: { imageUrl, firstName, lastName, middleName },
+});
+
+export const setEmail = (email) => ({
+  type: UserActionTypes.SET_EMAIL,
+  payload: email,
+});
+
+export const setPhoneNumber = ({ phoneNumber, phoneCountryCode }) => ({
+  type: UserActionTypes.SET_PHONE_NUMBER,
+  payload: { phoneNumber, phoneCountryCode },
+});
+
+export const verifyEmail = (emailStatus) => ({
+  type: UserActionTypes.VERIFY_EMAIL,
+  payload: emailStatus,
+});
