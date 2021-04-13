@@ -61,6 +61,7 @@ const Row = styled.div`
   padding: 20px 0 10px;
   border-bottom: ${(props) => (props.border ? '0.5px solid #c2c2c2' : 'none')};
   width: ${(props) => props.size || 'auto'};
+  cursor: ${(props) => (props.pointer ? 'pointer' : 'default')};
 
   @media (max-width: 768px) {
     align-items: flex-start;
@@ -298,8 +299,15 @@ const IndividualProfile = () => {
           </Text>
         </Row>
 
-        <Row border>
-          <Text>
+        <Row
+          border
+          pointer
+          onClick={() => {
+            window.location =
+              'https://soby.vn/en/soby-privacy-terms%e2%80%8b/soby-privacy-policy/';
+          }}
+        >
+          <Text pointer>
             <Icon>
               <UnionIcon />
             </Icon>
@@ -308,8 +316,15 @@ const IndividualProfile = () => {
           <Text>&gt;</Text>
         </Row>
 
-        <Row border>
-          <Text>
+        <Row
+          border
+          pointer
+          onClick={() => {
+            window.location =
+              'https://soby.vn/en/soby-privacy-terms%e2%80%8b/soby-terms-of-service/';
+          }}
+        >
+          <Text pointer>
             <Icon>
               <HandIcon />
             </Icon>

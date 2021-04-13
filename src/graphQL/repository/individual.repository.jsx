@@ -279,3 +279,23 @@ export const decryptIndividualModel = async (
     country,
   };
 };
+
+export const createKeyForNewPassword = async (
+  signingSecretCurrent,
+  encryptionSecretCurrent,
+  password,
+  newPassword
+) => {
+  const encryption = new Encryption();
+  const signing = new Signing();
+  debugger
+
+  signing.importPrivateKey(signingSecretCurrent, password);
+
+  await encryption.importPrivateKey(encryptionSecretCurrent, password);
+
+  const encryptionSecretNew = await encryption.exportPrivateKey(newPassword);
+  const signingSecretNew = signing.exportPrivateKey(newPassword);
+
+  return { encryptionSecretNew, signingSecretNew };
+};

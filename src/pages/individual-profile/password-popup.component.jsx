@@ -3,7 +3,11 @@ import { useMutation } from '@apollo/client';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
-import { UPDATE_PASSWORD } from 'graphQL/repository/individual.repository';
+import {
+  createKeyForNewPassword,
+  getHashPassword,
+  UPDATE_PASSWORD,
+} from 'graphQL/repository/individual.repository';
 import React, { useEffect, useState } from 'react';
 import passwordValidation from 'shared/utils/passwordValidation';
 import styled from 'styled-components';
@@ -110,10 +114,10 @@ const PasswordPopup = ({
     errorPolicy: 'all',
   });
   useEffect(() => {
-    if (updatePasswordData?.updatePassword?.data) {
+    if (updatePasswordData?.updatePassword?.success) {
       setOpenPasswordPopup(false);
     }
-  }, [updatePasswordData?.updatePassword?.data, updatePasswordMutation]);
+  }, [updatePasswordData?.updatePassword?.success, updatePasswordMutation]);
 
   useEffect(() => {
     if (updatePasswordError?.message) {
@@ -154,14 +158,20 @@ const PasswordPopup = ({
       !isNewPasswordAndConfirmNotCorrect &&
       !isNewPasswordNotValid
     ) {
+      const { encryptionSecretNew, signingSecretNew } = await createKeyForNewPassword(
+        signingSecret,
+        encryptionSecret,
+        state.password,
+        state.newPassword
+      );
       updatePasswordMutation({
         variables: {
           cmd: {
-            password: state.password,
+            password: getHashPassword(state.password),
             newPassword: state.newPassword,
-            signingSecret,
+            signingSecret: signingSecretNew,
             encryptionPublicKey,
-            encryptionSecret,
+            encryptionSecret: encryptionSecretNew,
           },
         },
       });
