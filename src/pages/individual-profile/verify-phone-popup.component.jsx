@@ -1,18 +1,15 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Box, ErrorTitle, PopupButton } from './shared-style.component';
 import ValidationInput from '../../components/validation-input/validation-input.component';
 import { useMutation } from '@apollo/client';
 import {
-  VERIFY_EMAIL,
-  SEND_EMAIL_VERIFICATION,
   SEND_PHONE_VERIFICATION,
   VERIFY_PHONE,
 } from 'graphQL/repository/individual.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { useDispatch } from 'react-redux';
-import { verifyEmail, verifyPhone } from 'redux/user/user.actions';
+import { verifyPhone } from 'redux/user/user.actions';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 

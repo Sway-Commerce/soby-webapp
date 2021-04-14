@@ -131,54 +131,57 @@ export const PRODUCT_FRAGMENT = gql`
   }
 `;
 
-export const INVOICE_FRAGMENT = gql`
-  fragment InvoiceFragment on Invoice {
+export const INVOICE_HISTORY_FRAGMENT = gql`
+  fragment InvoiceHistoryFragment on InvoiceHistory {
     id
+    invoiceId
+    invoiceVersion
     name
     description
     shopId
     shippingType
     escrowFee
-    expiredAt
     createdAt
-    succeededCount
-    acceptedCount
-    updatedAt
     items {
       id
-      invoiceId
       productId
       skuId
       quantity
       price
+      weight
     }
     price
-    expired
+    totalWeight
   }
 `;
-export const INDIVIDUAL_INVOICE_FRAGMENT = gql`
-  ${INVOICE_FRAGMENT}
-  fragment IndividualInvoiceFragment on InvoiceIndividual {
+export const INVOICE_ORDER_FRAGMENT = gql`
+  ${INVOICE_HISTORY_FRAGMENT}
+  fragment InvoiceOrderFragment on InvoiceOrder {
     id
     invoice {
-      ...InvoiceFragment
+      ...InvoiceHistoryFragment
     }
     individualId
     shippingLocationId
     shippingFee
-    status
     individualTrackingUrl
     shopTrackingUrl
+    orderFee
+    voucherCodes
+    voucherDiscount
+    paymentMethod
+    status
     reason
     totalPrice
     createdAt
     updatedAt
   }
 `;
-export const AGGREGATED_INVOICE_FRAGMENT = gql`
+
+export const AGGREGATED_INVOICE_HISTORY_FRAGMENT = gql`
   ${PRODUCT_FRAGMENT}
   ${SKU_FRAGMENT}
-  fragment AggregatedInvoiceFragment on AggregatedInvoiceData {
+  fragment AggregatedInvoiceHistoryFragment on AggregatedInvoiceData {
     id
     name
     description
@@ -189,9 +192,9 @@ export const AGGREGATED_INVOICE_FRAGMENT = gql`
     }
     shippingType
     escrowFee
+    oneTime
     expiredAt
     acceptedCount
-    succeededCount
     createdAt
     updatedAt
     items {
@@ -208,6 +211,7 @@ export const AGGREGATED_INVOICE_FRAGMENT = gql`
     }
     price
     expired
+    totalWeight
   }
 `;
 export const REFUND_REQUEST_FRAGMENT = gql`
@@ -254,14 +258,14 @@ export const ASSESS_FRAGMENT = gql`
     }
   }
 `;
-export const AGGREGATED_INVOICE_INDIVIDUAL = gql`
-  ${AGGREGATED_INVOICE_FRAGMENT}
+export const AGGREGATED_INVOICE_ORDER_FRAGMENT = gql`
+  ${AGGREGATED_INVOICE_HISTORY_FRAGMENT}
   ${SHIPPING_FRAGMENT}
   ${ASSESS_FRAGMENT}
-  fragment AggregatedInvoiceIndividual on AggregatedInvoiceIndividual {
+  fragment AggregatedInvoiceOrderFragment on AggregatedInvoiceOrder {
     id
     invoice {
-      ...AggregatedInvoiceFragment
+      ...AggregatedInvoiceHistoryFragment
     }
     individualId
     shippingLocation {
@@ -383,29 +387,5 @@ export const AGGREGATED_ORDER_FRAGMENT = gql`
     assess {
       ...AssessFragment
     }
-  }
-`;
-
-export const INVOICE_INDIVIDUAL_FRAGMENT = gql`
-  ${INVOICE_FRAGMENT}
-  fragment InvoiceIndividualFragment on InvoiceIndividual {
-    id
-    invoice {
-      ...InvoiceFragment
-    }
-    individualId
-    shippingLocationId
-    shippingFee
-    individualTrackingUrl
-    shopTrackingUrl
-    orderFee
-    voucherCodes
-    voucherDiscount
-    paymentMethod
-    status
-    reason
-    totalPrice
-    createdAt
-    updatedAt
   }
 `;

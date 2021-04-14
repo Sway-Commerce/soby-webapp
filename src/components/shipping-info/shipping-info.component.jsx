@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -8,7 +7,7 @@ import {
   GET_DISTRICT_LIST,
   GET_PROVINCE_LIST,
   GET_WARD_LIST,
-  UPDATE_INVOICE_INDIVIDUAL_INFO,
+  UPDATE_INVOICE_ORDER_INFO,
 } from 'graphQL/repository/invoice.repository';
 import {
   CREATE_INDIVIDUAL_SHIPPING_LOCATION,
@@ -175,13 +174,13 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   });
 
   const [
-    updateInvoiceIndividualInfo,
+    updateInvoiceOrderInfo,
     {
-      data: updateInvoiceIndividualInfoData,
-      loading: updateInvoiceIndividualInfoLoading,
-      error: updateInvoiceIndividualInfoError,
+      data: updateInvoiceOrderInfoData,
+      loading: updateInvoiceOrderInfoLoading,
+      error: updateInvoiceOrderInfoError,
     },
-  ] = useMutation(UPDATE_INVOICE_INDIVIDUAL_INFO, {
+  ] = useMutation(UPDATE_INVOICE_ORDER_INFO, {
     errorPolicy: 'all',
   });
 
@@ -200,14 +199,14 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     if (
       loadProvinceError ||
       loadDistrictListError ||
-      updateInvoiceIndividualInfoError ||
+      updateInvoiceOrderInfoError ||
       createShippingLocationError ||
       createInvoicePaymentError
     ) {
       setFormError(
         loadProvinceError?.message ??
           loadDistrictListError?.message ??
-          updateInvoiceIndividualInfoError?.message ??
+          updateInvoiceOrderInfoError?.message ??
           createInvoicePaymentError?.message ??
           createShippingLocationError?.message
       );
@@ -216,7 +215,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   }, [
     loadProvinceError,
     loadDistrictListError,
-    updateInvoiceIndividualInfoError,
+    updateInvoiceOrderInfoError,
     createInvoicePaymentError,
     createShippingLocationError
   ]);
@@ -228,14 +227,13 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
         variables: { provinceId: provinceId },
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invoiceIndividualId]);
 
   useEffect(() => {
     if (createShippingLocationData?.createIndividualShippingLocation?.data) {
       const shippingLocationId =
         createShippingLocationData?.createIndividualShippingLocation?.data?.id;
-      updateInvoiceIndividualInfo({
+      updateInvoiceOrderInfo({
         variables: {
           cmd: {
             shippingLocationId,
@@ -245,7 +243,6 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
         },
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createShippingLocationData?.createIndividualShippingLocation?.data]);
 
   const mapData = (data) =>
@@ -291,7 +288,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   }, [createInvoicePaymentData?.createInvoicePayment?.data?.payUrl]);
 
   useEffect(() => {
-    if (updateInvoiceIndividualInfoData?.updateInvoiceIndividualInfo?.data) {
+    if (updateInvoiceOrderInfoData?.updateInvoiceOrderInfo?.data) {
       const requestedAt = Date.now();
       const jsonString = JSON.stringify({
         invoiceIndividualId,
@@ -305,7 +302,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
         createInvoicePayment({
           variables: {
             cmd: {
-              invoiceIndividualId,
+              id: invoiceIndividualId,
               requestedAt,
               signature,
             },
@@ -313,10 +310,10 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
         });
       }
     }
-  }, [updateInvoiceIndividualInfoData?.updateInvoiceIndividualInfo?.data]);
+  }, [updateInvoiceOrderInfoData?.updateInvoiceOrderInfo?.data]);
 
   if (
-    updateInvoiceIndividualInfoLoading ||
+    updateInvoiceOrderInfoLoading ||
     provinceLoading ||
     loadDistrictListLoading ||
     createShippingLocationLoading ||
@@ -437,7 +434,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     // paymentMethod: OrderPaymentMethod!
     const shippingLocationId =
       createShippingLocationData?.createIndividualShippingLocation?.data?.id;
-    updateInvoiceIndividualInfo({
+    updateInvoiceOrderInfo({
       variables: {
         cmd: {
           shippingLocationId,
@@ -459,7 +456,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     if (!isPasswordValid) {
       return;
     }
-    updateInvoiceIndividualInfo({
+    updateInvoiceOrderInfo({
       variables: {
         cmd: {
           shippingLocationId,

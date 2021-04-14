@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -173,14 +172,12 @@ const CreateShipping = ({ setOpenCreate }) => {
     loadDistrictList({
       variables: { provinceId: provinceId },
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (createShippingLocationData?.createIndividualShippingLocation?.data) {
       setOpenCreate(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createShippingLocationData?.createIndividualShippingLocation?.data]);
 
   const mapData = (data) =>

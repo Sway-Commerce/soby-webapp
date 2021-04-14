@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,7 +18,6 @@ import {
   signUpStart,
   signUpSuccess,
   signUpFailure,
-  sendPhoneVerification,
   setAccessToken,
 } from 'redux/user/user.actions';
 
@@ -137,7 +135,6 @@ const Register = ({ history }) => {
 
       history.push('/phone-verification');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signatureData?.loginWithSignature?.data]);
 
   useEffect(() => {
@@ -145,7 +142,6 @@ const Register = ({ history }) => {
       const signature = getSignature(signingPublicKey, signingSecret, password);
       setSignature(signature);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [registerData?.register?.data]);
 
   useEffect(() => {

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useLazyQuery } from '@apollo/client';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';

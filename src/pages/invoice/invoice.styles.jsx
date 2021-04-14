@@ -175,3 +175,17 @@ export const ShippingCard = styled.div`
     }
   }
 `;
+
+export const Row = styled.div`
+  display: flex;
+`;
+
+export const InvoiceButton = styled.div`
+  display: flex;
+  background-color: ${(props) => (props.accept ? '#2B74E4' : '#f53535')};
+  border-radius: 8px;
+  color: white;
+  padding:16.5px 72px 0;
+  width: 198px;
+  height: 50px;
+`;

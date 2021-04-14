@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 
-import { Container, ProductContainer } from './your-transactions.styles';
+import { Container } from './your-transactions.styles';
 import Invoice from '../invoice/invoice.component';
 
 import { ReactComponent as OrderIcon } from 'shared/assets/order-icon.svg';
 import { ReactComponent as BillIcon } from 'shared/assets/bill-icon.svg';
 
 import HorizontalList from 'components/horizontal-list/horizontal-list.component';
-import { GET_INDIVIDUAL_INVOICE_LIST } from '../../graphQL/repository/invoice.repository';
+import { GET_INVOICE_ORDER_LIST_FOR_INDIVIDUAL } from '../../graphQL/repository/invoice.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import InvoiceItem from 'components/invoice-item/invoice-item.component';
-import InvoiceStatus from 'components/invoice-status/invoice-status.component';
 import {
   mainInvoiceFilters,
   subInvoiceFilters,
@@ -38,29 +37,29 @@ const YourTransaction = ({ name }) => {
   const { mainFilter, subFilter, page, pageSize, total } = invoiceListQuery;
 
   const [
-    getIndividualInvoiceList,
+    getInvoiceOrderListForIndividual,
     {
-      error: getIndividualInvoiceListError,
-      data: getIndividualInvoiceListData,
-      loading: getIndividualInvoiceListLoading,
+      error: getInvoiceOrderListForIndividualError,
+      data: getInvoiceOrderListForIndividualData,
+      loading: getInvoiceOrderListForIndividualLoading,
     },
-  ] = useLazyQuery(GET_INDIVIDUAL_INVOICE_LIST, {
+  ] = useLazyQuery(GET_INVOICE_ORDER_LIST_FOR_INDIVIDUAL, {
     fetchPolicy: 'network-only',
   });
 
   useEffect(() => {
-    if (getIndividualInvoiceListError) {
-      setFormError(getIndividualInvoiceListError?.message);
+    if (getInvoiceOrderListForIndividualError) {
+      setFormError(getInvoiceOrderListForIndividualError?.message);
       setOpen(true);
     }
-  }, [getIndividualInvoiceListError]);
+  }, [getInvoiceOrderListForIndividualError]);
 
   useEffect(() => {
     setActiveInvoice(null);
     setInvoiceList([]);
     setInvoiceListQuery({ ...invoiceListQuery, total: 0 });
     if (mainFilter === 'Invoices') {
-      getIndividualInvoiceList({
+      getInvoiceOrderListForIndividual({
         variables: {
           query: {
             statuses: [subFilter.toUpperCase()],
@@ -70,26 +69,26 @@ const YourTransaction = ({ name }) => {
         },
       });
     }
-  }, [mainFilter, subFilter, page, pageSize, getIndividualInvoiceList]);
+  }, [mainFilter, subFilter, page, pageSize, getInvoiceOrderListForIndividual]);
 
   useEffect(() => {
-    if (getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records) {
+    if (getInvoiceOrderListForIndividualData?.getIndividualInvoiceList?.data?.records) {
       setInvoiceList(
-        getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records
+        getInvoiceOrderListForIndividualData?.getIndividualInvoiceList?.data?.records
       );
       setInvoiceListQuery({
         ...invoiceListQuery,
         total:
-          getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.total,
+          getInvoiceOrderListForIndividualData?.getIndividualInvoiceList?.data?.total,
       });
     }
-  }, [getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records]);
+  }, [getInvoiceOrderListForIndividualData?.getIndividualInvoiceList?.data?.records]);
 
   useEffect(() => {
-    if (getIndividualInvoiceListError) {
-      setFormError(getIndividualInvoiceListError.message);
+    if (getInvoiceOrderListForIndividualError) {
+      setFormError(getInvoiceOrderListForIndividualError.message);
     }
-  }, [getIndividualInvoiceListError]);
+  }, [getInvoiceOrderListForIndividualError]);
 
   return (
     <Container>
@@ -142,7 +141,7 @@ const YourTransaction = ({ name }) => {
             />
           ))}
         </div>
-        {getIndividualInvoiceListLoading ? <Spinner /> : null}
+        {getInvoiceOrderListForIndividualLoading ? <Spinner /> : null}
       </div>
       {activeInvoice ? <Invoice invoiceIndividualId={activeInvoice} /> : null}
       <SobyModal open={open} setOpen={setOpen}>
