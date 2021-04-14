@@ -44,6 +44,11 @@ const AddButton = styled.button`
   height: 44px;
   padding: 9px 10px 10px 10px;
   border: none;
+  display: ${(props) => (props.show ? 'flex' : 'none')};
+
+  @media (max-width: 768px) {
+    display: ${(props) => (props.hide ? 'flex' : 'none')};
+  }
 `;
 
 const PrimaryState = styled.div`
@@ -114,7 +119,9 @@ const IndividualShipping = ({ setOpenEditMailPopup, email }) => {
       <Container>
         <Row first>
           <h2>Thông tin giao hàng</h2>
-          <AddButton onClick={() => setOpenCreate(true)}>+ Add New</AddButton>
+          <AddButton onClick={() => setOpenCreate(true)} show>
+            + Add New
+          </AddButton>
         </Row>
         {shippingList.map((x, i) => (
           <React.Fragment key={x.id}>
@@ -127,6 +134,12 @@ const IndividualShipping = ({ setOpenEditMailPopup, email }) => {
             </Row>
           </React.Fragment>
         ))}
+
+        <Row>
+          <AddButton onClick={() => setOpenCreate(true)} hide>
+            + Add New
+          </AddButton>
+        </Row>
       </Container>
 
       <SobyModal open={openCreate} setOpen={setOpenCreate}>
