@@ -10,6 +10,7 @@ import {
   GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL,
   MARK_SATISFIED_WITH_INVOICE,
   REQUEST_INVOICE_REFUND,
+  UPDATE_RETURN_SHIPPING_INFO
 } from 'graphQL/repository/invoice.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { timestampToDate } from 'shared/utils/getDate';
@@ -209,6 +210,33 @@ const Invoice = ({ invoiceIndividualId }) => {
     }
   }, [requestInvoiceRefundData?.requestInvoiceRefund?.success]);
 
+
+  // UPDATE_RETURN_SHIPPING_INFO
+  const [
+    updateReturnShippingInfo,
+    {
+      data: updateReturnShippingInfoData,
+      loading: updateReturnShippingInfoLoading,
+      error: updateReturnShippingInfoError,
+    },
+  ] = useMutation(UPDATE_RETURN_SHIPPING_INFO, {
+    errorPolicy: 'all',
+    variables: {
+      cmd: {
+        assessId: "",
+        shippingType: "", //BY_USER BY_SOBY
+        shippingLocationId: "",
+        returnFeePaidBy: "", //INDIVIDUAL SHOP
+        bankCode: "", // ABBANK
+        accountType: "", // ATM_CARD BANK_ACCOUNT
+        accountNumber: "",
+        accountOwner: "",
+        accountIssuedOn: "",
+        bankBranch: "",
+      },
+    },
+  });
+
   // Error handle
   useEffect(() => {
     if (
@@ -216,14 +244,16 @@ const Invoice = ({ invoiceIndividualId }) => {
       requestInvoiceRefundError?.message ||
       loadDetailInvoiceError?.message ||
       getAggregatedInvoiceOrderForIndividualError?.message ||
-      acceptInvoiceError?.message
+      acceptInvoiceError?.message ||
+      updateReturnShippingInfoError?.message
     ) {
       setFormError(
         markSatisfiedWithInvoiceError?.message ??
           requestInvoiceRefundError?.message ??
           loadDetailInvoiceError?.message ??
           getAggregatedInvoiceOrderForIndividualError?.message ??
-          acceptInvoiceError?.message
+          acceptInvoiceError?.message ??
+          updateReturnShippingInfoError?.message
       );
     }
   }, [
@@ -232,11 +262,13 @@ const Invoice = ({ invoiceIndividualId }) => {
     loadDetailInvoiceError?.message,
     getAggregatedInvoiceOrderForIndividualError?.message,
     acceptInvoiceError?.message,
+    updateReturnShippingInfoError?.message
   ]);
   if (
     loading ||
     acceptLoading ||
-    getAggregatedInvoiceOrderForIndividualLoading
+    getAggregatedInvoiceOrderForIndividualLoading ||
+    updateReturnShippingInfoLoading
   )
     return <Spinner />;
 
