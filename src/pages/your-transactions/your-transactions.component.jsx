@@ -72,17 +72,17 @@ const YourTransaction = ({ name }) => {
   }, [mainFilter, subFilter, page, pageSize, getInvoiceOrderListForIndividual]);
 
   useEffect(() => {
-    if (getInvoiceOrderListForIndividualData?.getIndividualInvoiceList?.data?.records) {
+    if (getInvoiceOrderListForIndividualData?.getInvoiceOrderListForIndividual?.data?.records) {
       setInvoiceList(
-        getInvoiceOrderListForIndividualData?.getIndividualInvoiceList?.data?.records
+        getInvoiceOrderListForIndividualData?.getInvoiceOrderListForIndividual?.data?.records
       );
       setInvoiceListQuery({
         ...invoiceListQuery,
         total:
-          getInvoiceOrderListForIndividualData?.getIndividualInvoiceList?.data?.total,
+          getInvoiceOrderListForIndividualData?.getInvoiceOrderListForIndividual?.data?.total,
       });
     }
-  }, [getInvoiceOrderListForIndividualData?.getIndividualInvoiceList?.data?.records]);
+  }, [getInvoiceOrderListForIndividualData?.getInvoiceOrderListForIndividual?.data?.records]);
 
   useEffect(() => {
     if (getInvoiceOrderListForIndividualError) {
