@@ -251,7 +251,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   const mapData = (data) =>
     data?.map((x) => ({
       value: x.id,
-      label: x.name,
+      label: x.fullName,
     })) ?? [];
 
   const mapShippingData = (data) =>
@@ -372,7 +372,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     createShippingLocation({
       variables: {
         cmd: {
-          locationName: shippingInfo.addressLine,
+          locationName: shippingInfo.locationName,
           phoneCountryCode,
           phoneNumber,
           country: 'VN',

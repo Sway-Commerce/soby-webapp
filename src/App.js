@@ -38,6 +38,9 @@ const YourTransaction = lazy(() =>
 const IndividualProfile = lazy(() =>
   import('pages/individual-profile/individual-profile.component')
 );
+const IndividualShipping = lazy(() =>
+  import('pages/individual-profile/individual-shipping.component')
+);
 
 const App = () => {
   return (
@@ -63,6 +66,7 @@ const App = () => {
               <Route path="/invoice/:invoiceId" component={Invoice} />
               <JwtRoute path="/your-transaction" component={YourTransaction} />
               <JwtRoute path="/individual-profile" component={IndividualProfile} />
+              <JwtRoute path="/individual-shipping" component={IndividualShipping} />
               <Route
                 path="/transaction/vnpay_return"
                 component={PaymentResult}

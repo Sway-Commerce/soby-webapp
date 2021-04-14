@@ -278,8 +278,8 @@ const IndividualProfile = () => {
           </Wrapper>
         </Row>
 
-        <Row border>
-          <Text small>Thông tin giao hàng</Text>
+        <Row border onClick={() => (window.location = '/individual-shipping')} pointer>
+          <Text pointer>Thông tin giao hàng</Text>
           <Text>&gt;</Text>
         </Row>
 
@@ -416,4 +416,3 @@ const IndividualProfile = () => {
 };
 
 export default IndividualProfile;
-
