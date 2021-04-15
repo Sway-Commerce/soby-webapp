@@ -10,7 +10,7 @@ import {
   GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL,
   MARK_SATISFIED_WITH_INVOICE,
   REQUEST_INVOICE_REFUND,
-  UPDATE_RETURN_SHIPPING_INFO
+  UPDATE_RETURN_SHIPPING_INFO,
 } from 'graphQL/repository/invoice.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { timestampToDate } from 'shared/utils/getDate';
@@ -188,29 +188,6 @@ const Invoice = ({ invoiceIndividualId }) => {
     }
   }, [markSatisfiedWithInvoiceData?.markSatisfiedWithInvoice?.success]);
 
-  // REQUEST_INVOICE_REFUND
-  const [
-    requestInvoiceRefund,
-    {
-      data: requestInvoiceRefundData,
-      loading: requestInvoiceRefundLoading,
-      error: requestInvoiceRefundError,
-    },
-  ] = useMutation(REQUEST_INVOICE_REFUND, {
-    errorPolicy: 'all',
-    variables: {
-      cmd: {
-        invoiceIndividualId,
-      },
-    },
-  });
-
-  useEffect(() => {
-    if (requestInvoiceRefundData?.requestInvoiceRefund?.success) {
-    }
-  }, [requestInvoiceRefundData?.requestInvoiceRefund?.success]);
-
-
   // UPDATE_RETURN_SHIPPING_INFO
   const [
     updateReturnShippingInfo,
@@ -223,16 +200,16 @@ const Invoice = ({ invoiceIndividualId }) => {
     errorPolicy: 'all',
     variables: {
       cmd: {
-        assessId: "",
-        shippingType: "", //BY_USER BY_SOBY
-        shippingLocationId: "",
-        returnFeePaidBy: "", //INDIVIDUAL SHOP
-        bankCode: "", // ABBANK
-        accountType: "", // ATM_CARD BANK_ACCOUNT
-        accountNumber: "",
-        accountOwner: "",
-        accountIssuedOn: "",
-        bankBranch: "",
+        assessId: '',
+        shippingType: '', //BY_USER BY_SOBY
+        shippingLocationId: '',
+        returnFeePaidBy: '', //INDIVIDUAL SHOP
+        bankCode: '', // ABBANK
+        accountType: '', // ATM_CARD BANK_ACCOUNT
+        accountNumber: '',
+        accountOwner: '',
+        accountIssuedOn: '',
+        bankBranch: '',
       },
     },
   });
@@ -241,7 +218,6 @@ const Invoice = ({ invoiceIndividualId }) => {
   useEffect(() => {
     if (
       markSatisfiedWithInvoiceError?.message ||
-      requestInvoiceRefundError?.message ||
       loadDetailInvoiceError?.message ||
       getAggregatedInvoiceOrderForIndividualError?.message ||
       acceptInvoiceError?.message ||
@@ -249,7 +225,6 @@ const Invoice = ({ invoiceIndividualId }) => {
     ) {
       setFormError(
         markSatisfiedWithInvoiceError?.message ??
-          requestInvoiceRefundError?.message ??
           loadDetailInvoiceError?.message ??
           getAggregatedInvoiceOrderForIndividualError?.message ??
           acceptInvoiceError?.message ??
@@ -258,25 +233,22 @@ const Invoice = ({ invoiceIndividualId }) => {
     }
   }, [
     markSatisfiedWithInvoiceError?.message,
-    requestInvoiceRefundError?.message,
     loadDetailInvoiceError?.message,
     getAggregatedInvoiceOrderForIndividualError?.message,
     acceptInvoiceError?.message,
-    updateReturnShippingInfoError?.message
+    updateReturnShippingInfoError?.message,
   ]);
-  if (
-    loading ||
-    acceptLoading ||
-    getAggregatedInvoiceOrderForIndividualLoading ||
-    updateReturnShippingInfoLoading
-  )
-    return <Spinner />;
 
   const handleCheckout = () => {
     invoiceIndividualId ? setOpen(true) : acceptInvoice();
   };
 
-  return (
+  return loading ||
+    acceptLoading ||
+    getAggregatedInvoiceOrderForIndividualLoading ||
+    updateReturnShippingInfoLoading ? (
+    <Spinner />
+  ) : (
     <React.Fragment>
       <Container>
         <div className="main-content">
