@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const TransactionContainer = styled.div`
@@ -54,12 +55,11 @@ export const Container = styled.div`
   justify-content: center;
   flex-direction: column;
   margin: 40px 0;
-  a {
+  div.back-btn {
     display: flex;
-    div.back-btn {
-      margin: auto;
-      margin-top: 85px;
-    }
+    justify-content: center;
+    margin-top: 85px;
+    cursor: pointer;
   }
 `;
 
@@ -146,4 +146,14 @@ export const FormContainer = styled.div`
 
 export const InputGroup = styled.div`
   margin-top: 32px;
+`;
+
+export const NavigateLink = styled.div`
+  display: ${(props) => (!!props?.show ? 'unset' : 'none')};
+  display: ${(props) => (!!props?.hide ? 'none' : 'unset')};
+  @media (max-width: 800px) {
+    /* height: auto; */
+    display: ${(props) => (!!props?.show ? 'none' : 'unset')};
+    display: ${(props) => (!!props?.hide ? 'unset' : 'none')};
+  }
 `;

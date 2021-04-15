@@ -4,6 +4,7 @@ import {
   CardWrapper,
   Container,
   FormContainer,
+  NavigateLink,
 } from './payment-result.styles';
 import PaymentStatus from 'components/payment-status/payment-status.component';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
@@ -92,9 +93,21 @@ const PaymentResult = () => {
           </FormContainer>
         </TransactionContainer>
       </CardWrapper>
-      <Link to="/your-transaction">
-        <div className="back-btn">Back</div>
-      </Link>
+      <NavigateLink show={true}>
+        <Link to="/your-transaction">
+          <div className="back-btn">Back</div>
+        </Link>
+      </NavigateLink>
+      <NavigateLink to="http://success.sdk.merchantbackapp/" hide={true}>
+        <div
+          className="back-btn"
+          onClick={() =>
+            (window.location = 'http://success.sdk.merchantbackapp/')
+          }
+        >
+          Back
+        </div>
+      </NavigateLink>
     </Container>
   );
 };
