@@ -288,7 +288,6 @@ export const createKeyForNewPassword = async (
 ) => {
   const encryption = new Encryption();
   const signing = new Signing();
-  debugger
 
   signing.importPrivateKey(signingSecretCurrent, password);
 

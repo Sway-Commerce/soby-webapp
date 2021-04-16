@@ -32,7 +32,6 @@ const PhonePopup = ({
     `${currentPhoneCountryCode}${currentPhoneNumber}`
   );
   const [isPhoneValid, setIsPhoneValid] = useState(true);
-    debugger
   const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
   const dispatch = useDispatch();
   const dispatchSetPhoneNumber = ({ phoneCountryCode, phoneNumber }) =>
@@ -49,7 +48,6 @@ const PhonePopup = ({
   ] = useMutation(UPDATE_PHONE);
   useEffect(() => {
     if (updatePhoneMutationData?.updatePhone?.success) {
-      debugger;
       dispatchSetPhoneNumber({ phoneCountryCode, phoneNumber });
       setOpenEditPhonePopup(false);
     }

@@ -9,6 +9,9 @@ import CreateShipping from './create-shipping.component';
 
 const Container = styled.div`
   margin-top: 50px;
+  @media (max-width: 800px) {
+    padding: 0 20px;
+  }
 `;
 
 const Row = styled.div`
@@ -25,8 +28,13 @@ const Row = styled.div`
   @media (max-width: 768px) {
     align-items: flex-start;
 
+
     &.column {
       flex-direction: column;
+    }
+
+    p {
+      font-size: 16px;
     }
   }
 `;

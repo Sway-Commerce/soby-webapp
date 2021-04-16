@@ -7,6 +7,9 @@ export const Container = styled.div`
   border-radius: 4px;
   font-size: 20px;
   color: white;
+  @media screen and (max-width: 800px) {
+    font-size: 16px;
+  }
 `;
 
 

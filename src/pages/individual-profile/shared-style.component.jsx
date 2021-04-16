@@ -10,7 +10,7 @@ export const Box = styled.form`
     margin-bottom: 30px;
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: 800px) {
     width: auto;
   }
 `;

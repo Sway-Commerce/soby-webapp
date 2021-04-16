@@ -74,7 +74,7 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0 10px;
 		input.PhoneInputInput {
 			border: none;
-			font-family: "Open Sans";
+			font-family: Work Sans;
 			font-size: 14px;
 			outline: none
 		}
