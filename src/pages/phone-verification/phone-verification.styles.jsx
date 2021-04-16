@@ -53,7 +53,7 @@ export const FormContainer = styled.div`
 export const CodeText = styled.div`
   font-style: normal;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 0.6rem;
   line-height: 15px;
   margin: 32px 0 8px;
 `;
@@ -61,7 +61,7 @@ export const CodeText = styled.div`
 export const SendAgain = styled.div`
   font-style: normal;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 0.6rem;
   line-height: 15px;
   cursor: pointer;
 `

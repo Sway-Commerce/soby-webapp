@@ -27,7 +27,7 @@ export const Container = styled.div`
       font-family: Work Sans;
       font-style: normal;
       font-weight: normal;
-      font-size: 16px;
+      font-size: 0.8rem;
       line-height: 26px;
       color: #000000;
       margin: auto 0;
@@ -38,7 +38,7 @@ export const Container = styled.div`
       font-family: Work Sans;
       font-style: normal;
       font-weight: normal;
-      font-size: 32px;
+      font-size: 1.6rem;
       line-height: 38px;
       color: #000000;
       margin: auto 0;
@@ -56,7 +56,7 @@ export const Container = styled.div`
       font-family: Work Sans;
       font-style: normal;
       font-weight: normal;
-      font-size: 20px;
+      font-size: 1rem;
       line-height: 26px;
       color: #000000;
     }

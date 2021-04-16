@@ -83,20 +83,13 @@ const Wrapper = styled.div`
   @media (max-width: 768px) {
     width: 100%;
   }
-  @media (max-width: 400px) {
-    font-size: 15px;
-  }
 `;
 
 const Text = styled.span`
-  font-size: ${(props) => (props.small ? '16px' : '20px')};
+  font-size: ${(props) => (props.small ? '.8em' : '1em')};
   display: flex;
   align-items: center;
   cursor: ${(props) => (props.pointer ? 'pointer' : 'default')};
-
-  @media (max-width: 400px) {
-    font-size: ${(props) => (props.small ? '15px' : '17px')};
-  }
 `;
 
 const Icon = styled.div`
@@ -152,7 +145,7 @@ const Box = styled.div`
   @media (max-width: 950px) {
     span {
       padding: 3px 10px;
-      font-size: 16px;
+      font-size: 0.8rem;
     }
   }
   @media (max-width: 470px) {

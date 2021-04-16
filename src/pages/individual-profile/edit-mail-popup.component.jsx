@@ -25,7 +25,7 @@ const Input = styled.input.attrs((props) => ({
   border: 0;
   border-radius: 0;
   border-bottom: 0.5px solid #c2c2c2;
-  font-size: 18px;
+  font-size: 0.9rem;
 `;
 
 const EmailPopup = ({ setOpenEditMailPopup, email }) => {

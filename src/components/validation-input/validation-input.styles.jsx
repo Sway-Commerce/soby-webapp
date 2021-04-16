@@ -11,7 +11,7 @@ export const NumberBox = styled.input`
   &[type='number'] {
     height: 70px;
     width: 50px;
-    font-size: 18px;
+    font-size: 0.9rem;
     text-align: center;
     background: #ffffff;
     border: 1px solid ${subColor};
@@ -40,7 +40,7 @@ export const InputCode = styled.input.attrs((props) => ({
   border: 0;
   border-radius: 3px;
   border: 0.5px solid #c2c2c2;
-  font-size: 18px;
+  font-size: 0.9rem;
   margin-right: 20px;
   box-sizing: border-box;
 

@@ -32,7 +32,7 @@ const Price = styled.h3`
 `;
 
 const Name = styled.p`
-  font-size: 16px;
+  font-size: 0.8rem;
   line-height: 24px;
 `;
 

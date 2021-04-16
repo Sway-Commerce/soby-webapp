@@ -2,14 +2,14 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   display: flex;
-  font-size: 16px;
+  font-size: 0.8rem;
   margin-bottom: 16px;
   width: 413px;
   *,
   .fs-16 {
-    font-size: 16px;
+    font-size: 0.8rem;
     span {
-      font-size: 14px;
+      font-size: 0.7rem;
     }
   }
 

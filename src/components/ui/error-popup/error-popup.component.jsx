@@ -12,7 +12,7 @@ export const Container = styled.div`
 export const Body = styled.div`
   padding: 20px;
   flex: 1;
-  font-size: 20px;
+  font-size: 1rem;
   color: #f53535;
   display: grid;
   place-items: center;
@@ -20,7 +20,7 @@ export const Body = styled.div`
 export const CloseButton = styled.button`
   width: calc(100% - 40px);
   color: ${mainColor};
-  font-size: 18px;
+  font-size: 0.9rem;
   font-weight: 500;
   background-color: #f1f1f1;
   border: 0;

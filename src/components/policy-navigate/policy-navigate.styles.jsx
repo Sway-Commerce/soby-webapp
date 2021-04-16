@@ -17,7 +17,7 @@ export const PolicyText = styled.div`
 
 export const InfoText = styled.div`
   font-style: normal;
-  font-size: 12px;
+  font-size: 0.6rem;
   font-weight: 400;
   line-height: 15px;
   color: black;

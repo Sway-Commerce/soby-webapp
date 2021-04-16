@@ -9,7 +9,7 @@ export const Container = styled.div`
     margin-top: 48px;
     flex: 1;
     .h2 {
-      font-size: 18px;
+      font-size: 0.9rem;
       font-weight: 500;
       margin-bottom: 20px;
     }
@@ -36,7 +36,7 @@ export const Container = styled.div`
       border-width: 0 0 2px;
       border-color: rgb(0, 0, 0, 0.08);
       padding: 6px 0;
-      font-size: 18px;
+      font-size: 0.9rem;
       margin: 8px 0 24px 0;
     }
 
@@ -47,7 +47,7 @@ export const Container = styled.div`
     button {
       width: 100%;
       color: ${mainColor};
-      font-size: 18px;
+      font-size: 0.9rem;
       font-weight: 500;
       background-color: #f1f1f1;
       border: 0;
@@ -119,7 +119,7 @@ export const ProductContainer = styled.div`
         font-family: Work Sans;
         font-style: normal;
         font-weight: 400;
-        font-size: 24px;
+        font-size: 1.2rem;
         line-height: 28px;
         color: #000000;
         margin-top: 8px;
@@ -129,7 +129,7 @@ export const ProductContainer = styled.div`
         font-family: Work Sans;
         font-style: normal;
         font-weight: normal;
-        font-size: 20px;
+        font-size: 1rem;
         line-height: 26px;
         color: #000000;
       }

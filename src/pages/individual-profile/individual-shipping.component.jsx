@@ -34,7 +34,7 @@ const Row = styled.div`
     }
 
     p {
-      font-size: 16px;
+      font-size: 0.8rem;
     }
   }
 `;
@@ -43,7 +43,7 @@ const AddButton = styled.button`
   font-family: Work Sans;
   font-style: normal;
   font-weight: normal;
-  font-size: 16px;
+  font-size: 0.8rem;
   line-height: 24px;
   color: #000000;
   border-radius: 8px;
@@ -62,7 +62,7 @@ const PrimaryState = styled.div`
   font-family: Work Sans;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
+  font-size: 0.6rem;
   line-height: 16px;
   text-align: center;
   color: #ffffff;

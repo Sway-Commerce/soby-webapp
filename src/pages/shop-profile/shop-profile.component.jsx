@@ -56,7 +56,7 @@ export const MainContent = styled.div`
     display: flex;
 
     p {
-      font-size: 18px;
+      font-size: 0.9rem;
     }
 
     .wrapper {

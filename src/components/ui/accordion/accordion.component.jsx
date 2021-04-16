@@ -23,7 +23,7 @@ export const Container = styled.div`
   /* Style the accordion content title */
   .accordion__title {
     font-weight: 600;
-    font-size: 20px;
+    font-size: 1rem;
     text-align: left;
   }
 
@@ -46,7 +46,7 @@ export const Container = styled.div`
 
   /* Style the accordion content text */
   .accordion__text {
-    font-size: 16px;
+    font-size: 0.8rem;
     padding: 18px;
     color: black;
   }

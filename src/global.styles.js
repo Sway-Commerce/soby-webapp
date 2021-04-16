@@ -2,10 +2,18 @@ import { createGlobalStyle } from 'styled-components';
 import { mainColor, subColor } from './shared/css-variable/variable';
 
 export const GlobalStyle = createGlobalStyle`
+	html {
+		font-size: 20px;
+		@media screen and (max-width: 1024px) {
+			font-size: 18px;
+		}
+		@media screen and (max-width: 785px) {
+			font-size: 16px;
+		}
+	}
 	body {
 		font-family: 'Commissioner', sans-serif;
 		font-weight: regular;
-		font-size: 20px;
 		line-height: 24px;
 		color: #000000;
 		.body-container {
@@ -15,11 +23,15 @@ export const GlobalStyle = createGlobalStyle`
 				box-sizing: border-box;
 			}
 		}
-		@media screen and (max-width: 800px) {
+		@media screen and (max-width: 1024px) {
 			.body-container {
 				width: auto;
 			}
 		}
+	}
+
+	h2 {
+		font-size: 1.2rem;
 	}
 
 	a {
@@ -75,7 +87,7 @@ export const GlobalStyle = createGlobalStyle`
 		input.PhoneInputInput {
 			border: none;
 			font-family: Work Sans;
-			font-size: 14px;
+			font-size: 0.7rem;
 			outline: none
 		}
 		.PhoneInputCountrySelectArrow {
@@ -96,7 +108,7 @@ export const GlobalStyle = createGlobalStyle`
 		font-family: Commissioner;
 		font-style: normal;
 		font-weight: normal;
-		font-size: 40px;
+		font-size: 2rem;
 		line-height: 56px;
 		color: ${mainColor};
 		text-align: center;
@@ -106,7 +118,7 @@ export const GlobalStyle = createGlobalStyle`
 		font-family: Commissioner;
 		font-style: normal;
 		font-weight: 600;
-		font-size: 24px;
+		font-size: 1.2rem;
 		line-height: 29px;
 		color: ${mainColor};
 		text-transform: none;
@@ -116,7 +128,7 @@ export const GlobalStyle = createGlobalStyle`
 	p {
 		font-style: normal;
 		font-weight: normal;
-		font-size: 20px;
+		font-size: 1rem;
 		line-height: 26px;
 	}
 

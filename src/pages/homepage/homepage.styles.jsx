@@ -49,7 +49,7 @@ export const Card = styled.div`
 export const ForgotPass = styled.div`
   font-style: normal;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 0.6rem;
   line-height: 15px;
   color: black;
   text-align: right;

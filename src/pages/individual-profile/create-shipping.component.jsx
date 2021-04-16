@@ -48,7 +48,7 @@ export const Container = styled.div`
     border-width: 0 0 2px;
     border-color: rgb(0, 0, 0, 0.08);
     padding: 6px 0;
-    font-size: 18px;
+    font-size: 0.9rem;
     margin: 8px 0 24px 0;
   }
 
@@ -59,7 +59,7 @@ export const Container = styled.div`
   button.shipping-button {
     width: 100%;
     color: ${mainColor};
-    font-size: 18px;
+    font-size: 0.9rem;
     font-weight: 500;
     background-color: #f1f1f1;
     border: 0;

@@ -13,7 +13,7 @@ export const StatusContainer = styled.div`
     .status {
       font-family: Commissioner;
       font-weight: 600;
-      font-size: 24px;
+      font-size: 1.2rem;
       line-height: 29px;
       font-style: normal;
     }
@@ -28,7 +28,7 @@ export const StatusContainer = styled.div`
       height: 40px;
     }
     .info .status {
-      font-size: 16px;
+      font-size: 0.8rem;
       line-height: 29px;
     }
   }

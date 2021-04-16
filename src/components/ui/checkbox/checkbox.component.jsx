@@ -9,7 +9,7 @@ export const Container = styled.div`
     position: relative;
     padding-left: 35px;
     margin-bottom: 12px;
-    font-size: 22px;
+    font-size: 1.1rem;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;

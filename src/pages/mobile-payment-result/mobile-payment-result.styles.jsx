@@ -7,13 +7,13 @@ export const TransactionContainer = styled.div`
   .soby-title {
     color: black;
     text-align: left;
-    font-size: 40px;
+    font-size: 2rem;
     line-height: 49px;
   }
 
   @media screen and (max-width: 800px) {
     .soby-title {
-      font-size: 20px;
+      font-size: 1rem;
       line-height: 24px;
     }
   }
@@ -42,7 +42,7 @@ export const CardWrapper = styled.div`
   }
 
   @media screen and (max-width: 800px) {
-    font-size: 14px;
+    font-size: 0.7rem;
     width: 376px;
     min-height: 393px;
     padding: 48px 24px;
@@ -105,7 +105,7 @@ export const FormContainer = styled.div`
       justify-content: space-between;
       #amount {
         font-weight: bold;
-        font-size: 64px;
+        font-size: 3.2rem;
         line-height: 78px;
       }
       margin-bottom: 32px;
@@ -119,14 +119,14 @@ export const FormContainer = styled.div`
   }
 
   @media screen and (max-width: 800px) {
-    font-size: 14px;
+    font-size: 0.7rem;
     margin-top: 8px;
     form {
       .amount-info {
         justify-content: space-between;
 
         #amount {
-          font-size: 32px;
+          font-size: 1.6rem;
           line-height: 39px;
         }
         margin-bottom: 16px;
