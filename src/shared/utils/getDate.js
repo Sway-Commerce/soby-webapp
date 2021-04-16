@@ -13,7 +13,7 @@ export const vnpayFormatToDate = (value = '') => {
   // yyyyMMddHHmmss
   const year = value.substr(0,4);
   const month = value.substr(4,2);
-  const day = value.substr(4,2);
+  const day = value.substr(6,2);
 
   return `${day}/${month}/${year}`;
 }

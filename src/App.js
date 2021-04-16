@@ -39,7 +39,9 @@ const IndividualProfile = lazy(() =>
   import('pages/individual-profile/individual-profile.component')
 );
 const IndividualShipping = lazy(() =>
-  import('pages/individual-profile/individual-shipping.component')
+  import('pages/individual-profile/individual-shipping.component');
+const MobilePaymentResult = lazy(() =>
+  import('pages/mobile-payment-result/mobile-payment-result.component')
 );
 
 const App = () => {
@@ -70,6 +72,10 @@ const App = () => {
               <Route
                 path="/transaction/vnpay_return"
                 component={PaymentResult}
+              />
+              <Route
+                path="/transaction/vnpay-mobile"
+                component={MobilePaymentResult}
               />
               <Route path="/phone-signin" component={PhoneSignin} />
             </Suspense>
