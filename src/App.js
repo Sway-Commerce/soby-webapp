@@ -75,7 +75,7 @@ const App = () => {
                 component={IndividualShipping}
               />
               <Route
-                path="/transaction/vnpay_return"
+                path="/transaction/vnpay-return"
                 component={PaymentResult}
               />
               <Route
