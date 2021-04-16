@@ -29,9 +29,7 @@ const ShopProfile = lazy(() =>
 const ProductDetail = lazy(() =>
   import('pages/product-detail/product-detail.component')
 );
-const Invoice = lazy(() =>
-  import('pages/invoice/invoice.component')
-);
+const Invoice = lazy(() => import('pages/invoice/invoice.component'));
 const YourTransaction = lazy(() =>
   import('pages/your-transactions/your-transactions.component')
 );
@@ -39,7 +37,8 @@ const IndividualProfile = lazy(() =>
   import('pages/individual-profile/individual-profile.component')
 );
 const IndividualShipping = lazy(() =>
-  import('pages/individual-profile/individual-shipping.component');
+  import('pages/individual-profile/individual-shipping.component')
+);
 const MobilePaymentResult = lazy(() =>
   import('pages/mobile-payment-result/mobile-payment-result.component')
 );
@@ -67,8 +66,14 @@ const App = () => {
               <Route path="/product/:productId" component={ProductDetail} />
               <Route path="/invoice/:invoiceId" component={Invoice} />
               <JwtRoute path="/your-transaction" component={YourTransaction} />
-              <JwtRoute path="/individual-profile" component={IndividualProfile} />
-              <JwtRoute path="/individual-shipping" component={IndividualShipping} />
+              <JwtRoute
+                path="/individual-profile"
+                component={IndividualProfile}
+              />
+              <JwtRoute
+                path="/individual-shipping"
+                component={IndividualShipping}
+              />
               <Route
                 path="/transaction/vnpay_return"
                 component={PaymentResult}
