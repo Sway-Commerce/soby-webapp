@@ -12,10 +12,11 @@ export const GlobalStyle = createGlobalStyle`
 		}
 	}
 	body {
-		font-family: 'Commissioner', sans-serif;
+		font-family: 'Roboto', sans-serif;
 		font-weight: regular;
 		line-height: 24px;
 		color: #000000;
+		background-color: #E5E5E5;
 		.body-container {
 			width: 1140px;
 			margin: auto;
@@ -128,7 +129,7 @@ export const GlobalStyle = createGlobalStyle`
 	p {
 		font-style: normal;
 		font-weight: normal;
-		font-size: 1rem;
+		font-size: 0.8rem;
 		line-height: 26px;
 	}
 

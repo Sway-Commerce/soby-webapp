@@ -76,13 +76,20 @@ export const Container = styled.div`
   .sub-filter {
     margin-top: 32px;
     overflow: auto;
-    padding-bottom: 8px;
+    height: 80px;
+    background-color: #ffffff;
   }
 
   .invoice-list {
     max-height: calc(100vh - 280px);
     overflow: auto;
-    padding-right: 10px;
+    padding: 24px;
+    background-color: #ffffff;
+    margin-top: 24px;
+    .header-wrapper {
+      display: grid;
+      grid-template-columns: 463px 176px 176px 176px 158px;
+    }
   }
 `;
 

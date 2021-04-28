@@ -26,6 +26,7 @@ export const CardWrapper = styled.div`
   width: 586px;
   min-height: 798px;
   height: auto;
+  background-color: #ffffff;
 
   &:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
