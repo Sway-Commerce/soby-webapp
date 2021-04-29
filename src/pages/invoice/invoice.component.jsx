@@ -1,451 +1,422 @@
-import React, { useEffect, useState } from 'react';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import product1 from 'shared/assets/product1.svg';
+import product2 from 'shared/assets/product2.svg';
+import { ReactComponent as CloseIcon } from 'shared/assets/close-action.svg';
+import { ReactComponent as AcceptIcon } from 'shared/assets/accept-action.svg';
 
-import { Container, InvoiceButton, Row, ShippingCard } from './invoice.styles';
-import { useParams } from 'react-router-dom';
-import { ReactComponent as Extra } from 'shared/assets/extra.svg';
-import {
-  ACCEPT_INVOICE,
-  GET_DETAILED_INVOICE_BY_ID,
-  GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL,
-  MARK_SATISFIED_WITH_INVOICE,
-  REQUEST_INVOICE_REFUND,
-  UPDATE_RETURN_SHIPPING_INFO,
-} from 'graphQL/repository/invoice.repository';
-import Spinner from 'components/ui/spinner/spinner.component';
-import { timestampToDate } from 'shared/utils/getDate';
-import { currencyFormatter } from 'shared/utils/formatCurrency';
-import InvoiceProductList from 'components/invoice-product-list/invoice-product-list.component';
-import SobyModal from 'components/ui/modal/modal.component';
-import ShippingInfo from 'components/shipping-info/shipping-info.component';
-import InvoiceStatus from 'components/invoice-status/invoice-status.component';
-import Accordion from 'components/ui/accordion/accordion.component';
-import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+const Page = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 40px 26px;
+  background-color: #ffffff;
+  margin-top: 38px;
+`;
 
-const Invoice = ({ invoiceIndividualId }) => {
-  const { invoiceId } = useParams();
+const Box = styled.div`
+  background-color: #fff;
+  text-align: left;
+
+  &.main-box {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  h4 {
+    color: ${(prop) => prop.theme.primary};
+  }
+
+  .row {
+    display: flex;
+    margin-top: 20px;
+  }
+
+  .sub {
+    margin-top: 5px;
+    font-size: 14px;
+    color: ${(prop) => prop.theme.stoke};
+  }
+  .bold {
+    font-weight: 600;
+    margin-top: 5px;
+  }
+
+  .phone {
+    width: 100%;
+    padding: 7px 0;
+    border-radius: 0;
+    border: 0;
+    outline: 0;
+    border-bottom: 1px solid #000;
+    margin-bottom: 10px;
+  }
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 50% 1fr 1fr 1fr;
+
+  :first-child,
+  :last-child {
+    border-bottom: 1px solid #e4e4e4;
+  }
+
+  .last-child {
+    justify-self: right;
+    flex: 1;
+  }
+
+  h3 {
+    text-align: left;
+  }
+
+  .title-info {
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+  }
+`;
+
+const HeaderCol = styled.p`
+  color: ${(prop) => prop.theme.stoke};
+  font-weight: 600;
+  text-align: right;
+`;
+
+const Product = styled.div`
+  display: flex;
+  text-align: left;
+
+  div {
+    margin-left: 15px;
+    padding: 5px;
+
+    p {
+      &:last-child {
+        margin-top: 5px;
+        font-size: 14px;
+        color: ${(prop) => prop.theme.stoke};
+      }
+    }
+  }
+`;
+
+const Counter = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  span {
+    margin: 0 14px;
+  }
+
+  button {
+    font-size: 25px;
+    outline: 0;
+    background: none;
+    border-radius: 5px;
+    height: 30px;
+    width: 30px;
+    border: 1px solid ${(prop) => prop.theme.stoke};
+    cursor: pointer;
+  }
+`;
+
+const BoxReason = styled.div`
+  border-bottom: 1px solid #c2c2c2;
+  padding: 7px 0 24px;
+  margin-top: 14px;
+  :last-child,
+  :first-child {
+    border: none;
+  }
+
+  &.upload-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 0;
+
+    img {
+      margin-left: 5px;
+    }
+  }
+
+  div {
+    label {
+      margin-left: 10px;
+    }
+  }
+
+  p {
+    margin-top: 5px;
+    font-size: 14px;
+    color: ${(prop) => prop.theme.stoke};
+  }
+
+  .checkbox {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    label {
+      position: relative;
+      cursor: pointer;
+
+      padding-left: 20px;
+      span {
+        margin-left: 12px;
+      }
+      &:before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0px;
+        transform: translate(-50%, -50%);
+        width: 12px;
+        height: 12px;
+        transition: transform 0.28s ease;
+        border-radius: 3px;
+        border: 1px solid #000;
+      }
+      &:after {
+        content: '';
+        display: block;
+        width: 9px;
+        height: 4px;
+        border-bottom: 2px solid #fff;
+        border-left: 2px solid #fff;
+        transform: rotate(-45deg) scale(0) translate(-50%, -50%);
+        transition: transform ease 0.25s;
+        position: absolute;
+        top: 7px;
+        left: -5px;
+      }
+    }
+    input[type='checkbox'] {
+      width: auto;
+      opacity: 0.00000001;
+      position: absolute;
+      left: 0;
+      margin-left: -20px;
+      &:checked ~ label {
+        &:before {
+          background-color: #2b74e4;
+          border: 2px solid #2b74e4;
+        }
+        &:after {
+          transform: rotate(-45deg) scale(1);
+        }
+      }
+      &:focus + label::before {
+        outline: 0;
+      }
+    }
+  }
+`;
+
+const ImgBox = styled.div`
+  position: relative;
+  margin-right: 18px;
+
+  .close-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: #f1f1f1;
+    height: 24px;
+    width: 24px;
+  }
+`;
+
+const SentButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${(prop) => prop.theme.primary};
+  color: #fff;
+  font-size: 18px;
+  border-radius: 7px;
+  outline: 0;
+  border: 0;
+  padding: 12px 180px;
+
+  img {
+    margin-left: 10px;
+  }
+`;
+
+export const ErrorTitle = styled.h5`
+  color: ${(prop) => prop.theme.red};
+  margin: 5px 0;
+`;
+
+export const ActionContainer = styled.div`
+  display: flex;
+  position: relative;
+  top: -15px;
+
+  .action {
+    display: flex;
+    flex-direction: column;
+
+    p {
+      text-align: center;
+    }
+
+    & + .action {
+      margin-left: 40px;
+    }
+  }
+`;
+
+export const InfoBox = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 30px;
+  background: #ffffff;
+
+  .info-box {
+    border: 1px solid #e4e4e4;
+    height: 100px;
+    padding: 16px 24px;
+    .invoice-info {
+      color: #828282;
+    }
+  }
+`;
+
+export const FooterBox = styled.div`
+  display: grid;
+  grid-template-columns: 50% 1fr 1fr;
+
+`;
+
+const BreakLine = styled.hr`
+  border-top: 1px solid #E4E4E4;
+  margin-bottom: 24px;
+`;
+
+const Invoice = () => {
+  const [qty1, setQty1] = useState(1);
+  const [qty2, setQty2] = useState(0);
+  const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
   const [open, setOpen] = useState(false);
-  const [openError, setOpenError] = useState(false);
-  const [shopData, setShopData] = useState({
-    name: '',
-    shippingType: '',
-    expiredAt: '',
-    price: '',
-    items: [],
-    shop: { logoUrl: '', name: '' },
-    status: '',
-    shippingFee: 0,
-    shippingLocation: {
-      addressLine: '',
-      district: '',
-      province: '',
-      ward: '',
-    },
-    individualTrackingUrl: '',
-    totalPrice: '',
-    orderFee: '',
-    escrowFee: '',
-  });
-  const [productMargin, setProductMargin] = useState(0);
   const [formError, setFormError] = useState('');
+  const [phoneValidation, setPhoneValid] = useState(true);
 
-  const [
-    loadDetailInvoice,
-    { loading, data: invoiceData, error: loadDetailInvoiceError },
-  ] = useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
-    variables: {
-      id: invoiceId,
-    },
-    fetchPolicy: 'network-only',
-    notifyOnNetworkStatusChange: true,
-  });
-
-  const [
-    getAggregatedInvoiceOrderForIndividual,
-    {
-      loading: getAggregatedInvoiceOrderForIndividualLoading,
-      error: getAggregatedInvoiceOrderForIndividualError,
-      data: getAggregatedInvoiceOrderForIndividualData,
-    },
-  ] = useLazyQuery(GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL, {
-    variables: {
-      id: invoiceIndividualId,
-    },
-    fetchPolicy: 'network-only',
-    notifyOnNetworkStatusChange: true,
-  });
-
-  const [
-    acceptInvoice,
-    {
-      data: acceptInvoiceData,
-      loading: acceptLoading,
-      error: acceptInvoiceError,
-    },
-  ] = useMutation(ACCEPT_INVOICE, {
-    errorPolicy: 'all',
-    variables: {
-      cmd: {
-        invoiceId,
-      },
-    },
-  });
-
-  useEffect(() => {
-    if (invoiceId) {
-      loadDetailInvoice();
-    }
-  }, [invoiceId]);
-
-  useEffect(() => {
-    if (invoiceIndividualId) {
-      getAggregatedInvoiceOrderForIndividual();
-    }
-  }, [invoiceIndividualId]);
-
-  useEffect(() => {
-    if (invoiceData?.getAggregatedInvoice?.data) {
-      const {
-        name,
-        shippingType,
-        expiredAt,
-        price,
-        items,
-        shop,
-      } = invoiceData?.getAggregatedInvoice?.data;
-      setShopData({ name, shippingType, expiredAt, price, items, shop });
-    }
-  }, [invoiceData?.getAggregatedInvoice?.data]);
-
-  useEffect(() => {
-    const invoiceData =
-      getAggregatedInvoiceOrderForIndividualData
-        ?.getAggregatedInvoiceOrderForIndividual?.data;
-    if (invoiceData) {
-      const {
-        status,
-        shippingFee,
-        shippingLocation,
-        individualTrackingUrl,
-        totalPrice,
-        orderFee,
-      } = invoiceData;
-      const {
-        name,
-        shippingType,
-        expiredAt,
-        price,
-        items,
-        shop,
-        escrowFee,
-      } = invoiceData?.invoice;
-      setShopData({
-        name,
-        shippingType,
-        expiredAt,
-        price,
-        items,
-        shop,
-        status,
-        shippingFee,
-        shippingLocation,
-        individualTrackingUrl,
-        totalPrice,
-        orderFee,
-        escrowFee,
-      });
-    }
-  }, [
-    getAggregatedInvoiceOrderForIndividualData
-      ?.getAggregatedInvoiceOrderForIndividual?.data,
-  ]);
-
-  useEffect(() => {
-    if (acceptInvoiceData?.acceptInvoice?.data) {
-      setOpen(true);
-    }
-  }, [acceptInvoiceData?.acceptInvoice?.data]);
-
-  // MARK_SATISFIED_WITH_INVOICE
-  const [
-    markSatisfiedWithInvoice,
-    {
-      data: markSatisfiedWithInvoiceData,
-      loading: markSatisfiedWithInvoiceLoading,
-      error: markSatisfiedWithInvoiceError,
-    },
-  ] = useMutation(MARK_SATISFIED_WITH_INVOICE, {
-    errorPolicy: 'all',
-    variables: {
-      cmd: {
-        invoiceIndividualId,
-      },
-    },
-  });
-
-  useEffect(() => {
-    if (markSatisfiedWithInvoiceData?.markSatisfiedWithInvoice?.success) {
-    }
-  }, [markSatisfiedWithInvoiceData?.markSatisfiedWithInvoice?.success]);
-
-  // UPDATE_RETURN_SHIPPING_INFO
-  const [
-    updateReturnShippingInfo,
-    {
-      data: updateReturnShippingInfoData,
-      loading: updateReturnShippingInfoLoading,
-      error: updateReturnShippingInfoError,
-    },
-  ] = useMutation(UPDATE_RETURN_SHIPPING_INFO, {
-    errorPolicy: 'all',
-    variables: {
-      cmd: {
-        assessId: '',
-        shippingType: '', //BY_USER BY_SOBY
-        shippingLocationId: '',
-        returnFeePaidBy: '', //INDIVIDUAL SHOP
-        bankCode: '', // ABBANK
-        accountType: '', // ATM_CARD BANK_ACCOUNT
-        accountNumber: '',
-        accountOwner: '',
-        accountIssuedOn: '',
-        bankBranch: '',
-      },
-    },
-  });
-
-  // Error handle
-  useEffect(() => {
-    if (
-      markSatisfiedWithInvoiceError?.message ||
-      loadDetailInvoiceError?.message ||
-      getAggregatedInvoiceOrderForIndividualError?.message ||
-      acceptInvoiceError?.message ||
-      updateReturnShippingInfoError?.message
-    ) {
-      setFormError(
-        markSatisfiedWithInvoiceError?.message ??
-          loadDetailInvoiceError?.message ??
-          getAggregatedInvoiceOrderForIndividualError?.message ??
-          acceptInvoiceError?.message ??
-          updateReturnShippingInfoError?.message
-      );
-    }
-  }, [
-    markSatisfiedWithInvoiceError?.message,
-    loadDetailInvoiceError?.message,
-    getAggregatedInvoiceOrderForIndividualError?.message,
-    acceptInvoiceError?.message,
-    updateReturnShippingInfoError?.message,
-  ]);
-
-  const handleCheckout = () => {
-    invoiceIndividualId ? setOpen(true) : acceptInvoice();
-  };
-
-  return loading ||
-    acceptLoading ||
-    getAggregatedInvoiceOrderForIndividualLoading ||
-    updateReturnShippingInfoLoading ? (
-    <Spinner />
-  ) : (
-    <React.Fragment>
-      <Container>
-        <div className="main-content">
-          <div className="content-left">
-            <div className="box-top">
-              <div className="header-group">
-                <div className="shop-name">
-                  <img src={shopData.shop.logoUrl} alt="" />
-                  <p className="h2">{shopData.shop.name}</p>
-                </div>
-                <Extra />
-              </div>
-
-              <p>
-                <b>{shopData.name}</b>
-              </p>
-
-              {
-                // Status
-              }
-              {shopData.status ? (
-                <div className="item-wrapper">
-                  <p>Status</p>
-                  <InvoiceStatus status={shopData.status} />
-                </div>
-              ) : null}
-
-              {
-                // Expriration date
-              }
-              {shopData.status === 'ACCEPTED' || !shopData.status ? (
-                <React.Fragment>
-                  <div className="item-wrapper">
-                    <p>Expriration date</p>
-                    <p>{timestampToDate(shopData.expiredAt)}</p>
-                  </div>
-                  <div className="item-wrapper">
-                    <p className="auto-fit">Shipping option</p>
-                    <div>
-                      <div className="option-chip">
-                        {shopData.shippingType === 'BY_SOBY'
-                          ? 'Soby ship'
-                          : 'Seller ship'}
-                      </div>
-                    </div>
-                  </div>
-
-                  {
-                    // Payment info
-                  }
-                  <div className="box-tag">
-                    <Accordion
-                      title="Payment details"
-                      setBelowGap={setProductMargin}
-                    >
-                      <div className="payinfo-wrapper">
-                        <p>Subtotal</p>
-                        <p>
-                          {currencyFormatter(
-                            invoiceIndividualId ? shopData.price : 0
-                          )}
-                        </p>
-                      </div>
-                      <div className="payinfo-wrapper">
-                        <p>Order Fee</p>
-                        <p>{currencyFormatter(shopData.orderFee)}</p>
-                      </div>
-                      <div className="payinfo-wrapper">
-                        <p>Shipping Fee</p>
-                        <p>{currencyFormatter(shopData.shippingFee)}</p>
-                      </div>
-                    </Accordion>
-                    <div className="payinfo-wrapper total">
-                      <h4>Total</h4>
-                      <h4>
-                        {currencyFormatter(
-                          invoiceIndividualId
-                            ? shopData.totalPrice
-                            : shopData.price
-                        )}
-                      </h4>
-                    </div>
-                  </div>
-                </React.Fragment>
-              ) : null}
-
-              {
-                // Payment info
-              }
-              {shopData.status !== 'ACCEPTED' && shopData.status ? (
-                <React.Fragment>
-                  <div className="accordion-wrapper">
-                    <Accordion title="Payment details">
-                      <div className="payinfo-wrapper">
-                        <p>Subtotal</p>
-                        <p>{currencyFormatter(shopData.price)}</p>
-                      </div>
-                      <div className="payinfo-wrapper">
-                        <p>Escrow Fee</p>
-                        <p>{currencyFormatter(shopData.escrowFee)}</p>
-                      </div>
-                      <div className="payinfo-wrapper">
-                        <p>Order Fee</p>
-                        <p>{currencyFormatter(shopData.orderFee)}</p>
-                      </div>
-                      <div className="payinfo-wrapper">
-                        <p>Shipping Fee</p>
-                        <p>{currencyFormatter(shopData.shippingFee)}</p>
-                      </div>
-                    </Accordion>
-                    <div className="payinfo-wrapper total">
-                      <h4>Total</h4>
-                      <h4>{currencyFormatter(shopData.totalPrice)}</h4>
-                    </div>
-                  </div>
-                  <ShippingCard>
-                    <div className="shipping-wrapper">
-                      <p>Shipping option</p>
-                      <div>
-                        <div className="option-chip">
-                          {shopData.shippingType === 'BY_SOBY'
-                            ? 'Soby ship'
-                            : 'Seller ship'}
-                        </div>
-                      </div>
-                    </div>
-                    {shopData.shippingLocation?.addressLine ? (
-                      <p className="text-truncation shipping-location">{`${shopData?.shippingLocation?.addressLine}, ${shopData?.shippingLocation?.ward}, ${shopData?.shippingLocation?.district}, ${shopData?.shippingLocation?.province}`}</p>
-                    ) : null}
-                    {shopData?.individualTrackingUrl ? (
-                      <div className="shipping-wrapper">
-                        <p className="tracking-code text-truncation">
-                          {shopData.individualTrackingUrl}
-                        </p>
-                        <div
-                          className="method"
-                          onClick={() => {
-                            navigator.clipboard.writeText(
-                              shopData.individualTrackingUrl
-                            );
-                            window.alert('Shipping tracking url is copied');
-                          }}
-                        >
-                          Copy
-                        </div>
-                      </div>
-                    ) : null}
-                  </ShippingCard>
-                </React.Fragment>
-              ) : null}
-            </div>
-            <div
-              style={{
-                marginTop: `${productMargin}`,
-                paddingTop: `${
-                  shopData.status === 'ACCEPTED' || !shopData.status
-                    ? '40px'
-                    : 0
-                }`,
-              }}
-            >
-              <InvoiceProductList items={shopData.items} />
-            </div>
-            {shopData.status === 'ACCEPTED' || !shopData.status ? (
-              <div className="check-out" onClick={handleCheckout}>
-                <div>Check out</div>
-                <div className="price">
-                  <b>{currencyFormatter(shopData.price)}</b>
-                </div>
-              </div>
-            ) : null}
-
-            {shopData.status === 'DELIVERED' ? (
-              <Row>
-                <InvoiceButton>Return</InvoiceButton>
-                <InvoiceButton accept>Accept</InvoiceButton>
-              </Row>
-            ) : null}
-          </div>
+  return (
+    <Page>
+      <Box className="main-box">
+        <div>
+          <h2>HD TV invoice from Soby</h2>
+          <h4>Delivired</h4>
         </div>
-      </Container>
-      <SobyModal open={open} setOpen={setOpen}>
-        {acceptInvoiceData?.acceptInvoice?.data?.id || invoiceIndividualId ? (
-          <ShippingInfo
-            invoiceIndividualId={
-              acceptInvoiceData?.acceptInvoice?.data?.id ?? invoiceIndividualId
-            }
-          />
-        ) : null}
-      </SobyModal>
+        <ActionContainer>
+          <div className="action">
+            <CloseIcon />
+            <p>Reject</p>
+          </div>
+          <div className="action">
+            <AcceptIcon />
+            <p>Accept</p>
+          </div>
+        </ActionContainer>
+      </Box>
 
-      <SobyModal open={openError} setOpen={setOpenError}>
-        {formError ? (
-          <ErrorPopup content={formError} setOpen={setOpenError} />
-        ) : null}
-      </SobyModal>
-    </React.Fragment>
+      <InfoBox>
+        <div className="info-box">
+          <p>
+            <b>Invoice form</b>
+          </p>
+          <p className="invoice-info">Blue bird Shop</p>
+        </div>
+        <div className="info-box">
+          <p>
+            <b>Shipping address</b>
+          </p>
+          <p className="invoice-info">
+            41-47 Dong Du Str., Ben Nghe Ward, D1, Hochiminh city
+          </p>
+        </div>
+        <div className="info-box">
+          <p>
+            <b>Tracking code</b>
+          </p>
+          <p className="invoice-info">123.4654.dsafd12345</p>
+        </div>
+      </InfoBox>
+
+      <Grid>
+        <p className="title-info">
+          <b>Products list</b>
+        </p>
+        <p className="title-info">
+          <b>Subtotal</b>
+        </p>
+        <p className="title-info">
+          <b>Qty</b>
+        </p>
+        <p className="title-info last-child">
+          <b>Total</b>
+        </p>
+      </Grid>
+      <BreakLine/>
+      <Grid>
+        <Product className="title-info">
+          <img src={product1} alt="" />
+          <div>
+            <p>HD TV invoice from Soby</p>
+            <p>Blue bird shop</p>
+          </div>
+        </Product>
+        <p className="title-info">240.000 đ</p>
+        <p className="title-info">02</p>
+        <p className="title-info last-child">240.000 đ</p>
+      </Grid>
+      <Grid>
+        <Product className="title-info">
+          <img src={product2} alt="" />
+          <div>
+            <p>Nintendo Switch with Neon Blue and Neon Red Joy-Con</p>
+            <p>Blue bird shop</p>
+          </div>
+        </Product>
+        <p className="title-info">240.000 đ</p>
+        <p className="title-info">02</p>
+        <p className="title-info last-child">240.000 đ</p>
+      </Grid>
+      <BreakLine/>
+      <FooterBox>
+        <div></div>
+        <p>Subtotal</p>
+        <p className="text-right">2.240,000 vnđ</p>
+      </FooterBox>
+      <FooterBox>
+        <div></div>
+        <p>Safebuy fee</p>
+        <p className="text-right">0 đ</p>
+      </FooterBox>
+      <FooterBox>
+        <div></div>
+        <p>Shipping fee</p>
+        <p className="text-right">0 đ</p>
+      </FooterBox>
+      <FooterBox>
+        <div></div>
+        <p>
+          <b>Total</b>
+        </p>
+        <p className="text-right">
+          <b>2.260.000 đ</b>
+        </p>
+      </FooterBox>
+    </Page>
   );
 };
 

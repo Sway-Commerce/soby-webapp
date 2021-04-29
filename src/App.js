@@ -13,6 +13,8 @@ import ErrorBoundary from 'components/error-boundary/error-boundary.component';
 const theme = {
   primary: "#2B74E4",
   stoke: "#828282",
+  red: "#F53535",
+  green: "#27AE60"
 };
 
 const HomePage = lazy(() => import('pages/homepage/homepage.component'));
@@ -36,7 +38,7 @@ const ShopProfile = lazy(() =>
 const ProductDetail = lazy(() =>
   import('pages/product-detail/product-detail.component')
 );
-const Invoice = lazy(() => import('pages/invoice/invoice.component'));
+const InvoiceLast = lazy(() => import('pages/invoice/invoice-last.component'));
 const YourTransaction = lazy(() =>
   import('pages/your-transactions/your-transactions.component')
 );
@@ -51,6 +53,9 @@ const MobilePaymentResult = lazy(() =>
 );
 const ReturnRequestPage = lazy(() =>
   import('pages/return-request/return-request.component')
+);
+const Invoice = lazy(() =>
+  import('pages/invoice/invoice.component')
 );
 
 const App = () => {
@@ -74,7 +79,6 @@ const App = () => {
 
               <Route path="/shop-profile/:shopId" component={ShopProfile} />
               <Route path="/product/:productId" component={ProductDetail} />
-              <Route path="/invoice/:invoiceId" component={Invoice} />
               <JwtRoute path="/your-transaction" component={YourTransaction} />
               <JwtRoute
                 path="/individual-profile"
@@ -94,6 +98,7 @@ const App = () => {
               />
               <Route path="/phone-signin" component={PhoneSignin} />
               <Route path="/return-request" component={ReturnRequestPage} />
+              <Route path="/invoice/:invoiceId" component={Invoice} />
             </Suspense>
           </ErrorBoundary>
         </Switch>

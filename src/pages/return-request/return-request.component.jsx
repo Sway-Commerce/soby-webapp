@@ -8,6 +8,7 @@ import proImg2 from "shared/assets/productImg2.svg";
 import proImg3 from "shared/assets/productImg3.svg";
 import closeIcon from "shared/assets/closeIcon.svg";
 import sentIcon from "shared/assets/sentIcon.svg";
+import PhoneInput from "react-phone-number-input";
 
 const Page = styled.div`
   min-height: 100vh;
@@ -240,9 +241,18 @@ const SentButton = styled.button`
   }
 `;
 
+export const ErrorTitle = styled.h5`
+  color: red;
+  margin: 5px 0;
+`;
+
 const ReturnRequest = () => {
   const [qty1, setQty1] = useState(1);
   const [qty2, setQty2] = useState(0);
+  const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
+  const [open, setOpen] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [phoneValidation, setPhoneValid] = useState(true);
 
   return (
     <Page>
@@ -306,8 +316,19 @@ const ReturnRequest = () => {
         <p class="bold" htmlFor="">
           Phone number
         </p>
-        <input type="text" className="phone" placeholder="090 1234 567" />
-        <p>Soby supported as your requested</p>
+        <PhoneInput
+                country="VN"
+                international
+                initialValueFormat="national"
+                countryCallingCodeEditable={false}
+                defaultCountry="VN"
+                name="phoneNumber"
+                value={phoneNumberIntl}
+                onChange={(value) => setPhoneNumberIntl(value)}
+              />
+              {!phoneValidation ? (
+                <ErrorTitle>Your phone number is not correct</ErrorTitle>
+              ) : null}
       </Box>
       <Box>
         <h3>Return reason</h3>

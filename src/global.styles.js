@@ -18,7 +18,7 @@ export const GlobalStyle = createGlobalStyle`
 		color: #000000;
 		background-color: #E5E5E5;
 		.body-container {
-			width: 1140px;
+			width: 1200px;
 			margin: auto;
 			* {
 				box-sizing: border-box;

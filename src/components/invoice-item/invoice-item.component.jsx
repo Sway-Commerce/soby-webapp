@@ -19,7 +19,7 @@ const Container = styled.div`
 const Status = styled.p`
   text-transform: capitalize;
   color: ${mainColor};
-  text-align: right
+  text-align: right;
 `;
 
 const InvoiceItem = ({
