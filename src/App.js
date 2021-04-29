@@ -3,10 +3,17 @@ import { Switch, Route } from 'react-router-dom';
 import 'react-phone-number-input/style.css';
 
 import { GlobalStyle } from './global.styles';
+import { ThemeProvider } from "styled-components";
+
 import Header from 'components/header/header.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import JwtRoute from './jwt-route';
 import ErrorBoundary from 'components/error-boundary/error-boundary.component';
+
+const theme = {
+  primary: "#2B74E4",
+  stoke: "#828282",
+};
 
 const HomePage = lazy(() => import('pages/homepage/homepage.component'));
 const SignUp = lazy(() =>
@@ -42,10 +49,13 @@ const IndividualShipping = lazy(() =>
 const MobilePaymentResult = lazy(() =>
   import('pages/mobile-payment-result/mobile-payment-result.component')
 );
+const ReturnRequestPage = lazy(() =>
+  import('pages/return-request/return-request.component')
+);
 
 const App = () => {
   return (
-    <div>
+    <ThemeProvider theme={theme}>
       <Header />
       <GlobalStyle />
       <div className="body-container">
@@ -83,11 +93,12 @@ const App = () => {
                 component={MobilePaymentResult}
               />
               <Route path="/phone-signin" component={PhoneSignin} />
+              <Route path="/return-request" component={ReturnRequestPage} />
             </Suspense>
           </ErrorBoundary>
         </Switch>
       </div>
-    </div>
+    </ThemeProvider>
   );
 };
 

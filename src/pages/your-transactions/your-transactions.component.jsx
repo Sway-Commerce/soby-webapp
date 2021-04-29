@@ -125,7 +125,7 @@ const YourTransaction = ({ name }) => {
             <p>
               <b>Seller</b>
             </p>
-            <p>
+            <p className="text-right">
               <b>Status</b>
             </p>
           </div>
@@ -136,6 +136,7 @@ const YourTransaction = ({ name }) => {
               price={x?.totalPrice}
               status={x?.status}
               name={x?.invoice?.name}
+              updatedAt={x?.updatedAt}
               id={x?.id}
               setActiveInvoice={setActiveInvoice}
               activeInvoice={activeInvoice}

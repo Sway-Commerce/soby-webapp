@@ -155,5 +155,7 @@ export const GlobalStyle = createGlobalStyle`
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
 	}
-
+	.text-right {
+		text-align: right;
+	}
 `;

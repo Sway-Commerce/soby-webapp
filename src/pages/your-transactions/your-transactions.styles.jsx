@@ -89,6 +89,9 @@ export const Container = styled.div`
     .header-wrapper {
       display: grid;
       grid-template-columns: 463px 176px 176px 176px 158px;
+      border-bottom: 1px solid #e4e4e4;
+      padding-bottom: 20px;
+      margin-bottom: 32px;
     }
   }
 `;

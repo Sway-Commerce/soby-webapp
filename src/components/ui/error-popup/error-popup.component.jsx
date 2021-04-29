@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { mainColor } from '../../../shared/css-variable/variable';
 
-export const Container = styled.div`
+export const Container = styled.form`
   display: flex;
   flex-direction: column;
   height: 350px;
@@ -48,7 +48,14 @@ const ErrorPopup = ({ content, setOpen }) => {
       <Container>
         <Header>Error</Header>
         <Body>{content}</Body>
-        <CloseButton onClick={() => setOpen(false)}>Close</CloseButton>
+        <CloseButton
+          onClick={(event) => {
+            event.preventDefault();
+            setOpen(false);
+          }}
+        >
+          Close
+        </CloseButton>
       </Container>
     </React.Fragment>
   );
