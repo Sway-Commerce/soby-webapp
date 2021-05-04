@@ -23,12 +23,10 @@ import {
 
 import {
   SigninContainer,
-
   CardWrapper,
   RegisterContainer,
   FormContainer,
-  InputGroup,
-  ForgotPass,
+  InputGroup
 } from './phone-signin.styles';
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 import usePhoneNumber from 'shared/hooks/usePhoneNumber';
@@ -246,7 +244,9 @@ const PhoneSignin = () => {
                 onChange={(value) => setPhoneNumberIntl(value)}
               />
               {!isPhoneValid ? (
-                <h5 className="error-title">Your phone number is not correct</h5>
+                <h5 className="error-title">
+                  Your phone number is not correct
+                </h5>
               ) : null}
 
               <InputGroup>
@@ -267,7 +267,9 @@ const PhoneSignin = () => {
                 ) : null}
               </InputGroup>
 
-              <CustomButton type="submit">Login</CustomButton>
+              <CustomButton className="main-button" type="submit">
+                Login
+              </CustomButton>
             </form>
           </FormContainer>
         </SigninContainer>

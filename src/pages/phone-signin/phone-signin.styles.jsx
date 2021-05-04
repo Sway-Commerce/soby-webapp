@@ -8,8 +8,7 @@ export const SigninContainer = styled.div`
 
 export const CardWrapper = styled.div`
   transition: 0.3s;
-  padding: 40px;
-  width: 440px;
+  padding: 56px 40px 40px;
   height: 565px;
   height: auto;
   background: #ffffff;
@@ -32,5 +31,5 @@ export const FormContainer = styled.div`
 `;
 
 export const InputGroup = styled.div`
-  margin-top: 32px;
-`
+  margin-top: 28px;
+`;

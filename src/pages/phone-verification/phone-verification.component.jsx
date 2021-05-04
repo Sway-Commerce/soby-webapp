@@ -12,7 +12,7 @@ import {
   FormContainer,
   CodeText,
   SendAgain,
-
+  SubText,
 } from './phone-verification.styles';
 
 import ValidationInput from 'components/validation-input/validation-input.component';
@@ -67,7 +67,7 @@ const PhoneVerification = () => {
 
   useEffect(() => {
     if (data?.verifyPhone?.success) {
-      dispatchVerify("CONFIRMED");
+      dispatchVerify('CONFIRMED');
       const redirectUrl = localStorage.getItem('redirectUrl');
       localStorage.removeItem('redirectUrl');
       window.location = redirectUrl || '/your-transaction';
@@ -90,7 +90,7 @@ const PhoneVerification = () => {
 
   const collectVerifyCode = (code) => {
     setVerificationCode(+code);
-    if(`${code}`.length == 6) {
+    if (`${code}`.length == 6) {
       verifyPhoneMutation({
         variables: {
           cmd: { phoneCountryCode, phoneNumber, verificationCode: +code },
@@ -114,10 +114,14 @@ const PhoneVerification = () => {
     <RegisterContainer>
       <CardWrapper>
         <SignUpContainer>
-          <div className="soby-title">Đăng ký</div>
+          <div className="soby-title">Verify</div>
           <FormContainer>
             <form onSubmit={handleSubmit}>
-              <div className="form-label">Verify Code</div>
+              <SubText className="form-label">
+                <p>Enter the 6 digit code</p>
+                <p>we sent you via phone number</p>
+              </SubText>
+
               <ValidationInput collectVerifyCode={collectVerifyCode} />
               {!isCodeValid ? (
                 <h5 className="error-title">
@@ -125,9 +129,9 @@ const PhoneVerification = () => {
                 </h5>
               ) : null}
               <CodeText>
-                We already send you a Code to your Phone Numbers
+                Didn't get the code?
+                <SendAgain onClick={sendAgain}>Send again</SendAgain>
               </CodeText>
-              <SendAgain onClick={sendAgain}>Send again</SendAgain>
               <CustomButton>Submit</CustomButton>
             </form>
           </FormContainer>

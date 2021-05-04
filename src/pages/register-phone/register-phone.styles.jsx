@@ -18,9 +18,8 @@ export const SignUpTitle = styled.h1`
 export const CardWrapper = styled.div`
   box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
-  padding: 80px 68px;
-  width: 586px;
-  height: 580px;
+  padding: 56px 40px 40px;
+  width: 440px;
   background-color: #ffffff;
 
   &:hover {

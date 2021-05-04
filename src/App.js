@@ -17,7 +17,6 @@ const theme = {
   green: "#27AE60"
 };
 
-const HomePage = lazy(() => import('pages/homepage/homepage.component'));
 const SignUp = lazy(() =>
   import('pages/register-phone/register-phone.component')
 );

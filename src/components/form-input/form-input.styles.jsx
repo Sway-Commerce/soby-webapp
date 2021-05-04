@@ -14,12 +14,14 @@ export const FormInputContainer = styled.input`
   background-color: white;
   color: black;
   font-size: 0.9rem;
-  padding: 10px 10px 10px 5px;
+  padding: 6px 10px 10px 5px;
   display: block;
   width: 100%;
   border: none;
   border-radius: 0;
   border-bottom: 1px solid ${borderColor};
+  margin-top: -6px;
+  padding-top: 6px;
 
   &:focus {
     outline: none;

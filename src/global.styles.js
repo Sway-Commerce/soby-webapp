@@ -112,8 +112,7 @@ export const GlobalStyle = createGlobalStyle`
 		font-size: 1.2rem;
 		line-height: 1rem;
 		text-align: center;
-		font-weight: bold;
-		margin:10px 0;
+		font-weight: 700;
 	}
 
 	.form-label {
@@ -122,7 +121,7 @@ export const GlobalStyle = createGlobalStyle`
 		font-size: 0.8rem;
 		line-height: 1.2rem;
 		text-transform: capitalize;
-		margin-bottom: 0.4rem;
+		margin-bottom: 24px;
 	}
 
 	p {
@@ -165,5 +164,9 @@ export const GlobalStyle = createGlobalStyle`
 	h5.error-title {
 		color: red;
   	margin: 5px 0;
+	}
+
+	.main-button {
+		margin: 48px 0 32px;
 	}
 `;

@@ -9,7 +9,6 @@ import { setUserPhoneNumber } from 'redux/user/user.actions';
 
 import {
   SignUpContainer,
-
   CardWrapper,
   RegisterContainer,
   FormContainer,
@@ -61,7 +60,7 @@ const RegisterPhone = ({ history }) => {
               {!isPhoneValid ? (
                 <h5 className="error-title">Your phone number is not correct</h5>
               ) : null}
-              <CustomButton>Đăng ký</CustomButton>
+              <CustomButton className="main-button">Register</CustomButton>
               <PolicyNavigate isSignIn />
             </form>
           </FormContainer>
