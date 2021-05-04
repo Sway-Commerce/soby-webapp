@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { setEmail } from 'redux/user/user.actions';
 import emailValidation from 'shared/utils/emailValidation';
 import styled from 'styled-components';
-import { Box, ErrorTitle, PopupButton } from './shared-style.component';
+import { Box, PopupButton } from './shared-style.component';
 
 
 const InputContainer = styled.div`
@@ -100,7 +100,7 @@ const EmailPopup = ({ setOpenEditMailPopup, email }) => {
         </InputContainer>
 
         {!isEmailValid ? (
-          <ErrorTitle>Your email is not correct</ErrorTitle>
+          <h5 className="error-title">Your email is not correct</h5>
         ) : null}
 
         <PopupButton />

@@ -22,7 +22,6 @@ export const InfoText = styled.div`
   line-height: 15px;
   color: black;
   text-align: center;
-  margin-top: 56px;
   span {
     font-weight: 600;
   }

@@ -4,6 +4,7 @@ import product1 from 'shared/assets/product1.svg';
 import product2 from 'shared/assets/product2.svg';
 import { ReactComponent as CloseIcon } from 'shared/assets/close-action.svg';
 import { ReactComponent as AcceptIcon } from 'shared/assets/accept-action.svg';
+import { borderColor } from 'shared/css-variable/variable';
 
 const Page = styled.div`
   display: flex;
@@ -58,7 +59,7 @@ const Grid = styled.div`
 
   :first-child,
   :last-child {
-    border-bottom: 1px solid #e4e4e4;
+    border-bottom: 1px solid ${borderColor};
   }
 
   .last-child {
@@ -251,11 +252,6 @@ const SentButton = styled.button`
   }
 `;
 
-export const ErrorTitle = styled.h5`
-  color: ${(prop) => prop.theme.red};
-  margin: 5px 0;
-`;
-
 export const ActionContainer = styled.div`
   display: flex;
   position: relative;
@@ -282,7 +278,7 @@ export const InfoBox = styled.div`
   background: #ffffff;
 
   .info-box {
-    border: 1px solid #e4e4e4;
+    border: 1px solid ${borderColor};
     height: 100px;
     padding: 16px 24px;
     .invoice-info {
@@ -298,7 +294,7 @@ export const FooterBox = styled.div`
 `;
 
 const BreakLine = styled.hr`
-  border-top: 1px solid #E4E4E4;
+  border-top: 1px solid ${borderColor};
   margin-bottom: 24px;
 `;
 

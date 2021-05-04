@@ -12,7 +12,7 @@ import {
   FormContainer,
   CodeText,
   SendAgain,
-  ErrorTitle,
+
 } from './phone-verification.styles';
 
 import ValidationInput from 'components/validation-input/validation-input.component';
@@ -120,9 +120,9 @@ const PhoneVerification = () => {
               <div className="form-label">Verify Code</div>
               <ValidationInput collectVerifyCode={collectVerifyCode} />
               {!isCodeValid ? (
-                <ErrorTitle>
+                <h5 className="error-title">
                   You have to provide the verification code
-                </ErrorTitle>
+                </h5>
               ) : null}
               <CodeText>
                 We already send you a Code to your Phone Numbers

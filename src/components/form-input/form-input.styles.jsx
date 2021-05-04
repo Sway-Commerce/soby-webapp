@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { mainColor, subColor } from 'shared/css-variable/variable';
+import { borderColor, mainColor, subColor } from 'shared/css-variable/variable';
 
 export const GroupContainer = styled.div`
   position: relative;
@@ -19,7 +19,7 @@ export const FormInputContainer = styled.input`
   width: 100%;
   border: none;
   border-radius: 0;
-  border-bottom: 1px solid ${subColor};
+  border-bottom: 1px solid ${borderColor};
 
   &:focus {
     outline: none;

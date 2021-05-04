@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { timestampToDate } from '../../shared/utils/getDate';
-import { mainColor } from '../../shared/css-variable/variable';
+import { mainColor, borderColor } from '../../shared/css-variable/variable';
 import { currencyFormatter } from '../../shared/utils/formatCurrency';
 
 const Container = styled.div`
@@ -10,7 +10,7 @@ const Container = styled.div`
   display: grid;
   height: 48px;
   margin-bottom: 14px;
-  border-bottom: 1px solid #e4e4e4;
+  border-bottom: 1px solid ${borderColor};
   :last-child {
     border: none;
   }

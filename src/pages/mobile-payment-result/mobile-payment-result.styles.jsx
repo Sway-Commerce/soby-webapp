@@ -19,27 +19,14 @@ export const TransactionContainer = styled.div`
   }
 `;
 
-export const ErrorTitle = styled.h5`
-  color: red;
-  margin: 5px 0;
-`;
-
 export const CardWrapper = styled.div`
-  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
   padding: 100px 50px;
   width: 700px;
   height: 735px;
   height: auto;
   margin: auto;
-
-  &:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-  }
-
-  button {
-    margin-top: 56px;
-  }
+  border-radius: 3px;
 
   @media screen and (max-width: 800px) {
     font-size: 0.7rem;

@@ -241,11 +241,6 @@ const SentButton = styled.button`
   }
 `;
 
-export const ErrorTitle = styled.h5`
-  color: red;
-  margin: 5px 0;
-`;
-
 const ReturnRequest = () => {
   const [qty1, setQty1] = useState(1);
   const [qty2, setQty2] = useState(0);
@@ -327,7 +322,7 @@ const ReturnRequest = () => {
                 onChange={(value) => setPhoneNumberIntl(value)}
               />
               {!phoneValidation ? (
-                <ErrorTitle>Your phone number is not correct</ErrorTitle>
+                <h5 className="error-title">Your phone number is not correct</h5>
               ) : null}
       </Box>
       <Box>

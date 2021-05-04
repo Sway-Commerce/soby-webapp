@@ -29,9 +29,3 @@ export const PopupButton = styled.input.attrs((props) => ({
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.04);
   cursor: pointer;
 `;
-
-
-export const ErrorTitle = styled.h5`
-  color: red;
-  margin: 5px 0;
-`;

@@ -10,7 +10,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import passwordValidation from 'shared/utils/passwordValidation';
 import styled from 'styled-components';
-import { Box, ErrorTitle, PopupButton } from './shared-style.component';
+import { Box,  PopupButton } from './shared-style.component';
 
 const Row = styled.div`
   display: flex;
@@ -159,10 +159,10 @@ const PasswordPopup = ({
         </Row>
         <Row>
           {inputValidation.isPasswordNotValid ? (
-            <ErrorTitle>
+            <h5 className="error-title">
               Your password must be between 8 to 20 characters which contain at
               least one numeric digit, one uppercase and one lowercase letter
-            </ErrorTitle>
+            </h5>
           ) : null}
         </Row>
 
@@ -180,24 +180,24 @@ const PasswordPopup = ({
 
         <Row error>
           {inputValidation.isNewPasswordNotValid ? (
-            <ErrorTitle>
+            <h5 className="error-title">
               Your password must be between 8 to 20 characters which contain at
               least one numeric digit, one uppercase and one lowercase letter
-            </ErrorTitle>
+            </h5>
           ) : null}
         </Row>
         <Row error>
           {inputValidation.isPasswordDuplicateCurrent ? (
-            <ErrorTitle>
+            <h5 className="error-title">
               Your new password is duplicate with the current
-            </ErrorTitle>
+            </h5>
           ) : null}
         </Row>
         <Row error>
           {inputValidation.isNewPasswordAndConfirmNotCorrect ? (
-            <ErrorTitle>
+            <h5 className="error-title">
               Your confirm password must equal your new password
-            </ErrorTitle>
+            </h5>
           ) : null}
         </Row>
 

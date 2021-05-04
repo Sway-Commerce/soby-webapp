@@ -14,11 +14,6 @@ export const SignoutTitle = styled.h1`
   padding-bottom: 10px;
 `;
 
-export const ErrorTitle = styled.h5`
-  color: red;
-  margin: 5px 0;
-`;
-
 export const CardWrapper = styled.div`
   box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
@@ -27,14 +22,6 @@ export const CardWrapper = styled.div`
   min-height: 798px;
   height: auto;
   background-color: #ffffff;
-
-  &:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-  }
-
-  button {
-    margin-top: 56px;
-  }
 `;
 
 export const RegisterContainer = styled.div`

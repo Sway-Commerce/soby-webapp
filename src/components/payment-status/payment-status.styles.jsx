@@ -11,7 +11,6 @@ export const StatusContainer = styled.div`
   }
   .info {
     .status {
-      font-family: Commissioner;
       font-weight: 600;
       font-size: 1.2rem;
       line-height: 29px;

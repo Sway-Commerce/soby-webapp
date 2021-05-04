@@ -67,7 +67,7 @@ const App = () => {
         <Switch>
           <ErrorBoundary>
             <Suspense fallback={<Spinner />}>
-              <Route exact path="/" component={HomePage} />
+              <Route exact path="/" component={PhoneSignin} />
               <Route
                 exact
                 path="/phone-verification"
@@ -96,7 +96,6 @@ const App = () => {
                 path="/transaction/vnpay-mobile"
                 component={MobilePaymentResult}
               />
-              <Route path="/phone-signin" component={PhoneSignin} />
               <Route path="/return-request" component={ReturnRequestPage} />
               <Route path="/invoice/:invoiceId" component={Invoice} />
             </Suspense>

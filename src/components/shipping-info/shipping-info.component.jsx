@@ -27,11 +27,6 @@ import passwordValidation from 'shared/utils/passwordValidation';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
-export const ErrorTitle = styled.h5`
-  color: red;
-  margin: 5px 0;
-`;
-
 export const Container = styled.div`
   padding: 40px 48px;
   width: 751px;
@@ -74,7 +69,6 @@ export const Container = styled.div`
     padding: 14px 0;
     margin-top: 40px;
     border-radius: 3px;
-    box-shadow: 0 0 8px rgba(196, 196, 196, 0.2);
     &.disable {
       pointer-events: none;
       color: white;
@@ -217,7 +211,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     loadDistrictListError,
     updateInvoiceOrderInfoError,
     createInvoicePaymentError,
-    createShippingLocationError
+    createShippingLocationError,
   ]);
 
   useEffect(() => {
@@ -294,8 +288,12 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
         invoiceIndividualId,
         requestedAt: requestedAt?.toString(),
       });
-      const {signature, error} = signSignature(signingSecret, jsonString, password);
-      if(error) {
+      const { signature, error } = signSignature(
+        signingSecret,
+        jsonString,
+        password
+      );
+      if (error) {
         setFormError(error);
         setOpen(true);
       } else {
@@ -581,15 +579,15 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
             required
           />
           {!isPasswordValid ? (
-            <ErrorTitle>
+            <h5 className="error-title">
               Your password must be between 8 to 20 characters which contain at
               least one numeric digit, one uppercase and one lowercase letter
-            </ErrorTitle>
+            </h5>
           ) : null}
         </InputGroup>
 
         {!isPhoneValid ? (
-          <ErrorTitle>Your phone number is not correct</ErrorTitle>
+          <h5 className="error-title">Your phone number is not correct</h5>
         ) : null}
         <button
           className={

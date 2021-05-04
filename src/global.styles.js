@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
-import { mainColor, subColor } from './shared/css-variable/variable';
+import { borderColor, mainColor, subColor } from './shared/css-variable/variable';
 
 export const GlobalStyle = createGlobalStyle`
 	html {
@@ -83,8 +83,9 @@ export const GlobalStyle = createGlobalStyle`
 	}
 
 	.PhoneInput {
-		border-bottom: 1px ${subColor} solid;
+		border-bottom: 1px ${borderColor} solid;
     padding: 0 10px;
+		margin-top: 4px;
 		input.PhoneInputInput {
 			border: none;
 			font-family: Work Sans;
@@ -106,24 +107,22 @@ export const GlobalStyle = createGlobalStyle`
 	}
 
 	.soby-title {
-		font-family: Commissioner;
 		font-style: normal;
 		font-weight: normal;
-		font-size: 2rem;
-		line-height: 56px;
-		color: ${mainColor};
+		font-size: 1.2rem;
+		line-height: 1rem;
 		text-align: center;
+		font-weight: bold;
+		margin:10px 0;
 	}
 
 	.form-label {
-		font-family: Commissioner;
 		font-style: normal;
-		font-weight: 600;
-		font-size: 1.2rem;
-		line-height: 29px;
-		color: ${mainColor};
-		text-transform: none;
-		margin-bottom: 16px;
+		font-weight: bold;
+		font-size: 0.8rem;
+		line-height: 1.2rem;
+		text-transform: capitalize;
+		margin-bottom: 0.4rem;
 	}
 
 	p {
@@ -157,5 +156,14 @@ export const GlobalStyle = createGlobalStyle`
 	}
 	.text-right {
 		text-align: right;
+	}
+
+	input {
+		margin-top: 4px;
+	}
+
+	h5.error-title {
+		color: red;
+  	margin: 5px 0;
 	}
 `;

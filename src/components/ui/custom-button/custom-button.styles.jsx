@@ -7,7 +7,7 @@ const buttonStyles = css`
   border: 1px solid white;
   min-width: 350px;
   width: 100%;
-  height: 56px;
+  height: 48px;
   letter-spacing: 0.5px;
   text-transform: none;
   cursor: pointer;

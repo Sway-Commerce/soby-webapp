@@ -23,7 +23,7 @@ import {
 
 import {
   SigninContainer,
-  ErrorTitle,
+
   CardWrapper,
   RegisterContainer,
   FormContainer,
@@ -230,10 +230,10 @@ const PhoneSignin = () => {
     <RegisterContainer>
       <CardWrapper>
         <SigninContainer>
-          <div className="soby-title">Đăng nhập</div>
+          <div className="soby-title">Welcome back</div>
           <FormContainer>
             <form onSubmit={handleSubmit}>
-              <div className="form-label">Your phone numbers</div>
+              <label className="form-label">Phone number</label>
               <PhoneInput
                 country="VN"
                 international
@@ -242,14 +242,15 @@ const PhoneSignin = () => {
                 defaultCountry="VN"
                 name="phoneNumber"
                 value={phoneNumberIntl}
+                placeholder="090 1324 567"
                 onChange={(value) => setPhoneNumberIntl(value)}
               />
               {!isPhoneValid ? (
-                <ErrorTitle>Your phone number is not correct</ErrorTitle>
+                <h5 className="error-title">Your phone number is not correct</h5>
               ) : null}
 
               <InputGroup>
-                <div className="form-label">Password</div>
+                <label className="form-label">Password</label>
                 <FormInput
                   type="password"
                   value={password}
@@ -258,18 +259,15 @@ const PhoneSignin = () => {
                   required
                 />
                 {!isPasswordValid ? (
-                  <ErrorTitle>
+                  <h5 className="error-title">
                     Your password must be between 8 to 20 characters which
                     contain at least one numeric digit, one uppercase and one
                     lowercase letter
-                  </ErrorTitle>
+                  </h5>
                 ) : null}
               </InputGroup>
 
-              <CustomButton type="submit">Đăng nhập</CustomButton>
-              <ForgotPass>
-                <Link to="/resetpass">Forgot your Password</Link>
-              </ForgotPass>
+              <CustomButton type="submit">Login</CustomButton>
             </form>
           </FormContainer>
         </SigninContainer>

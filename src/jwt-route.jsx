@@ -28,7 +28,7 @@ function JwtRoute({ history, component: Component, ...rest }) {
       {...rest}
       render={(props) =>
         !isAuthenticated ? (
-          <Redirect to="/phone-signin" />
+          <Redirect to="/" />
         ) : (
           <Component {...props} />
         )

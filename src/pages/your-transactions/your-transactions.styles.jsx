@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { mainColor } from 'shared/css-variable/variable';
+import { borderColor, mainColor } from 'shared/css-variable/variable';
 
 export const Container = styled.div`
   display: flex;
@@ -89,16 +89,11 @@ export const Container = styled.div`
     .header-wrapper {
       display: grid;
       grid-template-columns: 463px 176px 176px 176px 158px;
-      border-bottom: 1px solid #e4e4e4;
+      border-bottom: 1px solid ${borderColor};
       padding-bottom: 20px;
       margin-bottom: 32px;
     }
   }
-`;
-
-export const ErrorTitle = styled.h5`
-  color: red;
-  margin: 5px 0;
 `;
 
 export const ProductContainer = styled.div`

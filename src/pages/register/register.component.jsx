@@ -23,7 +23,7 @@ import {
 
 import {
   SignUpContainer,
-  ErrorTitle,
+
   CardWrapper,
   RegisterContainer,
   FormContainer,
@@ -231,7 +231,7 @@ const Register = ({ history }) => {
                     label="Brian"
                   />
                   {!isFirstNameValid ? (
-                    <ErrorTitle>The field is required</ErrorTitle>
+                    <h5 className="error-title">The field is required</h5>
                   ) : null}
                 </div>
                 <div>
@@ -244,7 +244,7 @@ const Register = ({ history }) => {
                     label="John"
                   />
                   {!isLastNameValid ? (
-                    <ErrorTitle>The field is required</ErrorTitle>
+                    <h5 className="error-title">The field is required</h5>
                   ) : null}
                 </div>
               </div>
@@ -259,7 +259,7 @@ const Register = ({ history }) => {
                   label="Email"
                 />
                 {!isEmailValid ? (
-                  <ErrorTitle>Your email is not correct</ErrorTitle>
+                  <h5 className="error-title">Your email is not correct</h5>
                 ) : null}
               </InputGroup>
 
@@ -274,11 +274,11 @@ const Register = ({ history }) => {
                   required
                 />
                 {!isPasswordValid ? (
-                  <ErrorTitle>
+                  <h5 className="error-title">
                     Your password must be between 8 to 20 characters which
                     contain at least one numeric digit, one uppercase and one
                     lowercase letter
-                  </ErrorTitle>
+                  </h5>
                 ) : null}
               </InputGroup>
 

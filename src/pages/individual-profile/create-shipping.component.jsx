@@ -20,11 +20,6 @@ import Spinner from 'components/ui/spinner/spinner.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
-export const ErrorTitle = styled.h5`
-  color: red;
-  margin: 5px 0;
-`;
-
 export const Container = styled.div`
   padding: 40px 48px;
   width: 751px;
@@ -315,7 +310,7 @@ const CreateShipping = ({ setOpenCreate }) => {
         </React.Fragment>
 
         {!isPhoneValid ? (
-          <ErrorTitle>Your phone number is not correct</ErrorTitle>
+          <h5 className="error-title">Your phone number is not correct</h5>
         ) : null}
         <button className={'shipping-button'}>Add</button>
       </form>

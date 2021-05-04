@@ -43,7 +43,7 @@ const link = ApolloLink.from([
       )
     ) {
       localStorage.setItem("redirectUrl", window.location.pathname);
-      window.location.href = '/phone-signin';
+      window.location.href = '/';
     }
     if (graphQLErrors.length) {
       console.log('[graphQLErrors]', graphQLErrors);
