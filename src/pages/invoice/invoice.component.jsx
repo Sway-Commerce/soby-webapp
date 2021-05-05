@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { ReactComponent as CloseIcon } from 'shared/assets/close-action.svg';
 import { ReactComponent as AcceptIcon } from 'shared/assets/accept-action.svg';
 import { borderColor } from 'shared/css-variable/variable';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   ACCEPT_INVOICE,
@@ -14,6 +14,8 @@ import {
 } from 'graphQL/repository/invoice.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
+import SobyModal from 'components/ui/modal/modal.component';
+import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
 const Page = styled.div`
   display: flex;
@@ -568,18 +570,22 @@ const Invoice = () => {
         <Box className="main-box">
           <div>
             <h2>{invoiceData.name}</h2>
-            <h4 style={{textTransform: 'capitalize'}}>{invoiceData.status?.toLocaleLowerCase()}</h4>
+            <h4 style={{ textTransform: 'capitalize' }}>
+              {invoiceData.status?.toLocaleLowerCase()}
+            </h4>
           </div>
-          <ActionContainer>
-            <div className="action">
-              <CloseIcon />
-              <p>Reject</p>
-            </div>
-            <div className="action">
-              <AcceptIcon />
-              <p>Accept</p>
-            </div>
-          </ActionContainer>
+          {invoiceData.status === 'DELIVERED' ? (
+            <ActionContainer>
+              <Link className="action" to={`/return-request/${invoiceId}`}>
+                <CloseIcon />
+                <p>Reject</p>
+              </Link>
+              <div className="action">
+                <AcceptIcon />
+                <p>Accept</p>
+              </div>
+            </ActionContainer>
+          ) : null}
         </Box>
 
         <InfoBox>
@@ -594,9 +600,7 @@ const Invoice = () => {
               <b>Shipping address</b>
             </p>
             <p className="invoice-info">
-              {
-                `${invoiceData?.shippingLocation?.addressLine}, ${invoiceData?.shippingLocation?.ward}, ${invoiceData?.shippingLocation?.district}, ${invoiceData?.shippingLocation?.province}`
-              }
+              {`${invoiceData?.shippingLocation?.addressLine}, ${invoiceData?.shippingLocation?.ward}, ${invoiceData?.shippingLocation?.district}, ${invoiceData?.shippingLocation?.province}`}
             </p>
           </div>
           <div className="info-box">
@@ -684,6 +688,12 @@ const Invoice = () => {
           </p>
         </FooterBox>
       </Page>
+
+      <SobyModal open={openError} setOpen={setOpenError}>
+      {formError ? (
+        <ErrorPopup content={formError} setOpen={setOpenError} />
+      ) : null}
+    </SobyModal>
     </React.Fragment>
   );
 };
