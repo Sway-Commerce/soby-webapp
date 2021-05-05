@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import product1 from 'shared/assets/product1.svg';
-import product2 from 'shared/assets/product2.svg';
 import { ReactComponent as CloseIcon } from 'shared/assets/close-action.svg';
 import { ReactComponent as AcceptIcon } from 'shared/assets/accept-action.svg';
 import { borderColor } from 'shared/css-variable/variable';
 import { useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { ACCEPT_INVOICE, GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL, GET_DETAILED_INVOICE_BY_ID, MARK_SATISFIED_WITH_INVOICE, UPDATE_RETURN_SHIPPING_INFO } from 'graphQL/repository/invoice.repository';
+import {
+  ACCEPT_INVOICE,
+  GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL,
+  GET_DETAILED_INVOICE_BY_ID,
+  MARK_SATISFIED_WITH_INVOICE,
+  UPDATE_RETURN_SHIPPING_INFO,
+} from 'graphQL/repository/invoice.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
+import { currencyFormatter } from 'shared/utils/formatCurrency';
 
 const Page = styled.div`
   display: flex;
@@ -103,6 +108,12 @@ const Product = styled.div`
         color: ${(prop) => prop.theme.stoke};
       }
     }
+  }
+
+  img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
   }
 `;
 
@@ -301,11 +312,16 @@ const BreakLine = styled.hr`
   margin-bottom: 24px;
 `;
 
+const ProductContainer = styled.div`
+  display: grid;
+  grid-row-gap: 24px;
+`;
+
 const Invoice = () => {
   const { invoiceId } = useParams();
   const [open, setOpen] = useState(false);
   const [openError, setOpenError] = useState(false);
-  const [shopData, setShopData] = useState({
+  const [invoiceData, setInvoiceData] = useState({
     name: '',
     shippingType: '',
     expiredAt: '',
@@ -324,13 +340,20 @@ const Invoice = () => {
     totalPrice: '',
     orderFee: '',
     escrowFee: '',
+    createdAt: '',
+    description: '',
+    id: '',
+    invoiceId: '',
+    invoiceVersion: '',
+    totalWeight: '',
   });
   const [productMargin, setProductMargin] = useState(0);
   const [formError, setFormError] = useState('');
+  const { shop } = invoiceData;
 
   const [
     loadDetailInvoice,
-    { loading, data: invoiceData, error: loadDetailInvoiceError },
+    { loading, data: detailInvoiceData, error: loadDetailInvoiceError },
   ] = useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
     variables: {
       id: invoiceId,
@@ -384,6 +407,7 @@ const Invoice = () => {
 
   useEffect(() => {
     if (invoiceData?.getAggregatedInvoice?.data) {
+      debugger;
       const {
         name,
         shippingType,
@@ -392,7 +416,7 @@ const Invoice = () => {
         items,
         shop,
       } = invoiceData?.getAggregatedInvoice?.data;
-      setShopData({ name, shippingType, expiredAt, price, items, shop });
+      setInvoiceData({ name, shippingType, expiredAt, price, items, shop });
     }
   }, [invoiceData?.getAggregatedInvoice?.data]);
 
@@ -402,26 +426,37 @@ const Invoice = () => {
         ?.getAggregatedInvoiceOrderForIndividual?.data;
     if (invoiceData) {
       const {
-        status,
-        shippingFee,
+        id,
+        invoice,
+        individualId,
+        shippingPartner,
         shippingLocation,
+        shippingFee,
         individualTrackingUrl,
-        totalPrice,
         orderFee,
+        status,
+        reason,
+        totalPrice,
+        createdAt,
+        updatedAt,
+        assess,
+        paymentMethod,
       } = invoiceData;
       const {
+        invoiceId,
+        invoiceVersion,
         name,
-        shippingType,
-        expiredAt,
-        price,
-        items,
+        description,
         shop,
+        shippingType,
         escrowFee,
-      } = invoiceData?.invoice;
-      setShopData({
+        items,
+        price,
+        totalWeight,
+      } = invoice;
+      setInvoiceData({
         name,
         shippingType,
-        expiredAt,
         price,
         items,
         shop,
@@ -532,8 +567,8 @@ const Invoice = () => {
       <Page>
         <Box className="main-box">
           <div>
-            <h2>HD TV invoice from Soby</h2>
-            <h4>Delivired</h4>
+            <h2>{invoiceData.name}</h2>
+            <h4 style={{textTransform: 'capitalize'}}>{invoiceData.status?.toLocaleLowerCase()}</h4>
           </div>
           <ActionContainer>
             <div className="action">
@@ -550,23 +585,25 @@ const Invoice = () => {
         <InfoBox>
           <div className="info-box">
             <p>
-              <b>Invoice form</b>
+              <b>Invoice from</b>
             </p>
-            <p className="invoice-info">Blue bird Shop</p>
+            <p className="invoice-info">{shop.name}</p>
           </div>
           <div className="info-box">
             <p>
               <b>Shipping address</b>
             </p>
             <p className="invoice-info">
-              41-47 Dong Du Str., Ben Nghe Ward, D1, Hochiminh city
+              {
+                `${invoiceData?.shippingLocation?.addressLine}, ${invoiceData?.shippingLocation?.ward}, ${invoiceData?.shippingLocation?.district}, ${invoiceData?.shippingLocation?.province}`
+              }
             </p>
           </div>
           <div className="info-box">
             <p>
               <b>Tracking code</b>
             </p>
-            <p className="invoice-info">123.4654.dsafd12345</p>
+            <p className="invoice-info">{invoiceData.individualTrackingUrl}</p>
           </div>
         </InfoBox>
 
@@ -585,45 +622,57 @@ const Invoice = () => {
           </p>
         </Grid>
         <BreakLine />
-        <Grid>
-          <Product className="title-info">
-            <img src={product1} alt="" />
-            <div>
-              <p>HD TV invoice from Soby</p>
-              <p>Blue bird shop</p>
-            </div>
-          </Product>
-          <p className="title-info">240.000 đ</p>
-          <p className="title-info">02</p>
-          <p className="title-info last-child">240.000 đ</p>
-        </Grid>
-        <Grid>
-          <Product className="title-info">
-            <img src={product2} alt="" />
-            <div>
-              <p>Nintendo Switch with Neon Blue and Neon Red Joy-Con</p>
-              <p>Blue bird shop</p>
-            </div>
-          </Product>
-          <p className="title-info">240.000 đ</p>
-          <p className="title-info">02</p>
-          <p className="title-info last-child">240.000 đ</p>
-        </Grid>
+
+        <ProductContainer>
+          {invoiceData.items.map((x) => {
+            const {
+              id: itemId,
+              price: totalPrice,
+              product: {
+                name: productName,
+                id,
+                imageUrls: [imageUrl],
+              },
+              sku: { properties, currentPrice },
+              quantity: productQuantity,
+            } = x;
+            return (
+              <Grid key={itemId}>
+                <Product className="title-info">
+                  <img src={imageUrl} alt="" />
+                  <div>
+                    <p>{productName}</p>
+                    <p>Blue bird shop</p>
+                  </div>
+                </Product>
+                <p className="title-info">{currencyFormatter(currentPrice)}</p>
+                <p className="title-info">{productQuantity}</p>
+                <p className="title-info last-child">
+                  {currencyFormatter(totalPrice)}
+                </p>
+              </Grid>
+            );
+          })}
+        </ProductContainer>
         <BreakLine />
         <FooterBox>
           <div></div>
           <p>Subtotal</p>
-          <p className="text-right">2.240,000 vnđ</p>
+          <p className="text-right">{currencyFormatter(invoiceData.price)}</p>
         </FooterBox>
         <FooterBox>
           <div></div>
           <p>Safebuy fee</p>
-          <p className="text-right">0 đ</p>
+          <p className="text-right">
+            {currencyFormatter(invoiceData.escrowFee)}
+          </p>
         </FooterBox>
         <FooterBox>
           <div></div>
           <p>Shipping fee</p>
-          <p className="text-right">0 đ</p>
+          <p className="text-right">
+            {currencyFormatter(invoiceData.shippingFee)}
+          </p>
         </FooterBox>
         <FooterBox>
           <div></div>
@@ -631,7 +680,7 @@ const Invoice = () => {
             <b>Total</b>
           </p>
           <p className="text-right">
-            <b>2.260.000 đ</b>
+            <b>{currencyFormatter(invoiceData.totalPrice)}</b>
           </p>
         </FooterBox>
       </Page>

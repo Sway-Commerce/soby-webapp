@@ -376,7 +376,8 @@ const InvoiceLast = ({ invoiceIndividualId }) => {
                       </div>
                     </div>
                     {shopData.shippingLocation?.addressLine ? (
-                      <p className="text-truncation shipping-location">{`${shopData?.shippingLocation?.addressLine}, ${shopData?.shippingLocation?.ward}, ${shopData?.shippingLocation?.district}, ${shopData?.shippingLocation?.province}`}</p>
+                      <p className="text-truncation shipping-location">{//`${shopData?.shippingLocation?.addressLine}, ${shopData?.shippingLocation?.ward}, ${shopData?.shippingLocation?.district}, ${shopData?.shippingLocation?.province}`
+                      }</p>
                     ) : null}
                     {shopData?.individualTrackingUrl ? (
                       <div className="shipping-wrapper">
