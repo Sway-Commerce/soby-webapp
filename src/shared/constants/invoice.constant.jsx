@@ -1,4 +1,3 @@
-
 import { ReactComponent as ClockIcon } from 'shared/assets/clock.svg';
 import { ReactComponent as TickIcon } from 'shared/assets/tick-icon.svg';
 import { ReactComponent as DollasIcon } from 'shared/assets/dollas-icon.svg';
@@ -13,6 +12,16 @@ export const subInvoiceFilters = [
   'DELIVERED',
   'COMPLETED',
   'RETURN REQUEST',
+];
+
+export const InvoiceStatusValue = [
+  'ACCEPTED',
+  'PAID',
+  'CONFIRMED',
+  'SHIPPING',
+  'DELIVERED',
+  'COMPLETED',
+  'CANCELLED',
 ];
 
 export const subInvoiceIcons = [

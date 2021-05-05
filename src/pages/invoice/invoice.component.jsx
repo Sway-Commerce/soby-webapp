@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import product1 from 'shared/assets/product1.svg';
 import product2 from 'shared/assets/product2.svg';
 import { ReactComponent as CloseIcon } from 'shared/assets/close-action.svg';
 import { ReactComponent as AcceptIcon } from 'shared/assets/accept-action.svg';
 import { borderColor } from 'shared/css-variable/variable';
+import { useParams } from 'react-router-dom';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { ACCEPT_INVOICE, GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL, GET_DETAILED_INVOICE_BY_ID, MARK_SATISFIED_WITH_INVOICE, UPDATE_RETURN_SHIPPING_INFO } from 'graphQL/repository/invoice.repository';
+import Spinner from 'components/ui/spinner/spinner.component';
 
 const Page = styled.div`
   display: flex;
@@ -290,7 +294,6 @@ export const InfoBox = styled.div`
 export const FooterBox = styled.div`
   display: grid;
   grid-template-columns: 50% 1fr 1fr;
-
 `;
 
 const BreakLine = styled.hr`
@@ -299,120 +302,340 @@ const BreakLine = styled.hr`
 `;
 
 const Invoice = () => {
-  const [qty1, setQty1] = useState(1);
-  const [qty2, setQty2] = useState(0);
-  const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
+  const { invoiceId } = useParams();
   const [open, setOpen] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [shopData, setShopData] = useState({
+    name: '',
+    shippingType: '',
+    expiredAt: '',
+    price: '',
+    items: [],
+    shop: { logoUrl: '', name: '' },
+    status: '',
+    shippingFee: 0,
+    shippingLocation: {
+      addressLine: '',
+      district: '',
+      province: '',
+      ward: '',
+    },
+    individualTrackingUrl: '',
+    totalPrice: '',
+    orderFee: '',
+    escrowFee: '',
+  });
+  const [productMargin, setProductMargin] = useState(0);
   const [formError, setFormError] = useState('');
-  const [phoneValidation, setPhoneValid] = useState(true);
 
-  return (
-    <Page>
-      <Box className="main-box">
-        <div>
-          <h2>HD TV invoice from Soby</h2>
-          <h4>Delivired</h4>
-        </div>
-        <ActionContainer>
-          <div className="action">
-            <CloseIcon />
-            <p>Reject</p>
-          </div>
-          <div className="action">
-            <AcceptIcon />
-            <p>Accept</p>
-          </div>
-        </ActionContainer>
-      </Box>
+  const [
+    loadDetailInvoice,
+    { loading, data: invoiceData, error: loadDetailInvoiceError },
+  ] = useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
+    variables: {
+      id: invoiceId,
+    },
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
+  });
 
-      <InfoBox>
-        <div className="info-box">
-          <p>
-            <b>Invoice form</b>
-          </p>
-          <p className="invoice-info">Blue bird Shop</p>
-        </div>
-        <div className="info-box">
-          <p>
-            <b>Shipping address</b>
-          </p>
-          <p className="invoice-info">
-            41-47 Dong Du Str., Ben Nghe Ward, D1, Hochiminh city
-          </p>
-        </div>
-        <div className="info-box">
-          <p>
-            <b>Tracking code</b>
-          </p>
-          <p className="invoice-info">123.4654.dsafd12345</p>
-        </div>
-      </InfoBox>
+  const [
+    getAggregatedInvoiceOrderForIndividual,
+    {
+      loading: getAggregatedInvoiceOrderForIndividualLoading,
+      error: getAggregatedInvoiceOrderForIndividualError,
+      data: getAggregatedInvoiceOrderForIndividualData,
+    },
+  ] = useLazyQuery(GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL, {
+    variables: {
+      id: invoiceId,
+    },
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
+  });
 
-      <Grid>
-        <p className="title-info">
-          <b>Products list</b>
-        </p>
-        <p className="title-info">
-          <b>Subtotal</b>
-        </p>
-        <p className="title-info">
-          <b>Qty</b>
-        </p>
-        <p className="title-info last-child">
-          <b>Total</b>
-        </p>
-      </Grid>
-      <BreakLine/>
-      <Grid>
-        <Product className="title-info">
-          <img src={product1} alt="" />
+  const [
+    acceptInvoice,
+    {
+      data: acceptInvoiceData,
+      loading: acceptLoading,
+      error: acceptInvoiceError,
+    },
+  ] = useMutation(ACCEPT_INVOICE, {
+    errorPolicy: 'all',
+    variables: {
+      cmd: {
+        invoiceId,
+      },
+    },
+  });
+
+  // useEffect(() => {
+  //   if (invoiceId) {
+  //     loadDetailInvoice();
+  //   }
+  // }, [invoiceId]);
+
+  useEffect(() => {
+    if (invoiceId) {
+      getAggregatedInvoiceOrderForIndividual();
+    }
+  }, [invoiceId]);
+
+  useEffect(() => {
+    if (invoiceData?.getAggregatedInvoice?.data) {
+      const {
+        name,
+        shippingType,
+        expiredAt,
+        price,
+        items,
+        shop,
+      } = invoiceData?.getAggregatedInvoice?.data;
+      setShopData({ name, shippingType, expiredAt, price, items, shop });
+    }
+  }, [invoiceData?.getAggregatedInvoice?.data]);
+
+  useEffect(() => {
+    const invoiceData =
+      getAggregatedInvoiceOrderForIndividualData
+        ?.getAggregatedInvoiceOrderForIndividual?.data;
+    if (invoiceData) {
+      const {
+        status,
+        shippingFee,
+        shippingLocation,
+        individualTrackingUrl,
+        totalPrice,
+        orderFee,
+      } = invoiceData;
+      const {
+        name,
+        shippingType,
+        expiredAt,
+        price,
+        items,
+        shop,
+        escrowFee,
+      } = invoiceData?.invoice;
+      setShopData({
+        name,
+        shippingType,
+        expiredAt,
+        price,
+        items,
+        shop,
+        status,
+        shippingFee,
+        shippingLocation,
+        individualTrackingUrl,
+        totalPrice,
+        orderFee,
+        escrowFee,
+      });
+    }
+  }, [
+    getAggregatedInvoiceOrderForIndividualData
+      ?.getAggregatedInvoiceOrderForIndividual?.data,
+  ]);
+
+  useEffect(() => {
+    if (acceptInvoiceData?.acceptInvoice?.data) {
+      setOpen(true);
+    }
+  }, [acceptInvoiceData?.acceptInvoice?.data]);
+
+  // MARK_SATISFIED_WITH_INVOICE
+  const [
+    markSatisfiedWithInvoice,
+    {
+      data: markSatisfiedWithInvoiceData,
+      loading: markSatisfiedWithInvoiceLoading,
+      error: markSatisfiedWithInvoiceError,
+    },
+  ] = useMutation(MARK_SATISFIED_WITH_INVOICE, {
+    errorPolicy: 'all',
+    variables: {
+      cmd: {
+        invoiceId,
+      },
+    },
+  });
+
+  useEffect(() => {
+    if (markSatisfiedWithInvoiceData?.markSatisfiedWithInvoice?.success) {
+    }
+  }, [markSatisfiedWithInvoiceData?.markSatisfiedWithInvoice?.success]);
+
+  // UPDATE_RETURN_SHIPPING_INFO
+  const [
+    updateReturnShippingInfo,
+    {
+      data: updateReturnShippingInfoData,
+      loading: updateReturnShippingInfoLoading,
+      error: updateReturnShippingInfoError,
+    },
+  ] = useMutation(UPDATE_RETURN_SHIPPING_INFO, {
+    errorPolicy: 'all',
+    variables: {
+      cmd: {
+        assessId: '',
+        shippingType: '', //BY_USER BY_SOBY
+        shippingLocationId: '',
+        returnFeePaidBy: '', //INDIVIDUAL SHOP
+        bankCode: '', // ABBANK
+        accountType: '', // ATM_CARD BANK_ACCOUNT
+        accountNumber: '',
+        accountOwner: '',
+        accountIssuedOn: '',
+        bankBranch: '',
+      },
+    },
+  });
+
+  // Error handle
+  useEffect(() => {
+    if (
+      markSatisfiedWithInvoiceError?.message ||
+      loadDetailInvoiceError?.message ||
+      getAggregatedInvoiceOrderForIndividualError?.message ||
+      acceptInvoiceError?.message ||
+      updateReturnShippingInfoError?.message
+    ) {
+      setFormError(
+        markSatisfiedWithInvoiceError?.message ??
+          loadDetailInvoiceError?.message ??
+          getAggregatedInvoiceOrderForIndividualError?.message ??
+          acceptInvoiceError?.message ??
+          updateReturnShippingInfoError?.message
+      );
+    }
+  }, [
+    markSatisfiedWithInvoiceError?.message,
+    loadDetailInvoiceError?.message,
+    getAggregatedInvoiceOrderForIndividualError?.message,
+    acceptInvoiceError?.message,
+    updateReturnShippingInfoError?.message,
+  ]);
+
+  const handleCheckout = () => {
+    invoiceId ? setOpen(true) : acceptInvoice();
+  };
+
+  return loading ||
+    acceptLoading ||
+    getAggregatedInvoiceOrderForIndividualLoading ||
+    updateReturnShippingInfoLoading ? (
+    <Spinner />
+  ) : (
+    <React.Fragment>
+      <Page>
+        <Box className="main-box">
           <div>
-            <p>HD TV invoice from Soby</p>
-            <p>Blue bird shop</p>
+            <h2>HD TV invoice from Soby</h2>
+            <h4>Delivired</h4>
           </div>
-        </Product>
-        <p className="title-info">240.000 đ</p>
-        <p className="title-info">02</p>
-        <p className="title-info last-child">240.000 đ</p>
-      </Grid>
-      <Grid>
-        <Product className="title-info">
-          <img src={product2} alt="" />
-          <div>
-            <p>Nintendo Switch with Neon Blue and Neon Red Joy-Con</p>
-            <p>Blue bird shop</p>
+          <ActionContainer>
+            <div className="action">
+              <CloseIcon />
+              <p>Reject</p>
+            </div>
+            <div className="action">
+              <AcceptIcon />
+              <p>Accept</p>
+            </div>
+          </ActionContainer>
+        </Box>
+
+        <InfoBox>
+          <div className="info-box">
+            <p>
+              <b>Invoice form</b>
+            </p>
+            <p className="invoice-info">Blue bird Shop</p>
           </div>
-        </Product>
-        <p className="title-info">240.000 đ</p>
-        <p className="title-info">02</p>
-        <p className="title-info last-child">240.000 đ</p>
-      </Grid>
-      <BreakLine/>
-      <FooterBox>
-        <div></div>
-        <p>Subtotal</p>
-        <p className="text-right">2.240,000 vnđ</p>
-      </FooterBox>
-      <FooterBox>
-        <div></div>
-        <p>Safebuy fee</p>
-        <p className="text-right">0 đ</p>
-      </FooterBox>
-      <FooterBox>
-        <div></div>
-        <p>Shipping fee</p>
-        <p className="text-right">0 đ</p>
-      </FooterBox>
-      <FooterBox>
-        <div></div>
-        <p>
-          <b>Total</b>
-        </p>
-        <p className="text-right">
-          <b>2.260.000 đ</b>
-        </p>
-      </FooterBox>
-    </Page>
+          <div className="info-box">
+            <p>
+              <b>Shipping address</b>
+            </p>
+            <p className="invoice-info">
+              41-47 Dong Du Str., Ben Nghe Ward, D1, Hochiminh city
+            </p>
+          </div>
+          <div className="info-box">
+            <p>
+              <b>Tracking code</b>
+            </p>
+            <p className="invoice-info">123.4654.dsafd12345</p>
+          </div>
+        </InfoBox>
+
+        <Grid>
+          <p className="title-info">
+            <b>Products list</b>
+          </p>
+          <p className="title-info">
+            <b>Subtotal</b>
+          </p>
+          <p className="title-info">
+            <b>Qty</b>
+          </p>
+          <p className="title-info last-child">
+            <b>Total</b>
+          </p>
+        </Grid>
+        <BreakLine />
+        <Grid>
+          <Product className="title-info">
+            <img src={product1} alt="" />
+            <div>
+              <p>HD TV invoice from Soby</p>
+              <p>Blue bird shop</p>
+            </div>
+          </Product>
+          <p className="title-info">240.000 đ</p>
+          <p className="title-info">02</p>
+          <p className="title-info last-child">240.000 đ</p>
+        </Grid>
+        <Grid>
+          <Product className="title-info">
+            <img src={product2} alt="" />
+            <div>
+              <p>Nintendo Switch with Neon Blue and Neon Red Joy-Con</p>
+              <p>Blue bird shop</p>
+            </div>
+          </Product>
+          <p className="title-info">240.000 đ</p>
+          <p className="title-info">02</p>
+          <p className="title-info last-child">240.000 đ</p>
+        </Grid>
+        <BreakLine />
+        <FooterBox>
+          <div></div>
+          <p>Subtotal</p>
+          <p className="text-right">2.240,000 vnđ</p>
+        </FooterBox>
+        <FooterBox>
+          <div></div>
+          <p>Safebuy fee</p>
+          <p className="text-right">0 đ</p>
+        </FooterBox>
+        <FooterBox>
+          <div></div>
+          <p>Shipping fee</p>
+          <p className="text-right">0 đ</p>
+        </FooterBox>
+        <FooterBox>
+          <div></div>
+          <p>
+            <b>Total</b>
+          </p>
+          <p className="text-right">
+            <b>2.260.000 đ</b>
+          </p>
+        </FooterBox>
+      </Page>
+    </React.Fragment>
   );
 };
 
