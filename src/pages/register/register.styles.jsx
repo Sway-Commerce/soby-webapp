@@ -15,17 +15,9 @@ export const SignUpTitle = styled.h1`
 `;
 
 export const CardWrapper = styled.div`
-  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
-  padding: 80px 68px;
-  width: 586px;
-  min-height: 798px;
-  height: auto;
+  padding: 56px 40px 40px;
   background-color: #ffffff;
-
-  &:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-  }
 `;
 
 export const RegisterContainer = styled.div`
@@ -37,12 +29,12 @@ export const RegisterContainer = styled.div`
 export const FormContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 56px;
+  margin-top: 64px;
   form {
     width: 100%;
   }
 `;
 
-export const InputGroup = styled.div`
-  margin-top: 32px;
-`
+export const InputContainer = styled.div`
+  margin-top: 24px;
+`;

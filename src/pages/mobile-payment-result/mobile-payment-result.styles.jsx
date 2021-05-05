@@ -140,6 +140,3 @@ export const FormContainer = styled.div`
   }
 `;
 
-export const InputGroup = styled.div`
-  margin-top: 32px;
-`;

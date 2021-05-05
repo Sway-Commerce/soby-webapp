@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 import { timestampToDate } from '../../shared/utils/getDate';
 import { mainColor, borderColor } from '../../shared/css-variable/variable';
 import { currencyFormatter } from '../../shared/utils/formatCurrency';
 
-const Container = styled.div`
+const Container = styled(Link)`
   grid-template-columns: 463px 176px 176px 176px 158px;
   display: grid;
   height: 48px;
@@ -35,6 +36,7 @@ const InvoiceItem = ({
     <Container
       onClick={() => setActiveInvoice(id)}
       className={`${activeInvoice === id ? 'active' : ''}`}
+      to={`invoice/${id}`}
     >
       <p>{name}</p>
       <p>{timestampToDate(updatedAt)}</p>

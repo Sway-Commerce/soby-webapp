@@ -33,14 +33,9 @@ export const CardContainer = styled.div`
 `;
 
 export const Card = styled.div`
-  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
   padding: 80px 68px;
   background-color: #ffffff;
-
-  &:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-  }
 
   button + button {
     margin-top: 24px;

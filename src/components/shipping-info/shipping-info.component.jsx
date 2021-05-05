@@ -96,10 +96,6 @@ export const Container = styled.div`
   }
 `;
 
-export const InputGroup = styled.div`
-  margin-top: 32px;
-`;
-
 const ShippingInfo = ({ invoiceIndividualId }) => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
   const [provinceId, setProvince] = useState('71');
@@ -569,13 +565,12 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
           </React.Fragment>
         )}
 
-        <InputGroup>
-          <div className="form-label">Password</div>
           <FormInput
             type="password"
             value={password}
             onChange={handleChangePassword}
-            label="*******"
+            label="Password"
+            placeholder="*******"
             required
           />
           {!isPasswordValid ? (
@@ -584,7 +579,6 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
               least one numeric digit, one uppercase and one lowercase letter
             </h5>
           ) : null}
-        </InputGroup>
 
         {!isPhoneValid ? (
           <h5 className="error-title">Your phone number is not correct</h5>

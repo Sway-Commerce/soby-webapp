@@ -90,10 +90,6 @@ export const Container = styled.div`
   }
 `;
 
-export const InputGroup = styled.div`
-  margin-top: 32px;
-`;
-
 const CreateShipping = ({ setOpenCreate }) => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
   const [provinceId, setProvince] = useState('79');

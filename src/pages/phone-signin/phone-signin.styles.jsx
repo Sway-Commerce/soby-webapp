@@ -30,6 +30,6 @@ export const FormContainer = styled.div`
   }
 `;
 
-export const InputGroup = styled.div`
-  margin-top: 28px;
+export const InputContainer = styled.div`
+  margin-top: 24px;
 `;

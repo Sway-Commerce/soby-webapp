@@ -166,7 +166,20 @@ export const GlobalStyle = createGlobalStyle`
   	margin: 5px 0;
 	}
 
-	.main-button {
+	.main-btn {
 		margin: 48px 0 32px;
+	}
+
+	::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+		color: rgba(79, 79, 79, 0.5);
+		opacity: 1; /* Firefox */
+	}
+
+	:-ms-input-placeholder { /* Internet Explorer 10-11 */
+		color: rgba(79, 79, 79, 0.5);
+	}
+
+	::-ms-input-placeholder { /* Microsoft Edge */
+		color: rgba(79, 79, 79, 0.5);
 	}
 `;

@@ -23,11 +23,10 @@ import {
 
 import {
   SignUpContainer,
-
   CardWrapper,
   RegisterContainer,
   FormContainer,
-  InputGroup,
+  InputContainer,
 } from './register.styles';
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 import Spinner from 'components/ui/spinner/spinner.component';
@@ -52,7 +51,7 @@ const Register = ({ history }) => {
   const [signature, setSignature] = useState('');
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
-  const [operationLoading, setOperationLoading] = useState(false)
+  const [operationLoading, setOperationLoading] = useState(false);
 
   const [userCredentials, setUserCredentials] = useState({
     password: '',
@@ -217,60 +216,54 @@ const Register = ({ history }) => {
     <RegisterContainer>
       <CardWrapper>
         <SignUpContainer>
-          <div className="soby-title">Đăng ký</div>
+          <div className="soby-title">Welcome to Soby</div>
           <FormContainer>
             <form onSubmit={handleSubmit}>
-              <div className="second-col">
-                <div>
-                  <div className="form-label">First name</div>
-                  <FormInput
-                    type="text"
-                    name="firstName"
-                    value={firstName}
-                    onChange={handleChange}
-                    label="Brian"
-                  />
-                  {!isFirstNameValid ? (
-                    <h5 className="error-title">The field is required</h5>
-                  ) : null}
-                </div>
-                <div>
-                  <div className="form-label">Last name</div>
-                  <FormInput
-                    type="text"
-                    name="lastName"
-                    value={lastName}
-                    onChange={handleChange}
-                    label="John"
-                  />
-                  {!isLastNameValid ? (
-                    <h5 className="error-title">The field is required</h5>
-                  ) : null}
-                </div>
-              </div>
-
-              <InputGroup>
-                <div className="form-label">Your email</div>
+              <FormInput
+                type="text"
+                name="firstName"
+                value={firstName}
+                onChange={handleChange}
+                label="First name"
+                placeholder="Brian"
+              />
+              {!isFirstNameValid ? (
+                <h5 className="error-title">The field is required</h5>
+              ) : null}
+              <InputContainer>
+                <FormInput
+                  type="text"
+                  name="lastName"
+                  value={lastName}
+                  onChange={handleChange}
+                  label="Last name"
+                  placeholder="John"
+                />
+                {!isLastNameValid ? (
+                  <h5 className="error-title">The field is required</h5>
+                ) : null}
+              </InputContainer>
+              <InputContainer>
                 <FormInput
                   type="email"
                   name="email"
                   value={email}
                   onChange={handleChange}
-                  label="Email"
+                  label="Your email"
+                  placeholder="Email"
                 />
                 {!isEmailValid ? (
                   <h5 className="error-title">Your email is not correct</h5>
                 ) : null}
-              </InputGroup>
-
-              <InputGroup>
-                <div className="form-label">Password</div>
+              </InputContainer>
+              <InputContainer>
                 <FormInput
                   type="password"
                   name="password"
                   value={password}
                   onChange={handleChange}
-                  label="Abcabc123#"
+                  label="Password"
+                  placeholder="Abcabc123#"
                   required
                 />
                 {!isPasswordValid ? (
@@ -280,9 +273,8 @@ const Register = ({ history }) => {
                     lowercase letter
                   </h5>
                 ) : null}
-              </InputGroup>
-
-              <CustomButton type="submit">Đăng ký</CustomButton>
+              </InputContainer>
+              <CustomButton type="submit" className="main-btn">Create Account</CustomButton>
             </form>
           </FormContainer>
         </SignUpContainer>

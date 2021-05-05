@@ -60,7 +60,7 @@ const RegisterPhone = ({ history }) => {
               {!isPhoneValid ? (
                 <h5 className="error-title">Your phone number is not correct</h5>
               ) : null}
-              <CustomButton className="main-button">Register</CustomButton>
+              <CustomButton className="main-btn">Register</CustomButton>
               <PolicyNavigate isSignIn />
             </form>
           </FormContainer>

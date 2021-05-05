@@ -26,13 +26,13 @@ import {
   CardWrapper,
   RegisterContainer,
   FormContainer,
-  InputGroup
 } from './phone-signin.styles';
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 import usePhoneNumber from 'shared/hooks/usePhoneNumber';
 import Spinner from 'components/ui/spinner/spinner.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import { InputContainer } from 'pages/register/register.styles';
 
 const PhoneSignin = () => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
@@ -249,13 +249,13 @@ const PhoneSignin = () => {
                 </h5>
               ) : null}
 
-              <InputGroup>
-                <label className="form-label">Password</label>
+              <InputContainer>
                 <FormInput
                   type="password"
                   value={password}
                   onChange={handleChange}
-                  label="*******"
+                  label="Password"
+                  placeholder="*******"
                   required
                 />
                 {!isPasswordValid ? (
@@ -265,9 +265,8 @@ const PhoneSignin = () => {
                     lowercase letter
                   </h5>
                 ) : null}
-              </InputGroup>
-
-              <CustomButton className="main-button" type="submit">
+              </InputContainer>
+              <CustomButton className="main-btn" type="submit">
                 Login
               </CustomButton>
             </form>

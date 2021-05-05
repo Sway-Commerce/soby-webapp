@@ -39,10 +39,6 @@ export const FormContainer = styled.div`
   }
 `;
 
-export const InputGroup = styled.div`
-  margin-top: 32px;
-`
-
 export const ForgotPass = styled.div`
   font-style: normal;
   font-weight: 600;
