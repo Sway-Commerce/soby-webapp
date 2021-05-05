@@ -14,25 +14,10 @@ export const SignUpTitle = styled.h1`
   padding-bottom: 10px;
 `;
 
-export const ErrorTitle = styled.h5`
-  color: red;
-  margin: 5px 0;
-`;
-
 export const CardWrapper = styled.div`
-  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
-  padding: 80px 68px;
-  width: 586px;
-  height: 585px;
-
-  &:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-  }
-
-  button {
-    margin-top: 56px;
-  }
+  padding: 56px 40px 40px;
+  background-color: #ffffff;
 `;
 
 export const RegisterContainer = styled.div`
@@ -44,7 +29,6 @@ export const RegisterContainer = styled.div`
 export const FormContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 56px;
   form {
     width: 100%;
   }
@@ -53,15 +37,27 @@ export const FormContainer = styled.div`
 export const CodeText = styled.div`
   font-style: normal;
   font-weight: 400;
-  font-size: 12px;
-  line-height: 15px;
-  margin: 32px 0 8px;
+  font-size: 0.7rem;
+  line-height: 24px;
+  margin: 16px 0 24px;
+  display: flex;
 `;
 
 export const SendAgain = styled.div`
   font-style: normal;
   font-weight: 600;
-  font-size: 12px;
-  line-height: 15px;
+  font-size: 0.7rem;
+  line-height: 24px;
   cursor: pointer;
+  margin-left: 8px;
+  color: ${mainColor};
+`
+export const SubText = styled.div`
+  margin: 40px 0 24px;
+  display: grid;
+  place-content: center;
+  p {
+    line-height: 24px;
+    text-align: center;
+  }
 `

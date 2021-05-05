@@ -7,21 +7,16 @@ export const TransactionContainer = styled.div`
   .soby-title {
     color: black;
     text-align: left;
-    font-size: 40px;
+    font-size: 2rem;
     line-height: 49px;
   }
 
   @media screen and (max-width: 800px) {
     .soby-title {
-      font-size: 20px;
+      font-size: 1rem;
       line-height: 24px;
     }
   }
-`;
-
-export const ErrorTitle = styled.h5`
-  color: red;
-  margin: 5px 0;
 `;
 
 export const CardWrapper = styled.div`
@@ -37,12 +32,8 @@ export const CardWrapper = styled.div`
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   }
 
-  button {
-    margin-top: 56px;
-  }
-
   @media screen and (max-width: 800px) {
-    font-size: 14px;
+    font-size: 0.7rem;
     width: 376px;
     min-height: 393px;
     padding: 48px 24px;
@@ -110,14 +101,14 @@ export const FormContainer = styled.div`
   }
 
   @media screen and (max-width: 800px) {
-    font-size: 14px;
+    font-size: 0.7rem;
     margin-top: 8px;
     form {
       .amount-info {
         justify-content: space-between;
 
         #amount {
-          font-size: 32px;
+          font-size: 1.6rem;
           line-height: 39px;
         }
         margin-bottom: 16px;
@@ -144,6 +135,3 @@ export const FormContainer = styled.div`
   }
 `;
 
-export const InputGroup = styled.div`
-  margin-top: 32px;
-`;

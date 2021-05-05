@@ -33,13 +33,9 @@ export const CardContainer = styled.div`
 `;
 
 export const Card = styled.div`
-  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
   padding: 80px 68px;
-
-  &:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-  }
+  background-color: #ffffff;
 
   button + button {
     margin-top: 24px;
@@ -49,7 +45,7 @@ export const Card = styled.div`
 export const ForgotPass = styled.div`
   font-style: normal;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 0.6rem;
   line-height: 15px;
   color: black;
   text-align: right;

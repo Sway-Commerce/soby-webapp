@@ -11,10 +11,10 @@ export const NumberBox = styled.input`
   &[type='number'] {
     height: 70px;
     width: 50px;
-    font-size: 18px;
+    font-size: 0.9rem;
     text-align: center;
     background: #ffffff;
-    border: 1px solid ${subColor};
+    border: 1.04651px solid #E4E4E4;
     box-sizing: border-box;
     border-radius: 8px;
 
@@ -34,22 +34,14 @@ export const NumberBox = styled.input`
 export const InputCode = styled.input.attrs((props) => ({
   type: "text",
 }))`
-  width: 60px;
+  width: 46px;
+  height: 62px;
   padding: 20px;
   outline: 0;
   border: 0;
   border-radius: 3px;
   border: 0.5px solid #c2c2c2;
-  font-size: 18px;
+  font-size: 0.9rem;
   margin-right: 20px;
   box-sizing: border-box;
-
-  @media (max-width: 700px) {
-    width: 48px;
-    padding: 15px;
-  }
-  @media (max-width: 450px) {
-    width: 30px;
-    padding: 12px;
-  }
 `;

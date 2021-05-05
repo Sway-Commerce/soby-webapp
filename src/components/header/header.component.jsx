@@ -4,15 +4,12 @@ import { withRouter } from 'react-router-dom';
 
 import {
   HeaderContainer,
-  OptionsContainer,
   LogoContainer,
-  SignInLink,
-  SignOut,
 } from './header.styles';
 import { ReactComponent as Logo } from 'shared/assets/logo.svg';
 import { signOutStart } from 'redux/user/user.actions';
 
-export const Header = ({ history }) => {
+export const Header = () => {
   const accessToken = useSelector((state) => {
     return state.user.accessToken;
   });

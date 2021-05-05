@@ -1,39 +1,38 @@
 import { gql } from '@apollo/client';
 import {
-  INVOICE_FRAGMENT,
+  INVOICE_HISTORY_FRAGMENT,
   AGGREGATED_ASSESS_FRAGMENT,
-  INDIVIDUAL_INVOICE_FRAGMENT,
-  AGGREGATED_INVOICE_FRAGMENT,
-  AGGREGATED_INVOICE_INDIVIDUAL,
+  INVOICE_ORDER_FRAGMENT,
+  AGGREGATED_INVOICE_HISTORY_FRAGMENT,
+  AGGREGATED_INVOICE_ORDER_FRAGMENT,
   ASSESS_FRAGMENT,
-  INVOICE_INDIVIDUAL_FRAGMENT,
 } from '../common.fragment';
 
 export const CREATE_INVOICE = gql`
-  ${INVOICE_FRAGMENT}
+  ${INVOICE_HISTORY_FRAGMENT}
   mutation CreateInvoice($cmd: CreateInvoiceCmd!) {
     createInvoice(cmd: $cmd) {
       message
       data {
-        ...InvoiceFragment
+        ...InvoiceHistoryFragment
       }
     }
   }
 `;
 export const ACCEPT_INVOICE = gql`
-  ${INVOICE_INDIVIDUAL_FRAGMENT}
+  ${INVOICE_ORDER_FRAGMENT}
   mutation AcceptInvoice($cmd: AcceptInvoiceCmd!) {
     acceptInvoice(cmd: $cmd) {
       message
       success
       data {
-        ...InvoiceIndividualFragment
+        ...InvoiceOrderFragment
       }
     }
   }
 `;
 export const SET_SHIPPING_LOCATION = gql`
-  ${INVOICE_FRAGMENT}
+  ${INVOICE_HISTORY_FRAGMENT}
 
   mutation SetShippingLocation($cmd: SetShippingLocationCmd!) {
     setShippingLocation(cmd: $cmd) {
@@ -41,7 +40,7 @@ export const SET_SHIPPING_LOCATION = gql`
       data {
         id
         invoice {
-          ...InvoiceFragment
+          ...InvoiceHistoryFragment
         }
         individualId
         shippingLocationId
@@ -56,43 +55,43 @@ export const SET_SHIPPING_LOCATION = gql`
   }
 `;
 export const ADD_INVOICE_ITEM = gql`
-  ${INVOICE_FRAGMENT}
+  ${INVOICE_HISTORY_FRAGMENT}
   mutation AddInvoiceItem($cmd: AddInvoiceItemsCmd!) {
     addInvoiceItems(cmd: $cmd) {
       message
       data {
-        ...InvoiceFragment
+        ...InvoiceHistoryFragment
       }
     }
   }
 `;
 export const REMOVE_INVOICE_ITEM = gql`
-  ${INVOICE_FRAGMENT}
+  ${INVOICE_HISTORY_FRAGMENT}
   mutation RemoveInvoiceItem($cmd: RemoveInvoiceItemsCmd!) {
     removeInvoiceItems(cmd: $cmd) {
       message
       data {
-        ...InvoiceFragment
+        ...InvoiceHistoryFragment
       }
     }
   }
 `;
 export const UPDATE_INVOICE = gql`
-  ${INVOICE_FRAGMENT}
+  ${INVOICE_HISTORY_FRAGMENT}
   mutation UpdateInvoice($cmd: UpdateInvoiceCmd!) {
     updateInvoice(cmd: $cmd) {
       message
       data {
-        ...InvoiceFragment
+        ...InvoiceHistoryFragment
       }
     }
   }
 `;
-export const UPDATE_INVOICE_INDIVIDUAL_STATUS = gql`
-  mutation UpdateInvoiceIndividualStatus(
-    $cmd: UpdateInvoiceIndividualStatusCmd!
+export const UPDATE_INVOICE_ORDER_STATUS = gql`
+  mutation UpdateInvoiceOrderStatus(
+    $cmd: UpdateInvoiceOrderStatusCmd!
   ) {
-    updateInvoiceIndividualStatus(cmd: $cmd) {
+    updateInvoiceOrderStatus(cmd: $cmd) {
       message
       success
     }
@@ -155,7 +154,7 @@ export const UPDATE_RETURN_SHIPPING_INFO = gql`
 `;
 
 export const GET_SHOP_INVOICE_LIST = gql`
-  ${INVOICE_FRAGMENT}
+  ${INVOICE_HISTORY_FRAGMENT}
   query GetShopInvoiceList($query: ShopInvoiceQuery!) {
     getShopInvoiceList(query: $query) {
       message
@@ -164,30 +163,30 @@ export const GET_SHOP_INVOICE_LIST = gql`
         pageSize
         total
         records {
-          ...InvoiceFragment
+          ...InvoiceHistoryFragment
         }
       }
     }
   }
 `;
-export const GET_INDIVIDUAL_INVOICE_LIST = gql`
-  ${INDIVIDUAL_INVOICE_FRAGMENT}
-  query GetIndividualInvoiceList($query: IndividualInvoiceOrderQuery!) {
-    getIndividualInvoiceList(query: $query) {
+export const GET_INVOICE_ORDER_LIST_FOR_INDIVIDUAL = gql`
+  ${INVOICE_ORDER_FRAGMENT}
+  query GetInvoiceOrderListForIndividual($query: IndividualInvoiceOrderQuery!) {
+    getInvoiceOrderListForIndividual(query: $query) {
       message
       data {
         page
         pageSize
         total
         records {
-          ...IndividualInvoiceFragment
+          ...InvoiceOrderFragment
         }
       }
     }
   }
 `;
 export const GET_DETAILED_INVOICE_BY_ID = gql`
-  ${AGGREGATED_INVOICE_FRAGMENT}
+  ${AGGREGATED_INVOICE_HISTORY_FRAGMENT}
   query GetDetailedInvoiceById($id: String!) {
     getAggregatedInvoice(id: $id) {
       message
@@ -197,38 +196,38 @@ export const GET_DETAILED_INVOICE_BY_ID = gql`
     }
   }
 `;
-export const GET_SHOP_INVOICE_INDIVIDUAL_LIST = gql`
-  ${INDIVIDUAL_INVOICE_FRAGMENT}
-  query GetShopInvoiceIndividualList($query: ShopInvoiceIndividualQuery!) {
-    getShopInvoiceIndividualList(query: $query) {
+export const GET_INVOICE_ORDER_LIST_FOR_SHOP = gql`
+  ${INVOICE_ORDER_FRAGMENT}
+  query GetInvoiceOrderListForShop($query: ShopInvoiceIndividualQuery!) {
+    getInvoiceOrderListForShop(query: $query) {
       message
       data {
         total
         records {
-          ...IndividualInvoiceFragment
+          ...InvoiceOrderFragment
         }
       }
     }
   }
 `;
-export const GET_DETAILED_INVOICE_FOR_INDIVIDUAL = gql`
-  ${AGGREGATED_INVOICE_INDIVIDUAL}
-  query GetDetailedInvoiceForIndividual($id: String!) {
-    getAggregatedInvoiceIndividualForIndividual(id: $id) {
+export const GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL = gql`
+  ${AGGREGATED_INVOICE_ORDER_FRAGMENT}
+  query GetAggregatedInvoiceOrderForIndividual($id: String!) {
+    getAggregatedInvoiceOrderForIndividual(id: $id) {
       message
       data {
-        ...AggregatedInvoiceIndividual
+        ...AggregatedInvoiceOrderFragment
       }
     }
   }
 `;
-export const GET_DETAILED_INVOICE_FOR_SHOP = gql`
-  ${AGGREGATED_INVOICE_INDIVIDUAL}
-  query GetDetailedInvoiceForShop($id: String!) {
-    getAggregatedInvoiceIndividualForShop(id: $id) {
+export const GET_AGGREGATED_INVOICE_ORDER_FOR_SHOP = gql`
+  ${AGGREGATED_INVOICE_ORDER_FRAGMENT}
+  query GetAggregatedInvoiceOrderForShop($id: String!) {
+    getAggregatedInvoiceOrderForShop(id: $id) {
       message
       data {
-        ...AggregatedInvoiceIndividual
+        ...AggregatedInvoiceOrderFragment
       }
     }
   }
@@ -273,14 +272,14 @@ export const GET_WARD_LIST = gql`
   }
 `;
 
-export const UPDATE_INVOICE_INDIVIDUAL_INFO = gql`
-  ${INVOICE_INDIVIDUAL_FRAGMENT}
-  mutation UpdateInvoiceIndividualInfo($cmd: UpdateInvoiceIndividualInfoCmd!) {
-    updateInvoiceIndividualInfo(cmd: $cmd) {
+export const UPDATE_INVOICE_ORDER_INFO = gql`
+  ${INVOICE_ORDER_FRAGMENT}
+  mutation UpdateInvoiceOrderInfo($cmd: UpdateInvoiceIndividualInfoCmd!) {
+    updateInvoiceOrderInfo(cmd: $cmd) {
       success
       message
       data {
-        ...InvoiceIndividualFragment
+        ...InvoiceOrderFragment
       }
     }
   }

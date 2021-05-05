@@ -5,7 +5,7 @@ export const Container = styled.div`
   padding: 4px 12px;
   background: ${(props) => props.bgColor};
   border-radius: 4px;
-  font-size: 20px;
+  font-size: 1rem;
   color: white;
 `;
 

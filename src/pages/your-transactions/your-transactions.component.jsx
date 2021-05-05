@@ -1,28 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 
-import { Container, ProductContainer } from './your-transactions.styles';
-import Invoice from '../invoice/invoice.component';
-
-import { ReactComponent as OrderIcon } from 'shared/assets/order-icon.svg';
-import { ReactComponent as BillIcon } from 'shared/assets/bill-icon.svg';
+import { Container } from './your-transactions.styles';
 
 import HorizontalList from 'components/horizontal-list/horizontal-list.component';
-import { GET_INDIVIDUAL_INVOICE_LIST } from '../../graphQL/repository/invoice.repository';
+import { GET_INVOICE_ORDER_LIST_FOR_INDIVIDUAL } from '../../graphQL/repository/invoice.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import InvoiceItem from 'components/invoice-item/invoice-item.component';
-import InvoiceStatus from 'components/invoice-status/invoice-status.component';
 import {
   mainInvoiceFilters,
   subInvoiceFilters,
-  subInvoiceIcons,
 } from 'shared/constants/invoice.constant';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
 const YourTransaction = ({ name }) => {
-  const mainIcons = [<OrderIcon />, <BillIcon />];
-
   const [invoiceList, setInvoiceList] = useState([]);
   const [activeInvoice, setActiveInvoice] = useState('');
   const [invoiceListQuery, setInvoiceListQuery] = useState({
@@ -38,29 +30,29 @@ const YourTransaction = ({ name }) => {
   const { mainFilter, subFilter, page, pageSize, total } = invoiceListQuery;
 
   const [
-    getIndividualInvoiceList,
+    getInvoiceOrderListForIndividual,
     {
-      error: getIndividualInvoiceListError,
-      data: getIndividualInvoiceListData,
-      loading: getIndividualInvoiceListLoading,
+      error: getInvoiceOrderListForIndividualError,
+      data: getInvoiceOrderListForIndividualData,
+      loading: getInvoiceOrderListForIndividualLoading,
     },
-  ] = useLazyQuery(GET_INDIVIDUAL_INVOICE_LIST, {
+  ] = useLazyQuery(GET_INVOICE_ORDER_LIST_FOR_INDIVIDUAL, {
     fetchPolicy: 'network-only',
   });
 
   useEffect(() => {
-    if (getIndividualInvoiceListError) {
-      setFormError(getIndividualInvoiceListError?.message);
+    if (getInvoiceOrderListForIndividualError) {
+      setFormError(getInvoiceOrderListForIndividualError?.message);
       setOpen(true);
     }
-  }, [getIndividualInvoiceListError]);
+  }, [getInvoiceOrderListForIndividualError]);
 
   useEffect(() => {
     setActiveInvoice(null);
     setInvoiceList([]);
     setInvoiceListQuery({ ...invoiceListQuery, total: 0 });
     if (mainFilter === 'Invoices') {
-      getIndividualInvoiceList({
+      getInvoiceOrderListForIndividual({
         variables: {
           query: {
             statuses: [subFilter.toUpperCase()],
@@ -70,81 +62,89 @@ const YourTransaction = ({ name }) => {
         },
       });
     }
-  }, [mainFilter, subFilter, page, pageSize, getIndividualInvoiceList]);
+  }, [mainFilter, subFilter, page, pageSize, getInvoiceOrderListForIndividual]);
 
   useEffect(() => {
-    if (getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records) {
+    if (
+      getInvoiceOrderListForIndividualData?.getInvoiceOrderListForIndividual
+        ?.data?.records
+    ) {
       setInvoiceList(
-        getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records
+        getInvoiceOrderListForIndividualData?.getInvoiceOrderListForIndividual
+          ?.data?.records
       );
       setInvoiceListQuery({
         ...invoiceListQuery,
         total:
-          getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.total,
+          getInvoiceOrderListForIndividualData?.getInvoiceOrderListForIndividual
+            ?.data?.total,
       });
     }
-  }, [getIndividualInvoiceListData?.getIndividualInvoiceList?.data?.records]);
+  }, [
+    getInvoiceOrderListForIndividualData?.getInvoiceOrderListForIndividual?.data
+      ?.records,
+  ]);
 
   useEffect(() => {
-    if (getIndividualInvoiceListError) {
-      setFormError(getIndividualInvoiceListError.message);
+    if (getInvoiceOrderListForIndividualError) {
+      setFormError(getInvoiceOrderListForIndividualError.message);
     }
-  }, [getIndividualInvoiceListError]);
+  }, [getInvoiceOrderListForIndividualError]);
 
   return (
     <Container>
-      <div className={`box-left ${activeInvoice ? 'width-limit' : ''}`}>
-        <HorizontalList
-          key={JSON.stringify(mainInvoiceFilters)}
-          items={mainInvoiceFilters}
-          renderItem={(item, index) => (
-            <div
-              className={`tab-wrapper ${mainFilter === item ? '' : 'opacity'}`}
-              key={item}
-              onClick={() =>
-                setInvoiceListQuery({ ...invoiceListQuery, mainFilter: item })
-              }
-            >
-              {mainIcons[index]}
-              <p className="order">{item}</p>
-              {mainFilter === item ? <p className="amount">{total}</p> : null}
-            </div>
-          )}
-        />
+      <div className="box-left">
         <div className="sub-filter">
           <HorizontalList
             key={JSON.stringify(subInvoiceFilters)}
             items={subInvoiceFilters}
             renderItem={(item, index) => (
               <div
-                className={`tab-status ${subFilter === item ? '' : 'opacity'}`}
+                className={`tab-status ${subFilter === item ? 'active' : ''}`}
                 key={item}
                 onClick={() =>
                   setInvoiceListQuery({ ...invoiceListQuery, subFilter: item })
                 }
               >
-                {subInvoiceIcons[index]}
                 <p className="status">{item}</p>
               </div>
             )}
           />
         </div>
         <div className="invoice-list">
+          <div className="header-wrapper">
+            <p>
+              <b>Invoice name</b>
+            </p>
+            <p>
+              <b>Date</b>
+            </p>
+            <p>
+              <b>Price</b>
+            </p>
+            <p>
+              <b>Seller</b>
+            </p>
+            <p className="text-right">
+              <b>Status</b>
+            </p>
+          </div>
+
           {invoiceList.map((x) => (
             <InvoiceItem
               key={x?.id}
               price={x?.totalPrice}
               status={x?.status}
               name={x?.invoice?.name}
+              updatedAt={x?.updatedAt}
               id={x?.id}
               setActiveInvoice={setActiveInvoice}
               activeInvoice={activeInvoice}
             />
           ))}
         </div>
-        {getIndividualInvoiceListLoading ? <Spinner /> : null}
+        {getInvoiceOrderListForIndividualLoading ? <Spinner /> : null}
       </div>
-      {activeInvoice ? <Invoice invoiceIndividualId={activeInvoice} /> : null}
       <SobyModal open={open} setOpen={setOpen}>
         {formError ? (
           <ErrorPopup content={formError} setOpen={setOpen} />
@@ -155,3 +155,22 @@ const YourTransaction = ({ name }) => {
 };
 
 export default YourTransaction;
+// {activeInvoice ? <Invoice invoiceIndividualId={activeInvoice} /> : null}
+// ${activeInvoice ? 'width-limit' : ''}`
+// <HorizontalList
+//           key={JSON.stringify(mainInvoiceFilters)}
+//           items={mainInvoiceFilters}
+//           renderItem={(item, index) => (
+//             <div
+//               className={`tab-wrapper ${mainFilter === item ? '' : 'opacity'}`}
+//               key={item}
+//               onClick={() =>
+//                 setInvoiceListQuery({ ...invoiceListQuery, mainFilter: item })
+//               }
+//             >
+//               {mainIcons[index]}
+//               <p className="order">{item}</p>
+//               {mainFilter === item ? <p className="amount">{total}</p> : null}
+//             </div>
+//           )}
+//         />

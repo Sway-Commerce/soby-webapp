@@ -105,7 +105,7 @@ export const Container = styled.div`
           border: 1px solid rgb(0, 0, 0, 0.5);
           border-radius: 8px;
           padding: 8px 12px;
-          font-size: 14px;
+          font-size: 0.7rem;
         }
 
         .accordion-wrapper {
@@ -120,7 +120,7 @@ export const Container = styled.div`
         border-radius: 8px;
         border: none;
         color: ${mainColor};
-        font-size: 20px;
+        font-size: 1rem;
         line-height: 26px;
       } */
 
@@ -159,14 +159,14 @@ export const ShippingCard = styled.div`
       max-width: 200px;
     }
     .method {
-      font-size: 12px;
+      font-size: 0.6rem;
       cursor: pointer;
     }
   }
 
   .shipping-location {
     max-width: 360px;
-    font-size: 14px;
+    font-size: 0.7rem;
     margin-top: 16px;
     & + .shipping-wrapper {
       margin-top: 16px;
@@ -174,4 +174,18 @@ export const ShippingCard = styled.div`
       border-top: 1px solid rgb(0, 0, 0, 0.5);
     }
   }
+`;
+
+export const Row = styled.div`
+  display: flex;
+`;
+
+export const InvoiceButton = styled.div`
+  display: flex;
+  background-color: ${(props) => (props.accept ? '#2B74E4' : '#f53535')};
+  border-radius: 8px;
+  color: white;
+  padding:16.5px 72px 0;
+  width: 198px;
+  height: 50px;
 `;

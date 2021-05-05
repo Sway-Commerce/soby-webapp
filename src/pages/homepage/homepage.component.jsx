@@ -37,7 +37,7 @@ const HomePage = () => (
               <Mail />
             </CustomButton>
           </Link>
-          <Link to="/phone-signin">
+          <Link to="/">
             <CustomButton withIcon>
               <div>Đăng nhập Số điện thoại</div>
               <Phone />

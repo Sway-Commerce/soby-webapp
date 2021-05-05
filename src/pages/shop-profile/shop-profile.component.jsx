@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -57,7 +56,7 @@ export const MainContent = styled.div`
     display: flex;
 
     p {
-      font-size: 18px;
+      font-size: 0.9rem;
     }
 
     .wrapper {

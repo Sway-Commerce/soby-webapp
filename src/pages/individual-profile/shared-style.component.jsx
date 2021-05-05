@@ -10,7 +10,7 @@ export const Box = styled.form`
     margin-bottom: 30px;
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: 800px) {
     width: auto;
   }
 `;
@@ -28,10 +28,4 @@ export const PopupButton = styled.input.attrs((props) => ({
   border-radius: 7px;
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.04);
   cursor: pointer;
-`;
-
-
-export const ErrorTitle = styled.h5`
-  color: red;
-  margin: 5px 0;
 `;

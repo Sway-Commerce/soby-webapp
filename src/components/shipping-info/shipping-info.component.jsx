@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
@@ -8,7 +7,7 @@ import {
   GET_DISTRICT_LIST,
   GET_PROVINCE_LIST,
   GET_WARD_LIST,
-  UPDATE_INVOICE_INDIVIDUAL_INFO,
+  UPDATE_INVOICE_ORDER_INFO,
 } from 'graphQL/repository/invoice.repository';
 import {
   CREATE_INDIVIDUAL_SHIPPING_LOCATION,
@@ -27,11 +26,6 @@ import { signSignature } from 'graphQL/repository/individual.repository';
 import passwordValidation from 'shared/utils/passwordValidation';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
-
-export const ErrorTitle = styled.h5`
-  color: red;
-  margin: 5px 0;
-`;
 
 export const Container = styled.div`
   padding: 40px 48px;
@@ -56,7 +50,7 @@ export const Container = styled.div`
     border-width: 0 0 2px;
     border-color: rgb(0, 0, 0, 0.08);
     padding: 6px 0;
-    font-size: 18px;
+    font-size: 0.9rem;
     margin: 8px 0 24px 0;
   }
 
@@ -67,7 +61,7 @@ export const Container = styled.div`
   button.shipping-button {
     width: 100%;
     color: ${mainColor};
-    font-size: 18px;
+    font-size: 0.9rem;
     font-weight: 500;
     background-color: #f1f1f1;
     border: 0;
@@ -75,7 +69,6 @@ export const Container = styled.div`
     padding: 14px 0;
     margin-top: 40px;
     border-radius: 3px;
-    box-shadow: 0 0 8px rgba(196, 196, 196, 0.2);
     &.disable {
       pointer-events: none;
       color: white;
@@ -101,10 +94,6 @@ export const Container = styled.div`
   .title {
     margin: 24px 0 16px;
   }
-`;
-
-export const InputGroup = styled.div`
-  margin-top: 32px;
 `;
 
 const ShippingInfo = ({ invoiceIndividualId }) => {
@@ -175,13 +164,13 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   });
 
   const [
-    updateInvoiceIndividualInfo,
+    updateInvoiceOrderInfo,
     {
-      data: updateInvoiceIndividualInfoData,
-      loading: updateInvoiceIndividualInfoLoading,
-      error: updateInvoiceIndividualInfoError,
+      data: updateInvoiceOrderInfoData,
+      loading: updateInvoiceOrderInfoLoading,
+      error: updateInvoiceOrderInfoError,
     },
-  ] = useMutation(UPDATE_INVOICE_INDIVIDUAL_INFO, {
+  ] = useMutation(UPDATE_INVOICE_ORDER_INFO, {
     errorPolicy: 'all',
   });
 
@@ -200,14 +189,14 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     if (
       loadProvinceError ||
       loadDistrictListError ||
-      updateInvoiceIndividualInfoError ||
+      updateInvoiceOrderInfoError ||
       createShippingLocationError ||
       createInvoicePaymentError
     ) {
       setFormError(
         loadProvinceError?.message ??
           loadDistrictListError?.message ??
-          updateInvoiceIndividualInfoError?.message ??
+          updateInvoiceOrderInfoError?.message ??
           createInvoicePaymentError?.message ??
           createShippingLocationError?.message
       );
@@ -216,9 +205,9 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   }, [
     loadProvinceError,
     loadDistrictListError,
-    updateInvoiceIndividualInfoError,
+    updateInvoiceOrderInfoError,
     createInvoicePaymentError,
-    createShippingLocationError
+    createShippingLocationError,
   ]);
 
   useEffect(() => {
@@ -228,14 +217,13 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
         variables: { provinceId: provinceId },
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invoiceIndividualId]);
 
   useEffect(() => {
     if (createShippingLocationData?.createIndividualShippingLocation?.data) {
       const shippingLocationId =
         createShippingLocationData?.createIndividualShippingLocation?.data?.id;
-      updateInvoiceIndividualInfo({
+      updateInvoiceOrderInfo({
         variables: {
           cmd: {
             shippingLocationId,
@@ -245,13 +233,12 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
         },
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createShippingLocationData?.createIndividualShippingLocation?.data]);
 
   const mapData = (data) =>
     data?.map((x) => ({
       value: x.id,
-      label: x.name,
+      label: x.fullName,
     })) ?? [];
 
   const mapShippingData = (data) =>
@@ -291,21 +278,25 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   }, [createInvoicePaymentData?.createInvoicePayment?.data?.payUrl]);
 
   useEffect(() => {
-    if (updateInvoiceIndividualInfoData?.updateInvoiceIndividualInfo?.data) {
+    if (updateInvoiceOrderInfoData?.updateInvoiceOrderInfo?.data) {
       const requestedAt = Date.now();
       const jsonString = JSON.stringify({
         invoiceIndividualId,
         requestedAt: requestedAt?.toString(),
       });
-      const {signature, error} = signSignature(signingSecret, jsonString, password);
-      if(error) {
+      const { signature, error } = signSignature(
+        signingSecret,
+        jsonString,
+        password
+      );
+      if (error) {
         setFormError(error);
         setOpen(true);
       } else {
         createInvoicePayment({
           variables: {
             cmd: {
-              invoiceIndividualId,
+              id: invoiceIndividualId,
               requestedAt,
               signature,
             },
@@ -313,10 +304,10 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
         });
       }
     }
-  }, [updateInvoiceIndividualInfoData?.updateInvoiceIndividualInfo?.data]);
+  }, [updateInvoiceOrderInfoData?.updateInvoiceOrderInfo?.data]);
 
   if (
-    updateInvoiceIndividualInfoLoading ||
+    updateInvoiceOrderInfoLoading ||
     provinceLoading ||
     loadDistrictListLoading ||
     createShippingLocationLoading ||
@@ -372,7 +363,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     createShippingLocation({
       variables: {
         cmd: {
-          locationName: shippingInfo.addressLine,
+          locationName: shippingInfo.locationName,
           phoneCountryCode,
           phoneNumber,
           country: 'VN',
@@ -437,7 +428,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     // paymentMethod: OrderPaymentMethod!
     const shippingLocationId =
       createShippingLocationData?.createIndividualShippingLocation?.data?.id;
-    updateInvoiceIndividualInfo({
+    updateInvoiceOrderInfo({
       variables: {
         cmd: {
           shippingLocationId,
@@ -459,7 +450,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     if (!isPasswordValid) {
       return;
     }
-    updateInvoiceIndividualInfo({
+    updateInvoiceOrderInfo({
       variables: {
         cmd: {
           shippingLocationId,
@@ -574,25 +565,23 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
           </React.Fragment>
         )}
 
-        <InputGroup>
-          <div className="form-label">Password</div>
           <FormInput
             type="password"
             value={password}
             onChange={handleChangePassword}
-            label="*******"
+            label="Password"
+            placeholder="*******"
             required
           />
           {!isPasswordValid ? (
-            <ErrorTitle>
+            <h5 className="error-title">
               Your password must be between 8 to 20 characters which contain at
               least one numeric digit, one uppercase and one lowercase letter
-            </ErrorTitle>
+            </h5>
           ) : null}
-        </InputGroup>
 
         {!isPhoneValid ? (
-          <ErrorTitle>Your phone number is not correct</ErrorTitle>
+          <h5 className="error-title">Your phone number is not correct</h5>
         ) : null}
         <button
           className={

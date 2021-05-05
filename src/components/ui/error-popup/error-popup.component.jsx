@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { mainColor } from '../../../shared/css-variable/variable';
 
-export const Container = styled.div`
+export const Container = styled.form`
   display: flex;
   flex-direction: column;
   height: 350px;
@@ -12,7 +12,7 @@ export const Container = styled.div`
 export const Body = styled.div`
   padding: 20px;
   flex: 1;
-  font-size: 20px;
+  font-size: 1rem;
   color: #f53535;
   display: grid;
   place-items: center;
@@ -20,7 +20,7 @@ export const Body = styled.div`
 export const CloseButton = styled.button`
   width: calc(100% - 40px);
   color: ${mainColor};
-  font-size: 18px;
+  font-size: 0.9rem;
   font-weight: 500;
   background-color: #f1f1f1;
   border: 0;
@@ -48,7 +48,14 @@ const ErrorPopup = ({ content, setOpen }) => {
       <Container>
         <Header>Error</Header>
         <Body>{content}</Body>
-        <CloseButton onClick={() => setOpen(false)}>Close</CloseButton>
+        <CloseButton
+          onClick={(event) => {
+            event.preventDefault();
+            setOpen(false);
+          }}
+        >
+          Close
+        </CloseButton>
       </Container>
     </React.Fragment>
   );

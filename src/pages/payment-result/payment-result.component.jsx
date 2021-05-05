@@ -7,7 +7,7 @@ import {
 } from './payment-result.styles';
 import PaymentStatus from 'components/payment-status/payment-status.component';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
-import { timestampToDate, vnpayFormatToDate } from 'shared/utils/getDate';
+import { vnpayFormatToDate } from 'shared/utils/getDate';
 
 import { ReactComponent as MasterCard } from 'shared/assets/master-card.svg';
 import { ReactComponent as VisaCard } from 'shared/assets/visa-card.svg';

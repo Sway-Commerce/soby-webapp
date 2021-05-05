@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { mainColor } from 'shared/css-variable/variable';
+import { borderColor, mainColor } from 'shared/css-variable/variable';
 
 export const Container = styled.div`
   display: flex;
@@ -9,7 +9,7 @@ export const Container = styled.div`
     margin-top: 48px;
     flex: 1;
     .h2 {
-      font-size: 18px;
+      font-size: 0.9rem;
       font-weight: 500;
       margin-bottom: 20px;
     }
@@ -36,7 +36,7 @@ export const Container = styled.div`
       border-width: 0 0 2px;
       border-color: rgb(0, 0, 0, 0.08);
       padding: 6px 0;
-      font-size: 18px;
+      font-size: 0.9rem;
       margin: 8px 0 24px 0;
     }
 
@@ -47,7 +47,7 @@ export const Container = styled.div`
     button {
       width: 100%;
       color: ${mainColor};
-      font-size: 18px;
+      font-size: 0.9rem;
       font-weight: 500;
       background-color: #f1f1f1;
       border: 0;
@@ -76,19 +76,24 @@ export const Container = styled.div`
   .sub-filter {
     margin-top: 32px;
     overflow: auto;
-    padding-bottom: 8px;
+    height: 80px;
+    background-color: #ffffff;
   }
 
   .invoice-list {
     max-height: calc(100vh - 280px);
     overflow: auto;
-    padding-right: 10px;
+    padding: 24px;
+    background-color: #ffffff;
+    margin-top: 24px;
+    .header-wrapper {
+      display: grid;
+      grid-template-columns: 463px 176px 176px 176px 158px;
+      border-bottom: 1px solid ${borderColor};
+      padding-bottom: 20px;
+      margin-bottom: 32px;
+    }
   }
-`;
-
-export const ErrorTitle = styled.h5`
-  color: red;
-  margin: 5px 0;
 `;
 
 export const ProductContainer = styled.div`
@@ -119,7 +124,7 @@ export const ProductContainer = styled.div`
         font-family: Work Sans;
         font-style: normal;
         font-weight: 400;
-        font-size: 24px;
+        font-size: 1.2rem;
         line-height: 28px;
         color: #000000;
         margin-top: 8px;
@@ -129,7 +134,7 @@ export const ProductContainer = styled.div`
         font-family: Work Sans;
         font-style: normal;
         font-weight: normal;
-        font-size: 20px;
+        font-size: 1rem;
         line-height: 26px;
         color: #000000;
       }

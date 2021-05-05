@@ -1,7 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Box, ErrorTitle, PopupButton } from './shared-style.component';
+import { Box,  PopupButton } from './shared-style.component';
 import ValidationInput from '../../components/validation-input/validation-input.component';
 import { useMutation } from '@apollo/client';
 import {
@@ -100,7 +99,7 @@ const EmailCodePopup = ({ email, setOpenVerifyEmailPopup }) => {
           />
         </Row>
         {!isCodeValid ? (
-          <ErrorTitle>You have to provide the verification code</ErrorTitle>
+          <h5 className="error-title">You have to provide the verification code</h5>
         ) : null}
 
         <Row>

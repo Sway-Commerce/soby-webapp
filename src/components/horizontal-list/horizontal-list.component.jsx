@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
+import {mainColor} from '../../shared/css-variable/variable';
 
 export const Container = styled.div`
-  margin: 0;
-  padding: 0;
-  display: flex;
+  margin: auto;
+  padding: 20px 4px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(106px, 158px));
 
   .tab-wrapper + .tab-wrapper {
     margin-left: 24px;
@@ -24,10 +26,9 @@ export const Container = styled.div`
     }
 
     .order {
-      font-family: Work Sans;
       font-style: normal;
       font-weight: normal;
-      font-size: 16px;
+      font-size: 0.8rem;
       line-height: 26px;
       color: #000000;
       margin: auto 0;
@@ -35,10 +36,9 @@ export const Container = styled.div`
     }
 
     .amount {
-      font-family: Work Sans;
       font-style: normal;
       font-weight: normal;
-      font-size: 32px;
+      font-size: 1.6rem;
       line-height: 38px;
       color: #000000;
       margin: auto 0;
@@ -47,8 +47,11 @@ export const Container = styled.div`
 
   .tab-status {
     display: flex;
-    padding-right: 16px;
     cursor: pointer;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    width: 160px;
     svg {
       margin: auto 8px auto 0px;
     }
@@ -56,19 +59,17 @@ export const Container = styled.div`
       font-family: Work Sans;
       font-style: normal;
       font-weight: normal;
-      font-size: 20px;
       line-height: 26px;
       color: #000000;
     }
 
-    & + .tab-status {
-      padding-left: 16px;
-      border-left: 1px rgb(0, 0, 0, 0.25) solid;
-    }
   }
 
-  .opacity {
-    opacity: 0.25;
+  .active {
+    background-color: ${mainColor};
+    p.status {
+      color: white;
+    }
   }
 `;
 

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { mainColor } from 'shared/css-variable/variable';
 
 export const SigninContainer = styled.div`
   display: flex;
@@ -7,33 +6,13 @@ export const SigninContainer = styled.div`
   margin: 0 auto;
 `;
 
-export const SigninTitle = styled.h1`
-  margin: 10px 0;
-  text-transform: capitalize;
-  color: ${mainColor};
-  padding-bottom: 10px;
-`;
-
-export const ErrorTitle = styled.h5`
-  color: red;
-  margin: 5px 0;
-`;
-
 export const CardWrapper = styled.div`
-  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
-  padding: 80px 68px;
-  width: 586px;
-  min-height: 798px;
+  padding: 56px 40px 40px;
+  height: 565px;
   height: auto;
-
-  &:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-  }
-
-  button {
-    margin-top: 56px;
-  }
+  background: #ffffff;
+  border-radius: 3px;
 `;
 
 export const RegisterContainer = styled.div`
@@ -45,22 +24,12 @@ export const RegisterContainer = styled.div`
 export const FormContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 56px;
+  margin-top: 64px;
   form {
     width: 100%;
   }
 `;
 
-export const InputGroup = styled.div`
-  margin-top: 32px;
-`
-
-export const ForgotPass = styled.div`
-  font-style: normal;
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 15px;
-  color: black;
-  text-align: right;
-  margin-top: 8px;
+export const InputContainer = styled.div`
+  margin-top: 24px;
 `;

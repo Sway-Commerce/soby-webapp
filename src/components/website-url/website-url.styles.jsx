@@ -9,9 +9,9 @@ export const WebsiteGroup = styled.div`
     }
     p {
       margin: auto 0;
-      font-size: 16px;
+      font-size: 0.8rem;
       &.url {
-        font-size: 14px;
+        font-size: 0.7rem;
         max-width: 162px;
         cursor: pointer;
       }

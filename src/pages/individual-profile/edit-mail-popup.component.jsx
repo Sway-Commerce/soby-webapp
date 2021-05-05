@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useMutation } from '@apollo/client';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
@@ -9,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { setEmail } from 'redux/user/user.actions';
 import emailValidation from 'shared/utils/emailValidation';
 import styled from 'styled-components';
-import { Box, ErrorTitle, PopupButton } from './shared-style.component';
+import { Box, PopupButton } from './shared-style.component';
 
 
 const InputContainer = styled.div`
@@ -26,7 +25,7 @@ const Input = styled.input.attrs((props) => ({
   border: 0;
   border-radius: 0;
   border-bottom: 0.5px solid #c2c2c2;
-  font-size: 18px;
+  font-size: 0.9rem;
 `;
 
 const EmailPopup = ({ setOpenEditMailPopup, email }) => {
@@ -101,7 +100,7 @@ const EmailPopup = ({ setOpenEditMailPopup, email }) => {
         </InputContainer>
 
         {!isEmailValid ? (
-          <ErrorTitle>Your email is not correct</ErrorTitle>
+          <h5 className="error-title">Your email is not correct</h5>
         ) : null}
 
         <PopupButton />

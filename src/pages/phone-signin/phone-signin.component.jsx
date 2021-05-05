@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
@@ -24,18 +23,16 @@ import {
 
 import {
   SigninContainer,
-  ErrorTitle,
   CardWrapper,
   RegisterContainer,
   FormContainer,
-  InputGroup,
-  ForgotPass,
 } from './phone-signin.styles';
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
 import usePhoneNumber from 'shared/hooks/usePhoneNumber';
 import Spinner from 'components/ui/spinner/spinner.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import { InputContainer } from 'pages/register/register.styles';
 
 const PhoneSignin = () => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
@@ -231,10 +228,10 @@ const PhoneSignin = () => {
     <RegisterContainer>
       <CardWrapper>
         <SigninContainer>
-          <div className="soby-title">Đăng nhập</div>
+          <div className="soby-title">Welcome back</div>
           <FormContainer>
             <form onSubmit={handleSubmit}>
-              <div className="form-label">Your phone numbers</div>
+              <label className="form-label">Phone number</label>
               <PhoneInput
                 country="VN"
                 international
@@ -243,34 +240,35 @@ const PhoneSignin = () => {
                 defaultCountry="VN"
                 name="phoneNumber"
                 value={phoneNumberIntl}
+                placeholder="090 1324 567"
                 onChange={(value) => setPhoneNumberIntl(value)}
               />
               {!isPhoneValid ? (
-                <ErrorTitle>Your phone number is not correct</ErrorTitle>
+                <h5 className="error-title">
+                  Your phone number is not correct
+                </h5>
               ) : null}
 
-              <InputGroup>
-                <div className="form-label">Password</div>
+              <InputContainer>
                 <FormInput
                   type="password"
                   value={password}
                   onChange={handleChange}
-                  label="*******"
+                  label="Password"
+                  placeholder="*******"
                   required
                 />
                 {!isPasswordValid ? (
-                  <ErrorTitle>
+                  <h5 className="error-title">
                     Your password must be between 8 to 20 characters which
                     contain at least one numeric digit, one uppercase and one
                     lowercase letter
-                  </ErrorTitle>
+                  </h5>
                 ) : null}
-              </InputGroup>
-
-              <CustomButton type="submit">Đăng nhập</CustomButton>
-              <ForgotPass>
-                <Link to="/resetpass">Forgot your Password</Link>
-              </ForgotPass>
+              </InputContainer>
+              <CustomButton className="main-btn" type="submit">
+                Login
+              </CustomButton>
             </form>
           </FormContainer>
         </SigninContainer>

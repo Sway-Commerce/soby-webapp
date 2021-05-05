@@ -1,7 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Box, ErrorTitle, PopupButton } from './shared-style.component';
+import { Box,  PopupButton } from './shared-style.component';
 import SobyModal from '../../components/ui/modal/modal.component';
 import ErrorPopup from '../../components/ui/error-popup/error-popup.component';
 import usePhoneNumber from '../../shared/hooks/usePhoneNumber';
@@ -33,7 +32,6 @@ const PhonePopup = ({
     `${currentPhoneCountryCode}${currentPhoneNumber}`
   );
   const [isPhoneValid, setIsPhoneValid] = useState(true);
-    debugger
   const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
   const dispatch = useDispatch();
   const dispatchSetPhoneNumber = ({ phoneCountryCode, phoneNumber }) =>
@@ -50,7 +48,6 @@ const PhonePopup = ({
   ] = useMutation(UPDATE_PHONE);
   useEffect(() => {
     if (updatePhoneMutationData?.updatePhone?.success) {
-      debugger;
       dispatchSetPhoneNumber({ phoneCountryCode, phoneNumber });
       setOpenEditPhonePopup(false);
     }
@@ -115,7 +112,7 @@ const PhonePopup = ({
               onChange={(value) => setPhoneNumberIntl(value)}
             />
             {!isPhoneValid ? (
-              <ErrorTitle>Your phone number is not correct</ErrorTitle>
+              <h5 className="error-title">Your phone number is not correct</h5>
             ) : null}
           </InputBox>
         </InputContainer>

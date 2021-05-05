@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   subInvoiceFilters,
   subInvoiceIcons,
@@ -16,7 +16,7 @@ export const Container = styled.div`
       font-family: Work Sans;
       font-style: normal;
       font-weight: normal;
-      font-size: 20px;
+      font-size: 1rem;
       line-height: 26px;
       color: #000000;
     }

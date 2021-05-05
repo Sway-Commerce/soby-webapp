@@ -1,25 +1,38 @@
 import { createGlobalStyle } from 'styled-components';
-import { mainColor, subColor } from './shared/css-variable/variable';
+import { borderColor, mainColor, subColor } from './shared/css-variable/variable';
 
 export const GlobalStyle = createGlobalStyle`
-	body {
-		font-family: 'Commissioner', sans-serif;
-		font-weight: regular;
+	html {
 		font-size: 20px;
+		@media screen and (max-width: 1024px) {
+			font-size: 18px;
+		}
+		@media screen and (max-width: 785px) {
+			font-size: 16px;
+		}
+	}
+	body {
+		font-family: 'Roboto', sans-serif;
+		font-weight: regular;
 		line-height: 24px;
 		color: #000000;
+		background-color: #E5E5E5;
 		.body-container {
-			width: 1140px;
+			width: 1200px;
 			margin: auto;
 			* {
 				box-sizing: border-box;
 			}
 		}
-		@media screen and (max-width: 800px) {
+		@media screen and (max-width: 1024px) {
 			.body-container {
 				width: auto;
 			}
 		}
+	}
+
+	h2 {
+		font-size: 1.2rem;
 	}
 
 	a {
@@ -70,12 +83,13 @@ export const GlobalStyle = createGlobalStyle`
 	}
 
 	.PhoneInput {
-		border-bottom: 1px ${subColor} solid;
+		border-bottom: 1px ${borderColor} solid;
     padding: 0 10px;
+		margin-top: 4px;
 		input.PhoneInputInput {
 			border: none;
-			font-family: "Open Sans";
-			font-size: 14px;
+			font-family: Work Sans;
+			font-size: 0.7rem;
 			outline: none
 		}
 		.PhoneInputCountrySelectArrow {
@@ -93,30 +107,27 @@ export const GlobalStyle = createGlobalStyle`
 	}
 
 	.soby-title {
-		font-family: Commissioner;
 		font-style: normal;
 		font-weight: normal;
-		font-size: 40px;
-		line-height: 56px;
-		color: ${mainColor};
+		font-size: 1.2rem;
+		line-height: 1rem;
 		text-align: center;
+		font-weight: 700;
 	}
 
 	.form-label {
-		font-family: Commissioner;
 		font-style: normal;
-		font-weight: 600;
-		font-size: 24px;
-		line-height: 29px;
-		color: ${mainColor};
-		text-transform: none;
-		margin-bottom: 16px;
+		font-weight: bold;
+		font-size: 0.8rem;
+		line-height: 1.2rem;
+		text-transform: capitalize;
+		margin-bottom: 24px;
 	}
 
 	p {
 		font-style: normal;
 		font-weight: normal;
-		font-size: 20px;
+		font-size: 0.8rem;
 		line-height: 26px;
 	}
 
@@ -142,5 +153,33 @@ export const GlobalStyle = createGlobalStyle`
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
 	}
+	.text-right {
+		text-align: right;
+	}
 
+	input {
+		margin-top: 4px;
+	}
+
+	h5.error-title {
+		color: red;
+  	margin: 5px 0;
+	}
+
+	.main-btn {
+		margin: 48px 0 32px;
+	}
+
+	::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+		color: rgba(79, 79, 79, 0.5);
+		opacity: 1; /* Firefox */
+	}
+
+	:-ms-input-placeholder { /* Internet Explorer 10-11 */
+		color: rgba(79, 79, 79, 0.5);
+	}
+
+	::-ms-input-placeholder { /* Microsoft Edge */
+		color: rgba(79, 79, 79, 0.5);
+	}
 `;
