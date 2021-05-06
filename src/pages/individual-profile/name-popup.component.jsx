@@ -156,12 +156,6 @@ const NamePopup = ({
     const formData = new FormData();
     formData.append('files', picture.pictureAsFile);
 
-    console.log(picture.pictureAsFile);
-
-    for (var key of formData.entries()) {
-      console.log(key[0] + ', ' + key[1]);
-    }
-
     const data = await fetch('https://api-dev.soby.vn/individuals/images', {
       method: 'POST',
       headers: {

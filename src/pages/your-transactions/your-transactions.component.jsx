@@ -8,6 +8,7 @@ import { GET_INVOICE_ORDER_LIST_FOR_INDIVIDUAL } from '../../graphQL/repository/
 import Spinner from 'components/ui/spinner/spinner.component';
 import InvoiceItem from 'components/invoice-item/invoice-item.component';
 import {
+  InvoiceStatusValue,
   mainInvoiceFilters,
   subInvoiceFilters,
 } from 'shared/constants/invoice.constant';
@@ -21,7 +22,7 @@ const YourTransaction = ({ name }) => {
     page: 0,
     pageSize: 10,
     mainFilter: mainInvoiceFilters[1],
-    subFilter: subInvoiceFilters[0],
+    subFilter: InvoiceStatusValue[0],
     total: 0,
   });
   const [open, setOpen] = useState(false);
@@ -100,10 +101,10 @@ const YourTransaction = ({ name }) => {
             items={subInvoiceFilters}
             renderItem={(item, index) => (
               <div
-                className={`tab-status ${subFilter === item ? 'active' : ''}`}
+                className={`tab-status ${subFilter === InvoiceStatusValue[index] ? 'active' : ''}`}
                 key={item}
                 onClick={() =>
-                  setInvoiceListQuery({ ...invoiceListQuery, subFilter: item })
+                  setInvoiceListQuery({ ...invoiceListQuery, subFilter: InvoiceStatusValue[index] })
                 }
               >
                 <p className="status">{item}</p>

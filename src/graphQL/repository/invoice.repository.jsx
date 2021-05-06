@@ -3,7 +3,7 @@ import {
   INVOICE_HISTORY_FRAGMENT,
   AGGREGATED_ASSESS_FRAGMENT,
   INVOICE_ORDER_FRAGMENT,
-  AGGREGATED_INVOICE_HISTORY_FRAGMENT,
+  AGGREGATED_INVOICE_FRAGMENT,
   AGGREGATED_INVOICE_ORDER_FRAGMENT,
   ASSESS_FRAGMENT,
 } from '../common.fragment';
@@ -121,7 +121,7 @@ export const MARK_SATISFIED_WITH_ORDER = gql`
 `;
 export const REQUEST_INVOICE_REFUND = gql`
   ${AGGREGATED_ASSESS_FRAGMENT}
-  mutation RequestInvoiceRefund($cmd: RequestInvoiceRefundCmd!) {
+  mutation RequestInvoiceRefund($cmd: RequestRefundCmd!) {
     requestInvoiceRefund(cmd: $cmd) {
       message
       data {
@@ -186,7 +186,7 @@ export const GET_INVOICE_ORDER_LIST_FOR_INDIVIDUAL = gql`
   }
 `;
 export const GET_DETAILED_INVOICE_BY_ID = gql`
-  ${AGGREGATED_INVOICE_HISTORY_FRAGMENT}
+  ${AGGREGATED_INVOICE_FRAGMENT}
   query GetDetailedInvoiceById($id: String!) {
     getAggregatedInvoice(id: $id) {
       message

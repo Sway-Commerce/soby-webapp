@@ -104,6 +104,7 @@ export const SKU_FRAGMENT = gql`
     }
     remainingQuantity
     totalQuantity
+    deleted
   }
 `;
 
@@ -115,19 +116,37 @@ export const PRODUCT_FRAGMENT = gql`
     id
     imageUrls
     category {
-        id
-        name
+      id
+      name
     }
     level2Category {
-        id
-        name
+      id
+      name
     }
     name
     shopId
     skus {
-        ...SkuFragment
+      ...SkuFragment
     }
     updatedAt
+    deleted
+  }
+`;
+
+export const AGGREGATED_INVOICE_ITEM = gql`
+  ${PRODUCT_FRAGMENT}
+  ${SKU_FRAGMENT}
+  fragment AggregatedInvoiceItemFragment on AggregatedInvoiceItem {
+    id
+    product {
+      ...ProductFragment
+    }
+    sku {
+      ...SkuFragment
+    }
+    quantity
+    price
+    weight
   }
 `;
 
@@ -178,10 +197,10 @@ export const INVOICE_ORDER_FRAGMENT = gql`
   }
 `;
 
-export const AGGREGATED_INVOICE_HISTORY_FRAGMENT = gql`
+export const AGGREGATED_INVOICE_FRAGMENT = gql`
   ${PRODUCT_FRAGMENT}
   ${SKU_FRAGMENT}
-  fragment AggregatedInvoiceHistoryFragment on AggregatedInvoiceData {
+  fragment AggregatedInvoiceFragment on AggregatedInvoice {
     id
     name
     description
@@ -193,13 +212,13 @@ export const AGGREGATED_INVOICE_HISTORY_FRAGMENT = gql`
     shippingType
     escrowFee
     oneTime
-    expiredAt
+    startTime
+    endTime
     acceptedCount
     createdAt
     updatedAt
     items {
       id
-      invoiceId
       product {
         ...ProductFragment
       }
@@ -208,10 +227,12 @@ export const AGGREGATED_INVOICE_HISTORY_FRAGMENT = gql`
       }
       quantity
       price
+      weight
     }
     price
-    expired
     totalWeight
+    createdBy
+    updatedBy
   }
 `;
 export const REFUND_REQUEST_FRAGMENT = gql`
@@ -223,18 +244,35 @@ export const REFUND_REQUEST_FRAGMENT = gql`
     requestReason
     description
     imageUrls
-    individualTrackingUrl
-    shopTrackingUrl
     requiredAdmin
     shippingType
+    shippingPartner
     shippingLocationId
     returnFeePaidBy
+    shippingFee
+    individualTrackingUrl
+    shopTrackingUrl
     status
     statusReason
     createdBy
     updatedBy
     createdAt
     updatedAt
+    bankCode
+    accountType
+    accountNumber
+    accountOwner
+    accountIssuedOn
+    bankBranch
+    refundAmount
+    items {
+      id
+      productId
+      skuId
+      quantity
+      price
+      weight
+    }
   }
 `;
 export const ASSESS_FRAGMENT = gql`
@@ -245,9 +283,7 @@ export const ASSESS_FRAGMENT = gql`
     orderId
     orderType
     shopId
-    productsAmount
-    refundAmount
-    weight
+    transferAmount
     assessType
     createdBy
     updatedBy
@@ -256,33 +292,7 @@ export const ASSESS_FRAGMENT = gql`
     refundRequests {
       ...RefundRequestFragment
     }
-  }
-`;
-export const AGGREGATED_INVOICE_ORDER_FRAGMENT = gql`
-  ${AGGREGATED_INVOICE_HISTORY_FRAGMENT}
-  ${SHIPPING_FRAGMENT}
-  ${ASSESS_FRAGMENT}
-  fragment AggregatedInvoiceOrderFragment on AggregatedInvoiceOrder {
-    id
-    invoice {
-      ...AggregatedInvoiceHistoryFragment
-    }
-    individualId
-    shippingLocation {
-      ...ShippingFragment
-    }
-    shippingFee
-    status
-    reason
-    totalPrice
-    createdAt
-    updatedAt
-    individualTrackingUrl
-    shopTrackingUrl
-    orderFee
-    assess {
-      ...AssessFragment
-    }
+    paymentMethod
   }
 `;
 
@@ -298,8 +308,7 @@ export const AGGREGATED_ASSESS_FRAGMENT = gql`
       phoneCountryCode
       phoneNumber
     }
-    productsAmount
-    refundAmount
+    transferAmount
     assessType
     createdBy
     updatedBy
@@ -308,6 +317,7 @@ export const AGGREGATED_ASSESS_FRAGMENT = gql`
     refundRequests {
       ...RefundRequestFragment
     }
+    paymentMethod
   }
 `;
 
@@ -387,5 +397,84 @@ export const AGGREGATED_ORDER_FRAGMENT = gql`
     assess {
       ...AssessFragment
     }
+  }
+`;
+
+export const SHOP_PUBLIC_INFO_FRAGMENT = gql`
+  fragment ShopPublicInfoFragment on ShopPublicInfo {
+    id
+    individualId
+    name
+    phoneCountryCode
+    phoneNumber
+    email
+    description
+    logoUrl
+    coverUrl
+    categoryIds
+    shopUrls
+    shippingType
+    signingPublicKey
+    encryptionPublicKey
+    createdAt
+    updatedAt
+    kyb {
+      status
+      reason
+    }
+    allowedCod
+  }
+`;
+
+export const AGGREGATED_INVOICE_HISTORY_FRAGMENT = gql`
+  ${SHOP_PUBLIC_INFO_FRAGMENT}
+  ${AGGREGATED_INVOICE_ITEM}
+  fragment AggregatedInvoiceHistoryFragment on AggregatedInvoiceHistory {
+    id
+    invoiceId
+    invoiceVersion
+    name
+    description
+    shop {
+      ...ShopPublicInfoFragment
+    }
+    shippingType
+    escrowFee
+    createdAt
+    items {
+      ...AggregatedInvoiceItemFragment
+    }
+    price
+    totalWeight
+  }
+`;
+
+export const AGGREGATED_INVOICE_ORDER_FRAGMENT = gql`
+  ${AGGREGATED_INVOICE_HISTORY_FRAGMENT}
+  ${SHIPPING_FRAGMENT}
+  ${ASSESS_FRAGMENT}
+  fragment AggregatedInvoiceOrderFragment on AggregatedInvoiceOrder {
+    id
+    invoice {
+      ...AggregatedInvoiceHistoryFragment
+    }
+    individualId
+    shippingLocation {
+      ...ShippingFragment
+    }
+    shippingFee
+    status
+    reason
+    totalPrice
+    createdAt
+    updatedAt
+    individualTrackingUrl
+    shopTrackingUrl
+    orderFee
+    assess {
+      ...AssessFragment
+    }
+    shippingPartner
+    paymentMethod
   }
 `;

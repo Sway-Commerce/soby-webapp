@@ -1,14 +1,25 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import product1 from "shared/assets/product1.svg";
-import product2 from "shared/assets/product2.svg";
-import uploadIcon from "shared/assets/uploadIcon.svg";
-import proImg1 from "shared/assets/productImg1.svg";
-import proImg2 from "shared/assets/productImg2.svg";
-import proImg3 from "shared/assets/productImg3.svg";
-import closeIcon from "shared/assets/closeIcon.svg";
-import sentIcon from "shared/assets/sentIcon.svg";
-import PhoneInput from "react-phone-number-input";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import proImg1 from 'shared/assets/productImg1.svg';
+import proImg2 from 'shared/assets/productImg2.svg';
+import proImg3 from 'shared/assets/productImg3.svg';
+import closeIcon from 'shared/assets/closeIcon.svg';
+import sentIcon from 'shared/assets/sentIcon.svg';
+import PhoneInput from 'react-phone-number-input';
+import { useParams } from 'react-router-dom';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import {
+  GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL,
+  REQUEST_INVOICE_REFUND,
+} from '../../graphQL/repository/invoice.repository';
+import usePhoneNumber from 'shared/hooks/usePhoneNumber';
+import Spinner from 'components/ui/spinner/spinner.component';
+import { currencyFormatter } from 'shared/utils/formatCurrency';
+import FileUpload from 'components/file-upload/file-upload.component';
+import { useSelector } from 'react-redux';
+import FormInput from 'components/form-input/form-input.component';
+import SobyModal from 'components/ui/modal/modal.component';
+import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
 const Page = styled.div`
   min-height: 100vh;
@@ -90,6 +101,12 @@ const Product = styled.div`
       }
     }
   }
+
+  img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+  }
 `;
 
 const Counter = styled.div`
@@ -117,7 +134,8 @@ const BoxReason = styled.div`
   border-bottom: 1px solid #c2c2c2;
   padding: 7px 0 24px;
   margin-top: 14px;
-  :last-child, :first-child {
+  :last-child,
+  :first-child {
     border: none;
   }
 
@@ -159,7 +177,7 @@ const BoxReason = styled.div`
         margin-left: 12px;
       }
       &:before {
-        content: "";
+        content: '';
         position: absolute;
         top: 50%;
         left: 0px;
@@ -171,7 +189,7 @@ const BoxReason = styled.div`
         border: 1px solid #000;
       }
       &:after {
-        content: "";
+        content: '';
         display: block;
         width: 9px;
         height: 4px;
@@ -184,7 +202,7 @@ const BoxReason = styled.div`
         left: -5px;
       }
     }
-    input[type="checkbox"] {
+    input[type='checkbox'] {
       width: auto;
       opacity: 0.00000001;
       position: absolute;
@@ -242,155 +260,433 @@ const SentButton = styled.button`
 `;
 
 const ReturnRequest = () => {
-  const [qty1, setQty1] = useState(1);
-  const [qty2, setQty2] = useState(0);
+  const [qty, setQty] = useState([0]);
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
   const [phoneValidation, setPhoneValid] = useState(true);
+  const { invoiceId } = useParams();
+  const [invoiceData, setInvoiceData] = useState({
+    name: '',
+    shippingType: '',
+    expiredAt: '',
+    price: '',
+    items: [],
+    shop: { logoUrl: '', name: '' },
+    status: '',
+    shippingFee: 0,
+    shippingLocation: {
+      addressLine: '',
+      district: '',
+      province: '',
+      ward: '',
+    },
+    individualTrackingUrl: '',
+    totalPrice: '',
+    orderFee: '',
+    escrowFee: '',
+    createdAt: '',
+    description: '',
+    id: '',
+    invoiceId: '',
+    invoiceVersion: '',
+    totalWeight: '',
+  });
+  const [picture, setPicture] = useState([]);
+  const [requestRefundInfo, setRequestRefundInfo] = useState({
+    id: invoiceId,
+    reason: '',
+    description: '',
+    imageUrls: '',
+    requiredAdmin: false,
+  });
+  const reasonMap = {
+    cb1: 'Wrong product',
+    cb2: "I don't want to buy this anymore",
+    cb3: 'I make wrong order',
+    cb4: 'Other reason',
+  };
 
-  return (
-    <Page>
-      <Box>
-        <h2>HD TV invoice from Soby</h2>
-        <h4>Delivired</h4>
-      </Box>
+  const { accessToken } = useSelector((state) => {
+    return state.user;
+  });
 
-      <Box>
-        <Grid>
-          <h3>Which product do you want return?</h3>
-          <HeaderCol>Qty</HeaderCol>
-          <HeaderCol>Price</HeaderCol>
+  const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
 
-          <Product>
-            <img src={product1} alt="" />
-            <div>
-              <p>HD TV invoice from Soby</p>
-              <p>Blue bird shop</p>
-            </div>
-          </Product>
-          <Counter>
-            <button onClick={() => setQty1(qty1 - 1)} disabled={qty1 === 0}>
-              -
-            </button>
-            <span>
-              {qty1.toLocaleString("en-US", {
-                minimumIntegerDigits: 2,
-                useGrouping: false,
-              })}
-            </span>
-            <button onClick={() => setQty1(qty1 + 1)}>+</button>
-          </Counter>
-          <span>240.000 đ</span>
+  const { shop } = invoiceData;
 
-          <Product>
-            <img src={product2} alt="" />
-            <div>
-              <p>Nintendo Switch with Neon Blue and Neon Red Joy-Con</p>
-              <p>Blue bird shop</p>
-            </div>
-          </Product>
-          <Counter>
-            <button onClick={() => setQty2(qty2 - 1)} disabled={qty2 === 0}>
-              -
-            </button>
-            <span>
-              {qty2.toLocaleString("en-US", {
-                minimumIntegerDigits: 2,
-                useGrouping: false,
-              })}
-            </span>
-            <button onClick={() => setQty2(qty2 + 1)}>+</button>
-          </Counter>
-          <span>2.000.000 đ</span>
-        </Grid>
-      </Box>
+  const {
+    id,
+    reason,
+    description,
+    imageUrls,
+    requiredAdmin,
+  } = requestRefundInfo;
 
-      <Box>
-        <h3>Contact information</h3>
-        <p class="bold" htmlFor="">
-          Phone number
-        </p>
-        <PhoneInput
-                country="VN"
-                international
-                initialValueFormat="national"
-                countryCallingCodeEditable={false}
-                defaultCountry="VN"
-                name="phoneNumber"
-                value={phoneNumberIntl}
-                onChange={(value) => setPhoneNumberIntl(value)}
+  // REQUEST_INVOICE_REFUND
+  const [
+    requestInvoiceRefund,
+    {
+      data: requestInvoiceRefundData,
+      loading: requestInvoiceRefundLoading,
+      error: requestInvoiceRefundError,
+    },
+  ] = useMutation(REQUEST_INVOICE_REFUND, {
+    errorPolicy: 'all',
+  });
+
+  useEffect(() => {
+    if (requestInvoiceRefundData?.requestInvoiceRefund?.success) {
+    }
+  }, [requestInvoiceRefundData?.requestInvoiceRefund?.success]);
+
+  const [
+    getAggregatedInvoiceOrderForIndividual,
+    {
+      loading: getAggregatedInvoiceOrderForIndividualLoading,
+      error: getAggregatedInvoiceOrderForIndividualError,
+      data: getAggregatedInvoiceOrderForIndividualData,
+    },
+  ] = useLazyQuery(GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL, {
+    variables: {
+      id: invoiceId,
+    },
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
+  });
+
+  useEffect(() => {
+    if (invoiceId) {
+      getAggregatedInvoiceOrderForIndividual();
+    }
+  }, [invoiceId]);
+
+  useEffect(() => {
+    const invoiceData =
+      getAggregatedInvoiceOrderForIndividualData
+        ?.getAggregatedInvoiceOrderForIndividual?.data;
+    if (invoiceData) {
+      const {
+        id,
+        invoice,
+        individualId,
+        shippingPartner,
+        shippingLocation,
+        shippingFee,
+        individualTrackingUrl,
+        orderFee,
+        status,
+        reason,
+        totalPrice,
+        createdAt,
+        updatedAt,
+        assess,
+        paymentMethod,
+      } = invoiceData;
+      const {
+        invoiceId,
+        invoiceVersion,
+        name,
+        description,
+        shop,
+        shippingType,
+        escrowFee,
+        items,
+        price,
+        totalWeight,
+      } = invoice;
+
+      setQty(items.map(() => 0));
+
+      setInvoiceData({
+        name,
+        shippingType,
+        price,
+        items,
+        shop,
+        status,
+        shippingFee,
+        shippingLocation,
+        individualTrackingUrl,
+        totalPrice,
+        orderFee,
+        escrowFee,
+      });
+    }
+  }, [
+    getAggregatedInvoiceOrderForIndividualData
+      ?.getAggregatedInvoiceOrderForIndividual?.data,
+  ]);
+
+  // Error handle
+  useEffect(() => {
+    if (
+      getAggregatedInvoiceOrderForIndividualError?.message ||
+      requestInvoiceRefundError?.message
+    ) {
+      setFormError(
+        getAggregatedInvoiceOrderForIndividualError?.message ||
+          requestInvoiceRefundError?.message
+      );
+      setOpen(true);
+    }
+  }, [
+    getAggregatedInvoiceOrderForIndividualError?.message,
+    requestInvoiceRefundError?.message,
+  ]);
+
+  const handleCheckChange = (event) => {
+    if (!event) {
+      return;
+    }
+    const { value } = event?.target;
+
+    setRequestRefundInfo({ ...requestRefundInfo, reason: value });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const items = qty
+      .map((x, i) => {
+        return { id: invoiceData.items[i].id, quantity: x };
+      })
+      .filter((x) => !!x.quantity);
+    const submitReason = reasonMap[reason];
+
+
+    const formData = new FormData();
+    picture.map(x =>  formData.append('files', x));
+
+    const data = await fetch('https://api-dev.soby.vn/individuals/images', {
+      method: 'POST',
+      headers: {
+        Category: 'REFUND',
+        Authorization: accessToken ? `Bearer ${accessToken}` : '',
+      },
+      body: formData,
+    });
+    const uploadedImage = await data.json();
+    if (uploadedImage?.data) {
+      requestInvoiceRefund({
+        variables: {
+          cmd: {
+            id: invoiceId,
+            phoneCountryCode,
+            phoneNumber,
+            reason,
+            description,
+            imageUrls: uploadedImage?.data?.urls,
+            requiredAdmin: false,
+            items,
+          },
+        },
+      });
+    } else {
+      setFormError(uploadedImage?.message);
+      setOpen(true);
+    }
+  };
+
+  return requestInvoiceRefundLoading ||
+    getAggregatedInvoiceOrderForIndividualLoading ? (
+    <Spinner />
+  ) : (
+    <React.Fragment>
+      <Page>
+        <Box>
+          <h2>{invoiceData.name}</h2>
+          <h4 style={{ textTransform: 'capitalize' }}>
+            {invoiceData.status?.toLocaleLowerCase()}
+          </h4>
+        </Box>
+
+        <Box>
+          <Grid>
+            <h3>Which product do you want return?</h3>
+            <HeaderCol>Qty</HeaderCol>
+            <HeaderCol>Price</HeaderCol>
+
+            {invoiceData.items.map((x, idx) => {
+              const {
+                id: itemId,
+                price: totalPrice,
+                product: {
+                  name: productName,
+                  id,
+                  imageUrls: [imageUrl],
+                },
+                sku: { properties, currentPrice },
+                quantity: productQuantity,
+              } = x;
+              return (
+                <React.Fragment key={itemId}>
+                  <Product>
+                    <img src={imageUrl} alt="" />
+                    <div>
+                      <p>{productName}</p>
+                      <p>{shop.name}</p>
+                    </div>
+                  </Product>
+                  <Counter>
+                    <button
+                      onClick={() => {
+                        setQty(
+                          qty.map((q, index) => {
+                            if (index === idx) {
+                              return q - 1;
+                            }
+                            return q;
+                          })
+                        );
+                      }}
+                      disabled={qty[idx] === 0}
+                    >
+                      -
+                    </button>
+                    <span>
+                      {qty[idx].toLocaleString('en-US', {
+                        minimumIntegerDigits: 2,
+                        useGrouping: false,
+                      })}
+                    </span>
+                    <button
+                      onClick={() => {
+                        setQty(
+                          qty.map((q, index) => {
+                            if (index === idx) {
+                              return q + 1;
+                            }
+                            return q;
+                          })
+                        );
+                      }}
+                      disabled={qty[idx] === productQuantity}
+                    >
+                      +
+                    </button>
+                  </Counter>
+                  <span>{currencyFormatter(qty[idx] * +currentPrice)}</span>
+                </React.Fragment>
+              );
+            })}
+          </Grid>
+        </Box>
+
+        <Box>
+          <h3>Contact information</h3>
+          <p className="bold" htmlFor="">
+            Phone number
+          </p>
+          <PhoneInput
+            country="VN"
+            international
+            initialValueFormat="national"
+            countryCallingCodeEditable={false}
+            defaultCountry="VN"
+            name="phoneNumber"
+            value={phoneNumberIntl}
+            onChange={(value) => setPhoneNumberIntl(value)}
+          />
+          {!phoneValidation ? (
+            <h5 className="error-title">Your phone number is not correct</h5>
+          ) : null}
+        </Box>
+        <Box>
+          <h3>Return reason</h3>
+          <BoxReason>
+            <div className="checkbox">
+              <input
+                type="checkbox"
+                name=""
+                value="cb1"
+                id="cb1"
+                checked={reason === 'cb1'}
+                onChange={handleCheckChange}
               />
-              {!phoneValidation ? (
-                <h5 className="error-title">Your phone number is not correct</h5>
-              ) : null}
-      </Box>
-      <Box>
-        <h3>Return reason</h3>
-        <BoxReason>
-          <div className="checkbox">
-            <input type="checkbox" name="" id="cb1" />
-            <label htmlFor="cb1">Wrong product</label>
-          </div>
-          <p contentEditable>Describe what happened</p>
-        </BoxReason>
-        <BoxReason>
-          <div className="checkbox">
-            <input type="checkbox" name="" id="cb2" />
-            <label htmlFor="cb2">I don't want to buy this anymore</label>
-          </div>
-        </BoxReason>
-        <BoxReason>
-          <div className="checkbox">
-            <input type="checkbox" name="" id="cb3" />
-            <label htmlFor="cb3">I make wrong order</label>
-          </div>
-        </BoxReason>
-        <BoxReason>
-          <div className="checkbox">
-            <input type="checkbox" name="" id="cb4" />
-            <label htmlFor="cb4">Order reason</label>
-          </div>
-        </BoxReason>
-      </Box>
-
-      <Box>
-        <h3>Provide pictures of the problem</h3>
-        <p className="sub">
-          If it's broken or missing something, be sure to capture an image of it
-        </p>
-
-        <BoxReason className="upload-box">
-          <p className="sub">Drag & drop or browser photo up upload</p>
-          <img src={uploadIcon} alt="" />
-        </BoxReason>
-
-        <div className="row">
-          <ImgBox>
-            <img src={proImg1} alt="" />
-            <div className="close-icon">
-              <img src={closeIcon} alt="" />
+              <label htmlFor="cb1">Wrong product</label>
             </div>
-          </ImgBox>
-          <ImgBox>
-            <img src={proImg2} alt="" />
-            <div className="close-icon">
-              <img src={closeIcon} alt="" />
+            <div style={{ marginTop: '10px' }}>
+              <FormInput
+                value={requestRefundInfo.description}
+                onChange={(event) =>
+                  setRequestRefundInfo({
+                    ...requestRefundInfo,
+                    description: event?.target?.value,
+                  })
+                }
+                placeholder="Describe what happened"
+                withoutTitle
+                withoutBorder
+                disabled={reason !== 'cb1'}
+              />
             </div>
-          </ImgBox>
-          <ImgBox>
-            <img src={proImg3} alt="" />
-            <div className="close-icon">
-              <img src={closeIcon} alt="" />
+          </BoxReason>
+          <BoxReason>
+            <div className="checkbox">
+              <input
+                type="checkbox"
+                name=""
+                value="cb2"
+                id="cb2"
+                checked={reason === 'cb2'}
+                onChange={handleCheckChange}
+              />
+              <label htmlFor="cb2">I don't want to buy this anymore</label>
             </div>
-          </ImgBox>
-        </div>
-      </Box>
+          </BoxReason>
+          <BoxReason>
+            <div className="checkbox">
+              <input
+                type="checkbox"
+                name="reason"
+                value="cb3"
+                id="cb3"
+                checked={reason === 'cb3'}
+                onChange={handleCheckChange}
+              />
+              <label htmlFor="cb3">I make wrong order</label>
+            </div>
+          </BoxReason>
+          <BoxReason>
+            <div className="checkbox">
+              <input
+                type="checkbox"
+                name="reason"
+                value="cb4"
+                id="cb4"
+                checked={reason === 'cb4'}
+                onChange={handleCheckChange}
+              />
+              <label htmlFor="cb4">Other reason</label>
+            </div>
+          </BoxReason>
+        </Box>
 
-      <SentButton>
-        Send request <img src={sentIcon} alt="" />
-      </SentButton>
-    </Page>
+        <Box>
+          <h3>Provide pictures of the problem</h3>
+          <p className="sub">
+            If it's broken or missing something, be sure to capture an image of
+            it
+          </p>
+
+          <FileUpload
+            accept=".jpg,.png,.jpeg"
+            label="Profile Image(s)"
+            multiple
+            updateFilesCb={setPicture}
+          />
+        </Box>
+
+        <SentButton onClick={handleSubmit}>
+          Send request <img src={sentIcon} alt="" />
+        </SentButton>
+      </Page>
+      <SobyModal open={open} setOpen={setOpen}>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpen} />
+        ) : null}
+      </SobyModal>
+    </React.Fragment>
   );
 };
 
