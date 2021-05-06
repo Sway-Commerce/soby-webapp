@@ -288,10 +288,7 @@ const ReturnRequest = () => {
     invoiceVersion: '',
     totalWeight: '',
   });
-  const [picture, setPicture] = useState({
-    picturePreview: '',
-    pictureAsFile: null,
-  });
+  const [picture, setPicture] = useState([]);
   const [requestRefundInfo, setRequestRefundInfo] = useState({
     id: invoiceId,
     reason: '',
@@ -434,13 +431,6 @@ const ReturnRequest = () => {
     requestInvoiceRefundError?.message,
   ]);
 
-  const uploadPicture = (files) => {
-    setPicture({
-      picturePreview: URL.createObjectURL(files[0]),
-      pictureAsFile: files[0],
-    });
-  };
-
   const handleChange = (event) => {
     if (!event) {
       return;
@@ -550,7 +540,7 @@ const ReturnRequest = () => {
 
       <Box>
         <h3>Contact information</h3>
-        <p class="bold" htmlFor="">
+        <p className="bold" htmlFor="">
           Phone number
         </p>
         <PhoneInput
@@ -581,7 +571,7 @@ const ReturnRequest = () => {
             />
             <label htmlFor="cb1">Wrong product</label>
           </div>
-          <p contentEditable>Describe what happened</p>
+          <p>Describe what happened</p>
         </BoxReason>
         <BoxReason>
           <div className="checkbox">
@@ -634,29 +624,8 @@ const ReturnRequest = () => {
           accept=".jpg,.png,.jpeg"
           label="Profile Image(s)"
           multiple
-          updateFilesCb={uploadPicture}
+          updateFilesCb={setPicture}
         />
-
-        <div className="row">
-          <ImgBox>
-            <img src={proImg1} alt="" />
-            <div className="close-icon">
-              <img src={closeIcon} alt="" />
-            </div>
-          </ImgBox>
-          <ImgBox>
-            <img src={proImg2} alt="" />
-            <div className="close-icon">
-              <img src={closeIcon} alt="" />
-            </div>
-          </ImgBox>
-          <ImgBox>
-            <img src={proImg3} alt="" />
-            <div className="close-icon">
-              <img src={closeIcon} alt="" />
-            </div>
-          </ImgBox>
-        </div>
       </Box>
 
       <SentButton>

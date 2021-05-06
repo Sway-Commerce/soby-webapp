@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import uploadIcon from 'shared/assets/uploadIcon.svg';
+import closeIcon from 'shared/assets/closeIcon.svg';
 
 import styled from 'styled-components';
 
@@ -11,9 +12,9 @@ const FileUploadContainer = styled.section`
   flex-direction: column;
   align-items: center;
   background-color: white;
-  border: 1px solid #E4E4E4;
+  border: 1px solid #e4e4e4;
   height: 80px;
-  padding: 24px 0 ;
+  padding: 24px 0;
 `;
 
 const FormField = styled.input`
@@ -237,6 +238,31 @@ const BoxReason = styled.div`
   }
 `;
 
+const ImgBox = styled.div`
+  position: relative;
+  margin-right: 18px;
+
+  img.preview-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
+
+  .close-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: #f1f1f1;
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
+  }
+`;
+
 const KILO_BYTES_PER_BYTE = 1000;
 const DEFAULT_MAX_FILE_SIZE_IN_BYTES = 500000;
 
@@ -260,12 +286,12 @@ const FileUpload = ({
 
   const addNewFiles = (newFiles) => {
     for (let file of newFiles) {
-      if (file.size <= maxFileSizeInBytes) {
+      // if (file.size <= maxFileSizeInBytes) {
         if (!otherProps.multiple) {
           return { file };
         }
         files[file.name] = file;
-      }
+      // }
     }
     return { ...files };
   };
@@ -276,19 +302,13 @@ const FileUpload = ({
   };
 
   const handleNewFileUpload = (e) => {
-    debugger
+    debugger;
     const { files: newFiles } = e.target;
     if (newFiles.length) {
       let updatedFiles = addNewFiles(newFiles);
       setFiles(updatedFiles);
       callUpdateFilesCb(updatedFiles);
     }
-  };
-
-  const removeFile = (fileName) => {
-    delete files[fileName];
-    setFiles({ ...files });
-    callUpdateFilesCb({ ...files });
   };
 
   return (
@@ -311,29 +331,53 @@ const FileUpload = ({
       <FilePreviewContainer>
         <PreviewList>
           {Object.keys(files).map((fileName, index) => {
+            debugger;
             let file = files[fileName];
             let isImageFile = file.type.split('/')[0] === 'image';
             return (
-              <PreviewContainer key={fileName}>
-                <div>
-                  {isImageFile && (
-                    <ImagePreview
-                      src={URL.createObjectURL(file)}
-                      alt={`file preview ${index}`}
+              isImageFile && (
+                <ImgBox key={fileName}>
+                  <img
+                    class="preview-img"
+                    src={URL.createObjectURL(file)}
+                    alt={`file preview ${index}`}
+                  />
+                  <div className="close-icon">
+                    <img
+                      src={closeIcon}
+                      alt=""
+                      onClick={() => {
+                        debugger
+                        delete files[fileName];
+                        setFiles({ ...files });
+                        callUpdateFilesCb({ ...files });
+                      }}
+                      key={fileName + Math.random()}
                     />
-                  )}
-                  <FileMetaData isImageFile={isImageFile}>
-                    <span>{file.name}</span>
-                    <aside>
-                      <span>{convertBytesToKB(file.size)} kb</span>
-                      <RemoveFileIcon
-                        className="fas fa-trash-alt"
-                        onClick={() => removeFile(fileName)}
-                      />
-                    </aside>
-                  </FileMetaData>
-                </div>
-              </PreviewContainer>
+                  </div>
+                </ImgBox>
+              )
+
+              // <PreviewContainer key={fileName}>
+              //   <div>
+              //     {isImageFile && (
+              //       <ImagePreview
+              //         src={URL.createObjectURL(file)}
+              //         alt={`file preview ${index}`}
+              //       />
+              //     )}
+              //     <FileMetaData isImageFile={isImageFile}>
+              //       <span>{file.name}</span>
+              //       <aside>
+              //         <span>{convertBytesToKB(file.size)} kb</span>
+              //         <RemoveFileIcon
+              //           className="fas fa-trash-alt"
+              //           onClick={() => removeFile(fileName)}
+              //         />
+              //       </aside>
+              //     </FileMetaData>
+              //   </div>
+              // </PreviewContainer>
             );
           })}
         </PreviewList>
