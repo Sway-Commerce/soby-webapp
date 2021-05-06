@@ -66,7 +66,6 @@ const YourTransaction = ({ name }) => {
   }, [mainFilter, subFilter, page, pageSize, getIndividualAggregatedInvoiceOrderList]);
 
   useEffect(() => {
-    debugger
     if (
       getIndividualAggregatedInvoiceOrderListData?.getIndividualAggregatedInvoiceOrderList
         ?.data?.records

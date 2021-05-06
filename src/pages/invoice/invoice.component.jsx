@@ -444,7 +444,6 @@ const Invoice = () => {
         assess,
         paymentMethod,
       } = invoiceData;
-      debugger
       const {
         invoiceId,
         invoiceVersion,
