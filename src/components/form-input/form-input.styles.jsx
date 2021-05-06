@@ -19,12 +19,16 @@ export const FormInputContainer = styled.input`
   width: 100%;
   border: none;
   border-radius: 0;
-  border-bottom: 1px solid ${borderColor};
+  border-bottom: ${(props) =>
+    props.withoutBorder ? 'none' : `1px solid ${borderColor}`};
+  pointer-events: ${(props) => (props.disabled ? 'none' : `all`)};
+
   margin-top: -6px;
 
   &:focus {
     outline: none;
-    border-bottom: 1px solid ${mainColor};
+    border-bottom: ${(props) =>
+      props.withoutBorder ? 'none' : `1px solid ${mainColor}`};
   }
 
   &:focus ~ label {

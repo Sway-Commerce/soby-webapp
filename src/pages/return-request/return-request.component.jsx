@@ -16,6 +16,10 @@ import usePhoneNumber from 'shared/hooks/usePhoneNumber';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
 import FileUpload from 'components/file-upload/file-upload.component';
+import { useSelector } from 'react-redux';
+import FormInput from 'components/form-input/form-input.component';
+import SobyModal from 'components/ui/modal/modal.component';
+import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
 const Page = styled.div`
   min-height: 100vh;
@@ -296,6 +300,16 @@ const ReturnRequest = () => {
     imageUrls: '',
     requiredAdmin: false,
   });
+  const reasonMap = {
+    cb1: 'Wrong product',
+    cb2: "I don't want to buy this anymore",
+    cb3: 'I make wrong order',
+    cb4: 'Other reason',
+  };
+
+  const { accessToken } = useSelector((state) => {
+    return state.user;
+  });
 
   const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
 
@@ -319,17 +333,6 @@ const ReturnRequest = () => {
     },
   ] = useMutation(REQUEST_INVOICE_REFUND, {
     errorPolicy: 'all',
-    variables: {
-      cmd: {
-        id,
-        phoneCountryCode,
-        phoneNumber,
-        reason,
-        description,
-        imageUrls,
-        requiredAdmin,
-      },
-    },
   });
 
   useEffect(() => {
@@ -425,23 +428,14 @@ const ReturnRequest = () => {
         getAggregatedInvoiceOrderForIndividualError?.message ||
           requestInvoiceRefundError?.message
       );
+      setOpen(true);
     }
   }, [
     getAggregatedInvoiceOrderForIndividualError?.message,
     requestInvoiceRefundError?.message,
   ]);
 
-  const handleChange = (event) => {
-    if (!event) {
-      return;
-    }
-    const { name, value } = event?.target;
-
-    setRequestRefundInfo({ ...requestRefundInfo, [name]: value });
-  };
-
   const handleCheckChange = (event) => {
-    debugger;
     if (!event) {
       return;
     }
@@ -450,188 +444,249 @@ const ReturnRequest = () => {
     setRequestRefundInfo({ ...requestRefundInfo, reason: value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    const items = qty
+      .map((x, i) => {
+        return { id: invoiceData.items[i].id, quantity: x };
+      })
+      .filter((x) => !!x.quantity);
+    const submitReason = reasonMap[reason];
+
+
+    const formData = new FormData();
+    picture.map(x =>  formData.append('files', x));
+
+    const data = await fetch('https://api-dev.soby.vn/individuals/images', {
+      method: 'POST',
+      headers: {
+        Category: 'REFUND',
+        Authorization: accessToken ? `Bearer ${accessToken}` : '',
+      },
+      body: formData,
+    });
+    const uploadedImage = await data.json();
+    if (uploadedImage?.data) {
+      requestInvoiceRefund({
+        variables: {
+          cmd: {
+            id: invoiceId,
+            phoneCountryCode,
+            phoneNumber,
+            reason,
+            description,
+            imageUrls: uploadedImage?.data?.urls,
+            requiredAdmin: false,
+            items,
+          },
+        },
+      });
+    } else {
+      setFormError(uploadedImage?.message);
+      setOpen(true);
+    }
   };
 
   return requestInvoiceRefundLoading ||
     getAggregatedInvoiceOrderForIndividualLoading ? (
     <Spinner />
   ) : (
-    <Page>
-      <Box>
-        <h2>{invoiceData.name}</h2>
-        <h4 style={{ textTransform: 'capitalize' }}>
-          {invoiceData.status?.toLocaleLowerCase()}
-        </h4>
-      </Box>
+    <React.Fragment>
+      <Page>
+        <Box>
+          <h2>{invoiceData.name}</h2>
+          <h4 style={{ textTransform: 'capitalize' }}>
+            {invoiceData.status?.toLocaleLowerCase()}
+          </h4>
+        </Box>
 
-      <Box>
-        <Grid>
-          <h3>Which product do you want return?</h3>
-          <HeaderCol>Qty</HeaderCol>
-          <HeaderCol>Price</HeaderCol>
+        <Box>
+          <Grid>
+            <h3>Which product do you want return?</h3>
+            <HeaderCol>Qty</HeaderCol>
+            <HeaderCol>Price</HeaderCol>
 
-          {invoiceData.items.map((x, idx) => {
-            const {
-              id: itemId,
-              price: totalPrice,
-              product: {
-                name: productName,
-                id,
-                imageUrls: [imageUrl],
-              },
-              sku: { properties, currentPrice },
-              quantity: productQuantity,
-            } = x;
-            return (
-              <React.Fragment key={itemId}>
-                <Product>
-                  <img src={imageUrl} alt="" />
-                  <div>
-                    <p>{productName}</p>
-                    <p>{shop.name}</p>
-                  </div>
-                </Product>
-                <Counter>
-                  <button
-                    onClick={() => {
-                      setQty(
-                        qty.map((q, index) => {
-                          if (index === idx) {
-                            return q - 1;
-                          }
-                          return q;
-                        })
-                      );
-                    }}
-                    disabled={qty[idx] === 0}
-                  >
-                    -
-                  </button>
-                  <span>
-                    {qty[idx].toLocaleString('en-US', {
-                      minimumIntegerDigits: 2,
-                      useGrouping: false,
-                    })}
-                  </span>
-                  <button
-                    onClick={() => {
-                      setQty(
-                        qty.map((q, index) => {
-                          if (index === idx) {
-                            return q + 1;
-                          }
-                          return q;
-                        })
-                      );
-                    }}
-                    disabled={qty[idx] === productQuantity}
-                  >
-                    +
-                  </button>
-                </Counter>
-                <span>{currencyFormatter(qty[idx] * +currentPrice)}</span>
-              </React.Fragment>
-            );
-          })}
-        </Grid>
-      </Box>
+            {invoiceData.items.map((x, idx) => {
+              const {
+                id: itemId,
+                price: totalPrice,
+                product: {
+                  name: productName,
+                  id,
+                  imageUrls: [imageUrl],
+                },
+                sku: { properties, currentPrice },
+                quantity: productQuantity,
+              } = x;
+              return (
+                <React.Fragment key={itemId}>
+                  <Product>
+                    <img src={imageUrl} alt="" />
+                    <div>
+                      <p>{productName}</p>
+                      <p>{shop.name}</p>
+                    </div>
+                  </Product>
+                  <Counter>
+                    <button
+                      onClick={() => {
+                        setQty(
+                          qty.map((q, index) => {
+                            if (index === idx) {
+                              return q - 1;
+                            }
+                            return q;
+                          })
+                        );
+                      }}
+                      disabled={qty[idx] === 0}
+                    >
+                      -
+                    </button>
+                    <span>
+                      {qty[idx].toLocaleString('en-US', {
+                        minimumIntegerDigits: 2,
+                        useGrouping: false,
+                      })}
+                    </span>
+                    <button
+                      onClick={() => {
+                        setQty(
+                          qty.map((q, index) => {
+                            if (index === idx) {
+                              return q + 1;
+                            }
+                            return q;
+                          })
+                        );
+                      }}
+                      disabled={qty[idx] === productQuantity}
+                    >
+                      +
+                    </button>
+                  </Counter>
+                  <span>{currencyFormatter(qty[idx] * +currentPrice)}</span>
+                </React.Fragment>
+              );
+            })}
+          </Grid>
+        </Box>
 
-      <Box>
-        <h3>Contact information</h3>
-        <p className="bold" htmlFor="">
-          Phone number
-        </p>
-        <PhoneInput
-          country="VN"
-          international
-          initialValueFormat="national"
-          countryCallingCodeEditable={false}
-          defaultCountry="VN"
-          name="phoneNumber"
-          value={phoneNumberIntl}
-          onChange={(value) => setPhoneNumberIntl(value)}
-        />
-        {!phoneValidation ? (
-          <h5 className="error-title">Your phone number is not correct</h5>
+        <Box>
+          <h3>Contact information</h3>
+          <p className="bold" htmlFor="">
+            Phone number
+          </p>
+          <PhoneInput
+            country="VN"
+            international
+            initialValueFormat="national"
+            countryCallingCodeEditable={false}
+            defaultCountry="VN"
+            name="phoneNumber"
+            value={phoneNumberIntl}
+            onChange={(value) => setPhoneNumberIntl(value)}
+          />
+          {!phoneValidation ? (
+            <h5 className="error-title">Your phone number is not correct</h5>
+          ) : null}
+        </Box>
+        <Box>
+          <h3>Return reason</h3>
+          <BoxReason>
+            <div className="checkbox">
+              <input
+                type="checkbox"
+                name=""
+                value="cb1"
+                id="cb1"
+                checked={reason === 'cb1'}
+                onChange={handleCheckChange}
+              />
+              <label htmlFor="cb1">Wrong product</label>
+            </div>
+            <div style={{ marginTop: '10px' }}>
+              <FormInput
+                value={requestRefundInfo.description}
+                onChange={(event) =>
+                  setRequestRefundInfo({
+                    ...requestRefundInfo,
+                    description: event?.target?.value,
+                  })
+                }
+                placeholder="Describe what happened"
+                withoutTitle
+                withoutBorder
+                disabled={reason !== 'cb1'}
+              />
+            </div>
+          </BoxReason>
+          <BoxReason>
+            <div className="checkbox">
+              <input
+                type="checkbox"
+                name=""
+                value="cb2"
+                id="cb2"
+                checked={reason === 'cb2'}
+                onChange={handleCheckChange}
+              />
+              <label htmlFor="cb2">I don't want to buy this anymore</label>
+            </div>
+          </BoxReason>
+          <BoxReason>
+            <div className="checkbox">
+              <input
+                type="checkbox"
+                name="reason"
+                value="cb3"
+                id="cb3"
+                checked={reason === 'cb3'}
+                onChange={handleCheckChange}
+              />
+              <label htmlFor="cb3">I make wrong order</label>
+            </div>
+          </BoxReason>
+          <BoxReason>
+            <div className="checkbox">
+              <input
+                type="checkbox"
+                name="reason"
+                value="cb4"
+                id="cb4"
+                checked={reason === 'cb4'}
+                onChange={handleCheckChange}
+              />
+              <label htmlFor="cb4">Other reason</label>
+            </div>
+          </BoxReason>
+        </Box>
+
+        <Box>
+          <h3>Provide pictures of the problem</h3>
+          <p className="sub">
+            If it's broken or missing something, be sure to capture an image of
+            it
+          </p>
+
+          <FileUpload
+            accept=".jpg,.png,.jpeg"
+            label="Profile Image(s)"
+            multiple
+            updateFilesCb={setPicture}
+          />
+        </Box>
+
+        <SentButton onClick={handleSubmit}>
+          Send request <img src={sentIcon} alt="" />
+        </SentButton>
+      </Page>
+      <SobyModal open={open} setOpen={setOpen}>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpen} />
         ) : null}
-      </Box>
-      <Box>
-        <h3>Return reason</h3>
-        <BoxReason>
-          <div className="checkbox">
-            <input
-              type="checkbox"
-              name=""
-              value="cb1"
-              id="cb1"
-              checked={reason === 'cb1'}
-              onChange={handleCheckChange}
-            />
-            <label htmlFor="cb1">Wrong product</label>
-          </div>
-          <p>Describe what happened</p>
-        </BoxReason>
-        <BoxReason>
-          <div className="checkbox">
-            <input
-              type="checkbox"
-              name=""
-              value="cb2"
-              id="cb2"
-              checked={reason === 'cb2'}
-              onChange={handleCheckChange}
-            />
-            <label htmlFor="cb2">I don't want to buy this anymore</label>
-          </div>
-        </BoxReason>
-        <BoxReason>
-          <div className="checkbox">
-            <input
-              type="checkbox"
-              name="reason"
-              value="cb3"
-              id="cb3"
-              checked={reason === 'cb3'}
-              onChange={handleCheckChange}
-            />
-            <label htmlFor="cb3">I make wrong order</label>
-          </div>
-        </BoxReason>
-        <BoxReason>
-          <div className="checkbox">
-            <input
-              type="checkbox"
-              name="reason"
-              value="cb4"
-              id="cb4"
-              checked={reason === 'cb4'}
-              onChange={handleCheckChange}
-            />
-            <label htmlFor="cb4">Other reason</label>
-          </div>
-        </BoxReason>
-      </Box>
-
-      <Box>
-        <h3>Provide pictures of the problem</h3>
-        <p className="sub">
-          If it's broken or missing something, be sure to capture an image of it
-        </p>
-
-        <FileUpload
-          accept=".jpg,.png,.jpeg"
-          label="Profile Image(s)"
-          multiple
-          updateFilesCb={setPicture}
-        />
-      </Box>
-
-      <SentButton>
-        Send request <img src={sentIcon} alt="" />
-      </SentButton>
-    </Page>
+      </SobyModal>
+    </React.Fragment>
   );
 };
 

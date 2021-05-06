@@ -121,7 +121,7 @@ export const MARK_SATISFIED_WITH_ORDER = gql`
 `;
 export const REQUEST_INVOICE_REFUND = gql`
   ${AGGREGATED_ASSESS_FRAGMENT}
-  mutation RequestInvoiceRefund($cmd: RequestInvoiceRefundCmd!) {
+  mutation RequestInvoiceRefund($cmd: RequestRefundCmd!) {
     requestInvoiceRefund(cmd: $cmd) {
       message
       data {

@@ -296,7 +296,6 @@ export const ASSESS_FRAGMENT = gql`
   }
 `;
 
-
 export const AGGREGATED_ASSESS_FRAGMENT = gql`
   ${REFUND_REQUEST_FRAGMENT}
   fragment AggregatedAssessFragment on AggregatedAssess {
@@ -309,8 +308,7 @@ export const AGGREGATED_ASSESS_FRAGMENT = gql`
       phoneCountryCode
       phoneNumber
     }
-    productsAmount
-    refundAmount
+    transferAmount
     assessType
     createdBy
     updatedBy
@@ -319,6 +317,7 @@ export const AGGREGATED_ASSESS_FRAGMENT = gql`
     refundRequests {
       ...RefundRequestFragment
     }
+    paymentMethod
   }
 `;
 

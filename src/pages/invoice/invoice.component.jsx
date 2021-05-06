@@ -409,7 +409,6 @@ const Invoice = () => {
 
   useEffect(() => {
     if (invoiceData?.getAggregatedInvoice?.data) {
-      debugger;
       const {
         name,
         shippingType,

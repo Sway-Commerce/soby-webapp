@@ -95,7 +95,7 @@ const App = () => {
                 path="/transaction/vnpay-mobile"
                 component={MobilePaymentResult}
               />
-              <Route path="/return-request/:invoiceId" component={ReturnRequestPage} />
+              <JwtRoute path="/return-request/:invoiceId" component={ReturnRequestPage} />
               <Route path="/invoice/:invoiceId" component={Invoice} />
             </Suspense>
           </ErrorBoundary>
