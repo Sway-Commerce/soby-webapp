@@ -4,7 +4,7 @@ import { useLazyQuery } from '@apollo/client';
 import { Container } from './your-transactions.styles';
 
 import HorizontalList from 'components/horizontal-list/horizontal-list.component';
-import { GET_INVOICE_ORDER_LIST_FOR_INDIVIDUAL } from '../../graphQL/repository/invoice.repository';
+import { GET_INDIVIDUAL_AGGREGATED_INVOICE_ORDER_LIST, GET_INVOICE_ORDER_LIST_FOR_INDIVIDUAL } from '../../graphQL/repository/invoice.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import InvoiceItem from 'components/invoice-item/invoice-item.component';
 import {
@@ -31,29 +31,29 @@ const YourTransaction = ({ name }) => {
   const { mainFilter, subFilter, page, pageSize, total } = invoiceListQuery;
 
   const [
-    getInvoiceOrderListForIndividual,
+    getIndividualAggregatedInvoiceOrderList,
     {
-      error: getInvoiceOrderListForIndividualError,
-      data: getInvoiceOrderListForIndividualData,
-      loading: getInvoiceOrderListForIndividualLoading,
+      error: getIndividualAggregatedInvoiceOrderListError,
+      data: getIndividualAggregatedInvoiceOrderListData,
+      loading: getIndividualAggregatedInvoiceOrderListLoading,
     },
-  ] = useLazyQuery(GET_INVOICE_ORDER_LIST_FOR_INDIVIDUAL, {
+  ] = useLazyQuery(GET_INDIVIDUAL_AGGREGATED_INVOICE_ORDER_LIST, {
     fetchPolicy: 'network-only',
   });
 
   useEffect(() => {
-    if (getInvoiceOrderListForIndividualError) {
-      setFormError(getInvoiceOrderListForIndividualError?.message);
+    if (getIndividualAggregatedInvoiceOrderListError) {
+      setFormError(getIndividualAggregatedInvoiceOrderListError?.message);
       setOpen(true);
     }
-  }, [getInvoiceOrderListForIndividualError]);
+  }, [getIndividualAggregatedInvoiceOrderListError]);
 
   useEffect(() => {
     setActiveInvoice(null);
     setInvoiceList([]);
     setInvoiceListQuery({ ...invoiceListQuery, total: 0 });
     if (mainFilter === 'Invoices') {
-      getInvoiceOrderListForIndividual({
+      getIndividualAggregatedInvoiceOrderList({
         variables: {
           query: {
             statuses: [subFilter.toUpperCase()],
@@ -63,34 +63,35 @@ const YourTransaction = ({ name }) => {
         },
       });
     }
-  }, [mainFilter, subFilter, page, pageSize, getInvoiceOrderListForIndividual]);
+  }, [mainFilter, subFilter, page, pageSize, getIndividualAggregatedInvoiceOrderList]);
 
   useEffect(() => {
+    debugger
     if (
-      getInvoiceOrderListForIndividualData?.getInvoiceOrderListForIndividual
+      getIndividualAggregatedInvoiceOrderListData?.getIndividualAggregatedInvoiceOrderList
         ?.data?.records
     ) {
       setInvoiceList(
-        getInvoiceOrderListForIndividualData?.getInvoiceOrderListForIndividual
+        getIndividualAggregatedInvoiceOrderListData?.getIndividualAggregatedInvoiceOrderList
           ?.data?.records
       );
       setInvoiceListQuery({
         ...invoiceListQuery,
         total:
-          getInvoiceOrderListForIndividualData?.getInvoiceOrderListForIndividual
+          getIndividualAggregatedInvoiceOrderListData?.getIndividualAggregatedInvoiceOrderList
             ?.data?.total,
       });
     }
   }, [
-    getInvoiceOrderListForIndividualData?.getInvoiceOrderListForIndividual?.data
+    getIndividualAggregatedInvoiceOrderListData?.getIndividualAggregatedInvoiceOrderList?.data
       ?.records,
   ]);
 
   useEffect(() => {
-    if (getInvoiceOrderListForIndividualError) {
-      setFormError(getInvoiceOrderListForIndividualError.message);
+    if (getIndividualAggregatedInvoiceOrderListError) {
+      setFormError(getIndividualAggregatedInvoiceOrderListError.message);
     }
-  }, [getInvoiceOrderListForIndividualError]);
+  }, [getIndividualAggregatedInvoiceOrderListError]);
 
   return (
     <Container>
@@ -144,7 +145,7 @@ const YourTransaction = ({ name }) => {
             />
           ))}
         </div>
-        {getInvoiceOrderListForIndividualLoading ? <Spinner /> : null}
+        {getIndividualAggregatedInvoiceOrderListLoading ? <Spinner /> : null}
       </div>
       <SobyModal open={open} setOpen={setOpen}>
         {formError ? (

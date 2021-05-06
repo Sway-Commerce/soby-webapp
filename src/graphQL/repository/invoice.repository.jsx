@@ -6,6 +6,8 @@ import {
   AGGREGATED_INVOICE_FRAGMENT,
   AGGREGATED_INVOICE_ORDER_FRAGMENT,
   ASSESS_FRAGMENT,
+  AGGREGATED_SEARCH_INVOICE_ORDER_RESULT,
+  AGGREGATED_SEARCH_INVOICE_ORDER,
 } from '../common.fragment';
 
 export const CREATE_INVOICE = gql`
@@ -88,9 +90,7 @@ export const UPDATE_INVOICE = gql`
   }
 `;
 export const UPDATE_INVOICE_ORDER_STATUS = gql`
-  mutation UpdateInvoiceOrderStatus(
-    $cmd: UpdateInvoiceOrderStatusCmd!
-  ) {
+  mutation UpdateInvoiceOrderStatus($cmd: UpdateInvoiceOrderStatusCmd!) {
     updateInvoiceOrderStatus(cmd: $cmd) {
       message
       success
@@ -284,3 +284,23 @@ export const UPDATE_INVOICE_ORDER_INFO = gql`
     }
   }
 `;
+
+export const GET_INDIVIDUAL_AGGREGATED_INVOICE_ORDER_LIST = gql`
+  ${AGGREGATED_SEARCH_INVOICE_ORDER}
+  query GetIndividualAggregatedInvoiceOrderList(
+    $query: IndividualInvoiceOrderQuery!
+  ) {
+    getIndividualAggregatedInvoiceOrderList(query: $query) {
+      message
+      data {
+        page
+        pageSize
+        total
+        records {
+          ...AggregatedSearchInvoiceOrderFragment
+        }
+      }
+    }
+  }
+`;
+

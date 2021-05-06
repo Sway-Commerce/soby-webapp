@@ -348,6 +348,7 @@ const Invoice = () => {
     invoiceId: '',
     invoiceVersion: '',
     totalWeight: '',
+    assess: {assessType: ''}
   });
   const [productMargin, setProductMargin] = useState(0);
   const [formError, setFormError] = useState('');
@@ -443,6 +444,7 @@ const Invoice = () => {
         assess,
         paymentMethod,
       } = invoiceData;
+      debugger
       const {
         invoiceId,
         invoiceVersion,
@@ -468,6 +470,7 @@ const Invoice = () => {
         totalPrice,
         orderFee,
         escrowFee,
+        assess
       });
     }
   }, [
@@ -573,7 +576,7 @@ const Invoice = () => {
               {invoiceData.status?.toLocaleLowerCase()}
             </h4>
           </div>
-          {invoiceData.status === 'DELIVERED' ? (
+          {invoiceData.assess?.assessType === 'PROCESSING' ? (
             <ActionContainer>
               <Link className="action" to={`/return-request/${invoiceId}`}>
                 <CloseIcon />
