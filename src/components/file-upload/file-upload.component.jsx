@@ -287,10 +287,10 @@ const FileUpload = ({
   const addNewFiles = (newFiles) => {
     for (let file of newFiles) {
       // if (file.size <= maxFileSizeInBytes) {
-        if (!otherProps.multiple) {
-          return { file };
-        }
-        files[file.name] = file;
+      if (!otherProps.multiple) {
+        return { file };
+      }
+      files[`${file.name}-${Date.now()}`] = file;
       // }
     }
     return { ...files };
@@ -338,22 +338,21 @@ const FileUpload = ({
               isImageFile && (
                 <ImgBox key={fileName}>
                   <img
-                    class="preview-img"
+                    className="preview-img"
                     src={URL.createObjectURL(file)}
                     alt={`file preview ${index}`}
                   />
-                  <div className="close-icon">
-                    <img
-                      src={closeIcon}
-                      alt=""
-                      onClick={() => {
-                        debugger
-                        delete files[fileName];
-                        setFiles({ ...files });
-                        callUpdateFilesCb({ ...files });
-                      }}
-                      key={fileName + Math.random()}
-                    />
+                  <div
+                    className="close-icon"
+                    key={fileName + Math.random()}
+                    onClick={() => {
+                      debugger;
+                      delete files[fileName];
+                      setFiles({ ...files });
+                      callUpdateFilesCb({ ...files });
+                    }}
+                  >
+                    <img src={closeIcon} alt="" />
                   </div>
                 </ImgBox>
               )
