@@ -89,22 +89,22 @@ const ReturnRequestList = () => {
           <p>26/01/2020</p>
           <p>1.260.000 đ</p>
           <p>Blue Bird Shop</p>
-          <p class="orange text-right">Want to return</p>
+          <p className="orange text-right">Want to return</p>
         </ItemContainer>
         <SubContainer>
-          <p class="request">Return Request 123456123456.002</p>
-          <p class="gray">Request pending</p>
+          <p>Return Request 123456123456.002</p>
+          <p className="gray">Request pending</p>
         </SubContainer>
         <ItemContainer>
           <p>HD TV invoice from Soby</p>
           <p>26/01/2020</p>
           <p>1.260.000 đ</p>
           <p>Soby Amazing seller</p>
-          <p class="green text-right">Accepted</p>
+          <p className="green text-right">Accepted</p>
         </ItemContainer>
         <SubContainer>
-          <p class="request">Return Request 123456123456.002</p>
-          <p class="refunded">Refunded</p>
+          <p>Return Request 123456123456.002</p>
+          <p className="cyan">Refunded</p>
         </SubContainer>
       </Container>
       <SobyModal open={open} setOpen={setOpen}>
