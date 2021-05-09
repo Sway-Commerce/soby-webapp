@@ -4,9 +4,9 @@ import {
   AGGREGATED_ASSESS_FRAGMENT,
 } from '../common.fragment';
 
-export const GET_INDIVIDUAL_DISPUTE_LIST = gql`
+export const GET_INDIVIDUAL_ASSESS_LIST= gql`
   ${ASSESS_FRAGMENT}
-  query GetIndividualDisputeList($query: IndividualAssessQuery!) {
+  query GetIndividualAssessList($query: IndividualAssessQuery!) {
     getIndividualAssessList(query: $query) {
       message
       data {

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { WebsiteGroup } from './website-url.styles';
-import { ReactComponent as FbIcon } from 'shared/assets/fb-icon.svg';
+import { ReactComponent as FbIcon } from 'shared/assets/facebook.svg';
 import { ReactComponent as InstaIcon } from 'shared/assets/insta.svg';
 import { ReactComponent as SiteIcon } from 'shared/assets/site.svg';
 import { ReactComponent as ZaloIcon } from 'shared/assets/zalo.svg';

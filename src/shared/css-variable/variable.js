@@ -7,4 +7,5 @@ export const greenColor = '#27AE60';
 export const orangeColor = '#CD6000';
 export const cyanColor = '#00AAB9';
 export const grayColor = '#828282';
+export const bodyColor = '#4F4F4F';
 

@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
-import { borderColor, cyanColor, grayColor, mainColor, orangeColor, subColor , greenColor} from './shared/css-variable/variable';
+import { borderColor, cyanColor, grayColor, mainColor, orangeColor, subColor , greenColor, bodyColor} from './shared/css-variable/variable';
 
 export const GlobalStyle = createGlobalStyle`
 	html {
@@ -80,6 +80,10 @@ export const GlobalStyle = createGlobalStyle`
 
 	.sub-color {
 		color: ${subColor};
+	}
+
+	.body-color {
+		color: ${bodyColor};
 	}
 
 	.PhoneInput {

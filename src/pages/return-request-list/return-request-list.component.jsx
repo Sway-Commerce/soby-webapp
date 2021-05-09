@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import FormInput from 'components/form-input/form-input.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import { GET_INDIVIDUAL_ASSESS_LIST } from '../../graphQL/repository/dispute.repository';
 
 const Container = styled.div`
   justify-content: center;
@@ -31,7 +32,6 @@ const HeaderContainer = styled.div`
   height: 60px;
   display: grid;
   grid-template-columns: 463px repeat(4, 1fr);
-  border-bottom: 1px solid #e4e4e4;
 `;
 
 const ItemContainer = styled.div`
@@ -40,6 +40,8 @@ const ItemContainer = styled.div`
   display: grid;
   grid-template-columns: 463px repeat(4, 1fr);
   padding-bottom: 30px;
+  border-top: 1px solid #e4e4e4;
+
   :last-child {
     text-align: right;
   }
@@ -54,15 +56,49 @@ const SubContainer = styled.div`
   align-items: center;
   padding: 4px 16px;
   width: 100%;
-  border-bottom: 1px solid #e4e4e4;
+  border-top: 1px solid #e4e4e4;
   justify-content: space-between;
 `;
 
 const ReturnRequestList = () => {
+  const AssessType = ['PROCESSING', 'SATISFIED', 'WANT_TO_RETURN'];
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
+  const [query, setQuery] = useState({
+    page: 0,
+    pageSize: 10,
+    assessTypes: AssessType[0],
+    orderTypes: 'INVOICE',
+  });
 
-  return false ? (
+  const [
+    getIndividualAssessList,
+    {
+      loading: getIndividualAssessListLoading,
+      error: getIndividualAssessListError,
+      data: getIndividualAssessListData,
+    },
+  ] = useLazyQuery(GET_INDIVIDUAL_ASSESS_LIST, {
+    variables: {
+      query,
+    },
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
+  });
+
+  useEffect(() => {
+    getIndividualAssessList();
+  }, [query]);
+
+  // Error handle
+  useEffect(() => {
+    if (getIndividualAssessListError?.message) {
+      setFormError(getIndividualAssessListError?.message);
+      setOpen(true);
+    }
+  }, [getIndividualAssessListError?.message]);
+
+  return getIndividualAssessListLoading ? (
     <Spinner />
   ) : (
     <React.Fragment>
