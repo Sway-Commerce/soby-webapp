@@ -296,17 +296,63 @@ export const ASSESS_FRAGMENT = gql`
   }
 `;
 
+export const AGGREGATED_REFUND_REQUEST_FRAGMENT = gql`
+  ${PRODUCT_FRAGMENT}
+  ${SKU_FRAGMENT}
+  fragment AggregatedRefundRequestFragment on AggregatedRefundRequest {
+    id
+    assessId
+    phoneCountryCode
+    phoneNumber
+    requestReason
+    description
+    imageUrls
+    requiredAdmin
+    shippingType
+    shippingPartner
+    shippingLocationId
+    returnFeePaidBy
+    shippingFee
+    individualTrackingUrl
+    shopTrackingUrl
+    status
+    statusReason
+    createdBy
+    updatedBy
+    createdAt
+    updatedAt
+    bankCode
+    accountType
+    accountNumber
+    accountOwner
+    accountIssuedOn
+    bankBranch
+    refundAmount
+    items {
+      id
+      product {
+        ...ProductFragment
+      }
+      sku {
+        ...SkuFragment
+      }
+      quantity
+      price
+      weight
+    }
+  }
+`;
+
 export const AGGREGATED_ASSESS_FRAGMENT = gql`
-  ${REFUND_REQUEST_FRAGMENT}
+  ${AGGREGATED_REFUND_REQUEST_FRAGMENT}
   fragment AggregatedAssessFragment on AggregatedAssess {
     id
     individualId
     orderId
     orderType
     shop {
+      id
       name
-      phoneCountryCode
-      phoneNumber
     }
     transferAmount
     assessType
@@ -315,7 +361,7 @@ export const AGGREGATED_ASSESS_FRAGMENT = gql`
     createdAt
     updatedAt
     refundRequests {
-      ...RefundRequestFragment
+      ...AggregatedRefundRequestFragment
     }
     paymentMethod
   }
@@ -508,3 +554,38 @@ export const AGGREGATED_SEARCH_INVOICE_ORDER = gql`
     }
   }
 `;
+
+export const AGGREGATED_SEARCH_ASSESS_FRAGMENT = gql`
+  ${REFUND_REQUEST_FRAGMENT}
+  ${INVOICE_HISTORY_FRAGMENT}
+  ${PRODUCT_FRAGMENT}
+  fragment AggregatedSearchAssessFragment on AggregatedSearchAssess {
+    id
+    individualId
+    orderId
+    orderType
+    shop {
+      name
+      id
+    }
+    transferAmount
+    assessType
+    createdBy
+    updatedBy
+    createdAt
+    updatedAt
+    refundRequests {
+      ...RefundRequestFragment
+    }
+    paymentMethod
+    invoice {
+      ...InvoiceHistoryFragment
+    }
+    product {
+      ...ProductFragment
+    }
+    refundAmount
+  }
+`;
+
+

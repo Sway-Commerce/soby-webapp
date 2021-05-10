@@ -31,32 +31,12 @@ import { ReactComponent as InboxIcon } from 'shared/assets/inbox.svg';
 import { ReactComponent as CallIcon } from 'shared/assets/call.svg';
 
 const Container = styled.div`
-  display: flex;
+  display: grid;
   background: #ffffff;
   padding: 28px;
+  grid-template-columns: 367px 471px 260px;
+  grid-column-gap: 28px;
   margin-top: 40px;
-
-  .advertise {
-    background-color: #393e46;
-    width: 367px;
-    height: 479, 39px;
-  }
-
-  .info-wrapper {
-    flex-wrap: wrap;
-    width: 400px;
-    margin-left: 24px;
-    margin-right: 24px;
-  }
-
-  .title {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 24px;
-    line-height: 32px;
-    color: #000000;
-  }
 
   .cost {
     font-family: Roboto;
@@ -312,10 +292,6 @@ const Container = styled.div`
     margin-top: 3px;
     margin-left: -4px;
   }
-
-  .contact {
-    width: 290px;
-  }
 `;
 
 const ShareTo = styled.div`
@@ -492,13 +468,19 @@ const ProductDetail = () => {
   ) : (
     <React.Fragment>
       <Container>
-        <div className="advertise"></div>
-        <div className="info-wrapper">
-          <p className="title">
+        <ProductCard
+          id={productData.id}
+          imageUrls={productData.imageUrls}
+          currentPrice={productData.sku.currentPrice}
+          description={productData.description}
+          isMain
+        />
+        <div>
+          <h2>
             Amazfit GTS 2e Smartwatch with 24H Heart Rate Monitor, Sleep, Stress
             and SpO2 Monitor, Activity Tracker Sports Watch with 90 Sports
             Modes, 14 Day Battery Life, Black
-          </p>
+          </h2>
           <p className="cost">13.150.000 đ</p>
           <div className="product-info">
             <div className="product">Product category:</div>

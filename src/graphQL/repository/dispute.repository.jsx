@@ -2,19 +2,21 @@ import { gql } from '@apollo/client';
 import {
   ASSESS_FRAGMENT,
   AGGREGATED_ASSESS_FRAGMENT,
+  AGGREGATED_SEARCH_ASSESS_FRAGMENT,
+  AGGREGATED_REFUND_REQUEST_FRAGMENT,
 } from '../common.fragment';
 
-export const GET_INDIVIDUAL_ASSESS_LIST= gql`
-  ${ASSESS_FRAGMENT}
-  query GetIndividualAssessList($query: IndividualAssessQuery!) {
-    getIndividualAssessList(query: $query) {
+export const GET_AGGREGATED_ASSESS_LIST_FOR_INDIVIDUAL= gql`
+  ${AGGREGATED_SEARCH_ASSESS_FRAGMENT}
+  query GetAggregatedAssessListForIndividual($query: IndividualAssessQuery!) {
+    getAggregatedAssessListForIndividual(query: $query) {
       message
       data {
         page
         pageSize
         total
         records {
-          ...AssessFragment
+          ...AggregatedSearchAssessFragment
         }
       }
     }
@@ -54,6 +56,18 @@ export const GET_DETAILED_DISPUTE_SHOP = gql`
       message
       data {
         ...AssessFragment
+      }
+    }
+  }
+`;
+
+export const GET_AGGREGATED_ASSESS_FOR_INDIVIDUAL= gql`
+  ${AGGREGATED_ASSESS_FRAGMENT}
+  query AggregatedSearchAssessFragment($id: String!) {
+    getAggregatedAssessForIndividual(id: $id) {
+      message
+      data {
+        ...AggregatedAssessFragment
       }
     }
   }
