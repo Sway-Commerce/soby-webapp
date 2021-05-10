@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
-import { borderColor, mainColor, subColor } from './shared/css-variable/variable';
+import { borderColor, cyanColor, grayColor, mainColor, orangeColor, subColor , greenColor, bodyColor} from './shared/css-variable/variable';
 
 export const GlobalStyle = createGlobalStyle`
 	html {
@@ -80,6 +80,10 @@ export const GlobalStyle = createGlobalStyle`
 
 	.sub-color {
 		color: ${subColor};
+	}
+
+	.body-color {
+		color: ${bodyColor};
 	}
 
 	.PhoneInput {
@@ -182,4 +186,20 @@ export const GlobalStyle = createGlobalStyle`
 	::-ms-input-placeholder { /* Microsoft Edge */
 		color: rgba(79, 79, 79, 0.5);
 	}
+
+	.orange {
+    color: ${orangeColor};
+  }
+
+  .cyan {
+    color: ${cyanColor};
+  }
+
+  .gray {
+    color: ${grayColor};
+  }
+
+  .green {
+    color: ${greenColor};
+  }
 `;

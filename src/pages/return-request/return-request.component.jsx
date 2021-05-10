@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import proImg1 from 'shared/assets/productImg1.svg';
-import proImg2 from 'shared/assets/productImg2.svg';
-import proImg3 from 'shared/assets/productImg3.svg';
-import closeIcon from 'shared/assets/closeIcon.svg';
 import sentIcon from 'shared/assets/sentIcon.svg';
 import PhoneInput from 'react-phone-number-input';
 import { useParams } from 'react-router-dom';
@@ -221,24 +217,6 @@ const BoxReason = styled.div`
         outline: 0;
       }
     }
-  }
-`;
-
-const ImgBox = styled.div`
-  position: relative;
-  margin-right: 18px;
-
-  .close-icon {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    background-color: #f1f1f1;
-    height: 24px;
-    width: 24px;
   }
 `;
 

@@ -478,3 +478,33 @@ export const AGGREGATED_INVOICE_ORDER_FRAGMENT = gql`
     paymentMethod
   }
 `;
+
+export const AGGREGATED_SEARCH_INVOICE_ORDER = gql`
+  ${INVOICE_HISTORY_FRAGMENT}
+  ${PRODUCT_FRAGMENT}
+
+  fragment AggregatedSearchInvoiceOrderFragment on AggregatedSearchInvoiceOrder {
+    id
+    invoice {
+      ...InvoiceHistoryFragment
+    }
+    individualId
+    shippingPartner
+    shippingLocationId
+    shippingFee
+    individualTrackingUrl
+    shopTrackingUrl
+    orderFee
+    voucherCodes
+    voucherDiscount
+    paymentMethod
+    status
+    reason
+    totalPrice
+    createdAt
+    updatedAt
+    product {
+      ...ProductFragment
+    }
+  }
+`;

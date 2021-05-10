@@ -89,11 +89,6 @@ const Grid = styled.div`
   }
 `;
 
-const HeaderCol = styled.p`
-  color: ${(prop) => prop.theme.stoke};
-  font-weight: 600;
-  text-align: right;
-`;
 
 const Product = styled.div`
   display: flex;
@@ -116,156 +111,6 @@ const Product = styled.div`
     width: 60px;
     height: 60px;
     object-fit: cover;
-  }
-`;
-
-const Counter = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
-  span {
-    margin: 0 14px;
-  }
-
-  button {
-    font-size: 25px;
-    outline: 0;
-    background: none;
-    border-radius: 5px;
-    height: 30px;
-    width: 30px;
-    border: 1px solid ${(prop) => prop.theme.stoke};
-    cursor: pointer;
-  }
-`;
-
-const BoxReason = styled.div`
-  border-bottom: 1px solid #c2c2c2;
-  padding: 7px 0 24px;
-  margin-top: 14px;
-  :last-child,
-  :first-child {
-    border: none;
-  }
-
-  &.upload-box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 30px 0;
-
-    img {
-      margin-left: 5px;
-    }
-  }
-
-  div {
-    label {
-      margin-left: 10px;
-    }
-  }
-
-  p {
-    margin-top: 5px;
-    font-size: 14px;
-    color: ${(prop) => prop.theme.stoke};
-  }
-
-  .checkbox {
-    width: 100%;
-    position: relative;
-    display: flex;
-    align-items: center;
-
-    label {
-      position: relative;
-      cursor: pointer;
-
-      padding-left: 20px;
-      span {
-        margin-left: 12px;
-      }
-      &:before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 0px;
-        transform: translate(-50%, -50%);
-        width: 12px;
-        height: 12px;
-        transition: transform 0.28s ease;
-        border-radius: 3px;
-        border: 1px solid #000;
-      }
-      &:after {
-        content: '';
-        display: block;
-        width: 9px;
-        height: 4px;
-        border-bottom: 2px solid #fff;
-        border-left: 2px solid #fff;
-        transform: rotate(-45deg) scale(0) translate(-50%, -50%);
-        transition: transform ease 0.25s;
-        position: absolute;
-        top: 7px;
-        left: -5px;
-      }
-    }
-    input[type='checkbox'] {
-      width: auto;
-      opacity: 0.00000001;
-      position: absolute;
-      left: 0;
-      margin-left: -20px;
-      &:checked ~ label {
-        &:before {
-          background-color: #2b74e4;
-          border: 2px solid #2b74e4;
-        }
-        &:after {
-          transform: rotate(-45deg) scale(1);
-        }
-      }
-      &:focus + label::before {
-        outline: 0;
-      }
-    }
-  }
-`;
-
-const ImgBox = styled.div`
-  position: relative;
-  margin-right: 18px;
-
-  .close-icon {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    background-color: #f1f1f1;
-    height: 24px;
-    width: 24px;
-  }
-`;
-
-const SentButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${(prop) => prop.theme.primary};
-  color: #fff;
-  font-size: 18px;
-  border-radius: 7px;
-  outline: 0;
-  border: 0;
-  padding: 12px 180px;
-
-  img {
-    margin-left: 10px;
   }
 `;
 
@@ -348,6 +193,7 @@ const Invoice = () => {
     invoiceId: '',
     invoiceVersion: '',
     totalWeight: '',
+    assess: {assessType: ''}
   });
   const [productMargin, setProductMargin] = useState(0);
   const [formError, setFormError] = useState('');
@@ -468,6 +314,7 @@ const Invoice = () => {
         totalPrice,
         orderFee,
         escrowFee,
+        assess
       });
     }
   }, [
@@ -573,7 +420,7 @@ const Invoice = () => {
               {invoiceData.status?.toLocaleLowerCase()}
             </h4>
           </div>
-          {invoiceData.status === 'DELIVERED' ? (
+          {invoiceData.assess?.assessType === 'PROCESSING' ? (
             <ActionContainer>
               <Link className="action" to={`/return-request/${invoiceId}`}>
                 <CloseIcon />
