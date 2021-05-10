@@ -151,11 +151,12 @@ const ReturnRequestList = () => {
             invoice: { name },
             shop: { name: shopName },
             refundRequests,
+            orderId
           } = x;
 
           const { name: assessTypeName, colorClass } = DisputeType[assessType];
           return (
-            <Link key={id} to={`/return-request-detail/${id}`}>
+            <Link key={id} to={`/return-request-detail/${orderId}`}>
               <ItemContainer>
                 <p>{name}</p>
                 <p>{timestampToDate(updatedAt)}</p>

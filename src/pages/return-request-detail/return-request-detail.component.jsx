@@ -16,9 +16,8 @@ import Spinner from 'components/ui/spinner/spinner.component';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
-import { GET_AGGREGATED_ASSESS_FOR_INDIVIDUAL } from 'graphQL/repository/dispute.repository';
-import { DisputeType } from 'shared/constants/dispute.constant';
 import RequestItem from 'pages/return-request-list/request-item.component';
+import { DisputeType } from 'shared/constants/dispute.constant';
 
 const Page = styled.div`
   display: flex;
@@ -163,44 +162,62 @@ const ProductContainer = styled.div`
   grid-row-gap: 24px;
 `;
 
-const ReturnRequestDetail = () => {
-  const { rrId } = useParams();
+const RequestReturnDetail = () => {
+  const { invoiceId } = useParams();
   const [open, setOpen] = useState(false);
   const [openError, setOpenError] = useState(false);
-  const [rrData, setRrData] = useState({
-    shop: { id: null, name: null },
-    refundRequests: [],
-    orderId: null,
-    invoice: null,
+  const [invoiceData, setInvoiceData] = useState({
+    name: '',
+    shippingType: '',
+    expiredAt: '',
+    price: '',
+    items: [],
+    shop: { logoUrl: '', name: '' },
+    status: '',
+    shippingFee: 0,
     shippingLocation: {
-      addressLine: null,
-      ward: null,
-      district: null,
-      province: null,
+      addressLine: '',
+      district: '',
+      province: '',
+      ward: '',
     },
-    assessType: null,
+    individualTrackingUrl: '',
+    totalPrice: '',
+    orderFee: '',
+    escrowFee: '',
+    createdAt: '',
+    description: '',
+    id: '',
+    invoiceId: '',
+    invoiceVersion: '',
+    totalWeight: '',
+    assess: null,
   });
-  const {
-    shop,
-    refundRequests,
-    orderId,
-    invoice,
-    shippingLocation,
-    assessType,
-  } = rrData;
   const [productMargin, setProductMargin] = useState(0);
   const [formError, setFormError] = useState('');
+  const { shop } = invoiceData;
 
   const [
-    getAggregatedAssessForIndividual,
-    {
-      loading: getAggregatedAssessForIndividualLoading,
-      error: getAggregatedAssessForIndividualError,
-      data: getAggregatedAssessForIndividualData,
-    },
-  ] = useLazyQuery(GET_AGGREGATED_ASSESS_FOR_INDIVIDUAL, {
+    loadDetailInvoice,
+    { loading, data: detailInvoiceData, error: loadDetailInvoiceError },
+  ] = useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
     variables: {
-      id: rrId,
+      id: invoiceId,
+    },
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
+  });
+
+  const [
+    getAggregatedInvoiceOrderForIndividual,
+    {
+      loading: getAggregatedInvoiceOrderForIndividualLoading,
+      error: getAggregatedInvoiceOrderForIndividualError,
+      data: getAggregatedInvoiceOrderForIndividualData,
+    },
+  ] = useLazyQuery(GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL, {
+    variables: {
+      id: invoiceId,
     },
     fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
@@ -215,48 +232,87 @@ const ReturnRequestDetail = () => {
     },
   ] = useMutation(ACCEPT_INVOICE, {
     errorPolicy: 'all',
-  });
-
-  useEffect(() => {
-    if (rrId) {
-      getAggregatedAssessForIndividual();
-    }
-  }, [rrId]);
-
-  const [
-    getAggregatedInvoiceOrderForIndividual,
-    {
-      loading: getAggregatedInvoiceOrderForIndividualLoading,
-      error: getAggregatedInvoiceOrderForIndividualError,
-      data: getAggregatedInvoiceOrderForIndividualData,
-    },
-  ] = useLazyQuery(GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL, {
     variables: {
-      id: orderId,
+      cmd: {
+        invoiceId,
+      },
     },
-    fetchPolicy: 'network-only',
-    notifyOnNetworkStatusChange: true,
   });
 
+  // useEffect(() => {
+  //   if (invoiceId) {
+  //     loadDetailInvoice();
+  //   }
+  // }, [invoiceId]);
+
   useEffect(() => {
-    if (orderId) {
+    if (invoiceId) {
       getAggregatedInvoiceOrderForIndividual();
     }
-  }, [orderId]);
+  }, [invoiceId]);
 
   useEffect(() => {
-    if (
-      getAggregatedInvoiceOrderForIndividualData
-        ?.getAggregatedInvoiceOrderForIndividual.data
-    ) {
+    if (invoiceData?.getAggregatedInvoice?.data) {
       const {
+        name,
+        shippingType,
+        expiredAt,
+        price,
+        items,
+        shop,
+      } = invoiceData?.getAggregatedInvoice?.data;
+      setInvoiceData({ name, shippingType, expiredAt, price, items, shop });
+    }
+  }, [invoiceData?.getAggregatedInvoice?.data]);
+
+  useEffect(() => {
+    const invoiceData =
+      getAggregatedInvoiceOrderForIndividualData
+        ?.getAggregatedInvoiceOrderForIndividual?.data;
+    if (invoiceData) {
+      const {
+        id,
         invoice,
-        shippingLocation
-      } = getAggregatedInvoiceOrderForIndividualData?.getAggregatedInvoiceOrderForIndividual.data;
-      setRrData({
-        ...rrData,
-        invoice,
-        shippingLocation
+        individualId,
+        shippingPartner,
+        shippingLocation,
+        shippingFee,
+        individualTrackingUrl,
+        orderFee,
+        status,
+        reason,
+        totalPrice,
+        createdAt,
+        updatedAt,
+        assess,
+        paymentMethod,
+      } = invoiceData;
+      const {
+        invoiceId,
+        invoiceVersion,
+        name,
+        description,
+        shop,
+        shippingType,
+        escrowFee,
+        items,
+        price,
+        totalWeight,
+      } = invoice;
+      setInvoiceData({
+        name,
+        shippingType,
+        price,
+        items,
+        shop,
+        status,
+        shippingFee,
+        shippingLocation,
+        individualTrackingUrl,
+        totalPrice,
+        orderFee,
+        escrowFee,
+        assess,
       });
     }
   }, [
@@ -265,20 +321,10 @@ const ReturnRequestDetail = () => {
   ]);
 
   useEffect(() => {
-    if (
-      getAggregatedAssessForIndividualData?.getAggregatedAssessForIndividual
-        ?.data
-    ) {
-      const data =
-        getAggregatedAssessForIndividualData?.getAggregatedAssessForIndividual
-          ?.data;
-      const assessType = DisputeType[data.assessType];
-      setRrData({ ...data, assessType });
+    if (acceptInvoiceData?.acceptInvoice?.data) {
+      setOpen(true);
     }
-  }, [
-    getAggregatedAssessForIndividualData?.getAggregatedAssessForIndividual
-      ?.data,
-  ]);
+  }, [acceptInvoiceData?.acceptInvoice?.data]);
 
   // MARK_SATISFIED_WITH_INVOICE
   const [
@@ -290,6 +336,11 @@ const ReturnRequestDetail = () => {
     },
   ] = useMutation(MARK_SATISFIED_WITH_INVOICE, {
     errorPolicy: 'all',
+    variables: {
+      cmd: {
+        invoiceId,
+      },
+    },
   });
 
   useEffect(() => {
@@ -327,27 +378,34 @@ const ReturnRequestDetail = () => {
   useEffect(() => {
     if (
       markSatisfiedWithInvoiceError?.message ||
-      getAggregatedAssessForIndividualError?.message ||
+      loadDetailInvoiceError?.message ||
+      getAggregatedInvoiceOrderForIndividualError?.message ||
       acceptInvoiceError?.message ||
       updateReturnShippingInfoError?.message
     ) {
       setFormError(
         markSatisfiedWithInvoiceError?.message ??
-          getAggregatedAssessForIndividualError?.message ??
+          loadDetailInvoiceError?.message ??
+          getAggregatedInvoiceOrderForIndividualError?.message ??
           acceptInvoiceError?.message ??
           updateReturnShippingInfoError?.message
       );
     }
   }, [
     markSatisfiedWithInvoiceError?.message,
-    getAggregatedAssessForIndividualError?.message,
+    loadDetailInvoiceError?.message,
+    getAggregatedInvoiceOrderForIndividualError?.message,
     acceptInvoiceError?.message,
     updateReturnShippingInfoError?.message,
   ]);
 
-  return acceptLoading ||
-    getAggregatedAssessForIndividualLoading ||
-    getAggregatedInvoiceOrderForIndividualError ||
+  const handleCheckout = () => {
+    invoiceId ? setOpen(true) : acceptInvoice();
+  };
+
+  return loading ||
+    acceptLoading ||
+    getAggregatedInvoiceOrderForIndividualLoading ||
     updateReturnShippingInfoLoading ? (
     <Spinner />
   ) : (
@@ -355,17 +413,19 @@ const ReturnRequestDetail = () => {
       <Page>
         <Box className="main-box">
           <div>
-            <h2>{invoice?.name}</h2>
-            <h4 className={assessType?.colorClass}>{assessType?.name}</h4>
+            <h2>{invoiceData.name}</h2>
+            <h4
+              className={DisputeType[invoiceData.assess?.assessType]?.colorClass}
+            >
+              {DisputeType[invoiceData.assess?.assessType]?.name}
+            </h4>
           </div>
-          {rrData.assess?.assessType === 'PROCESSING' ? (
+          {invoiceData.assess?.assessType === 'PROCESSING' ? (
             <ActionContainer>
-              {
-                //   <Link className="action" to={`/return-request/${invoiceId}`}>
-                //   <CloseIcon />
-                //   <p>Reject</p>
-                // </Link>
-              }
+              <Link className="action" to={`/return-request/${invoiceId}`}>
+                <CloseIcon />
+                <p>Reject</p>
+              </Link>
               <div className="action">
                 <AcceptIcon />
                 <p>Accept</p>
@@ -386,18 +446,18 @@ const ReturnRequestDetail = () => {
               <b>Shipping address</b>
             </p>
             <p className="invoice-info">
-              {`${shippingLocation?.addressLine}, ${shippingLocation?.ward}, ${shippingLocation?.district}, ${shippingLocation?.province}`}
+              {`${invoiceData?.shippingLocation?.addressLine}, ${invoiceData?.shippingLocation?.ward}, ${invoiceData?.shippingLocation?.district}, ${invoiceData?.shippingLocation?.province}`}
             </p>
           </div>
           <div className="info-box">
             <p>
               <b>Tracking code</b>
             </p>
-            <p className="invoice-info">{rrData.individualTrackingUrl}</p>
+            <p className="invoice-info">{invoiceData.individualTrackingUrl}</p>
           </div>
         </InfoBox>
 
-        <RequestItem refundRequests={refundRequests}/>
+        <RequestItem refundRequests={invoiceData.assess?.refundRequests} />
 
         <Grid>
           <p className="title-info">
@@ -416,7 +476,7 @@ const ReturnRequestDetail = () => {
         <BreakLine />
 
         <ProductContainer>
-          {rrData?.invoice?.items.map((x) => {
+          {invoiceData.items.map((x) => {
             const {
               id: itemId,
               price: totalPrice,
@@ -450,17 +510,21 @@ const ReturnRequestDetail = () => {
         <FooterBox>
           <div></div>
           <p>Subtotal</p>
-          <p className="text-right">{currencyFormatter(rrData.price)}</p>
+          <p className="text-right">{currencyFormatter(invoiceData.price)}</p>
         </FooterBox>
         <FooterBox>
           <div></div>
           <p>Safebuy fee</p>
-          <p className="text-right">{currencyFormatter(rrData.escrowFee)}</p>
+          <p className="text-right">
+            {currencyFormatter(invoiceData.escrowFee)}
+          </p>
         </FooterBox>
         <FooterBox>
           <div></div>
           <p>Shipping fee</p>
-          <p className="text-right">{currencyFormatter(rrData.shippingFee)}</p>
+          <p className="text-right">
+            {currencyFormatter(invoiceData.shippingFee)}
+          </p>
         </FooterBox>
         <FooterBox>
           <div></div>
@@ -468,7 +532,7 @@ const ReturnRequestDetail = () => {
             <b>Total</b>
           </p>
           <p className="text-right">
-            <b>{currencyFormatter(rrData.totalPrice)}</b>
+            <b>{currencyFormatter(invoiceData.totalPrice)}</b>
           </p>
         </FooterBox>
       </Page>
@@ -482,4 +546,4 @@ const ReturnRequestDetail = () => {
   );
 };
 
-export default ReturnRequestDetail;
+export default RequestReturnDetail;

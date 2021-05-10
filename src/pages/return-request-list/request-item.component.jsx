@@ -18,7 +18,7 @@ const SubContainer = styled.div`
 const RequestItem = ({
   refundRequests
 }) => {
-  return refundRequests.map((rr) => {
+  return refundRequests?.map((rr) => {
     const { id: rrId, status } = rr;
     const { colorClass, name } = RefundRequestStatus[status];
     return (
@@ -27,7 +27,7 @@ const RequestItem = ({
         <p className={colorClass}>{name}</p>
       </SubContainer>
     );
-  })
+  }) ?? null
 };
 
 export default RequestItem;

@@ -102,7 +102,7 @@ const App = () => {
                 component={MobilePaymentResult}
               />
               <JwtRoute path="/return-request/:invoiceId" component={ReturnRequestPage} />
-              <JwtRoute path="/return-request-detail/:rrId" component={ReturnRequestDetail} />
+              <JwtRoute path="/return-request-detail/:invoiceId" component={ReturnRequestDetail} />
               <JwtRoute path="/return-request" exact component={ReturnRequestList} />
               <Route path="/invoice/:invoiceId" component={Invoice} />
             </Suspense>

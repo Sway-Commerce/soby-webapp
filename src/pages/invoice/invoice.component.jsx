@@ -16,6 +16,7 @@ import Spinner from 'components/ui/spinner/spinner.component';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import RequestItem from 'pages/return-request-list/request-item.component';
 
 const Page = styled.div`
   display: flex;
@@ -32,10 +33,7 @@ const Box = styled.div`
   &.main-box {
     display: flex;
     justify-content: space-between;
-  }
-
-  h4 {
-    color: ${(prop) => prop.theme.primary};
+    height: 100px;
   }
 
   .row {
@@ -193,7 +191,7 @@ const Invoice = () => {
     invoiceId: '',
     invoiceVersion: '',
     totalWeight: '',
-    assess: {assessType: ''}
+    assess: null
   });
   const [productMargin, setProductMargin] = useState(0);
   const [formError, setFormError] = useState('');
@@ -314,7 +312,7 @@ const Invoice = () => {
         totalPrice,
         orderFee,
         escrowFee,
-        assess
+        assess,
       });
     }
   }, [
@@ -456,6 +454,8 @@ const Invoice = () => {
             <p className="invoice-info">{invoiceData.individualTrackingUrl}</p>
           </div>
         </InfoBox>
+
+        <RequestItem refundRequests={invoiceData.assess?.refundRequests} />
 
         <Grid>
           <p className="title-info">
