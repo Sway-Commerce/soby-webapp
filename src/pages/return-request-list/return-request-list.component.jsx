@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import sentIcon from 'shared/assets/sentIcon.svg';
-import PhoneInput from 'react-phone-number-input';
-import { Link, useParams } from 'react-router-dom';
-import { useLazyQuery, useMutation } from '@apollo/client';
-import {
-  GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL,
-  REQUEST_INVOICE_REFUND,
-} from '../../graphQL/repository/invoice.repository';
-import usePhoneNumber from 'shared/hooks/usePhoneNumber';
+import { Link } from 'react-router-dom';
+import { useLazyQuery } from '@apollo/client';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
-import FileUpload from 'components/file-upload/file-upload.component';
-import { useSelector } from 'react-redux';
-import FormInput from 'components/form-input/form-input.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import { GET_AGGREGATED_ASSESS_LIST_FOR_INDIVIDUAL } from '../../graphQL/repository/dispute.repository';
 import { timestampToDate } from 'shared/utils/getDate';
-import { grayColor } from 'shared/css-variable/variable';
+import {
+  DisputeType,
+} from 'shared/constants/dispute.constant';
+import RequestItem from './request-item.component';
 
 const Container = styled.div`
   justify-content: center;
@@ -73,51 +66,7 @@ const SubContainer = styled.div`
 
 const ReturnRequestList = () => {
   const AssessType = ['PROCESSING', 'SATISFIED', 'WANT_TO_RETURN'];
-  const DisputeType = {
-    PROCESSING: {
-      name: 'Processing',
-      colorClass: 'gray',
-    },
-    SATISFIED: {
-      name: 'Accepted',
-      colorClass: 'green',
-    },
-    WANT_TO_RETURN: {
-      name: 'Want to return',
-      colorClass: 'orange',
-    },
-  };
 
-  const RefundRequestStatus = {
-    PROCESSING: {
-      name: 'Processing',
-      colorClass: 'gray',
-    },
-    ACCEPTED: {
-      name: 'Accepted',
-      colorClass: 'green',
-    },
-    AUTO_ACCEPTED: {
-      name: 'Auto accepted',
-      colorClass: 'green',
-    },
-    REJECTED: {
-      name: 'Rejected',
-      colorClass: 'red',
-    },
-    SHIPPING: {
-      name: 'Shipping',
-      colorClass: 'gray',
-    },
-    RETURNED: {
-      name: 'Returned',
-      colorClass: 'green',
-    },
-    REFUNDED: {
-      name: 'Returned',
-      colorClass: 'cyan',
-    },
-  };
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
   const [assessList, setAssessList] = useState([]);
@@ -194,7 +143,6 @@ const ReturnRequestList = () => {
         </HeaderContainer>
 
         {assessList.map((x) => {
-          debugger;
           const {
             id,
             assessType,
@@ -215,16 +163,7 @@ const ReturnRequestList = () => {
                 <p>{shopName}</p>
                 <p className={`text-right ${colorClass}`}>{assessTypeName}</p>
               </ItemContainer>
-              {refundRequests.map((rr) => {
-                const { id: rrId, status } = rr;
-                const { colorClass, name } = RefundRequestStatus[status];
-                return (
-                  <SubContainer key={rrId}>
-                    <p>Return Request {rrId}</p>
-                    <p className={colorClass}>{name}</p>
-                  </SubContainer>
-                );
-              })}
+              <RequestItem refundRequests={refundRequests} />
             </Link>
           );
         })}

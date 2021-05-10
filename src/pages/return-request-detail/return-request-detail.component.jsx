@@ -17,6 +17,8 @@ import { currencyFormatter } from 'shared/utils/formatCurrency';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import { GET_AGGREGATED_ASSESS_FOR_INDIVIDUAL } from 'graphQL/repository/dispute.repository';
+import { DisputeType } from 'shared/constants/dispute.constant';
+import RequestItem from 'pages/return-request-list/request-item.component';
 
 const Page = styled.div`
   display: flex;
@@ -33,10 +35,7 @@ const Box = styled.div`
   &.main-box {
     display: flex;
     justify-content: space-between;
-  }
-
-  h4 {
-    color: ${(prop) => prop.theme.primary};
+    height: 100px;
   }
 
   .row {
@@ -168,7 +167,27 @@ const ReturnRequestDetail = () => {
   const { rrId } = useParams();
   const [open, setOpen] = useState(false);
   const [openError, setOpenError] = useState(false);
-  const [rrData, setRrData] = useState({});
+  const [rrData, setRrData] = useState({
+    shop: { id: null, name: null },
+    refundRequests: [],
+    orderId: null,
+    invoice: null,
+    shippingLocation: {
+      addressLine: null,
+      ward: null,
+      district: null,
+      province: null,
+    },
+    assessType: null,
+  });
+  const {
+    shop,
+    refundRequests,
+    orderId,
+    invoice,
+    shippingLocation,
+    assessType,
+  } = rrData;
   const [productMargin, setProductMargin] = useState(0);
   const [formError, setFormError] = useState('');
 
@@ -204,15 +223,57 @@ const ReturnRequestDetail = () => {
     }
   }, [rrId]);
 
+  const [
+    getAggregatedInvoiceOrderForIndividual,
+    {
+      loading: getAggregatedInvoiceOrderForIndividualLoading,
+      error: getAggregatedInvoiceOrderForIndividualError,
+      data: getAggregatedInvoiceOrderForIndividualData,
+    },
+  ] = useLazyQuery(GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL, {
+    variables: {
+      id: orderId,
+    },
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
+  });
+
+  useEffect(() => {
+    if (orderId) {
+      getAggregatedInvoiceOrderForIndividual();
+    }
+  }, [orderId]);
+
+  useEffect(() => {
+    if (
+      getAggregatedInvoiceOrderForIndividualData
+        ?.getAggregatedInvoiceOrderForIndividual.data
+    ) {
+      const {
+        invoice,
+        shippingLocation
+      } = getAggregatedInvoiceOrderForIndividualData?.getAggregatedInvoiceOrderForIndividual.data;
+      setRrData({
+        ...rrData,
+        invoice,
+        shippingLocation
+      });
+    }
+  }, [
+    getAggregatedInvoiceOrderForIndividualData
+      ?.getAggregatedInvoiceOrderForIndividual?.data,
+  ]);
+
   useEffect(() => {
     if (
       getAggregatedAssessForIndividualData?.getAggregatedAssessForIndividual
         ?.data
     ) {
-      setRrData(
+      const data =
         getAggregatedAssessForIndividualData?.getAggregatedAssessForIndividual
-          ?.data
-      );
+          ?.data;
+      const assessType = DisputeType[data.assessType];
+      setRrData({ ...data, assessType });
     }
   }, [
     getAggregatedAssessForIndividualData?.getAggregatedAssessForIndividual
@@ -286,6 +347,7 @@ const ReturnRequestDetail = () => {
 
   return acceptLoading ||
     getAggregatedAssessForIndividualLoading ||
+    getAggregatedInvoiceOrderForIndividualError ||
     updateReturnShippingInfoLoading ? (
     <Spinner />
   ) : (
@@ -293,10 +355,8 @@ const ReturnRequestDetail = () => {
       <Page>
         <Box className="main-box">
           <div>
-            <h2>{rrData.name}</h2>
-            <h4 style={{ textTransform: 'capitalize' }}>
-              {rrData.status?.toLocaleLowerCase()}
-            </h4>
+            <h2>{invoice?.name}</h2>
+            <h4 className={assessType?.colorClass}>{assessType?.name}</h4>
           </div>
           {rrData.assess?.assessType === 'PROCESSING' ? (
             <ActionContainer>
@@ -319,14 +379,14 @@ const ReturnRequestDetail = () => {
             <p>
               <b>Invoice from</b>
             </p>
-            <p className="invoice-info">shop.name</p>
+            <p className="invoice-info">{shop.name}</p>
           </div>
           <div className="info-box">
             <p>
               <b>Shipping address</b>
             </p>
             <p className="invoice-info">
-              {`${rrData?.shippingLocation?.addressLine}, ${rrData?.shippingLocation?.ward}, ${rrData?.shippingLocation?.district}, ${rrData?.shippingLocation?.province}`}
+              {`${shippingLocation?.addressLine}, ${shippingLocation?.ward}, ${shippingLocation?.district}, ${shippingLocation?.province}`}
             </p>
           </div>
           <div className="info-box">
@@ -336,6 +396,8 @@ const ReturnRequestDetail = () => {
             <p className="invoice-info">{rrData.individualTrackingUrl}</p>
           </div>
         </InfoBox>
+
+        <RequestItem refundRequests={refundRequests}/>
 
         <Grid>
           <p className="title-info">
