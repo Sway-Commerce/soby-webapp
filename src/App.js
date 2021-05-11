@@ -62,6 +62,9 @@ const ReturnRequestList = lazy(() =>
 const ReturnRequestDetail = lazy(() =>
   import('pages/return-request-detail/return-request-detail.component')
 );
+const ReturnRequestInfo = lazy(() =>
+  import('pages/request-info/request-info.component')
+);
 
 const App = () => {
   return (
@@ -104,6 +107,7 @@ const App = () => {
               <JwtRoute path="/return-request/:invoiceId" component={ReturnRequestPage} />
               <JwtRoute path="/return-request-detail/:invoiceId" component={ReturnRequestDetail} />
               <JwtRoute path="/return-request" exact component={ReturnRequestList} />
+              <JwtRoute path="/return-info/:assessId/:requestId" exact component={ReturnRequestInfo} />
               <Route path="/invoice/:invoiceId" component={Invoice} />
             </Suspense>
           </ErrorBoundary>

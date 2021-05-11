@@ -1,8 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { RefundRequestStatus } from 'shared/constants/dispute.constant';
 import styled from 'styled-components';
 
-const SubContainer = styled.div`
+const SubContainer = styled(Link)`
   margin: 16px 0;
   display: flex;
   height: 40px;
@@ -16,13 +17,14 @@ const SubContainer = styled.div`
 `;
 
 const RequestItem = ({
-  refundRequests
+  refundRequests,
+  assessId
 }) => {
   return refundRequests?.map((rr) => {
     const { id: rrId, status } = rr;
     const { colorClass, name } = RefundRequestStatus[status];
     return (
-      <SubContainer key={rrId}>
+      <SubContainer key={rrId} to={`/return-info/${assessId}/${rrId}`}>
         <p>Return Request {rrId}</p>
         <p className={colorClass}>{name}</p>
       </SubContainer>

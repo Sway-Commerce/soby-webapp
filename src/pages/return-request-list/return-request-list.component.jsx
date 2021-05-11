@@ -8,9 +8,7 @@ import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import { GET_AGGREGATED_ASSESS_LIST_FOR_INDIVIDUAL } from '../../graphQL/repository/dispute.repository';
 import { timestampToDate } from 'shared/utils/getDate';
-import {
-  DisputeType,
-} from 'shared/constants/dispute.constant';
+import { DisputeType } from 'shared/constants/dispute.constant';
 import RequestItem from './request-item.component';
 
 const Container = styled.div`
@@ -35,7 +33,7 @@ const HeaderContainer = styled.div`
   }
 `;
 
-const ItemContainer = styled.div`
+const ItemContainer = styled(Link)`
   height: 40px;
   display: grid;
   grid-template-columns: 463px repeat(4, 1fr);
@@ -151,21 +149,21 @@ const ReturnRequestList = () => {
             invoice: { name },
             shop: { name: shopName },
             refundRequests,
-            orderId
+            orderId,
           } = x;
 
           const { name: assessTypeName, colorClass } = DisputeType[assessType];
           return (
-            <Link key={id} to={`/return-request-detail/${orderId}`}>
-              <ItemContainer>
+            <React.Fragment key={id}>
+              <ItemContainer to={`/return-request-detail/${orderId}`}>
                 <p>{name}</p>
                 <p>{timestampToDate(updatedAt)}</p>
                 <p>{currencyFormatter(transferAmount)}</p>
                 <p>{shopName}</p>
                 <p className={`text-right ${colorClass}`}>{assessTypeName}</p>
               </ItemContainer>
-              <RequestItem refundRequests={refundRequests} />
-            </Link>
+              <RequestItem refundRequests={refundRequests} assessId={id} />
+            </React.Fragment>
           );
         })}
       </Container>

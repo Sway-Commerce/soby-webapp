@@ -1,5 +1,20 @@
 import { gql } from '@apollo/client';
 
+export const SHIPPING_LOCATION_FRAGMENT = gql`
+  fragment ShippingLocationFragment on ShippingLocation {
+    id
+    locationName
+    phoneCountryCode
+    phoneNumber
+    country
+    province
+    district
+    ward
+    addressLine
+    defaultLocation
+  }
+`;
+
 export const INDIVIDUAL_PROFILE_FRAGMENT = gql`
   fragment IndividualProfileFragment on IndividualResultData {
     id
@@ -299,6 +314,7 @@ export const ASSESS_FRAGMENT = gql`
 export const AGGREGATED_REFUND_REQUEST_FRAGMENT = gql`
   ${PRODUCT_FRAGMENT}
   ${SKU_FRAGMENT}
+  ${SHIPPING_LOCATION_FRAGMENT}
   fragment AggregatedRefundRequestFragment on AggregatedRefundRequest {
     id
     assessId
@@ -310,7 +326,9 @@ export const AGGREGATED_REFUND_REQUEST_FRAGMENT = gql`
     requiredAdmin
     shippingType
     shippingPartner
-    shippingLocationId
+    shippingLocation {
+      ...ShippingLocationFragment
+    }
     returnFeePaidBy
     shippingFee
     individualTrackingUrl
@@ -382,7 +400,10 @@ export const SHOP_PROFILE_FRAGMENT = gql`
     userCountsApi
     incorporationDate
     categories
-    shopUrls
+    shopUrls {
+      url
+      verified
+    }
     status
     shippingType
     signingPublicKey
@@ -458,7 +479,10 @@ export const SHOP_PUBLIC_INFO_FRAGMENT = gql`
     logoUrl
     coverUrl
     categoryIds
-    shopUrls
+    shopUrls {
+      url
+      verified
+    }
     shippingType
     signingPublicKey
     encryptionPublicKey
@@ -587,5 +611,3 @@ export const AGGREGATED_SEARCH_ASSESS_FRAGMENT = gql`
     refundAmount
   }
 `;
-
-

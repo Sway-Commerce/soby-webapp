@@ -457,7 +457,7 @@ const RequestReturnDetail = () => {
           </div>
         </InfoBox>
 
-        <RequestItem refundRequests={invoiceData.assess?.refundRequests} />
+        <RequestItem refundRequests={invoiceData.assess?.refundRequests} assessId={invoiceData.assess?.id} />
 
         <Grid>
           <p className="title-info">

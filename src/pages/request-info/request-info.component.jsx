@@ -17,6 +17,8 @@ import { currencyFormatter } from 'shared/utils/formatCurrency';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import RequestItem from 'pages/return-request-list/request-item.component';
+import { DisputeType } from 'shared/constants/dispute.constant';
+import { GET_AGGREGATED_ASSESS_FOR_INDIVIDUAL } from 'graphQL/repository/dispute.repository';
 
 const Page = styled.div`
   display: flex;
@@ -86,7 +88,6 @@ const Grid = styled.div`
     align-items: center;
   }
 `;
-
 
 const Product = styled.div`
   display: flex;
@@ -162,62 +163,29 @@ const ProductContainer = styled.div`
   grid-row-gap: 24px;
 `;
 
-const Invoice = () => {
-  const { invoiceId } = useParams();
+const RequestInfo = () => {
+  const { assessId, requestId } = useParams();
   const [open, setOpen] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [invoiceData, setInvoiceData] = useState({
-    name: '',
-    shippingType: '',
-    expiredAt: '',
-    price: '',
-    items: [],
-    shop: { logoUrl: '', name: '' },
-    status: '',
-    shippingFee: 0,
-    shippingLocation: {
-      addressLine: '',
-      district: '',
-      province: '',
-      ward: '',
+    assess: {
+      assessType: null,
+      refundRequests: [],
     },
-    individualTrackingUrl: '',
-    totalPrice: '',
-    orderFee: '',
-    escrowFee: '',
-    createdAt: '',
-    description: '',
-    id: '',
-    invoiceId: '',
-    invoiceVersion: '',
-    totalWeight: '',
-    assess: null
   });
-  const [productMargin, setProductMargin] = useState(0);
+  const [refundRequest, setRefundRequest] = useState({});
   const [formError, setFormError] = useState('');
-  const { shop } = invoiceData;
 
   const [
-    loadDetailInvoice,
-    { loading, data: detailInvoiceData, error: loadDetailInvoiceError },
-  ] = useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
-    variables: {
-      id: invoiceId,
-    },
-    fetchPolicy: 'network-only',
-    notifyOnNetworkStatusChange: true,
-  });
-
-  const [
-    getAggregatedInvoiceOrderForIndividual,
+    getAggregatedAssessForIndividual,
     {
-      loading: getAggregatedInvoiceOrderForIndividualLoading,
-      error: getAggregatedInvoiceOrderForIndividualError,
-      data: getAggregatedInvoiceOrderForIndividualData,
+      loading: getAggregatedAssessForIndividualLoading,
+      error: getAggregatedAssessForIndividualError,
+      data: getAggregatedAssessForIndividualData,
     },
-  ] = useLazyQuery(GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL, {
+  ] = useLazyQuery(GET_AGGREGATED_ASSESS_FOR_INDIVIDUAL, {
     variables: {
-      id: invoiceId,
+      id: assessId,
     },
     fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
@@ -234,89 +202,31 @@ const Invoice = () => {
     errorPolicy: 'all',
     variables: {
       cmd: {
-        invoiceId,
+        invoiceId: assessId,
       },
     },
   });
 
-  // useEffect(() => {
-  //   if (invoiceId) {
-  //     loadDetailInvoice();
-  //   }
-  // }, [invoiceId]);
-
   useEffect(() => {
-    if (invoiceId) {
-      getAggregatedInvoiceOrderForIndividual();
+    if (assessId) {
+      getAggregatedAssessForIndividual();
     }
-  }, [invoiceId]);
-
-  useEffect(() => {
-    if (invoiceData?.getAggregatedInvoice?.data) {
-      const {
-        name,
-        shippingType,
-        expiredAt,
-        price,
-        items,
-        shop,
-      } = invoiceData?.getAggregatedInvoice?.data;
-      setInvoiceData({ name, shippingType, expiredAt, price, items, shop });
-    }
-  }, [invoiceData?.getAggregatedInvoice?.data]);
+  }, [assessId]);
 
   useEffect(() => {
     const invoiceData =
-      getAggregatedInvoiceOrderForIndividualData
+      getAggregatedAssessForIndividualData
         ?.getAggregatedInvoiceOrderForIndividual?.data;
     if (invoiceData) {
-      const {
-        id,
-        invoice,
-        individualId,
-        shippingPartner,
-        shippingLocation,
-        shippingFee,
-        individualTrackingUrl,
-        orderFee,
-        status,
-        reason,
-        totalPrice,
-        createdAt,
-        updatedAt,
-        assess,
-        paymentMethod,
-      } = invoiceData;
-      const {
-        invoiceId,
-        invoiceVersion,
-        name,
-        description,
-        shop,
-        shippingType,
-        escrowFee,
-        items,
-        price,
-        totalWeight,
-      } = invoice;
-      setInvoiceData({
-        name,
-        shippingType,
-        price,
-        items,
-        shop,
-        status,
-        shippingFee,
-        shippingLocation,
-        individualTrackingUrl,
-        totalPrice,
-        orderFee,
-        escrowFee,
-        assess,
-      });
+      setInvoiceData(invoiceData);
+      debugger
+      setRefundRequest(
+        invoiceData?.assess?.refundRequests?.find((x) => x.id === requestId)
+      );
+
     }
   }, [
-    getAggregatedInvoiceOrderForIndividualData
+    getAggregatedAssessForIndividualData
       ?.getAggregatedInvoiceOrderForIndividual?.data,
   ]);
 
@@ -338,7 +248,7 @@ const Invoice = () => {
     errorPolicy: 'all',
     variables: {
       cmd: {
-        invoiceId,
+        invoiceId: assessId,
       },
     },
   });
@@ -378,34 +288,30 @@ const Invoice = () => {
   useEffect(() => {
     if (
       markSatisfiedWithInvoiceError?.message ||
-      loadDetailInvoiceError?.message ||
-      getAggregatedInvoiceOrderForIndividualError?.message ||
+      getAggregatedAssessForIndividualError?.message ||
       acceptInvoiceError?.message ||
       updateReturnShippingInfoError?.message
     ) {
       setFormError(
         markSatisfiedWithInvoiceError?.message ??
-          loadDetailInvoiceError?.message ??
-          getAggregatedInvoiceOrderForIndividualError?.message ??
+          getAggregatedAssessForIndividualError?.message ??
           acceptInvoiceError?.message ??
           updateReturnShippingInfoError?.message
       );
     }
   }, [
     markSatisfiedWithInvoiceError?.message,
-    loadDetailInvoiceError?.message,
-    getAggregatedInvoiceOrderForIndividualError?.message,
+    getAggregatedAssessForIndividualError?.message,
     acceptInvoiceError?.message,
     updateReturnShippingInfoError?.message,
   ]);
 
   const handleCheckout = () => {
-    invoiceId ? setOpen(true) : acceptInvoice();
+    assessId ? setOpen(true) : acceptInvoice();
   };
 
-  return loading ||
-    acceptLoading ||
-    getAggregatedInvoiceOrderForIndividualLoading ||
+  return acceptLoading ||
+    getAggregatedAssessForIndividualLoading ||
     updateReturnShippingInfoLoading ? (
     <Spinner />
   ) : (
@@ -413,14 +319,18 @@ const Invoice = () => {
       <Page>
         <Box className="main-box">
           <div>
-            <h2>{invoiceData.name}</h2>
-            <h4 style={{ textTransform: 'capitalize' }}>
-              {invoiceData.status?.toLocaleLowerCase()}
+            <h2>Return Request {requestId}</h2>
+            <h4
+              className={
+                DisputeType[invoiceData.assess?.assessType]?.colorClass
+              }
+            >
+              {DisputeType[invoiceData.assess?.assessType]?.name}
             </h4>
           </div>
           {invoiceData.assess?.assessType === 'PROCESSING' ? (
             <ActionContainer>
-              <Link className="action" to={`/return-request/${invoiceId}`}>
+              <Link className="action" to={`/return-request/${assessId}`}>
                 <CloseIcon />
                 <p>Reject</p>
               </Link>
@@ -431,35 +341,9 @@ const Invoice = () => {
             </ActionContainer>
           ) : null}
         </Box>
-
-        <InfoBox>
-          <div className="info-box">
-            <p>
-              <b>Invoice from</b>
-            </p>
-            <p className="invoice-info">{shop.name}</p>
-          </div>
-          <div className="info-box">
-            <p>
-              <b>Shipping address</b>
-            </p>
-            <p className="invoice-info">
-              {`${invoiceData?.shippingLocation?.addressLine}, ${invoiceData?.shippingLocation?.ward}, ${invoiceData?.shippingLocation?.district}, ${invoiceData?.shippingLocation?.province}`}
-            </p>
-          </div>
-          <div className="info-box">
-            <p>
-              <b>Tracking code</b>
-            </p>
-            <p className="invoice-info">{invoiceData.individualTrackingUrl}</p>
-          </div>
-        </InfoBox>
-
-        <RequestItem refundRequests={invoiceData.assess?.refundRequests} assessId={invoiceData.assess?.id} />
-
         <Grid>
           <p className="title-info">
-            <b>Products list</b>
+            <b>Return list</b>
           </p>
           <p className="title-info">
             <b>Subtotal</b>
@@ -473,37 +357,36 @@ const Invoice = () => {
         </Grid>
         <BreakLine />
 
-        <ProductContainer>
-          {invoiceData.items.map((x) => {
-            const {
-              id: itemId,
-              price: totalPrice,
-              product: {
-                name: productName,
-                id,
-                imageUrls: [imageUrl],
-              },
-              sku: { properties, currentPrice },
-              quantity: productQuantity,
-            } = x;
-            return (
-              <Grid key={itemId}>
-                <Product className="title-info">
-                  <img src={imageUrl} alt="" />
-                  <div>
-                    <p>{productName}</p>
-                    <p>Blue bird shop</p>
-                  </div>
-                </Product>
-                <p className="title-info">{currencyFormatter(currentPrice)}</p>
-                <p className="title-info">{productQuantity}</p>
-                <p className="title-info last-child">
-                  {currencyFormatter(totalPrice)}
-                </p>
-              </Grid>
-            );
-          })}
-        </ProductContainer>
+            <ProductContainer>
+            {refundRequest?.items?.map((x) => {
+              const {
+                id: itemId,
+                price,
+                product: {
+                  name: productName,
+                  id,
+                  imageUrls: [imageUrl],
+                },
+                quantity: productQuantity,
+              } = x;
+              return (
+                <Grid key={itemId}>
+                  <Product className="title-info">
+                    <img src={imageUrl} alt="" />
+                    <div>
+                      <p>{productName}</p>
+                      <p>Blue bird shop</p>
+                    </div>
+                  </Product>
+                  <p className="title-info">{currencyFormatter(price)}</p>
+                  <p className="title-info">{productQuantity}</p>
+                  <p className="title-info last-child">
+                    {currencyFormatter(+price * +productQuantity)}
+                  </p>
+                </Grid>
+              );
+            })}
+          </ProductContainer>
         <BreakLine />
         <FooterBox>
           <div></div>
@@ -536,12 +419,12 @@ const Invoice = () => {
       </Page>
 
       <SobyModal open={openError} setOpen={setOpenError}>
-      {formError ? (
-        <ErrorPopup content={formError} setOpen={setOpenError} />
-      ) : null}
-    </SobyModal>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpenError} />
+        ) : null}
+      </SobyModal>
     </React.Fragment>
   );
 };
 
-export default Invoice;
+export default RequestInfo;
