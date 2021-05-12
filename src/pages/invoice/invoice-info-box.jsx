@@ -1,6 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { RefundRequestStatus } from 'shared/constants/dispute.constant';
 import { borderColor } from 'shared/css-variable/variable';
 import styled from 'styled-components';
 
@@ -17,6 +15,7 @@ export const InfoBox = styled.div`
     padding: 16px 24px;
     .invoice-info {
       color: #828282;
+      word-break: break-word;
     }
   }
 `;

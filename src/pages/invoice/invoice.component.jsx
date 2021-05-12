@@ -132,22 +132,6 @@ export const ActionContainer = styled.div`
   }
 `;
 
-export const InfoBox = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-column-gap: 30px;
-  background: #ffffff;
-
-  .info-box {
-    border: 1px solid ${borderColor};
-    height: 100px;
-    padding: 16px 24px;
-    .invoice-info {
-      color: #828282;
-    }
-  }
-`;
-
 export const FooterBox = styled.div`
   display: grid;
   grid-template-columns: 50% 1fr 1fr;
@@ -198,16 +182,14 @@ const Invoice = () => {
   const [formError, setFormError] = useState('');
   const { shop } = invoiceData;
 
-  const [
-    loadDetailInvoice,
-    { loading, data: detailInvoiceData, error: loadDetailInvoiceError },
-  ] = useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
-    variables: {
-      id: invoiceId,
-    },
-    fetchPolicy: 'network-only',
-    notifyOnNetworkStatusChange: true,
-  });
+  const [loadDetailInvoice, { loading, error: loadDetailInvoiceError }] =
+    useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
+      variables: {
+        id: invoiceId,
+      },
+      fetchPolicy: 'network-only',
+      notifyOnNetworkStatusChange: true,
+    });
 
   const [
     getAggregatedInvoiceOrderForIndividual,
@@ -266,34 +248,16 @@ const Invoice = () => {
         ?.getAggregatedInvoiceOrderForIndividual?.data;
     if (invoiceData) {
       const {
-        id,
         invoice,
-        individualId,
-        shippingPartner,
         shippingLocation,
         shippingFee,
         individualTrackingUrl,
         orderFee,
         status,
-        reason,
         totalPrice,
-        createdAt,
-        updatedAt,
         assess,
-        paymentMethod,
       } = invoiceData;
-      const {
-        invoiceId,
-        invoiceVersion,
-        name,
-        description,
-        shop,
-        shippingType,
-        escrowFee,
-        items,
-        price,
-        totalWeight,
-      } = invoice;
+      const { name, shop, shippingType, escrowFee, items, price } = invoice;
       setInvoiceData({
         name,
         shippingType,
@@ -326,7 +290,6 @@ const Invoice = () => {
     markSatisfiedWithInvoice,
     {
       data: markSatisfiedWithInvoiceData,
-      loading: markSatisfiedWithInvoiceLoading,
       error: markSatisfiedWithInvoiceError,
     },
   ] = useMutation(MARK_SATISFIED_WITH_INVOICE, {
@@ -347,7 +310,6 @@ const Invoice = () => {
   const [
     updateReturnShippingInfo,
     {
-      data: updateReturnShippingInfoData,
       loading: updateReturnShippingInfoLoading,
       error: updateReturnShippingInfoError,
     },
@@ -393,10 +355,6 @@ const Invoice = () => {
     acceptInvoiceError?.message,
     updateReturnShippingInfoError?.message,
   ]);
-
-  const handleCheckout = () => {
-    invoiceId ? setOpen(true) : acceptInvoice();
-  };
 
   return loading ||
     acceptLoading ||
@@ -463,10 +421,9 @@ const Invoice = () => {
               price: totalPrice,
               product: {
                 name: productName,
-                id,
                 imageUrls: [imageUrl],
               },
-              sku: { properties, currentPrice },
+              sku: { currentPrice },
               quantity: productQuantity,
             } = x;
             return (

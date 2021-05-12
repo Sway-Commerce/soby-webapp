@@ -153,22 +153,6 @@ export const ActionContainer = styled.div`
   }
 `;
 
-export const InfoBox = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-column-gap: 30px;
-  background: #ffffff;
-
-  .info-box {
-    border: 1px solid ${borderColor};
-    height: 100px;
-    padding: 16px 24px;
-    .invoice-info {
-      color: #828282;
-    }
-  }
-`;
-
 export const FooterBox = styled.div`
   display: grid;
   grid-template-columns: 50% 1fr 1fr;

@@ -34,7 +34,6 @@ const HeaderContainer = styled.div`
 `;
 
 const ItemContainer = styled(Link)`
-  height: 40px;
   display: grid;
   grid-template-columns: 463px repeat(4, 1fr);
   padding: 32px 0 16px;

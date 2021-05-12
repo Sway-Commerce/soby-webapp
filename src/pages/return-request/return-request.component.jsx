@@ -243,9 +243,10 @@ const ReturnRequest = () => {
   });
 
   useEffect(() => {
-    if (requestInvoiceRefundData?.requestInvoiceRefund?.success) {
+    if (requestInvoiceRefundData?.requestInvoiceRefund?.message === "Success") {
+      window.location = '/return-request';
     }
-  }, [requestInvoiceRefundData?.requestInvoiceRefund?.success]);
+  }, [requestInvoiceRefundData?.requestInvoiceRefund?.message]);
 
   const [
     getAggregatedInvoiceOrderForIndividual,
