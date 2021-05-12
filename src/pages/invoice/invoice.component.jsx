@@ -296,7 +296,7 @@ const Invoice = () => {
     errorPolicy: 'all',
     variables: {
       cmd: {
-        invoiceId,
+        id: invoiceId,
       },
     },
   });
@@ -379,7 +379,10 @@ const Invoice = () => {
                 <CloseIcon />
                 <p>Reject</p>
               </Link>
-              <div className="action">
+              <div
+                className="action"
+                onClick={() => markSatisfiedWithInvoice()}
+              >
                 <AcceptIcon />
                 <p>Accept</p>
               </div>

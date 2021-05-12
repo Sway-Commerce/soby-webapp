@@ -102,6 +102,7 @@ export const MARK_SATISFIED_WITH_INVOICE = gql`
   mutation MarkSatisfiedWithInvoice($cmd: MarkSatisfiedWithInvoiceCmd!) {
     markSatisfiedWithInvoice(cmd: $cmd) {
       message
+      success
       data {
         ...AssessFragment
       }

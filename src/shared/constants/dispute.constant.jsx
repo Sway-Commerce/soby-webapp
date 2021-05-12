@@ -11,6 +11,10 @@ export const DisputeType = {
     name: 'Want to return',
     colorClass: 'orange',
   },
+  COMPLETED: {
+    name: 'Completed',
+    colorClass: 'primary-color',
+  },
 };
 
 export const RefundRequestStatus = {
@@ -44,6 +48,10 @@ export const RefundRequestStatus = {
   },
   DELIVERED: {
     name: 'Delivered',
+    colorClass: 'primary-color',
+  },
+  COMPLETED: {
+    name: 'Completed',
     colorClass: 'primary-color',
   },
 };

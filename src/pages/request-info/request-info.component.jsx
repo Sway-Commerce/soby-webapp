@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as CloseIcon } from 'shared/assets/close-action.svg';
-import { ReactComponent as CheckIcon } from 'shared/assets/check.svg';
 import { ReactComponent as CheckShippingIcon } from 'shared/assets/check-shipping.svg';
 import {
   borderColor,
@@ -165,21 +164,6 @@ export const FooterBox = styled.div`
 const ProductContainer = styled.div`
   display: grid;
   grid-row-gap: 24px;
-`;
-
-const AcceptButton = styled.div`
-  width: 255.89px;
-  height: 48px;
-  background: ${greenColor};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #ffffff;
-  border-radius: 6px;
-  cursor: pointer;
-  * + * {
-    margin-left: 10px;
-  }
 `;
 
 const RefundImage = styled.img`
@@ -433,17 +417,6 @@ const RequestInfo = () => {
               {RefundRequestStatus[refundRequest?.status]?.name}
             </h4>
           </div>
-
-          {
-            //   refundRequest?.status === 'ACCEPTED' ? (
-            //   <ActionContainer>
-            //     <AcceptButton>
-            //       <CheckIcon />
-            //       <span>Accept</span>
-            //     </AcceptButton>
-            //   </ActionContainer>
-            // ) : null
-          }
         </Box>
 
         {refundRequest ? (

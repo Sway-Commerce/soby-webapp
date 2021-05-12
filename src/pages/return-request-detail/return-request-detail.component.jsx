@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as CloseIcon } from 'shared/assets/close-action.svg';
 import { ReactComponent as AcceptIcon } from 'shared/assets/accept-action.svg';
-import { borderColor } from 'shared/css-variable/variable';
+import { borderColor, greenColor } from 'shared/css-variable/variable';
 import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -19,6 +19,7 @@ import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import RequestItem from 'pages/return-request-list/request-item.component';
 import { DisputeType } from 'shared/constants/dispute.constant';
 import InvoiceInfoBox from 'pages/invoice/invoice-info-box';
+import { ReactComponent as CheckIcon } from 'shared/assets/check.svg';
 
 const Page = styled.div`
   display: flex;
@@ -147,6 +148,21 @@ const ProductContainer = styled.div`
   grid-row-gap: 24px;
 `;
 
+const AcceptButton = styled.div`
+  width: 255.89px;
+  height: 48px;
+  background: ${greenColor};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+  * + * {
+    margin-left: 10px;
+  }
+`;
+
 const RequestReturnDetail = () => {
   const { invoiceId } = useParams();
   const [open, setOpen] = useState(false);
@@ -182,16 +198,14 @@ const RequestReturnDetail = () => {
   const [formError, setFormError] = useState('');
   const { shop } = invoiceData;
 
-  const [
-    loadDetailInvoice,
-    { loading, data: detailInvoiceData, error: loadDetailInvoiceError },
-  ] = useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
-    variables: {
-      id: invoiceId,
-    },
-    fetchPolicy: 'network-only',
-    notifyOnNetworkStatusChange: true,
-  });
+  const [loadDetailInvoice, { loading, error: loadDetailInvoiceError }] =
+    useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
+      variables: {
+        id: invoiceId,
+      },
+      fetchPolicy: 'network-only',
+      notifyOnNetworkStatusChange: true,
+    });
 
   const [
     getAggregatedInvoiceOrderForIndividual,
@@ -238,14 +252,8 @@ const RequestReturnDetail = () => {
 
   useEffect(() => {
     if (invoiceData?.getAggregatedInvoice?.data) {
-      const {
-        name,
-        shippingType,
-        expiredAt,
-        price,
-        items,
-        shop,
-      } = invoiceData?.getAggregatedInvoice?.data;
+      const { name, shippingType, expiredAt, price, items, shop } =
+        invoiceData?.getAggregatedInvoice?.data;
       setInvoiceData({ name, shippingType, expiredAt, price, items, shop });
     }
   }, [invoiceData?.getAggregatedInvoice?.data]);
@@ -256,34 +264,16 @@ const RequestReturnDetail = () => {
         ?.getAggregatedInvoiceOrderForIndividual?.data;
     if (invoiceData) {
       const {
-        id,
         invoice,
-        individualId,
-        shippingPartner,
         shippingLocation,
         shippingFee,
         individualTrackingUrl,
         orderFee,
         status,
-        reason,
         totalPrice,
-        createdAt,
-        updatedAt,
         assess,
-        paymentMethod,
       } = invoiceData;
-      const {
-        invoiceId,
-        invoiceVersion,
-        name,
-        description,
-        shop,
-        shippingType,
-        escrowFee,
-        items,
-        price,
-        totalWeight,
-      } = invoice;
+      const { name, shop, shippingType, escrowFee, items, price } = invoice;
       setInvoiceData({
         name,
         shippingType,
@@ -316,20 +306,20 @@ const RequestReturnDetail = () => {
     markSatisfiedWithInvoice,
     {
       data: markSatisfiedWithInvoiceData,
-      loading: markSatisfiedWithInvoiceLoading,
       error: markSatisfiedWithInvoiceError,
     },
   ] = useMutation(MARK_SATISFIED_WITH_INVOICE, {
     errorPolicy: 'all',
     variables: {
       cmd: {
-        invoiceId,
+        id: invoiceId,
       },
     },
   });
 
   useEffect(() => {
     if (markSatisfiedWithInvoiceData?.markSatisfiedWithInvoice?.success) {
+      window.location = '/return-request';
     }
   }, [markSatisfiedWithInvoiceData?.markSatisfiedWithInvoice?.success]);
 
@@ -337,7 +327,6 @@ const RequestReturnDetail = () => {
   const [
     updateReturnShippingInfo,
     {
-      data: updateReturnShippingInfoData,
       loading: updateReturnShippingInfoLoading,
       error: updateReturnShippingInfoError,
     },
@@ -384,10 +373,6 @@ const RequestReturnDetail = () => {
     updateReturnShippingInfoError?.message,
   ]);
 
-  const handleCheckout = () => {
-    invoiceId ? setOpen(true) : acceptInvoice();
-  };
-
   return loading ||
     acceptLoading ||
     getAggregatedInvoiceOrderForIndividualLoading ||
@@ -400,9 +385,11 @@ const RequestReturnDetail = () => {
           <div>
             <h2>{invoiceData.name}</h2>
             <h4
-              className={DisputeType[invoiceData.assess?.assessType]?.colorClass}
+              className={
+                DisputeType[invoiceData.status]?.colorClass
+              }
             >
-              {DisputeType[invoiceData.assess?.assessType]?.name}
+              {DisputeType[invoiceData.status]?.name}
             </h4>
           </div>
           {invoiceData.assess?.assessType === 'PROCESSING' ? (
@@ -417,6 +404,15 @@ const RequestReturnDetail = () => {
               </div>
             </ActionContainer>
           ) : null}
+
+          {invoiceData.assess?.refundRequests[0]?.status === 'PROCESSING' ? (
+            <ActionContainer>
+              <AcceptButton onClick={() => markSatisfiedWithInvoice()}>
+                <CheckIcon />
+                <span>Accept</span>
+              </AcceptButton>
+            </ActionContainer>
+          ) : null}
         </Box>
 
         <InvoiceInfoBox
@@ -425,7 +421,10 @@ const RequestReturnDetail = () => {
           trackingUrl={invoiceData.individualTrackingUrl}
         />
 
-        <RequestItem refundRequests={invoiceData.assess?.refundRequests} assessId={invoiceData.assess?.id} />
+        <RequestItem
+          refundRequests={invoiceData.assess?.refundRequests}
+          assessId={invoiceData.assess?.id}
+        />
 
         <Grid>
           <p className="title-info">
@@ -450,10 +449,9 @@ const RequestReturnDetail = () => {
               price: totalPrice,
               product: {
                 name: productName,
-                id,
                 imageUrls: [imageUrl],
               },
-              sku: { properties, currentPrice },
+              sku: { currentPrice },
               quantity: productQuantity,
             } = x;
             return (
