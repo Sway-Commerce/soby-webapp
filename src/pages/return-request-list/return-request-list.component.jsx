@@ -154,7 +154,7 @@ const ReturnRequestList = () => {
           const { name: assessTypeName, colorClass } = DisputeType[assessType];
           return (
             <React.Fragment key={id}>
-              <ItemContainer to={`/return-request-detail/${orderId}`}>
+              <ItemContainer to={`/invoice/${orderId}`}>
                 <p>{name}</p>
                 <p>{timestampToDate(updatedAt)}</p>
                 <p>{currencyFormatter(transferAmount)}</p>

@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as CloseIcon } from 'shared/assets/close-action.svg';
 import { ReactComponent as AcceptIcon } from 'shared/assets/accept-action.svg';
-import { borderColor } from 'shared/css-variable/variable';
+import {
+  bodyColor,
+  borderColor,
+  greenColor,
+} from 'shared/css-variable/variable';
 import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -17,8 +21,9 @@ import { currencyFormatter } from 'shared/utils/formatCurrency';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import RequestItem from 'pages/return-request-list/request-item.component';
-import InvoiceInfoBox from './invoice-info-box';
-import { RefundRequestStatus } from 'shared/constants/dispute.constant';
+import { DisputeType } from 'shared/constants/dispute.constant';
+import InvoiceInfoBox from 'pages/invoice/invoice-info-box';
+import { ReactComponent as CheckIcon } from 'shared/assets/check.svg';
 
 const Page = styled.div`
   display: flex;
@@ -147,7 +152,39 @@ const ProductContainer = styled.div`
   grid-row-gap: 24px;
 `;
 
-const Invoice = () => {
+const AcceptButton = styled.div`
+  width: 255.89px;
+  height: 48px;
+  background: ${greenColor};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+  * + * {
+    margin-left: 10px;
+  }
+`;
+
+const ReportButton = styled.div`
+  width: 255.89px;
+  height: 48px;
+  border: 1px solid ${bodyColor};
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${bodyColor};
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 16px;
+  * + * {
+    margin-left: 10px;
+  }
+`;
+
+const RequestReturnDetail = () => {
   const { invoiceId } = useParams();
   const [open, setOpen] = useState(false);
   const [openError, setOpenError] = useState(false);
@@ -181,6 +218,7 @@ const Invoice = () => {
   const [productMargin, setProductMargin] = useState(0);
   const [formError, setFormError] = useState('');
   const { shop } = invoiceData;
+  const [rejectCount, setRejectCount] = useState(0);
 
   const [loadDetailInvoice, { loading, error: loadDetailInvoiceError }] =
     useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
@@ -273,6 +311,12 @@ const Invoice = () => {
         escrowFee,
         assess,
       });
+
+      setRejectCount(
+        invoiceData?.assess?.refundRequests?.filter(
+          (x) => x.status === 'REJECTED'
+        )?.length ?? 0
+      );
     }
   }, [
     getAggregatedInvoiceOrderForIndividualData
@@ -303,6 +347,7 @@ const Invoice = () => {
 
   useEffect(() => {
     if (markSatisfiedWithInvoiceData?.markSatisfiedWithInvoice?.success) {
+      window.location = '/return-request';
     }
   }, [markSatisfiedWithInvoiceData?.markSatisfiedWithInvoice?.success]);
 
@@ -367,10 +412,8 @@ const Invoice = () => {
         <Box className="main-box">
           <div>
             <h2>{invoiceData.name}</h2>
-            <h4
-              className={RefundRequestStatus[invoiceData?.status]?.colorClass}
-            >
-              {RefundRequestStatus[invoiceData?.status]?.name}
+            <h4 className={DisputeType[invoiceData.status]?.colorClass}>
+              {DisputeType[invoiceData.status]?.name}
             </h4>
           </div>
           {invoiceData.assess?.assessType === 'PROCESSING' ? (
@@ -379,13 +422,28 @@ const Invoice = () => {
                 <CloseIcon />
                 <p>Reject</p>
               </Link>
-              <div
-                className="action"
-                onClick={() => markSatisfiedWithInvoice()}
-              >
+              <div className="action">
                 <AcceptIcon />
                 <p>Accept</p>
               </div>
+            </ActionContainer>
+          ) : null}
+
+          {invoiceData?.status !== 'COMPLETED' &&
+          rejectCount < 3 ? (
+            <ActionContainer>
+              <AcceptButton onClick={() => markSatisfiedWithInvoice()}>
+                <CheckIcon />
+                <span>Accept</span>
+              </AcceptButton>
+            </ActionContainer>
+          ) : null}
+
+          {rejectCount === 3 ? (
+            <ActionContainer>
+              <ReportButton>
+                <span>Report problem</span>
+              </ReportButton>
             </ActionContainer>
           ) : null}
         </Box>
@@ -487,4 +545,4 @@ const Invoice = () => {
   );
 };
 
-export default Invoice;
+export default RequestReturnDetail;
