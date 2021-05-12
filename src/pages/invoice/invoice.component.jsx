@@ -17,6 +17,8 @@ import { currencyFormatter } from 'shared/utils/formatCurrency';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import RequestItem from 'pages/return-request-list/request-item.component';
+import InvoiceInfoBox from './invoice-info-box';
+import { RefundRequestStatus } from 'shared/constants/dispute.constant';
 
 const Page = styled.div`
   display: flex;
@@ -86,7 +88,6 @@ const Grid = styled.div`
     align-items: center;
   }
 `;
-
 
 const Product = styled.div`
   display: flex;
@@ -191,7 +192,7 @@ const Invoice = () => {
     invoiceId: '',
     invoiceVersion: '',
     totalWeight: '',
-    assess: null
+    assess: null,
   });
   const [productMargin, setProductMargin] = useState(0);
   const [formError, setFormError] = useState('');
@@ -253,14 +254,8 @@ const Invoice = () => {
 
   useEffect(() => {
     if (invoiceData?.getAggregatedInvoice?.data) {
-      const {
-        name,
-        shippingType,
-        expiredAt,
-        price,
-        items,
-        shop,
-      } = invoiceData?.getAggregatedInvoice?.data;
+      const { name, shippingType, expiredAt, price, items, shop } =
+        invoiceData?.getAggregatedInvoice?.data;
       setInvoiceData({ name, shippingType, expiredAt, price, items, shop });
     }
   }, [invoiceData?.getAggregatedInvoice?.data]);
@@ -414,8 +409,10 @@ const Invoice = () => {
         <Box className="main-box">
           <div>
             <h2>{invoiceData.name}</h2>
-            <h4 style={{ textTransform: 'capitalize' }}>
-              {invoiceData.status?.toLocaleLowerCase()}
+            <h4
+              className={RefundRequestStatus[invoiceData?.status]?.colorClass}
+            >
+              {RefundRequestStatus[invoiceData?.status]?.name}
             </h4>
           </div>
           {invoiceData.assess?.assessType === 'PROCESSING' ? (
@@ -432,30 +429,16 @@ const Invoice = () => {
           ) : null}
         </Box>
 
-        <InfoBox>
-          <div className="info-box">
-            <p>
-              <b>Invoice from</b>
-            </p>
-            <p className="invoice-info">{shop.name}</p>
-          </div>
-          <div className="info-box">
-            <p>
-              <b>Shipping address</b>
-            </p>
-            <p className="invoice-info">
-              {`${invoiceData?.shippingLocation?.addressLine}, ${invoiceData?.shippingLocation?.ward}, ${invoiceData?.shippingLocation?.district}, ${invoiceData?.shippingLocation?.province}`}
-            </p>
-          </div>
-          <div className="info-box">
-            <p>
-              <b>Tracking code</b>
-            </p>
-            <p className="invoice-info">{invoiceData.individualTrackingUrl}</p>
-          </div>
-        </InfoBox>
+        <InvoiceInfoBox
+          shopName={shop.name}
+          shippingLocation={invoiceData?.shippingLocation}
+          trackingUrl={invoiceData.individualTrackingUrl}
+        />
 
-        <RequestItem refundRequests={invoiceData.assess?.refundRequests} assessId={invoiceData.assess?.id} />
+        <RequestItem
+          refundRequests={invoiceData.assess?.refundRequests}
+          assessId={invoiceData.assess?.id}
+        />
 
         <Grid>
           <p className="title-info">
@@ -536,10 +519,10 @@ const Invoice = () => {
       </Page>
 
       <SobyModal open={openError} setOpen={setOpenError}>
-      {formError ? (
-        <ErrorPopup content={formError} setOpen={setOpenError} />
-      ) : null}
-    </SobyModal>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpenError} />
+        ) : null}
+      </SobyModal>
     </React.Fragment>
   );
 };

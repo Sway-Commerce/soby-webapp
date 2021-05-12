@@ -1,5 +1,16 @@
 import { createGlobalStyle } from 'styled-components';
-import { borderColor, cyanColor, grayColor, mainColor, orangeColor, subColor , greenColor, bodyColor, redColor, gray1Color} from './shared/css-variable/variable';
+import {
+  borderColor,
+  cyanColor,
+  grayColor,
+  mainColor,
+  orangeColor,
+  subColor,
+  greenColor,
+  bodyColor,
+  redColor,
+  gray1Color,
+} from './shared/css-variable/variable';
 
 export const GlobalStyle = createGlobalStyle`
 	html {
@@ -235,4 +246,63 @@ export const GlobalStyle = createGlobalStyle`
 		pointer-events: none;
 		cursor: default;
 	}
+
+	.checkbox {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    label {
+      position: relative;
+      cursor: pointer;
+
+      padding-left: 20px;
+      span {
+        margin-left: 12px;
+      }
+      &:before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0px;
+        transform: translate(-50%, -50%);
+        width: 12px;
+        height: 12px;
+        transition: transform 0.28s ease;
+        border-radius: 3px;
+        border: 1px solid #000;
+      }
+      &:after {
+        content: '';
+        display: block;
+        width: 9px;
+        height: 4px;
+        border-bottom: 2px solid #fff;
+        border-left: 2px solid #fff;
+        transform: rotate(-45deg) scale(0) translate(-50%, -50%);
+        transition: transform ease 0.25s;
+        position: absolute;
+        top: 7px;
+        left: -5px;
+      }
+    }
+    input[type='checkbox'] {
+      width: auto;
+      opacity: 0.00000001;
+      left: 0;
+      &:checked ~ label {
+        &:before {
+          background-color: #2b74e4;
+          border: 2px solid #2b74e4;
+        }
+        &:after {
+          transform: rotate(-45deg) scale(1);
+        }
+      }
+      &:focus + label::before {
+        outline: 0;
+      }
+    }
+  }
 `;

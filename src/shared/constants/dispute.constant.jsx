@@ -15,7 +15,7 @@ export const DisputeType = {
 
 export const RefundRequestStatus = {
   PROCESSING: {
-    name: 'Processing',
+    name: 'Request pending',
     colorClass: 'gray',
   },
   ACCEPTED: {
@@ -39,8 +39,12 @@ export const RefundRequestStatus = {
     colorClass: 'green',
   },
   REFUNDED: {
-    name: 'Returned',
+    name: 'Refunded',
     colorClass: 'cyan',
+  },
+  DELIVERED: {
+    name: 'Delivered',
+    colorClass: 'primary-color',
   },
 };
 

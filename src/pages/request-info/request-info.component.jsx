@@ -28,6 +28,7 @@ import { stokeColor } from 'shared/css-variable/variable';
 import InvoiceInfoBox from 'pages/invoice/invoice-info-box';
 import { GET_INDIVIDUAL_SHIPPING_LOCATION_LIST } from 'graphQL/repository/shipping.repository';
 import CustomButton from 'components/ui/custom-button/custom-button.component';
+import Checkbox from 'components/ui/checkbox/checkbox.component';
 
 const Page = styled.div`
   display: flex;
@@ -248,6 +249,8 @@ const RequestInfo = () => {
   const [formError, setFormError] = useState('');
   const [shippingLocationList, setShippingLocationList] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
+  const [canShowAction, setCanShowAction] = useState(true);
+  const [shippingFeePayBy, setShippingFeePayBy] = useState('SHOP');
 
   const [
     getAggregatedAssessForIndividual,
@@ -294,6 +297,9 @@ const RequestInfo = () => {
       const { refundRequests, shop } = assessData;
       setAccessData(assessData);
       setRefundRequest(refundRequests?.find((x) => x.id === requestId));
+      setCanShowAction(
+        refundRequests?.findIndex((x) => x.id === requestId) === 0
+      );
 
       setShop(shop);
     }
@@ -336,23 +342,16 @@ const RequestInfo = () => {
   } = useQuery(GET_INDIVIDUAL_SHIPPING_LOCATION_LIST);
 
   useEffect(() => {
-    if (
+    const shippingList =
       getIndividualShippingLocationListData?.getIndividualShippingLocationList
-        ?.data
-    ) {
-      setShippingLocationList(
-        getIndividualShippingLocationListData?.getIndividualShippingLocationList
-          ?.data
-      );
+        ?.data;
+    if (shippingList) {
+      setShippingLocationList(shippingList);
 
-      const selectedLocation =
-        getIndividualShippingLocationListData?.getIndividualShippingLocationList?.data?.find(
-          (x) => x.defaultLocation
-        );
+      const selectedLocation = shippingList?.find((x) => x.defaultLocation);
 
       console.log(selectedLocation?.id);
       setSelectedLocation(selectedLocation?.id);
-      // const [shippingLocationList, setShippingLocationList] = useState([]);
     }
   }, [
     getIndividualShippingLocationListData?.getIndividualShippingLocationList
@@ -369,21 +368,22 @@ const RequestInfo = () => {
     },
   ] = useMutation(UPDATE_RETURN_SHIPPING_INFO, {
     errorPolicy: 'all',
-    variables: {
-      cmd: {
-        assessId: '',
-        shippingType: '', //BY_USER BY_SOBY
-        shippingLocationId: '',
-        returnFeePaidBy: '', //INDIVIDUAL SHOP
-        bankCode: '', // ABBANK
-        accountType: '', // ATM_CARD BANK_ACCOUNT
-        accountNumber: '',
-        accountOwner: '',
-        accountIssuedOn: '',
-        bankBranch: '',
-      },
-    },
   });
+
+  const handleCheckChange = (event) => {
+    if (!event) {
+      return;
+    }
+    setShippingFeePayBy(
+      shippingFeePayBy === 'INDIVIDUAL' ? 'SHOP' : 'INDIVIDUAL'
+    );
+  };
+
+  useEffect(() => {
+    if (updateReturnShippingInfoData?.updateReturnShippingInfo?.data) {
+      window.location = 'return-request';
+    }
+  }, [updateReturnShippingInfoData?.updateReturnShippingInfo?.data]);
 
   // Error handle
   useEffect(() => {
@@ -409,6 +409,25 @@ const RequestInfo = () => {
     updateReturnShippingInfoError?.message,
     getIndividualShippingLocationListError?.message,
   ]);
+
+  const updateReturnShipping = () => {
+    updateReturnShippingInfo({
+      variables: {
+        cmd: {
+          assessId: accessData?.id,
+          shippingType: 'BY_USER',
+          shippingLocationId: selectedLocation,
+          returnFeePaidBy: shippingFeePayBy,
+          bankCode: null,
+          accountType: null,
+          accountNumber: null,
+          accountOwner: null,
+          accountIssuedOn: null,
+          bankBranch: null,
+        },
+      },
+    });
+  };
 
   const handleCheckout = () => {
     assessId ? setOpen(true) : acceptInvoice();
@@ -445,7 +464,7 @@ const RequestInfo = () => {
 
         {refundRequest ? (
           <React.Fragment>
-            {refundRequest?.status === 'SHIPPING' ? (
+            {refundRequest?.status === 'SHIPPING' && canShowAction ? (
               <InvoiceInfoBox
                 shopName={shop.name}
                 shippingLocation={refundRequest.shippingLocation}
@@ -531,7 +550,8 @@ const RequestInfo = () => {
             })}
           </RefundImageContainer>
         </DetailBox>
-        {refundRequest?.status === 'ACCEPTED' ? (
+        {refundRequest?.status === 'ACCEPTED' &&
+        !refundRequest?.shippingLocation ? (
           <React.Fragment>
             <ShippingContainer>
               <p className="mg-b-24">
@@ -550,10 +570,26 @@ const RequestInfo = () => {
                   <p>{`${x.addressLine}, ${x.ward}, ${x.district}, ${x.province}`}</p>
                 </ShippingBox>
               ))}
+
+              <div className="checkbox">
+                <input
+                  type="checkbox"
+                  name=""
+                  value="paidBy"
+                  id="paidBy"
+                  checked={shippingFeePayBy === 'INDIVIDUAL'}
+                  onChange={handleCheckChange}
+                />
+                <label htmlFor="paidBy">I will pay for the shipping fee</label>
+              </div>
             </ShippingContainer>
-            <div className="submit-action">
-              <CustomButton>Submit</CustomButton>
-            </div>
+            {canShowAction ? (
+              <div className="submit-action">
+                <CustomButton onClick={updateReturnShipping}>
+                  Submit
+                </CustomButton>
+              </div>
+            ) : null}
           </React.Fragment>
         ) : null}
       </Page>
