@@ -15,6 +15,10 @@ export const DisputeType = {
     name: 'Completed',
     colorClass: 'primary-color',
   },
+  DELIVERED: {
+    name: 'Delivered',
+    colorClass: 'primary-color',
+  },
 };
 
 export const RefundRequestStatus = {

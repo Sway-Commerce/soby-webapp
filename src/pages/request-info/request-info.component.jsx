@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ReactComponent as CloseIcon } from 'shared/assets/close-action.svg';
 import { ReactComponent as CheckShippingIcon } from 'shared/assets/check-shipping.svg';
 import {
+  bodyColor,
   borderColor,
   greenColor,
   mainColor,
@@ -207,6 +208,40 @@ const ShippingContainer = styled.div`
   margin: 48px 0 24px;
 `;
 
+const ResendRequestButton = styled.div`
+  width: 255.89px;
+  height: 48px;
+  border: 1px solid ${mainColor};
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${mainColor};
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 16px;
+  * + * {
+    margin-left: 10px;
+  }
+`;
+
+const ReportButton = styled.div`
+  width: 255.89px;
+  height: 48px;
+  border: 1px solid ${bodyColor};
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${bodyColor};
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 16px;
+  * + * {
+    margin-left: 10px;
+  }
+`;
+
 const RequestInfo = () => {
   const { assessId, requestId } = useParams();
   const [open, setOpen] = useState(false);
@@ -219,6 +254,7 @@ const RequestInfo = () => {
   const [selectedLocation, setSelectedLocation] = useState('');
   const [canShowAction, setCanShowAction] = useState(true);
   const [shippingFeePayBy, setShippingFeePayBy] = useState('SHOP');
+  const [rejectCount, setRejectCount] = useState(0);
 
   const [
     getAggregatedAssessForIndividual,
@@ -267,6 +303,10 @@ const RequestInfo = () => {
       setRefundRequest(refundRequests?.find((x) => x.id === requestId));
       setCanShowAction(
         refundRequests?.findIndex((x) => x.id === requestId) === 0
+      );
+
+      setRejectCount(
+        refundRequests?.filter((x) => x.status === 'REJECTED')?.length ?? 0
       );
 
       setShop(shop);
@@ -417,6 +457,28 @@ const RequestInfo = () => {
               {RefundRequestStatus[refundRequest?.status]?.name}
             </h4>
           </div>
+
+          {refundRequest?.status === 'REJECTED' &&
+          canShowAction &&
+          rejectCount !== 3 ? (
+            <ActionContainer>
+              <ResendRequestButton
+                onClick={() =>
+                  (window.location = `/return-request/${accessData?.orderId}`)
+                }
+              >
+                <span>Resend request</span>
+              </ResendRequestButton>
+            </ActionContainer>
+          ) : null}
+
+          {rejectCount === 3 && canShowAction ? (
+            <ActionContainer>
+              <ReportButton>
+                <span>Report problem</span>
+              </ReportButton>
+            </ActionContainer>
+          ) : null}
         </Box>
 
         {refundRequest ? (

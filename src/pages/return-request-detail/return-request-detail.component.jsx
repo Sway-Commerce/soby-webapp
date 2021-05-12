@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as CloseIcon } from 'shared/assets/close-action.svg';
 import { ReactComponent as AcceptIcon } from 'shared/assets/accept-action.svg';
-import { borderColor, greenColor } from 'shared/css-variable/variable';
+import {
+  bodyColor,
+  borderColor,
+  greenColor,
+} from 'shared/css-variable/variable';
 import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -163,6 +167,23 @@ const AcceptButton = styled.div`
   }
 `;
 
+const ReportButton = styled.div`
+  width: 255.89px;
+  height: 48px;
+  border: 1px solid ${bodyColor};
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${bodyColor};
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 16px;
+  * + * {
+    margin-left: 10px;
+  }
+`;
+
 const RequestReturnDetail = () => {
   const { invoiceId } = useParams();
   const [open, setOpen] = useState(false);
@@ -197,6 +218,7 @@ const RequestReturnDetail = () => {
   const [productMargin, setProductMargin] = useState(0);
   const [formError, setFormError] = useState('');
   const { shop } = invoiceData;
+  const [rejectCount, setRejectCount] = useState(0);
 
   const [loadDetailInvoice, { loading, error: loadDetailInvoiceError }] =
     useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
@@ -289,6 +311,12 @@ const RequestReturnDetail = () => {
         escrowFee,
         assess,
       });
+
+      setRejectCount(
+        invoiceData?.assess?.refundRequests?.filter(
+          (x) => x.status === 'REJECTED'
+        )?.length ?? 0
+      );
     }
   }, [
     getAggregatedInvoiceOrderForIndividualData
@@ -384,11 +412,7 @@ const RequestReturnDetail = () => {
         <Box className="main-box">
           <div>
             <h2>{invoiceData.name}</h2>
-            <h4
-              className={
-                DisputeType[invoiceData.status]?.colorClass
-              }
-            >
+            <h4 className={DisputeType[invoiceData.status]?.colorClass}>
               {DisputeType[invoiceData.status]?.name}
             </h4>
           </div>
@@ -405,12 +429,21 @@ const RequestReturnDetail = () => {
             </ActionContainer>
           ) : null}
 
-          {invoiceData.assess?.refundRequests[0]?.status === 'PROCESSING' ? (
+          {invoiceData.assess?.refundRequests[0]?.status !== 'COMPLETED' &&
+          rejectCount < 3 ? (
             <ActionContainer>
               <AcceptButton onClick={() => markSatisfiedWithInvoice()}>
                 <CheckIcon />
                 <span>Accept</span>
               </AcceptButton>
+            </ActionContainer>
+          ) : null}
+
+          {rejectCount === 3 ? (
+            <ActionContainer>
+              <ReportButton>
+                <span>Report problem</span>
+              </ReportButton>
             </ActionContainer>
           ) : null}
         </Box>

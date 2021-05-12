@@ -25,10 +25,14 @@ const Page = styled.div`
   justify-content: center;
   align-items: center;
   padding: 30px 50px;
+  background-color: #fff;
+
+  .checkbox {
+    margin-left: -16px;
+  }
 `;
 
 const Box = styled.div`
-  background-color: #fff;
   width: 1200px;
   padding: 22px 30px;
   text-align: left;
@@ -211,6 +215,8 @@ const ReturnRequest = () => {
     totalWeight: '',
   });
   const [picture, setPicture] = useState([]);
+  const [isSobySupport, setIsSobySupport] = useState(false);
+  const [rejectCount, setRejectCount] = useState(0);
   const [requestRefundInfo, setRequestRefundInfo] = useState({
     id: invoiceId,
     reason: '',
@@ -227,8 +233,7 @@ const ReturnRequest = () => {
 
   const { shop } = invoiceData;
 
-  const { id, reason, description, imageUrls, requiredAdmin } =
-    requestRefundInfo;
+  const { reason, description } = requestRefundInfo;
 
   // REQUEST_INVOICE_REFUND
   const [
@@ -243,7 +248,7 @@ const ReturnRequest = () => {
   });
 
   useEffect(() => {
-    if (requestInvoiceRefundData?.requestInvoiceRefund?.message === "Success") {
+    if (requestInvoiceRefundData?.requestInvoiceRefund?.message === 'Success') {
       window.location = '/return-request';
     }
   }, [requestInvoiceRefundData?.requestInvoiceRefund?.message]);
@@ -275,34 +280,20 @@ const ReturnRequest = () => {
         ?.getAggregatedInvoiceOrderForIndividual?.data;
     if (invoiceData) {
       const {
-        id,
         invoice,
-        individualId,
-        shippingPartner,
         shippingLocation,
         shippingFee,
         individualTrackingUrl,
         orderFee,
         status,
-        reason,
         totalPrice,
-        createdAt,
-        updatedAt,
         assess,
-        paymentMethod,
       } = invoiceData;
-      const {
-        invoiceId,
-        invoiceVersion,
-        name,
-        description,
-        shop,
-        shippingType,
-        escrowFee,
-        items,
-        price,
-        totalWeight,
-      } = invoice;
+      const { name, shop, shippingType, escrowFee, items, price } = invoice;
+
+      if (invoiceData?.assess?.refundRequests[0]?.status !== 'REJECTED') {
+        window.location = '/return-request';
+      }
 
       setQty(items.map(() => 0));
 
@@ -319,7 +310,14 @@ const ReturnRequest = () => {
         totalPrice,
         orderFee,
         escrowFee,
+        assess,
       });
+
+      setRejectCount(
+        invoiceData?.assess?.refundRequests?.filter(
+          (x) => x.status === 'REJECTED'
+        )?.length ?? 0
+      );
     }
   }, [
     getAggregatedInvoiceOrderForIndividualData
@@ -359,7 +357,6 @@ const ReturnRequest = () => {
         return { id: invoiceData.items[i].id, quantity: x };
       })
       .filter((x) => !!x.quantity);
-    const submitReason = REASON_MAP[reason];
 
     const formData = new FormData();
     picture.map((x) => formData.append('files', x));
@@ -380,10 +377,10 @@ const ReturnRequest = () => {
             id: invoiceId,
             phoneCountryCode,
             phoneNumber,
-            reason,
+            reason: REASON_MAP[reason],
             description,
             imageUrls: uploadedImage?.data?.urls,
-            requiredAdmin: false,
+            requiredAdmin: rejectCount === 2 || isSobySupport,
             items,
           },
         },
@@ -416,13 +413,11 @@ const ReturnRequest = () => {
             {invoiceData.items.map((x, idx) => {
               const {
                 id: itemId,
-                price: totalPrice,
                 product: {
                   name: productName,
-                  id,
                   imageUrls: [imageUrl],
                 },
-                sku: { properties, currentPrice },
+                sku: { currentPrice },
                 quantity: productQuantity,
               } = x;
               return (
@@ -496,6 +491,25 @@ const ReturnRequest = () => {
           />
           {!phoneValidation ? (
             <h5 className="error-title">Your phone number is not correct</h5>
+          ) : null}
+          {rejectCount === 1 ? (
+            <BoxReason>
+              <div className="checkbox">
+                <input
+                  type="checkbox"
+                  name="reason"
+                  value="sobySupport"
+                  id="sobySupport"
+                  checked={isSobySupport}
+                  onChange={() => setIsSobySupport(!isSobySupport)}
+                />
+                <label htmlFor="sobySupport">Get Soby support</label>
+              </div>
+            </BoxReason>
+          ) : rejectCount === 2 ? (
+            <BoxReason>
+              <p htmlFor="sobySupport">Soby supported as your requested</p>
+            </BoxReason>
           ) : null}
         </Box>
         <Box>
