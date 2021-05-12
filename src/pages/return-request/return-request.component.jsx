@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import FormInput from 'components/form-input/form-input.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import { REASON_MAP } from 'shared/constants/dispute.constant';
 
 const Page = styled.div`
   min-height: 100vh;
@@ -278,12 +279,6 @@ const ReturnRequest = () => {
     imageUrls: '',
     requiredAdmin: false,
   });
-  const reasonMap = {
-    cb1: 'Wrong product',
-    cb2: "I don't want to buy this anymore",
-    cb3: 'I make wrong order',
-    cb4: 'Other reason',
-  };
 
   const { accessToken } = useSelector((state) => {
     return state.user;
@@ -293,13 +288,8 @@ const ReturnRequest = () => {
 
   const { shop } = invoiceData;
 
-  const {
-    id,
-    reason,
-    description,
-    imageUrls,
-    requiredAdmin,
-  } = requestRefundInfo;
+  const { id, reason, description, imageUrls, requiredAdmin } =
+    requestRefundInfo;
 
   // REQUEST_INVOICE_REFUND
   const [
@@ -429,11 +419,10 @@ const ReturnRequest = () => {
         return { id: invoiceData.items[i].id, quantity: x };
       })
       .filter((x) => !!x.quantity);
-    const submitReason = reasonMap[reason];
-
+    const submitReason = REASON_MAP[reason];
 
     const formData = new FormData();
-    picture.map(x =>  formData.append('files', x));
+    picture.map((x) => formData.append('files', x));
 
     const data = await fetch('https://api-dev.soby.vn/individuals/images', {
       method: 'POST',

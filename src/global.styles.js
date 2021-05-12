@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
-import { borderColor, cyanColor, grayColor, mainColor, orangeColor, subColor , greenColor, bodyColor, redColor} from './shared/css-variable/variable';
+import { borderColor, cyanColor, grayColor, mainColor, orangeColor, subColor , greenColor, bodyColor, redColor, gray1Color} from './shared/css-variable/variable';
 
 export const GlobalStyle = createGlobalStyle`
 	html {
@@ -206,4 +206,33 @@ export const GlobalStyle = createGlobalStyle`
   .red {
     color: ${redColor};
   }
+
+  .gray1 {
+    color: ${gray1Color};
+  }
+
+	.mg-b-8 {
+		margin-bottom: 8px;
+	}
+
+	.mg-b-16 {
+		margin-bottom: 8px;
+	}
+
+	.mg-b-4 {
+		margin-bottom: 8px;
+	}
+
+	.mg-b-24 {
+		margin-bottom: 8px;
+	}
+
+	.flex-display {
+		display: flex;
+	}
+
+	.non-clickable {
+		pointer-events: none;
+		cursor: default;
+	}
 `;

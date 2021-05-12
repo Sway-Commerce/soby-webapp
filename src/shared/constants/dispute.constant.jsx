@@ -32,7 +32,7 @@ export const RefundRequestStatus = {
   },
   SHIPPING: {
     name: 'Shipping',
-    colorClass: 'gray',
+    colorClass: 'primary-color',
   },
   RETURNED: {
     name: 'Returned',
@@ -42,4 +42,11 @@ export const RefundRequestStatus = {
     name: 'Returned',
     colorClass: 'cyan',
   },
+};
+
+export const REASON_MAP = {
+  cb1: 'Wrong product',
+  cb2: "I don't want to buy this anymore",
+  cb3: 'I make wrong order',
+  cb4: 'Other reason',
 };

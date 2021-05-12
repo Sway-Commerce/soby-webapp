@@ -16,20 +16,23 @@ const SubContainer = styled(Link)`
   justify-content: space-between;
 `;
 
-const RequestItem = ({
-  refundRequests,
-  assessId
-}) => {
-  return refundRequests?.map((rr) => {
-    const { id: rrId, status } = rr;
-    const { colorClass, name } = RefundRequestStatus[status];
-    return (
-      <SubContainer key={rrId} to={`/return-info/${assessId}/${rrId}`}>
-        <p>Return Request {rrId}</p>
-        <p className={colorClass}>{name}</p>
-      </SubContainer>
-    );
-  }) ?? null
+const RequestItem = ({ refundRequests, assessId, nonClickable, ...props }) => {
+  return (
+    refundRequests?.map((rr) => {
+      const { id: rrId, status } = rr;
+      const { colorClass, name } = RefundRequestStatus[status];
+      return (
+        <SubContainer
+          key={rrId}
+          to={`/return-info/${assessId}/${rrId}`}
+          className={`${nonClickable ? 'non-clickable' : ''}`}
+        >
+          <p>Return Request {rrId}</p>
+          <p className={colorClass}>{name}</p>
+        </SubContainer>
+      );
+    }) ?? null
+  );
 };
 
 export default RequestItem;

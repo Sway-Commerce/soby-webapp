@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as CloseIcon } from 'shared/assets/close-action.svg';
-import { ReactComponent as AcceptIcon } from 'shared/assets/accept-action.svg';
-import { borderColor } from 'shared/css-variable/variable';
+import { ReactComponent as CheckIcon } from 'shared/assets/check.svg';
+import { ReactComponent as CheckShippingIcon } from 'shared/assets/check-shipping.svg';
+import {
+  borderColor,
+  greenColor,
+  mainColor,
+} from 'shared/css-variable/variable';
 import { Link, useParams } from 'react-router-dom';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import {
   ACCEPT_INVOICE,
   GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL,
@@ -17,15 +22,27 @@ import { currencyFormatter } from 'shared/utils/formatCurrency';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import RequestItem from 'pages/return-request-list/request-item.component';
-import { DisputeType } from 'shared/constants/dispute.constant';
+import { RefundRequestStatus } from 'shared/constants/dispute.constant';
 import { GET_AGGREGATED_ASSESS_FOR_INDIVIDUAL } from 'graphQL/repository/dispute.repository';
+import { stokeColor } from 'shared/css-variable/variable';
+import InvoiceInfoBox from 'pages/invoice/invoice-info-box';
+import { GET_INDIVIDUAL_SHIPPING_LOCATION_LIST } from 'graphQL/repository/shipping.repository';
+import CustomButton from 'components/ui/custom-button/custom-button.component';
 
 const Page = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 40px 26px;
+  padding: 26px 24px;
   background-color: #ffffff;
   margin-top: 38px;
+
+  .submit-action {
+    display: flex;
+    justify-content: center;
+    button {
+      width: 475px;
+    }
+  }
 `;
 
 const Box = styled.div`
@@ -36,6 +53,9 @@ const Box = styled.div`
     display: flex;
     justify-content: space-between;
     height: 100px;
+    h4 {
+      margin-top: 4px;
+    }
   }
 
   .row {
@@ -68,9 +88,9 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: 50% 1fr 1fr 1fr;
 
-  :first-child,
-  :last-child {
-    border-bottom: 1px solid ${borderColor};
+  :first-child {
+    padding-top: 24px;
+    border-top: 1px solid ${stokeColor};
   }
 
   .last-child {
@@ -151,11 +171,10 @@ export const InfoBox = styled.div`
 export const FooterBox = styled.div`
   display: grid;
   grid-template-columns: 50% 1fr 1fr;
-`;
-
-const BreakLine = styled.hr`
-  border-top: 1px solid ${borderColor};
-  margin-bottom: 24px;
+  :first-child {
+    margin-top: 24px;
+    border-top: 1px solid ${borderColor};
+  }
 `;
 
 const ProductContainer = styled.div`
@@ -163,18 +182,72 @@ const ProductContainer = styled.div`
   grid-row-gap: 24px;
 `;
 
+const AcceptButton = styled.div`
+  width: 255.89px;
+  height: 48px;
+  background: ${greenColor};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+  * + * {
+    margin-left: 10px;
+  }
+`;
+
+const RefundImage = styled.img`
+  width: 100px;
+  height: 100px;
+`;
+
+const RefundImageContainer = styled.div`
+  * + * {
+    margin-left: 24px;
+  }
+`;
+
+const DetailBox = styled.div`
+  margin-top: 24px;
+`;
+
+const ShippingBox = styled.div`
+  margin: 16px 0;
+  height: 69px;
+  border: 1px solid #e4e4e4;
+  padding: 8px;
+  width: 100%;
+  cursor: pointer;
+
+  .main-content {
+    display: flex;
+    align-items: center;
+    * {
+      margin: auto 0;
+      font-weight: 700;
+    }
+
+    svg {
+      margin-right: 8px;
+    }
+  }
+`;
+
+const ShippingContainer = styled.div`
+  margin: 48px 0 24px;
+`;
+
 const RequestInfo = () => {
   const { assessId, requestId } = useParams();
   const [open, setOpen] = useState(false);
   const [openError, setOpenError] = useState(false);
-  const [invoiceData, setInvoiceData] = useState({
-    assess: {
-      assessType: null,
-      refundRequests: [],
-    },
-  });
-  const [refundRequest, setRefundRequest] = useState({});
+  const [accessData, setAccessData] = useState({});
+  const [refundRequest, setRefundRequest] = useState(null);
+  const [shop, setShop] = useState(null);
   const [formError, setFormError] = useState('');
+  const [shippingLocationList, setShippingLocationList] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState('');
 
   const [
     getAggregatedAssessForIndividual,
@@ -214,20 +287,19 @@ const RequestInfo = () => {
   }, [assessId]);
 
   useEffect(() => {
-    const invoiceData =
-      getAggregatedAssessForIndividualData
-        ?.getAggregatedInvoiceOrderForIndividual?.data;
-    if (invoiceData) {
-      setInvoiceData(invoiceData);
-      debugger
-      setRefundRequest(
-        invoiceData?.assess?.refundRequests?.find((x) => x.id === requestId)
-      );
+    const assessData =
+      getAggregatedAssessForIndividualData?.getAggregatedAssessForIndividual
+        ?.data;
+    if (assessData) {
+      const { refundRequests, shop } = assessData;
+      setAccessData(assessData);
+      setRefundRequest(refundRequests?.find((x) => x.id === requestId));
 
+      setShop(shop);
     }
   }, [
-    getAggregatedAssessForIndividualData
-      ?.getAggregatedInvoiceOrderForIndividual?.data,
+    getAggregatedAssessForIndividualData?.getAggregatedAssessForIndividual
+      ?.data,
   ]);
 
   useEffect(() => {
@@ -252,11 +324,40 @@ const RequestInfo = () => {
       },
     },
   });
-
   useEffect(() => {
     if (markSatisfiedWithInvoiceData?.markSatisfiedWithInvoice?.success) {
     }
   }, [markSatisfiedWithInvoiceData?.markSatisfiedWithInvoice?.success]);
+
+  const {
+    data: getIndividualShippingLocationListData,
+    error: getIndividualShippingLocationListError,
+    loading: getIndividualShippingLocationListLoading,
+  } = useQuery(GET_INDIVIDUAL_SHIPPING_LOCATION_LIST);
+
+  useEffect(() => {
+    if (
+      getIndividualShippingLocationListData?.getIndividualShippingLocationList
+        ?.data
+    ) {
+      setShippingLocationList(
+        getIndividualShippingLocationListData?.getIndividualShippingLocationList
+          ?.data
+      );
+
+      const selectedLocation =
+        getIndividualShippingLocationListData?.getIndividualShippingLocationList?.data?.find(
+          (x) => x.defaultLocation
+        );
+
+      console.log(selectedLocation?.id);
+      setSelectedLocation(selectedLocation?.id);
+      // const [shippingLocationList, setShippingLocationList] = useState([]);
+    }
+  }, [
+    getIndividualShippingLocationListData?.getIndividualShippingLocationList
+      ?.data,
+  ]);
 
   // UPDATE_RETURN_SHIPPING_INFO
   const [
@@ -290,13 +391,15 @@ const RequestInfo = () => {
       markSatisfiedWithInvoiceError?.message ||
       getAggregatedAssessForIndividualError?.message ||
       acceptInvoiceError?.message ||
-      updateReturnShippingInfoError?.message
+      updateReturnShippingInfoError?.message ||
+      getIndividualShippingLocationListError?.message
     ) {
       setFormError(
         markSatisfiedWithInvoiceError?.message ??
           getAggregatedAssessForIndividualError?.message ??
           acceptInvoiceError?.message ??
-          updateReturnShippingInfoError?.message
+          updateReturnShippingInfoError?.message ??
+          getIndividualShippingLocationListError?.message
       );
     }
   }, [
@@ -304,6 +407,7 @@ const RequestInfo = () => {
     getAggregatedAssessForIndividualError?.message,
     acceptInvoiceError?.message,
     updateReturnShippingInfoError?.message,
+    getIndividualShippingLocationListError?.message,
   ]);
 
   const handleCheckout = () => {
@@ -321,26 +425,36 @@ const RequestInfo = () => {
           <div>
             <h2>Return Request {requestId}</h2>
             <h4
-              className={
-                DisputeType[invoiceData.assess?.assessType]?.colorClass
-              }
+              className={RefundRequestStatus[refundRequest?.status]?.colorClass}
             >
-              {DisputeType[invoiceData.assess?.assessType]?.name}
+              {RefundRequestStatus[refundRequest?.status]?.name}
             </h4>
           </div>
-          {invoiceData.assess?.assessType === 'PROCESSING' ? (
-            <ActionContainer>
-              <Link className="action" to={`/return-request/${assessId}`}>
-                <CloseIcon />
-                <p>Reject</p>
-              </Link>
-              <div className="action">
-                <AcceptIcon />
-                <p>Accept</p>
-              </div>
-            </ActionContainer>
-          ) : null}
+
+          {
+            //   refundRequest?.status === 'ACCEPTED' ? (
+            //   <ActionContainer>
+            //     <AcceptButton>
+            //       <CheckIcon />
+            //       <span>Accept</span>
+            //     </AcceptButton>
+            //   </ActionContainer>
+            // ) : null
+          }
         </Box>
+
+        {refundRequest ? (
+          <React.Fragment>
+            {refundRequest?.status === 'SHIPPING' ? (
+              <InvoiceInfoBox
+                shopName={shop.name}
+                shippingLocation={refundRequest.shippingLocation}
+                trackingUrl={refundRequest.individualTrackingUrl}
+              />
+            ) : null}
+          </React.Fragment>
+        ) : null}
+
         <Grid>
           <p className="title-info">
             <b>Return list</b>
@@ -355,67 +469,93 @@ const RequestInfo = () => {
             <b>Total</b>
           </p>
         </Grid>
-        <BreakLine />
-
-            <ProductContainer>
-            {refundRequest?.items?.map((x) => {
-              const {
-                id: itemId,
-                price,
-                product: {
-                  name: productName,
-                  id,
-                  imageUrls: [imageUrl],
-                },
-                quantity: productQuantity,
-              } = x;
-              return (
-                <Grid key={itemId}>
-                  <Product className="title-info">
-                    <img src={imageUrl} alt="" />
-                    <div>
-                      <p>{productName}</p>
-                      <p>Blue bird shop</p>
-                    </div>
-                  </Product>
-                  <p className="title-info">{currencyFormatter(price)}</p>
-                  <p className="title-info">{productQuantity}</p>
-                  <p className="title-info last-child">
-                    {currencyFormatter(+price * +productQuantity)}
-                  </p>
-                </Grid>
-              );
+        <ProductContainer>
+          {refundRequest?.items?.map((x) => {
+            const {
+              id: itemId,
+              price,
+              product: {
+                name: productName,
+                id,
+                imageUrls: [imageUrl],
+              },
+              quantity: productQuantity,
+            } = x;
+            return (
+              <Grid key={itemId}>
+                <Product className="title-info">
+                  <img src={imageUrl} alt="" />
+                  <div>
+                    <p>{productName}</p>
+                    <p>{shop.name}</p>
+                  </div>
+                </Product>
+                <p className="title-info">{currencyFormatter(price)}</p>
+                <p className="title-info">
+                  {productQuantity.toLocaleString('en-US', {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false,
+                  })}
+                </p>
+                <p className="title-info last-child">
+                  {currencyFormatter(+price * +productQuantity)}
+                </p>
+              </Grid>
+            );
+          })}
+        </ProductContainer>
+        <DetailBox>
+          <p className="mg-b-16">
+            <b>Return reason</b>
+          </p>
+          <p>{refundRequest?.requestReason}</p>
+          {refundRequest?.description ? (
+            <p className="gray1">{refundRequest?.description} </p>
+          ) : null}
+        </DetailBox>
+        <DetailBox>
+          <p className="mg-b-8">
+            <b>Phone Number</b>
+          </p>
+          <p className="gray1">
+            {`${refundRequest?.phoneCountryCode} | ${refundRequest?.phoneNumber}`}
+          </p>
+        </DetailBox>
+        <DetailBox>
+          <p className="mg-b-16">
+            <b> Provide pictures of the problem</b>
+          </p>
+          <RefundImageContainer>
+            {refundRequest?.imageUrls?.map((x) => {
+              return <RefundImage src={x} key={x} />;
             })}
-          </ProductContainer>
-        <BreakLine />
-        <FooterBox>
-          <div></div>
-          <p>Subtotal</p>
-          <p className="text-right">{currencyFormatter(invoiceData.price)}</p>
-        </FooterBox>
-        <FooterBox>
-          <div></div>
-          <p>Safebuy fee</p>
-          <p className="text-right">
-            {currencyFormatter(invoiceData.escrowFee)}
-          </p>
-        </FooterBox>
-        <FooterBox>
-          <div></div>
-          <p>Shipping fee</p>
-          <p className="text-right">
-            {currencyFormatter(invoiceData.shippingFee)}
-          </p>
-        </FooterBox>
-        <FooterBox>
-          <div></div>
-          <p>
-            <b>Total</b>
-          </p>
-          <p className="text-right">
-            <b>{currencyFormatter(invoiceData.totalPrice)}</b>
-          </p>
-        </FooterBox>
+          </RefundImageContainer>
+        </DetailBox>
+        {refundRequest?.status === 'ACCEPTED' ? (
+          <React.Fragment>
+            <ShippingContainer>
+              <p className="mg-b-24">
+                <b>Pickup address</b>
+              </p>
+
+              {shippingLocationList.map((x) => (
+                <ShippingBox
+                  key={x.id}
+                  onClick={() => setSelectedLocation(x.id)}
+                >
+                  <div class="main-content">
+                    {selectedLocation == x.id ? <CheckShippingIcon /> : null}
+                    <p className="mg-b-16">{x.locationName}</p>
+                  </div>
+                  <p>{`${x.addressLine}, ${x.ward}, ${x.district}, ${x.province}`}</p>
+                </ShippingBox>
+              ))}
+            </ShippingContainer>
+            <div className="submit-action">
+              <CustomButton>Submit</CustomButton>
+            </div>
+          </React.Fragment>
+        ) : null}
       </Page>
 
       <SobyModal open={openError} setOpen={setOpenError}>
