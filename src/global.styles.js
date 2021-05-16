@@ -2,7 +2,6 @@ import { createGlobalStyle } from 'styled-components';
 import {
   borderColor,
   cyanColor,
-  grayColor,
   mainColor,
   orangeColor,
   subColor,
@@ -10,6 +9,7 @@ import {
   bodyColor,
   redColor,
   gray1Color,
+	stokeColor
 } from './shared/css-variable/variable';
 
 export const GlobalStyle = createGlobalStyle`
@@ -35,9 +35,10 @@ export const GlobalStyle = createGlobalStyle`
 				box-sizing: border-box;
 			}
 		}
-		@media screen and (max-width: 1024px) {
+		@media screen and (max-width: 1200px) {
 			.body-container {
 				width: auto;
+				margin:0 10px;
 			}
 		}
 	}
@@ -139,7 +140,7 @@ export const GlobalStyle = createGlobalStyle`
 		margin-bottom: 24px;
 	}
 
-	p {
+	p, a {
 		font-style: normal;
 		font-weight: normal;
 		font-size: 0.8rem;
@@ -207,7 +208,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .gray {
-    color: ${grayColor};
+    color: ${stokeColor};
   }
 
   .green {
@@ -305,4 +306,12 @@ export const GlobalStyle = createGlobalStyle`
       }
     }
   }
+
+	.truncate {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
+		display: -webkit-box;
+	}
 `;

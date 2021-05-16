@@ -2,69 +2,79 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import { ReactComponent as BellIcon } from 'shared/assets/bell.svg';
-import { ReactComponent as EditIcon } from 'shared/assets/edit.svg';
-import { ReactComponent as ErrorIcon } from 'shared/assets/error.svg';
-import { ReactComponent as HandIcon } from 'shared/assets/hand.svg';
-import { ReactComponent as KeyIcon } from 'shared/assets/key.svg';
-import { ReactComponent as TickIcon } from 'shared/assets/tick.svg';
-import { ReactComponent as UnionIcon } from 'shared/assets/union.svg';
-import { ReactComponent as EditWhiteIcon } from 'shared/assets/edit-white.svg';
 import KybStatus from 'components/kyb-status/kyb-status.component';
 import SobyModal from 'components/ui/modal/modal.component';
-import NamePopup from './name-popup.component';
+import EditProfile from './edit-profile.component';
 import PasswordPopup from './password-popup.component';
 import EmailPopup from './edit-mail-popup.component';
 import PhonePopup from './edit-phone-popup.component';
 import EmailCodePopup from './verify-email-popup.component';
 import PhoneCodePopup from './verify-phone-popup.component';
+import {
+  subColor,
+  bodyColor,
+  stokeColor,
+} from '../../shared/css-variable/variable';
 
-const Page = styled.div`
-  height: 100vh;
-  padding-top: 100px;
+import { ReactComponent as VerifiedIcon } from 'shared/assets/verified.svg';
+import { ReactComponent as PhoneBlackIcon } from 'shared/assets/phone-black.svg';
+import { ReactComponent as IdCardIcon } from 'shared/assets/id-card.svg';
+import { ReactComponent as EmailBlackIcon } from 'shared/assets/email-black.svg';
+import { ReactComponent as ArrowRightIcon } from 'shared/assets/arrow-right.svg';
+import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
+import { Link } from 'react-router-dom';
 
-  @media (max-width: 768px) {
-    /* height: auto; */
-    padding: 10px 20px 30px;
+export const Page = styled.div`
+  background-color: #ffffff;
+  padding: 0.5rem 1.2rem;
+`;
+
+export const AvatarBox = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Name = styled.h2`
+  margin-left: 0.8rem;
+`;
+
+export const Avatar = styled.img`
+  height: 4rem;
+  width: 4rem;
+  border-radius: 8px;
+`;
+
+const InfoBox = styled.div`
+  margin: 1.6em 0 1.7em;
+
+  div.info-row {
+    height: 2.4em;
+    display: flex;
+    align-items: center;
+    padding: 0 0.8rem;
+    background-color: #f1f1f1;
+
+    & + div.info-row {
+      margin-top: 0.8rem;
+    }
+
+    p {
+      color: ${bodyColor};
+      margin-left: 0.8rem;
+      flex: 1;
+    }
   }
 `;
 
-const Content = styled.div`
-  margin: auto;
-
-  .hidden-title {
-    visibility: hidden;
-  }
-
-  @media (max-width: 1250px) {
-    width: 100%;
-    padding: 0 20px;
-  }
-
-  @media (max-width: 850px) {
-    h1 {
-      display: none;
-    }
-
-    h2 {
-      visibility: visible;
-    }
-
-    .hidden-title {
-      visibility: visible;
-    }
-  }
-`;
-
-const Row = styled.div`
+const Row = styled(Link)`
   display: flex;
   justify-content: space-between;
   justify-content: ${(props) => (props.left ? 'left' : 'space-between')};
   align-items: center;
-  padding: 20px 0 10px;
   border-bottom: ${(props) => (props.border ? '0.5px solid #c2c2c2' : 'none')};
   width: ${(props) => props.size || 'auto'};
   cursor: ${(props) => (props.pointer ? 'pointer' : 'default')};
+  margin-bottom: 1.2rem;
 
   @media (max-width: 768px) {
     align-items: flex-start;
@@ -75,88 +85,12 @@ const Row = styled.div`
   }
 `;
 
-const Wrapper = styled.div`
-  width: 48%;
-  border-bottom: ${(props) => (props.border ? '0.5px solid #c2c2c2' : 'none')};
-  padding-bottom: 10px;
-
-  @media (max-width: 768px) {
-    width: 100%;
-  }
-`;
-
-const Text = styled.span`
-  font-size: ${(props) => (props.small ? '.8em' : '1em')};
-  display: flex;
-  align-items: center;
-  cursor: ${(props) => (props.pointer ? 'pointer' : 'default')};
-`;
-
-const Icon = styled.div`
-  cursor: pointer;
-  margin-right: 8px;
-  margin-left: ${(props) => (props.marginLeft ? '8px' : '0')};
-  display: flex;
-  align-items: center;
-`;
-
-const CircleIcon = styled(Icon)`
-  position: absolute;
-  bottom: -15px;
-  right: -21px;
-  height: 35px;
-  width: 35px;
-`;
-
-const AvatarBox = styled.div`
-  position: relative;
-  height: 100px;
-  width: 100px;
-`;
-
-const Avatar = styled.img`
-  height: 100px;
-  width: 100px;
-  border-radius: 8px;
-`;
-const Name = styled.h2`
-  margin-left: 20px;
-  color: #2b74e4;
-  @media (max-width: 768px) {
-    margin: auto 0 auto 20px;
-  }
-`;
-
-const Box = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px;
-  border: 0.5px solid #c2c2c2;
-  border-radius: 8px;
-
-  h3 {
-    margin: 0;
-  }
-  span {
-    min-width: 90px;
-  }
-
-  @media (max-width: 950px) {
-    span {
-      padding: 3px 10px;
-      font-size: 0.8rem;
-    }
-  }
-  @media (max-width: 470px) {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px;
-
-    h3 {
-      margin-bottom: 10px;
-    }
-  }
+const VerifyBtn = styled.button`
+  border: ${stokeColor} 1px solid;
+  color: ${stokeColor};
+  background-color: #ffffff;
+  padding: 0.4rem 0.5rem;
+  border-radius: 3px;
 `;
 
 const IndividualProfile = () => {
@@ -196,153 +130,65 @@ const IndividualProfile = () => {
   const [openEditPhonePopup, setOpenEditPhonePopup] = useState(false);
   const [openVerifyPhonePopup, setOpenVerifyPhonePopup] = useState(false);
   const [openVerifyEmailPopup, setOpenVerifyEmailPopup] = useState(false);
+  const [breadcrumbs] = useState([
+    {
+      name: 'Your account',
+      src: '/individual-profile',
+    },
+    // {
+    //   name: 'Edit information',
+    //   src: '/edit-profile',
+    // },
+  ]);
 
   return (
-    <Page>
-      <Content>
-        <h1>Information</h1>
-
-        <Row className="column">
-          <Wrapper>
-            <Row left className="avatar-box">
-              <AvatarBox>
-                <Avatar src={imageUrl} />
-                <CircleIcon>
-                  <EditWhiteIcon onClick={() => setOpenNamePopup(true)} />
-                </CircleIcon>
-              </AvatarBox>
-              <Name>{`${lastName} ${middleName} ${firstName}`}</Name>
-            </Row>
-          </Wrapper>
-
-          <Wrapper>
-            <Box>
-              <h3>Personal verification - KYC</h3>
-              <KybStatus status={kycStatus} />
-            </Box>
-          </Wrapper>
+    <React.Fragment>
+      <SharedBreadcrumb breadcrumbs={breadcrumbs} />
+      <Page>
+        <AvatarBox>
+          <Avatar src={imageUrl} />
+          <Name>{`${lastName} ${middleName} ${firstName}`}</Name>
+        </AvatarBox>
+        <InfoBox>
+          <div className="info-row">
+            <IdCardIcon />
+            <p>Personal ID</p>
+            <VerifyBtn>Verify</VerifyBtn>
+          </div>
+          <div className="info-row">
+            <PhoneBlackIcon />
+            <p>+84 090 123 4567</p>
+            <VerifiedIcon />
+          </div>
+          <div className="info-row">
+            <EmailBlackIcon />
+            <p>lan.nguye@email.com</p>
+            <VerifyBtn>Verify</VerifyBtn>
+          </div>
+        </InfoBox>
+        <Row to="/edit-profile" pointer>
+          <p>Edit information</p>
+          <ArrowRightIcon />
         </Row>
-
-        <h2 className="hidden-title">Information</h2>
-
-        <Row className="column">
-          <Wrapper border>
-            <Row>
-              <Text>
-                Email
-                <Icon marginLeft>
-                  {emailStatus === 'CONFIRMED' ? (
-                    <TickIcon />
-                  ) : (
-                    <ErrorIcon onClick={() => setOpenVerifyEmailPopup(true)} />
-                  )}
-                </Icon>
-              </Text>
-              <Text small pointer onClick={() => setOpenEditMailPopup(true)}>
-                <Icon>
-                  <EditIcon />
-                </Icon>
-                Edit
-              </Text>
-            </Row>
-            {email}
-          </Wrapper>
-
-          <Wrapper border>
-            <Row>
-              <Text>
-                Số điện thoại
-                <Icon marginLeft>
-                  {phoneStatus === 'CONFIRMED' ? (
-                    <TickIcon />
-                  ) : (
-                    <ErrorIcon onClick={() => setOpenVerifyPhonePopup(true)} />
-                  )}
-                </Icon>
-              </Text>
-              <Text small pointer onClick={() => setOpenEditPhonePopup(true)}>
-                <Icon>
-                  <EditIcon />
-                </Icon>
-                Edit
-              </Text>
-            </Row>
-            {phoneCountryCode} {phoneNumber}
-          </Wrapper>
+        <Row to="/individual-shipping" pointer>
+          <p>Password</p>
+          <ArrowRightIcon />
         </Row>
-
-        <Row border onClick={() => (window.location = '/individual-shipping')} pointer>
-          <Text pointer>Thông tin giao hàng</Text>
-          <Text>&gt;</Text>
+        <Row to="/individual-shipping" pointer>
+          <p>Shipping info</p>
+          <ArrowRightIcon />
         </Row>
-
-        <Row border>
-          <Text>
-            <Icon>
-              <BellIcon />
-            </Icon>
-            Notification Settings
-          </Text>
-          <Text small pointer>
-            <Icon>
-              <EditIcon />
-            </Icon>
-            Edit
-          </Text>
-        </Row>
-
-        <Row border>
-          <Text>
-            <Icon>
-              <KeyIcon />
-            </Icon>
-            Password or Upload your Pin
-          </Text>
-          <Text small pointer onClick={() => setOpenPasswordPopup(true)}>
-            <Icon>
-              <EditIcon />
-            </Icon>
-            Edit
-          </Text>
-        </Row>
-
         <Row
-          border
+          to="https://soby.vn/en/soby-privacy-terms%e2%80%8b/soby-terms-of-service/"
           pointer
-          onClick={() => {
-            window.location =
-              'https://soby.vn/en/soby-privacy-terms%e2%80%8b/soby-privacy-policy/';
-          }}
         >
-          <Text pointer>
-            <Icon>
-              <UnionIcon />
-            </Icon>
-            Soby Policies & About
-          </Text>
-          <Text>&gt;</Text>
+          <p>Terms and Polices</p>
+          <ArrowRightIcon />
         </Row>
-
-        <Row
-          border
-          pointer
-          onClick={() => {
-            window.location =
-              'https://soby.vn/en/soby-privacy-terms%e2%80%8b/soby-terms-of-service/';
-          }}
-        >
-          <Text pointer>
-            <Icon>
-              <HandIcon />
-            </Icon>
-            Help center
-          </Text>
-          <Text>&gt;</Text>
-        </Row>
-      </Content>
+      </Page>
       <SobyModal open={openNamePopup} setOpen={setOpenNamePopup}>
         {openNamePopup ? (
-          <NamePopup
+          <EditProfile
             firstName={firstName}
             lastName={lastName}
             middleName={middleName}
@@ -404,7 +250,7 @@ const IndividualProfile = () => {
           />
         ) : null}
       </SobyModal>
-    </Page>
+    </React.Fragment>
   );
 };
 
