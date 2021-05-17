@@ -90,11 +90,9 @@ const PhoneSignin = () => {
         const {
           signingSecret,
           encryptionSecret,
-        } = getSecretData?.getSecret?.data;
-        const {
           signingPublicKey,
           encryptionPublicKey,
-        } = loadIndividualBasicInfoData?.getIndividual?.data;
+        } = getSecretData?.getSecret?.data;
 
         const {
           firstName,

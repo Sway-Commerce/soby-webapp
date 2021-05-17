@@ -36,8 +36,6 @@ export const INDIVIDUAL_PROFILE_FRAGMENT = gql`
     kycStatus
     emailStatus
     phoneStatus
-    signingPublicKey
-    encryptionPublicKey
     pendingIdentities {
       id
       source
@@ -406,8 +404,6 @@ export const SHOP_PROFILE_FRAGMENT = gql`
     }
     status
     shippingType
-    signingPublicKey
-    encryptionPublicKey
     kyb {
       ...KYBFragment
     }
@@ -484,8 +480,6 @@ export const SHOP_PUBLIC_INFO_FRAGMENT = gql`
       verified
     }
     shippingType
-    signingPublicKey
-    encryptionPublicKey
     createdAt
     updatedAt
     kyb {

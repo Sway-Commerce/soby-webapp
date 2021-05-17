@@ -183,7 +183,15 @@ const SentButton = styled.button`
 
 const ReturnRequest = () => {
   const [qty, setQty] = useState([0]);
-  const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
+  const {
+    phoneNumber: currentPhoneNumber,
+    phoneCountryCode: currentPhoneCountryCode,
+  } = useSelector((state) => {
+    return state.user;
+  });
+  const [phoneNumberIntl, setPhoneNumberIntl] = useState(
+    `${currentPhoneCountryCode}${currentPhoneNumber}`
+  );
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
   const [phoneValidation, setPhoneValid] = useState(true);
@@ -291,7 +299,10 @@ const ReturnRequest = () => {
       } = invoiceData;
       const { name, shop, shippingType, escrowFee, items, price } = invoice;
 
-      if (invoiceData?.assess?.refundRequests[0]?.status !== 'REJECTED') {
+      if (
+        invoiceData?.assess?.refundRequests[0]?.status !== 'REJECTED' &&
+        invoiceData?.assess?.refundRequests?.length
+      ) {
         window.location = '/return-request';
       }
 

@@ -430,6 +430,7 @@ const RequestReturnDetail = () => {
           ) : null}
 
           {invoiceData?.status !== 'COMPLETED' &&
+          invoiceData.assess?.assessType !== 'PROCESSING' &&
           rejectCount < 3 ? (
             <ActionContainer>
               <AcceptButton onClick={() => markSatisfiedWithInvoice()}>
