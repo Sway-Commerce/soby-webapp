@@ -224,19 +224,19 @@ export const GlobalStyle = createGlobalStyle`
   }
 
 	.mg-b-8 {
-		margin-bottom: 8px;
+		margin-bottom: .4rem;
 	}
 
 	.mg-b-16 {
-		margin-bottom: 8px;
+		margin-bottom: .8rem;
 	}
 
 	.mg-b-4 {
-		margin-bottom: 8px;
+		margin-bottom: .2rem;
 	}
 
 	.mg-b-24 {
-		margin-bottom: 8px;
+		margin-bottom: 1.2rem;
 	}
 
 	.flex-display {
@@ -313,5 +313,13 @@ export const GlobalStyle = createGlobalStyle`
 		-webkit-line-clamp: 1;
 		-webkit-box-orient: vertical;
 		display: -webkit-box;
+	}
+
+	.global-btn {
+		width: 475px;
+	}
+
+	.txt-capitalize {
+		text-transform: capitalize;
 	}
 `;

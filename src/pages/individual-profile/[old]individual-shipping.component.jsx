@@ -1,15 +1,18 @@
 import { useLazyQuery } from '@apollo/client';
-import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { GET_INDIVIDUAL_SHIPPING_LOCATION_LIST } from 'graphQL/repository/shipping.repository';
 import React, { useEffect, useState } from 'react';
-import { mainColor } from 'shared/css-variable/variable';
 import styled from 'styled-components';
 import CreateShipping from './create-shipping.component';
-import { Page } from './edit-profile.component';
-import { ReactComponent as EditPencilIcon } from 'shared/assets/edit-pencil.svg';
+
+const Container = styled.div`
+  margin-top: 50px;
+  @media (max-width: 800px) {
+    padding: 0 20px;
+  }
+`;
 
 const Row = styled.div`
   display: flex;
@@ -20,10 +23,11 @@ const Row = styled.div`
   width: ${(props) => props.size || 'auto'};
   cursor: ${(props) => (props.pointer ? 'pointer' : 'default')};
   margin-bottom: ${(props) =>
-    props.first ? '24px' : props.sub ? '32px' : '8px'};
+    props.first ? '47px' : props.sub ? '32px' : '8px'};
 
   @media (max-width: 768px) {
     align-items: flex-start;
+
 
     &.column {
       flex-direction: column;
@@ -36,42 +40,38 @@ const Row = styled.div`
 `;
 
 const AddButton = styled.button`
+  font-family: Work Sans;
   font-style: normal;
-  font-weight: 700;
+  font-weight: normal;
   font-size: 0.8rem;
   line-height: 24px;
-  color: ${mainColor};
+  color: #000000;
   border-radius: 8px;
+  width: 105px;
+  height: 44px;
+  padding: 9px 10px 10px 10px;
   border: none;
-  background-color: #ffffff;
   display: ${(props) => (props.show ? 'flex' : 'none')};
 
-  /* @media (max-width: 768px) {
+  @media (max-width: 768px) {
     display: ${(props) => (props.hide ? 'flex' : 'none')};
-  } */
+  }
 `;
 
-
-const ShippingItem = styled.div`
-  border: 1px solid #e4e4e4;
-  padding: 8px 12px;
-  position: relative;
-  p + p {
-    margin-top: 5px;
-  }
-
-  p {
-    span + span {
-      margin-left: 32px;
-    }
-  }
-
-  svg {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    cursor: pointer;
-  }
+const PrimaryState = styled.div`
+  font-family: Work Sans;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 0.6rem;
+  line-height: 16px;
+  text-align: center;
+  color: #ffffff;
+  background-color: rgb(43, 116, 228);
+  width: 69px;
+  height: 24px;
+  padding: 4px 12px 4px 12px;
+  border-radius: 4px;
+  border-color: rgb(43, 116, 228);
 `;
 
 const IndividualShipping = ({ setOpenEditMailPopup, email }) => {
@@ -79,16 +79,6 @@ const IndividualShipping = ({ setOpenEditMailPopup, email }) => {
   const [openCreate, setOpenCreate] = useState(false);
   const [formError, setFormError] = useState('');
   const [shippingList, setShippingList] = useState([]);
-  const [breadcrumbs] = useState([
-    {
-      name: 'Your account',
-      src: '/individual-profile',
-    },
-    {
-      name: 'Shipping information',
-      src: '/individual-shipping',
-    },
-  ]);
 
   const [
     loadShippingList,
@@ -133,34 +123,31 @@ const IndividualShipping = ({ setOpenEditMailPopup, email }) => {
     <Spinner />
   ) : (
     <React.Fragment>
-      <SharedBreadcrumb breadcrumbs={breadcrumbs} />
-      <Page>
+      <Container>
         <Row first>
-          <h4>Shipping info</h4>
+          <h2>Thông tin giao hàng</h2>
           <AddButton onClick={() => setOpenCreate(true)} show>
             + Add New
           </AddButton>
         </Row>
         {shippingList.map((x, i) => (
           <React.Fragment key={x.id}>
-            <ShippingItem>
-              <p>
-                <b className="txt-capitalize">{x.locationName}</b>
-              </p>
-              <p>
-                {`${x.addressLine}, ${x.district}, ${x.ward}, ${x.province}, ${x.country}`}
-              </p>
-              <p>{`${x.phoneCountryCode} ${x.phoneNumber}`}</p>
-              <p>
-                <span>{x.province}</span>
-                <span>{x.district}</span>
-                <span>{x.ward}</span>
-              </p>
-              <EditPencilIcon />
-            </ShippingItem>
+            <Row>
+              <p>{x.locationName}</p>
+              {x.defaultLocation ? <PrimaryState>Primary</PrimaryState> : null}
+            </Row>
+            <Row sub border>
+              <p>{`${x.addressLine}, ${x.district}, ${x.ward}, ${x.country}, ${x.province}`}</p>
+            </Row>
           </React.Fragment>
         ))}
-      </Page>
+
+        <Row>
+          <AddButton onClick={() => setOpenCreate(true)} hide>
+            + Add New
+          </AddButton>
+        </Row>
+      </Container>
 
       <SobyModal open={openCreate} setOpen={setOpenCreate}>
         {openCreate ? <CreateShipping setOpenCreate={setOpenCreate} /> : null}
@@ -176,9 +163,3 @@ const IndividualShipping = ({ setOpenEditMailPopup, email }) => {
 };
 
 export default IndividualShipping;
-
-// <Row>
-// <AddButton onClick={() => setOpenCreate(true)} hide>
-//   + Add New
-// </AddButton>
-// </Row>

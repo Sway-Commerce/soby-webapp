@@ -9,11 +9,17 @@ import { UPDATE_INDIVIDUAL } from 'graphQL/repository/individual.repository';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import Spinner from 'components/ui/spinner/spinner.component';
-import { Page, Avatar } from './individual-profile.component';
+import { Avatar } from './individual-profile.component';
 
 import { setNameAndImage } from 'redux/user/user.actions';
 import FormInput from 'components/form-input/form-input.component';
 import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
+import CustomButton from 'components/ui/custom-button/custom-button.component';
+
+export const Page = styled.div`
+  background-color: #ffffff;
+  padding: 1.2rem;
+`;
 
 const AvatarBox = styled.div`
   position: relative;
@@ -55,6 +61,12 @@ const InputBox = styled.div`
       flex-direction: column;
     }
   }
+`;
+
+export const PageFooter = styled.div`
+  margin: 40px auto 24px;
+  display: flex;
+  justify-content: center;
 `;
 
 const EditProfile = () => {
@@ -234,6 +246,7 @@ const EditProfile = () => {
     <React.Fragment>
       <SharedBreadcrumb breadcrumbs={breadcrumbs} />
       <Page>
+        <h4 className="mg-b-24">Edit information</h4>
         <form onSubmit={handleSubmit}>
           <AvatarBox>
             <Avatar src={picture.picturePreview} />
@@ -282,6 +295,9 @@ const EditProfile = () => {
               />
             </div>
           </InputBox>
+          <PageFooter>
+            <CustomButton className="global-btn">Save</CustomButton>
+          </PageFooter>
         </form>
       </Page>
       <SobyModal open={open} setOpen={setOpen}>
