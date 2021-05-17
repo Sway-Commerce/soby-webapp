@@ -291,7 +291,10 @@ const ReturnRequest = () => {
       } = invoiceData;
       const { name, shop, shippingType, escrowFee, items, price } = invoice;
 
-      if (invoiceData?.assess?.refundRequests[0]?.status !== 'REJECTED') {
+      if (
+        invoiceData?.assess?.refundRequests[0]?.status !== 'REJECTED' &&
+        invoiceData?.assess?.refundRequests?.length
+      ) {
         window.location = '/return-request';
       }
 

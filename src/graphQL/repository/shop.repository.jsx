@@ -19,8 +19,6 @@ export const GET_SHOP_BY_ID = gql`
           url
           verified
         }
-        signingPublicKey
-        encryptionPublicKey
         createdAt
         updatedAt
         shippingType
@@ -151,8 +149,6 @@ export const SEARCH = gql`
           verified
         }
           shippingType
-          signingPublicKey
-          encryptionPublicKey
           createdAt
           updatedAt
         }
