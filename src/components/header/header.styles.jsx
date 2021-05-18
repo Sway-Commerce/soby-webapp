@@ -63,3 +63,42 @@ export const CartContainer = styled(Link)`
 `;
 
 OptionLink.displayName = 'OptionLink';
+
+export const SwitchBtn = styled.button`
+  padding: 0.5rem 1.2rem;
+  color: white;
+  font-size: 0.7rem;
+  border: 1px white solid;
+  background-color: ${mainColor};
+`;
+
+export const IconBtn = styled(Link)`
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  background-color: ${mainColor};
+  border: none;
+  display: flex;
+  align-items: center;
+  svg + span,
+  span + svg {
+    margin-left: 8px;
+  }
+`;
+
+export const UserContainer = styled(Link)`
+  color: white;
+  padding: 0.5rem 0 0.5rem 1rem;
+  font-size: 0.8rem;
+  background-color: ${mainColor};
+  border: none;
+  display: flex;
+  align-items: center;
+  img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 0.8rem;
+  }
+`;
