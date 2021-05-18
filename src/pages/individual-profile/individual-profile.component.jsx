@@ -42,6 +42,7 @@ export const Avatar = styled.img`
   height: 4rem;
   width: 4rem;
   border-radius: 8px;
+  object-fit: cover;
 `;
 
 const InfoBox = styled.div`

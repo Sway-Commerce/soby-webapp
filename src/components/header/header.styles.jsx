@@ -70,6 +70,7 @@ export const SwitchBtn = styled.button`
   font-size: 0.7rem;
   border: 1px white solid;
   background-color: ${mainColor};
+  border-radius: 5rem;
 `;
 
 export const IconBtn = styled(Link)`
