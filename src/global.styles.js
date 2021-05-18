@@ -180,9 +180,10 @@ export const GlobalStyle = createGlobalStyle`
 		margin-top: 4px;
 	}
 
-	h5.error-title {
+	p.error-title {
 		color: red;
   	margin: 5px 0;
+		font-size: 0.7rem;
 	}
 
 	.main-btn {
@@ -335,5 +336,9 @@ export const GlobalStyle = createGlobalStyle`
 
 	.txt-center {
 		text-align: center;
+	}
+
+	.fs-14 {
+		font-size: 0.7rem;
 	}
 `;

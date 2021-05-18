@@ -58,7 +58,7 @@ const RegisterPhone = ({ history }) => {
                 onChange={(value) => setPhoneNumberIntl(value)}
               />
               {!isPhoneValid ? (
-                <h5 className="error-title">Your phone number is not correct</h5>
+                <p className="error-title">*Your phone number is not correct</p>
               ) : null}
               <CustomButton className="main-btn">Register</CustomButton>
               <PolicyNavigate isSignIn />

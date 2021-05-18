@@ -117,9 +117,9 @@ const EmailCodePopup = ({ email, setOpenVerifyEmailPopup }) => {
           />
         </Row>
         {!isCodeValid ? (
-          <h5 className="error-title">
-            You have to provide the verification code
-          </h5>
+          <p className="error-title">
+            *You have to provide the verification code
+          </p>
         ) : null}
 
         <Row>

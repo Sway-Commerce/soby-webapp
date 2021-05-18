@@ -191,8 +191,9 @@ const IndividualProfile = () => {
           <ArrowRightIcon />
         </Row>
         <Row
-          to="https://soby.vn/en/soby-privacy-terms%e2%80%8b/soby-terms-of-service/"
           pointer
+          to="#"
+          onClick={() => window.location = "https://soby.vn/en/soby-privacy-terms%e2%80%8b/soby-terms-of-service/"}
         >
           <p>Terms and Polices</p>
           <ArrowRightIcon />

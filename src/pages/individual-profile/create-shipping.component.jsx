@@ -301,7 +301,7 @@ const CreateShipping = ({ setOpenCreate }) => {
         </React.Fragment>
 
         {!isPhoneValid ? (
-          <h5 className="error-title">Your phone number is not correct</h5>
+          <p className="error-title">*Your phone number is not correct</p>
         ) : null}
         <CustomButton>Add</CustomButton>
       </form>

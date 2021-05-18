@@ -164,14 +164,24 @@ const EditPassword = ({
           {inputValidation.isPasswordNotValid ? (
             <Row>
               (
-              <h5 className="error-title">
+              <p className="error-title">
+                *Your password must be between 8 to 20 characters which contain
+                at least one numeric digit, one uppercase and one lowercase
+                letter
+              </p>
+              )
+            </Row>
+          ) : (
+            <Row>
+              (
+              <p className="fs-14">
                 Your password must be between 8 to 20 characters which contain
                 at least one numeric digit, one uppercase and one lowercase
                 letter
-              </h5>
+              </p>
               )
             </Row>
-          ) : null}
+          )}
 
           <FormInput
             type="password"
@@ -185,18 +195,18 @@ const EditPassword = ({
 
           <Row error>
             {inputValidation.isNewPasswordNotValid ? (
-              <h5 className="error-title">
-                Your password must be between 8 to 20 characters which contain
+              <p className="error-title">
+                *Your password must be between 8 to 20 characters which contain
                 at least one numeric digit, one uppercase and one lowercase
                 letter
-              </h5>
+              </p>
             ) : null}
           </Row>
           <Row error>
             {inputValidation.isPasswordDuplicateCurrent ? (
-              <h5 className="error-title">
-                Your new password is duplicate with the current
-              </h5>
+              <p className="error-title">
+                *Your new password is duplicate with the current
+              </p>
             ) : null}
           </Row>
 

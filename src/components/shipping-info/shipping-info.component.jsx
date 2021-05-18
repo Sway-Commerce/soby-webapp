@@ -124,12 +124,8 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
 
-  const {
-    isPhoneValid,
-    locationNameValid,
-    addressLineValid,
-    isPasswordValid,
-  } = inputValidation;
+  const { isPhoneValid, locationNameValid, addressLineValid, isPasswordValid } =
+    inputValidation;
 
   const [
     loadProvince,
@@ -565,23 +561,28 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
           </React.Fragment>
         )}
 
-          <FormInput
-            type="password"
-            value={password}
-            onChange={handleChangePassword}
-            label="Password"
-            placeholder="*******"
-            required
-          />
-          {!isPasswordValid ? (
-            <h5 className="error-title">
-              Your password must be between 8 to 20 characters which contain at
-              least one numeric digit, one uppercase and one lowercase letter
-            </h5>
-          ) : null}
+        <FormInput
+          type="password"
+          value={password}
+          onChange={handleChangePassword}
+          label="Password"
+          placeholder="*******"
+          required
+        />
+        {!isPasswordValid ? (
+          <p className="error-title">
+            *Your password must be between 8 to 20 characters which contain at
+            least one numeric digit, one uppercase and one lowercase letter
+          </p>
+        ) : (
+          <p className="fs-14">
+            Your password must be between 8 to 20 characters which contain at
+            least one numeric digit, one uppercase and one lowercase letter
+          </p>
+        )}
 
         {!isPhoneValid ? (
-          <h5 className="error-title">Your phone number is not correct</h5>
+          <p className="error-title">*Your phone number is not correct</p>
         ) : null}
         <button
           className={

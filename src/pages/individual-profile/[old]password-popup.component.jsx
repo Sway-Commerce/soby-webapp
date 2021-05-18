@@ -10,7 +10,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import passwordValidation from 'shared/utils/passwordValidation';
 import styled from 'styled-components';
-import { Box,  PopupButton } from './shared-style.component';
+import { Box, PopupButton } from './shared-style.component';
 
 const Row = styled.div`
   display: flex;
@@ -124,12 +124,13 @@ const PasswordPopup = ({
       !isNewPasswordAndConfirmNotCorrect &&
       !isNewPasswordNotValid
     ) {
-      const { encryptionSecretNew, signingSecretNew } = await createKeyForNewPassword(
-        signingSecret,
-        encryptionSecret,
-        state.password,
-        state.newPassword
-      );
+      const { encryptionSecretNew, signingSecretNew } =
+        await createKeyForNewPassword(
+          signingSecret,
+          encryptionSecret,
+          state.password,
+          state.newPassword
+        );
       updatePasswordMutation({
         variables: {
           cmd: {
@@ -159,11 +160,16 @@ const PasswordPopup = ({
         </Row>
         <Row>
           {inputValidation.isPasswordNotValid ? (
-            <h5 className="error-title">
+            <p className="error-title">
+              *Your password must be between 8 to 20 characters which contain at
+              least one numeric digit, one uppercase and one lowercase letter
+            </p>
+          ) : (
+            <p className="fs-14">
               Your password must be between 8 to 20 characters which contain at
               least one numeric digit, one uppercase and one lowercase letter
-            </h5>
-          ) : null}
+            </p>
+          )}
         </Row>
 
         <Row>
@@ -180,24 +186,24 @@ const PasswordPopup = ({
 
         <Row error>
           {inputValidation.isNewPasswordNotValid ? (
-            <h5 className="error-title">
-              Your password must be between 8 to 20 characters which contain at
+            <p className="error-title">
+              *Your password must be between 8 to 20 characters which contain at
               least one numeric digit, one uppercase and one lowercase letter
-            </h5>
+            </p>
           ) : null}
         </Row>
         <Row error>
           {inputValidation.isPasswordDuplicateCurrent ? (
-            <h5 className="error-title">
-              Your new password is duplicate with the current
-            </h5>
+            <p className="error-title">
+              *Your new password is duplicate with the current
+            </p>
           ) : null}
         </Row>
         <Row error>
           {inputValidation.isNewPasswordAndConfirmNotCorrect ? (
-            <h5 className="error-title">
+            <p className="error-title">
               Your confirm password must equal your new password
-            </h5>
+            </p>
           ) : null}
         </Row>
 

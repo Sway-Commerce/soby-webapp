@@ -100,7 +100,7 @@ const EmailPopup = ({ setOpenEditMailPopup, email }) => {
         </InputContainer>
 
         {!isEmailValid ? (
-          <h5 className="error-title">Your email is not correct</h5>
+          <p className="error-title">*Your email is not correct</p>
         ) : null}
 
         <PopupButton />

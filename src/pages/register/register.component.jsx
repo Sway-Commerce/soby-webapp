@@ -34,19 +34,15 @@ import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
 const Register = ({ history }) => {
-  const {
-    phoneNumber,
-    phoneCountryCode,
-    signingSecret,
-    signingPublicKey,
-  } = useSelector((state) => {
-    return {
-      phoneNumber: state.user.phoneNumber,
-      phoneCountryCode: state.user.phoneCountryCode,
-      signingSecret: state.user.signingSecret,
-      signingPublicKey: state.user.signingPublicKey,
-    };
-  });
+  const { phoneNumber, phoneCountryCode, signingSecret, signingPublicKey } =
+    useSelector((state) => {
+      return {
+        phoneNumber: state.user.phoneNumber,
+        phoneCountryCode: state.user.phoneCountryCode,
+        signingSecret: state.user.signingSecret,
+        signingPublicKey: state.user.signingPublicKey,
+      };
+    });
 
   const [signature, setSignature] = useState('');
   const [open, setOpen] = useState(false);
@@ -80,12 +76,8 @@ const Register = ({ history }) => {
 
   const { firstName, lastName, email, password } = userCredentials;
 
-  const {
-    isPasswordValid,
-    isEmailValid,
-    isFirstNameValid,
-    isLastNameValid,
-  } = inputValidation;
+  const { isPasswordValid, isEmailValid, isFirstNameValid, isLastNameValid } =
+    inputValidation;
 
   const [
     register,
@@ -152,10 +144,8 @@ const Register = ({ history }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const {
-      encryptionSecret,
-      encryptionPublicKey,
-    } = await generateEncryptionKey(password);
+    const { encryptionSecret, encryptionPublicKey } =
+      await generateEncryptionKey(password);
 
     const { signingSecretKey, signingPublicKey } = generateSignInKey(password);
 
@@ -228,7 +218,7 @@ const Register = ({ history }) => {
                 placeholder="Brian"
               />
               {!isFirstNameValid ? (
-                <h5 className="error-title">The field is required</h5>
+                <p className="error-title">*The field is required</p>
               ) : null}
               <InputContainer>
                 <FormInput
@@ -240,7 +230,7 @@ const Register = ({ history }) => {
                   placeholder="John"
                 />
                 {!isLastNameValid ? (
-                  <h5 className="error-title">The field is required</h5>
+                  <p className="error-title">*The field is required</p>
                 ) : null}
               </InputContainer>
               <InputContainer>
@@ -253,7 +243,7 @@ const Register = ({ history }) => {
                   placeholder="Email"
                 />
                 {!isEmailValid ? (
-                  <h5 className="error-title">Your email is not correct</h5>
+                  <p className="error-title">*Your email is not correct</p>
                 ) : null}
               </InputContainer>
               <InputContainer>
@@ -267,14 +257,22 @@ const Register = ({ history }) => {
                   required
                 />
                 {!isPasswordValid ? (
-                  <h5 className="error-title">
+                  <p className="error-title">
+                    *Your password must be between 8 to 20 characters which
+                    contain at least one numeric digit, one uppercase and one
+                    lowercase letter
+                  </p>
+                ) : (
+                  <p className="fs-14">
                     Your password must be between 8 to 20 characters which
                     contain at least one numeric digit, one uppercase and one
                     lowercase letter
-                  </h5>
-                ) : null}
+                  </p>
+                )}
               </InputContainer>
-              <CustomButton type="submit" className="main-btn">Create Account</CustomButton>
+              <CustomButton type="submit" className="main-btn">
+                Create Account
+              </CustomButton>
             </form>
           </FormContainer>
         </SignUpContainer>

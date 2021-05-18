@@ -112,7 +112,7 @@ const PhonePopup = ({
               onChange={(value) => setPhoneNumberIntl(value)}
             />
             {!isPhoneValid ? (
-              <h5 className="error-title">Your phone number is not correct</h5>
+              <p className="error-title">*Your phone number is not correct</p>
             ) : null}
           </InputBox>
         </InputContainer>
