@@ -322,11 +322,18 @@ export const GlobalStyle = createGlobalStyle`
 		display: -webkit-box;
 	}
 
-	.global-btn {
-		width: 475px;
+	button.global-btn {
+		max-width: 23.75rem;
+		@media screen and (max-width: 500px) {
+			width: 100%;
+		}
 	}
 
 	.txt-capitalize {
 		text-transform: capitalize;
+	}
+
+	.txt-center {
+		text-align: center;
 	}
 `;

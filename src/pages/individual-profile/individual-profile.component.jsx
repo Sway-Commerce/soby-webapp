@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import KybStatus from 'components/kyb-status/kyb-status.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import EditProfile from './edit-profile.component';
-import PasswordPopup from './password-popup.component';
+import PasswordPopup from './edit-password.component';
 import EmailPopup from './edit-mail-popup.component';
 import PhonePopup from './edit-phone-popup.component';
 import EmailCodePopup from './verify-email-popup.component';
@@ -152,25 +152,37 @@ const IndividualProfile = () => {
         <InfoBox>
           <div className="info-row">
             <IdCardIcon />
-            <p>Personal ID</p>
-            <VerifyBtn>Verify</VerifyBtn>
+            <p>Personal ID</p>{' '}
+            {kycStatus === 'CONFIRMED' ? (
+              <VerifiedIcon />
+            ) : (
+              <VerifyBtn>Verify</VerifyBtn>
+            )}
           </div>
           <div className="info-row">
             <PhoneBlackIcon />
             <p>+84 090 123 4567</p>
-            <VerifiedIcon />
+            {phoneStatus === 'CONFIRMED' ? (
+              <VerifiedIcon />
+            ) : (
+              <VerifyBtn onClick={() => setOpenVerifyPhonePopup(true)}>Verify</VerifyBtn>
+            )}
           </div>
           <div className="info-row">
             <EmailBlackIcon />
             <p>lan.nguye@email.com</p>
-            <VerifyBtn>Verify</VerifyBtn>
+            {emailStatus === 'CONFIRMED' ? (
+              <VerifiedIcon />
+            ) : (
+              <VerifyBtn  onClick={() => setOpenVerifyEmailPopup(true)}>Verify</VerifyBtn>
+            )}
           </div>
         </InfoBox>
         <Row to="/edit-profile" pointer>
           <p>Edit information</p>
           <ArrowRightIcon />
         </Row>
-        <Row to="/individual-shipping" pointer>
+        <Row to="/change-password" pointer>
           <p>Password</p>
           <ArrowRightIcon />
         </Row>

@@ -13,7 +13,7 @@ import { ReactComponent as EditWhiteIcon } from 'shared/assets/edit-white.svg';
 import KybStatus from 'components/kyb-status/kyb-status.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import EditProfile from './edit-profile.component';
-import PasswordPopup from './password-popup.component';
+import PasswordPopup from './edit-password.component';
 import EmailPopup from './edit-mail-popup.component';
 import PhonePopup from './edit-phone-popup.component';
 import EmailCodePopup from './verify-email-popup.component';
