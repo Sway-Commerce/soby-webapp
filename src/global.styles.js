@@ -38,13 +38,17 @@ export const GlobalStyle = createGlobalStyle`
 		@media screen and (max-width: 1200px) {
 			.body-container {
 				width: auto;
-				margin:0 10px;
+				margin:0 .6rem;
 			}
 		}
 	}
 
 	h2 {
 		font-size: 1.2rem;
+	}
+
+	h3 {
+		font-size: 1rem;
 	}
 
 	a {

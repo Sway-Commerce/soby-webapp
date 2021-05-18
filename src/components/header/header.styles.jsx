@@ -8,8 +8,8 @@ export const HeaderContainer = styled.div`
   justify-content: space-between;
   padding: 0 calc((100vw - 1200px) / 2);
   background-color: ${mainColor};
-  @media screen and (max-width: 800px) {
-    padding: 0 10px;
+  @media screen and (max-width: 1024px) {
+    padding: 0 0.6rem;
   }
 `;
 
