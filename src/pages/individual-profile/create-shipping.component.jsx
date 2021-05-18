@@ -290,7 +290,7 @@ const CreateShipping = ({ setOpenCreate }) => {
               className="mg-b-16"
             />
           ) : null}
-          <div className="select-wrapper mg-b-24">
+          <div className="select-wrapper mg-b-48">
             <Dropdown
               options={districtList}
               onChange={onSelectDistrictChange}

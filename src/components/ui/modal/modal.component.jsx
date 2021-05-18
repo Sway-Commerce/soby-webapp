@@ -23,6 +23,7 @@ export const ModalContainer = styled.div`
       position: absolute;
       top: 1rem;
       right: 1rem;
+      cursor: pointer;
       svg {
         width: 1.2rem;
         height: 1.2rem;
@@ -51,7 +52,7 @@ const SobyModal = ({ open, setOpen, children }) => {
       <ModalContainer className={open ? 'show' : null}>
         <div className="contract-detail">
           {children}
-          <div className="close-wrapper">
+          <div className="close-wrapper" onClick={() => setOpen(false)}>
             <CloseIcon />
           </div>
         </div>

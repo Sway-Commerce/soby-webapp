@@ -9,7 +9,7 @@ import {
   bodyColor,
   redColor,
   gray1Color,
-	stokeColor
+  stokeColor,
 } from './shared/css-variable/variable';
 
 export const GlobalStyle = createGlobalStyle`
@@ -148,9 +148,12 @@ export const GlobalStyle = createGlobalStyle`
 	}
 
 	.Soby__dropdown {
-		border: 1px solid rgb(112,112,112,0.5);
-		box-sizing: border-box;
-		border-radius: 8px;
+		font-size: 0.8rem;
+		color: #000000;
+		.Dropdown-control {
+			border-radius: 6px;
+			border: 1px solid #828282;
+		}
 	}
 
 	.text-truncation {
@@ -237,6 +240,10 @@ export const GlobalStyle = createGlobalStyle`
 
 	.mg-b-24 {
 		margin-bottom: 1.2rem;
+	}
+
+	.mg-b-48 {
+		margin-bottom: 2.4rem;
 	}
 
 	.flex-display {
