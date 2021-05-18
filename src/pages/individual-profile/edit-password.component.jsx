@@ -173,13 +173,11 @@ const EditPassword = ({
             </Row>
           ) : (
             <Row>
-              (
               <p className="fs-14">
                 Your password must be between 8 to 20 characters which contain
                 at least one numeric digit, one uppercase and one lowercase
                 letter
               </p>
-              )
             </Row>
           )}
 
@@ -203,11 +201,11 @@ const EditPassword = ({
             ) : null}
           </Row>
           <Row error>
-            {inputValidation.isPasswordDuplicateCurrent ? (
+            {inputValidation.isPasswordDuplicateCurrent ?
               <p className="error-title">
                 *Your new password is duplicate with the current
               </p>
-            ) : null}
+             : null}
           </Row>
 
           <PageFooter>

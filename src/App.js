@@ -68,6 +68,9 @@ const EditProfile = lazy(() =>
 const ChangePassword = lazy(() =>
   import('pages/individual-profile/edit-password.component')
 );
+const HomePage = lazy(() =>
+  import('pages/homepage/homepage.component')
+);
 
 const App = () => {
   return (
@@ -78,7 +81,8 @@ const App = () => {
         <Switch>
           <ErrorBoundary>
             <Suspense fallback={<Spinner />}>
-              <Route exact path="/" component={PhoneSignin} />
+              <Route exact path="/" component={HomePage} />
+              <Route path="/phone-signin" component={PhoneSignin} />
               <Route
                 exact
                 path="/phone-verification"
