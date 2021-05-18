@@ -162,7 +162,7 @@ const IndividualProfile = () => {
           </div>
           <div className="info-row">
             <PhoneBlackIcon />
-            <p>+84 090 123 4567</p>
+            <p>{phoneCountryCode}&nbsp;{phoneNumber}</p>
             {phoneStatus === 'CONFIRMED' ? (
               <VerifiedIcon />
             ) : (
@@ -171,7 +171,7 @@ const IndividualProfile = () => {
           </div>
           <div className="info-row">
             <EmailBlackIcon />
-            <p>lan.nguye@email.com</p>
+            <p>{email}</p>
             {emailStatus === 'CONFIRMED' ? (
               <VerifiedIcon />
             ) : (
