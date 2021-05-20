@@ -49,8 +49,6 @@ export const typeDefs = gql`
     phoneStatus: ConfirmationStatus
     emailStatus: ConfirmationStatus
     kycStatus: ConfirmationStatus
-    signingPublicKey: String
-    encryptionPublicKey: String
     identityId: String
     identityHash: String
   }

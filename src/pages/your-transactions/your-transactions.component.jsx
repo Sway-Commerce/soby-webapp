@@ -4,7 +4,10 @@ import { useLazyQuery } from '@apollo/client';
 import { Container } from './your-transactions.styles';
 
 import HorizontalList from 'components/horizontal-list/horizontal-list.component';
-import { GET_INDIVIDUAL_AGGREGATED_INVOICE_ORDER_LIST, GET_INVOICE_ORDER_LIST_FOR_INDIVIDUAL } from '../../graphQL/repository/invoice.repository';
+import {
+  GET_INDIVIDUAL_AGGREGATED_INVOICE_ORDER_LIST,
+  GET_INVOICE_ORDER_LIST_FOR_INDIVIDUAL,
+} from '../../graphQL/repository/invoice.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import InvoiceItem from 'components/invoice-item/invoice-item.component';
 import {
@@ -52,6 +55,13 @@ const YourTransaction = ({ name }) => {
     setActiveInvoice(null);
     setInvoiceList([]);
     setInvoiceListQuery({ ...invoiceListQuery, total: 0 });
+    if (
+      InvoiceStatusValue[InvoiceStatusValue.length - 1] ===
+      subFilter.toUpperCase()
+    ) {
+      window.location = '/return-request';
+      return;
+    }
     if (mainFilter === 'Invoices') {
       getIndividualAggregatedInvoiceOrderList({
         variables: {
@@ -63,27 +73,33 @@ const YourTransaction = ({ name }) => {
         },
       });
     }
-  }, [mainFilter, subFilter, page, pageSize, getIndividualAggregatedInvoiceOrderList]);
+  }, [
+    mainFilter,
+    subFilter,
+    page,
+    pageSize,
+    getIndividualAggregatedInvoiceOrderList,
+  ]);
 
   useEffect(() => {
     if (
-      getIndividualAggregatedInvoiceOrderListData?.getIndividualAggregatedInvoiceOrderList
-        ?.data?.records
+      getIndividualAggregatedInvoiceOrderListData
+        ?.getIndividualAggregatedInvoiceOrderList?.data?.records
     ) {
       setInvoiceList(
-        getIndividualAggregatedInvoiceOrderListData?.getIndividualAggregatedInvoiceOrderList
-          ?.data?.records
+        getIndividualAggregatedInvoiceOrderListData
+          ?.getIndividualAggregatedInvoiceOrderList?.data?.records
       );
       setInvoiceListQuery({
         ...invoiceListQuery,
         total:
-          getIndividualAggregatedInvoiceOrderListData?.getIndividualAggregatedInvoiceOrderList
-            ?.data?.total,
+          getIndividualAggregatedInvoiceOrderListData
+            ?.getIndividualAggregatedInvoiceOrderList?.data?.total,
       });
     }
   }, [
-    getIndividualAggregatedInvoiceOrderListData?.getIndividualAggregatedInvoiceOrderList?.data
-      ?.records,
+    getIndividualAggregatedInvoiceOrderListData
+      ?.getIndividualAggregatedInvoiceOrderList?.data?.records,
   ]);
 
   useEffect(() => {
@@ -101,10 +117,15 @@ const YourTransaction = ({ name }) => {
             items={subInvoiceFilters}
             renderItem={(item, index) => (
               <div
-                className={`tab-status ${subFilter === InvoiceStatusValue[index] ? 'active' : ''}`}
+                className={`tab-status ${
+                  subFilter === InvoiceStatusValue[index] ? 'active' : ''
+                }`}
                 key={item}
                 onClick={() =>
-                  setInvoiceListQuery({ ...invoiceListQuery, subFilter: InvoiceStatusValue[index] })
+                  setInvoiceListQuery({
+                    ...invoiceListQuery,
+                    subFilter: InvoiceStatusValue[index],
+                  })
                 }
               >
                 <p className="status">{item}</p>

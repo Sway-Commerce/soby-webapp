@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import FormInput from 'components/form-input/form-input.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import { REASON_MAP } from 'shared/constants/dispute.constant';
 
 const Page = styled.div`
   min-height: 100vh;
@@ -24,10 +25,14 @@ const Page = styled.div`
   justify-content: center;
   align-items: center;
   padding: 30px 50px;
+  background-color: #fff;
+
+  .checkbox {
+    margin-left: -16px;
+  }
 `;
 
 const Box = styled.div`
-  background-color: #fff;
   width: 1200px;
   padding: 22px 30px;
   text-align: left;
@@ -157,67 +162,6 @@ const BoxReason = styled.div`
     font-size: 14px;
     color: ${(prop) => prop.theme.stoke};
   }
-
-  .checkbox {
-    width: 100%;
-    position: relative;
-    display: flex;
-    align-items: center;
-
-    label {
-      position: relative;
-      cursor: pointer;
-
-      padding-left: 20px;
-      span {
-        margin-left: 12px;
-      }
-      &:before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 0px;
-        transform: translate(-50%, -50%);
-        width: 12px;
-        height: 12px;
-        transition: transform 0.28s ease;
-        border-radius: 3px;
-        border: 1px solid #000;
-      }
-      &:after {
-        content: '';
-        display: block;
-        width: 9px;
-        height: 4px;
-        border-bottom: 2px solid #fff;
-        border-left: 2px solid #fff;
-        transform: rotate(-45deg) scale(0) translate(-50%, -50%);
-        transition: transform ease 0.25s;
-        position: absolute;
-        top: 7px;
-        left: -5px;
-      }
-    }
-    input[type='checkbox'] {
-      width: auto;
-      opacity: 0.00000001;
-      position: absolute;
-      left: 0;
-      margin-left: -20px;
-      &:checked ~ label {
-        &:before {
-          background-color: #2b74e4;
-          border: 2px solid #2b74e4;
-        }
-        &:after {
-          transform: rotate(-45deg) scale(1);
-        }
-      }
-      &:focus + label::before {
-        outline: 0;
-      }
-    }
-  }
 `;
 
 const SentButton = styled.button`
@@ -239,7 +183,15 @@ const SentButton = styled.button`
 
 const ReturnRequest = () => {
   const [qty, setQty] = useState([0]);
-  const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
+  const {
+    phoneNumber: currentPhoneNumber,
+    phoneCountryCode: currentPhoneCountryCode,
+  } = useSelector((state) => {
+    return state.user;
+  });
+  const [phoneNumberIntl, setPhoneNumberIntl] = useState(
+    `${currentPhoneCountryCode}${currentPhoneNumber}`
+  );
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
   const [phoneValidation, setPhoneValid] = useState(true);
@@ -271,6 +223,8 @@ const ReturnRequest = () => {
     totalWeight: '',
   });
   const [picture, setPicture] = useState([]);
+  const [isSobySupport, setIsSobySupport] = useState(false);
+  const [rejectCount, setRejectCount] = useState(0);
   const [requestRefundInfo, setRequestRefundInfo] = useState({
     id: invoiceId,
     reason: '',
@@ -278,12 +232,6 @@ const ReturnRequest = () => {
     imageUrls: '',
     requiredAdmin: false,
   });
-  const reasonMap = {
-    cb1: 'Wrong product',
-    cb2: "I don't want to buy this anymore",
-    cb3: 'I make wrong order',
-    cb4: 'Other reason',
-  };
 
   const { accessToken } = useSelector((state) => {
     return state.user;
@@ -293,13 +241,7 @@ const ReturnRequest = () => {
 
   const { shop } = invoiceData;
 
-  const {
-    id,
-    reason,
-    description,
-    imageUrls,
-    requiredAdmin,
-  } = requestRefundInfo;
+  const { reason, description } = requestRefundInfo;
 
   // REQUEST_INVOICE_REFUND
   const [
@@ -314,9 +256,10 @@ const ReturnRequest = () => {
   });
 
   useEffect(() => {
-    if (requestInvoiceRefundData?.requestInvoiceRefund?.success) {
+    if (requestInvoiceRefundData?.requestInvoiceRefund?.message === 'Success') {
+      window.location = '/return-request';
     }
-  }, [requestInvoiceRefundData?.requestInvoiceRefund?.success]);
+  }, [requestInvoiceRefundData?.requestInvoiceRefund?.message]);
 
   const [
     getAggregatedInvoiceOrderForIndividual,
@@ -345,34 +288,23 @@ const ReturnRequest = () => {
         ?.getAggregatedInvoiceOrderForIndividual?.data;
     if (invoiceData) {
       const {
-        id,
         invoice,
-        individualId,
-        shippingPartner,
         shippingLocation,
         shippingFee,
         individualTrackingUrl,
         orderFee,
         status,
-        reason,
         totalPrice,
-        createdAt,
-        updatedAt,
         assess,
-        paymentMethod,
       } = invoiceData;
-      const {
-        invoiceId,
-        invoiceVersion,
-        name,
-        description,
-        shop,
-        shippingType,
-        escrowFee,
-        items,
-        price,
-        totalWeight,
-      } = invoice;
+      const { name, shop, shippingType, escrowFee, items, price } = invoice;
+
+      if (
+        invoiceData?.assess?.refundRequests[0]?.status !== 'REJECTED' &&
+        invoiceData?.assess?.refundRequests?.length
+      ) {
+        window.location = '/return-request';
+      }
 
       setQty(items.map(() => 0));
 
@@ -389,7 +321,14 @@ const ReturnRequest = () => {
         totalPrice,
         orderFee,
         escrowFee,
+        assess,
       });
+
+      setRejectCount(
+        invoiceData?.assess?.refundRequests?.filter(
+          (x) => x.status === 'REJECTED'
+        )?.length ?? 0
+      );
     }
   }, [
     getAggregatedInvoiceOrderForIndividualData
@@ -429,11 +368,9 @@ const ReturnRequest = () => {
         return { id: invoiceData.items[i].id, quantity: x };
       })
       .filter((x) => !!x.quantity);
-    const submitReason = reasonMap[reason];
-
 
     const formData = new FormData();
-    picture.map(x =>  formData.append('files', x));
+    picture.map((x) => formData.append('files', x));
 
     const data = await fetch('https://api-dev.soby.vn/individuals/images', {
       method: 'POST',
@@ -451,10 +388,10 @@ const ReturnRequest = () => {
             id: invoiceId,
             phoneCountryCode,
             phoneNumber,
-            reason,
+            reason: REASON_MAP[reason],
             description,
             imageUrls: uploadedImage?.data?.urls,
-            requiredAdmin: false,
+            requiredAdmin: rejectCount === 2 || isSobySupport,
             items,
           },
         },
@@ -487,13 +424,11 @@ const ReturnRequest = () => {
             {invoiceData.items.map((x, idx) => {
               const {
                 id: itemId,
-                price: totalPrice,
                 product: {
                   name: productName,
-                  id,
                   imageUrls: [imageUrl],
                 },
-                sku: { properties, currentPrice },
+                sku: { currentPrice },
                 quantity: productQuantity,
               } = x;
               return (
@@ -567,6 +502,25 @@ const ReturnRequest = () => {
           />
           {!phoneValidation ? (
             <h5 className="error-title">Your phone number is not correct</h5>
+          ) : null}
+          {rejectCount === 1 ? (
+            <BoxReason>
+              <div className="checkbox">
+                <input
+                  type="checkbox"
+                  name="reason"
+                  value="sobySupport"
+                  id="sobySupport"
+                  checked={isSobySupport}
+                  onChange={() => setIsSobySupport(!isSobySupport)}
+                />
+                <label htmlFor="sobySupport">Get Soby support</label>
+              </div>
+            </BoxReason>
+          ) : rejectCount === 2 ? (
+            <BoxReason>
+              <p htmlFor="sobySupport">Soby supported as your requested</p>
+            </BoxReason>
           ) : null}
         </Box>
         <Box>

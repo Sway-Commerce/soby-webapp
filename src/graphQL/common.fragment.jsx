@@ -1,5 +1,20 @@
 import { gql } from '@apollo/client';
 
+export const SHIPPING_LOCATION_FRAGMENT = gql`
+  fragment ShippingLocationFragment on ShippingLocation {
+    id
+    locationName
+    phoneCountryCode
+    phoneNumber
+    country
+    province
+    district
+    ward
+    addressLine
+    defaultLocation
+  }
+`;
+
 export const INDIVIDUAL_PROFILE_FRAGMENT = gql`
   fragment IndividualProfileFragment on IndividualResultData {
     id
@@ -21,8 +36,6 @@ export const INDIVIDUAL_PROFILE_FRAGMENT = gql`
     kycStatus
     emailStatus
     phoneStatus
-    signingPublicKey
-    encryptionPublicKey
     pendingIdentities {
       id
       source
@@ -296,17 +309,66 @@ export const ASSESS_FRAGMENT = gql`
   }
 `;
 
+export const AGGREGATED_REFUND_REQUEST_FRAGMENT = gql`
+  ${PRODUCT_FRAGMENT}
+  ${SKU_FRAGMENT}
+  ${SHIPPING_LOCATION_FRAGMENT}
+  fragment AggregatedRefundRequestFragment on AggregatedRefundRequest {
+    id
+    assessId
+    phoneCountryCode
+    phoneNumber
+    requestReason
+    description
+    imageUrls
+    requiredAdmin
+    shippingType
+    shippingPartner
+    shippingLocation {
+      ...ShippingLocationFragment
+    }
+    returnFeePaidBy
+    shippingFee
+    individualTrackingUrl
+    shopTrackingUrl
+    status
+    statusReason
+    createdBy
+    updatedBy
+    createdAt
+    updatedAt
+    bankCode
+    accountType
+    accountNumber
+    accountOwner
+    accountIssuedOn
+    bankBranch
+    refundAmount
+    items {
+      id
+      product {
+        ...ProductFragment
+      }
+      sku {
+        ...SkuFragment
+      }
+      quantity
+      price
+      weight
+    }
+  }
+`;
+
 export const AGGREGATED_ASSESS_FRAGMENT = gql`
-  ${REFUND_REQUEST_FRAGMENT}
+  ${AGGREGATED_REFUND_REQUEST_FRAGMENT}
   fragment AggregatedAssessFragment on AggregatedAssess {
     id
     individualId
     orderId
     orderType
     shop {
+      id
       name
-      phoneCountryCode
-      phoneNumber
     }
     transferAmount
     assessType
@@ -315,7 +377,7 @@ export const AGGREGATED_ASSESS_FRAGMENT = gql`
     createdAt
     updatedAt
     refundRequests {
-      ...RefundRequestFragment
+      ...AggregatedRefundRequestFragment
     }
     paymentMethod
   }
@@ -336,11 +398,12 @@ export const SHOP_PROFILE_FRAGMENT = gql`
     userCountsApi
     incorporationDate
     categories
-    shopUrls
+    shopUrls {
+      url
+      verified
+    }
     status
     shippingType
-    signingPublicKey
-    encryptionPublicKey
     kyb {
       ...KYBFragment
     }
@@ -411,11 +474,16 @@ export const SHOP_PUBLIC_INFO_FRAGMENT = gql`
     description
     logoUrl
     coverUrl
-    categoryIds
-    shopUrls
+    categories {
+      id
+      name
+      description
+    }
+    shopUrls {
+      url
+      verified
+    }
     shippingType
-    signingPublicKey
-    encryptionPublicKey
     createdAt
     updatedAt
     kyb {
@@ -506,5 +574,38 @@ export const AGGREGATED_SEARCH_INVOICE_ORDER = gql`
     product {
       ...ProductFragment
     }
+  }
+`;
+
+export const AGGREGATED_SEARCH_ASSESS_FRAGMENT = gql`
+  ${REFUND_REQUEST_FRAGMENT}
+  ${INVOICE_HISTORY_FRAGMENT}
+  ${PRODUCT_FRAGMENT}
+  fragment AggregatedSearchAssessFragment on AggregatedSearchAssess {
+    id
+    individualId
+    orderId
+    orderType
+    shop {
+      name
+      id
+    }
+    transferAmount
+    assessType
+    createdBy
+    updatedBy
+    createdAt
+    updatedAt
+    refundRequests {
+      ...RefundRequestFragment
+    }
+    paymentMethod
+    invoice {
+      ...InvoiceHistoryFragment
+    }
+    product {
+      ...ProductFragment
+    }
+    refundAmount
   }
 `;

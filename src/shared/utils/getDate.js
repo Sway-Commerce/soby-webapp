@@ -1,4 +1,7 @@
 export const timestampToDate = (timestamp) => {
+  if(!timestamp) {
+    return null;
+  }
   const date = new Date(+timestamp);
   const year = date.getFullYear();
   let month = date.getMonth() + 1;

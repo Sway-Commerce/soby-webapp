@@ -9,10 +9,10 @@ export const SigninContainer = styled.div`
 export const CardWrapper = styled.div`
   transition: 0.3s;
   padding: 56px 40px 40px;
-  height: 565px;
   height: auto;
   background: #ffffff;
   border-radius: 3px;
+  width: 430px;
 `;
 
 export const RegisterContainer = styled.div`

@@ -14,10 +14,15 @@ export const GET_SHOP_BY_ID = gql`
         phoneNumber
         description
         logoUrl
-        categoryIds
-        shopUrls
-        signingPublicKey
-        encryptionPublicKey
+        categories {
+          id
+          name
+          description
+        }
+        shopUrls {
+          url
+          verified
+        }
         createdAt
         updatedAt
         shippingType
@@ -79,8 +84,15 @@ export const GET_SHOP_DETAILED_INFO = gql`
         logoUrl
         phoneCountryCode
         phoneNumber
-        categoryIds
-        shopUrls
+        categories {
+          id
+          name
+          description
+        }
+        shopUrls {
+          url
+          verified
+        }
         shippingType
         shippingLocations {
           addressLine
@@ -112,7 +124,10 @@ export const GET_SHOP_PUBLIC = gql`
         phoneCountryCode
         phoneNumber
         categories
-        shopUrls
+        shopUrls {
+          url
+          verified
+        }
         shippingType
         kyb {
           status
@@ -137,10 +152,11 @@ export const SEARCH = gql`
           phoneNumber
           description
           categories
-          shopUrls
+          shopUrls {
+            url
+            verified
+          }
           shippingType
-          signingPublicKey
-          encryptionPublicKey
           createdAt
           updatedAt
         }

@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as CloseIcon } from 'shared/assets/close-action.svg';
 import { ReactComponent as AcceptIcon } from 'shared/assets/accept-action.svg';
-import { borderColor } from 'shared/css-variable/variable';
+import {
+  bodyColor,
+  borderColor,
+  greenColor,
+} from 'shared/css-variable/variable';
 import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
@@ -16,6 +20,10 @@ import Spinner from 'components/ui/spinner/spinner.component';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import RequestItem from 'pages/return-request-list/request-item.component';
+import { DisputeType } from 'shared/constants/dispute.constant';
+import InvoiceInfoBox from 'pages/invoice/invoice-info-box';
+import { ReactComponent as CheckIcon } from 'shared/assets/check.svg';
 
 const Page = styled.div`
   display: flex;
@@ -32,10 +40,7 @@ const Box = styled.div`
   &.main-box {
     display: flex;
     justify-content: space-between;
-  }
-
-  h4 {
-    color: ${(prop) => prop.theme.primary};
+    height: 100px;
   }
 
   .row {
@@ -89,7 +94,6 @@ const Grid = styled.div`
   }
 `;
 
-
 const Product = styled.div`
   display: flex;
   text-align: left;
@@ -133,22 +137,6 @@ export const ActionContainer = styled.div`
   }
 `;
 
-export const InfoBox = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-column-gap: 30px;
-  background: #ffffff;
-
-  .info-box {
-    border: 1px solid ${borderColor};
-    height: 100px;
-    padding: 16px 24px;
-    .invoice-info {
-      color: #828282;
-    }
-  }
-`;
-
 export const FooterBox = styled.div`
   display: grid;
   grid-template-columns: 50% 1fr 1fr;
@@ -164,7 +152,39 @@ const ProductContainer = styled.div`
   grid-row-gap: 24px;
 `;
 
-const Invoice = () => {
+const AcceptButton = styled.div`
+  width: 255.89px;
+  height: 48px;
+  background: ${greenColor};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+  * + * {
+    margin-left: 10px;
+  }
+`;
+
+const ReportButton = styled.div`
+  width: 255.89px;
+  height: 48px;
+  border: 1px solid ${bodyColor};
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${bodyColor};
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 16px;
+  * + * {
+    margin-left: 10px;
+  }
+`;
+
+const RequestReturnDetail = () => {
   const { invoiceId } = useParams();
   const [open, setOpen] = useState(false);
   const [openError, setOpenError] = useState(false);
@@ -193,22 +213,21 @@ const Invoice = () => {
     invoiceId: '',
     invoiceVersion: '',
     totalWeight: '',
-    assess: {assessType: ''}
+    assess: null,
   });
   const [productMargin, setProductMargin] = useState(0);
   const [formError, setFormError] = useState('');
   const { shop } = invoiceData;
+  const [rejectCount, setRejectCount] = useState(0);
 
-  const [
-    loadDetailInvoice,
-    { loading, data: detailInvoiceData, error: loadDetailInvoiceError },
-  ] = useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
-    variables: {
-      id: invoiceId,
-    },
-    fetchPolicy: 'network-only',
-    notifyOnNetworkStatusChange: true,
-  });
+  const [loadDetailInvoice, { loading, error: loadDetailInvoiceError }] =
+    useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
+      variables: {
+        id: invoiceId,
+      },
+      fetchPolicy: 'network-only',
+      notifyOnNetworkStatusChange: true,
+    });
 
   const [
     getAggregatedInvoiceOrderForIndividual,
@@ -255,14 +274,8 @@ const Invoice = () => {
 
   useEffect(() => {
     if (invoiceData?.getAggregatedInvoice?.data) {
-      const {
-        name,
-        shippingType,
-        expiredAt,
-        price,
-        items,
-        shop,
-      } = invoiceData?.getAggregatedInvoice?.data;
+      const { name, shippingType, expiredAt, price, items, shop } =
+        invoiceData?.getAggregatedInvoice?.data;
       setInvoiceData({ name, shippingType, expiredAt, price, items, shop });
     }
   }, [invoiceData?.getAggregatedInvoice?.data]);
@@ -273,34 +286,16 @@ const Invoice = () => {
         ?.getAggregatedInvoiceOrderForIndividual?.data;
     if (invoiceData) {
       const {
-        id,
         invoice,
-        individualId,
-        shippingPartner,
         shippingLocation,
         shippingFee,
         individualTrackingUrl,
         orderFee,
         status,
-        reason,
         totalPrice,
-        createdAt,
-        updatedAt,
         assess,
-        paymentMethod,
       } = invoiceData;
-      const {
-        invoiceId,
-        invoiceVersion,
-        name,
-        description,
-        shop,
-        shippingType,
-        escrowFee,
-        items,
-        price,
-        totalWeight,
-      } = invoice;
+      const { name, shop, shippingType, escrowFee, items, price } = invoice;
       setInvoiceData({
         name,
         shippingType,
@@ -314,8 +309,14 @@ const Invoice = () => {
         totalPrice,
         orderFee,
         escrowFee,
-        assess
+        assess,
       });
+
+      setRejectCount(
+        invoiceData?.assess?.refundRequests?.filter(
+          (x) => x.status === 'REJECTED'
+        )?.length ?? 0
+      );
     }
   }, [
     getAggregatedInvoiceOrderForIndividualData
@@ -333,20 +334,20 @@ const Invoice = () => {
     markSatisfiedWithInvoice,
     {
       data: markSatisfiedWithInvoiceData,
-      loading: markSatisfiedWithInvoiceLoading,
       error: markSatisfiedWithInvoiceError,
     },
   ] = useMutation(MARK_SATISFIED_WITH_INVOICE, {
     errorPolicy: 'all',
     variables: {
       cmd: {
-        invoiceId,
+        id: invoiceId,
       },
     },
   });
 
   useEffect(() => {
     if (markSatisfiedWithInvoiceData?.markSatisfiedWithInvoice?.success) {
+      window.location = '/return-request';
     }
   }, [markSatisfiedWithInvoiceData?.markSatisfiedWithInvoice?.success]);
 
@@ -354,7 +355,6 @@ const Invoice = () => {
   const [
     updateReturnShippingInfo,
     {
-      data: updateReturnShippingInfoData,
       loading: updateReturnShippingInfoLoading,
       error: updateReturnShippingInfoError,
     },
@@ -401,10 +401,6 @@ const Invoice = () => {
     updateReturnShippingInfoError?.message,
   ]);
 
-  const handleCheckout = () => {
-    invoiceId ? setOpen(true) : acceptInvoice();
-  };
-
   return loading ||
     acceptLoading ||
     getAggregatedInvoiceOrderForIndividualLoading ||
@@ -416,8 +412,8 @@ const Invoice = () => {
         <Box className="main-box">
           <div>
             <h2>{invoiceData.name}</h2>
-            <h4 style={{ textTransform: 'capitalize' }}>
-              {invoiceData.status?.toLocaleLowerCase()}
+            <h4 className={DisputeType[invoiceData.status]?.colorClass}>
+              {DisputeType[invoiceData.status]?.name}
             </h4>
           </div>
           {invoiceData.assess?.assessType === 'PROCESSING' ? (
@@ -432,30 +428,37 @@ const Invoice = () => {
               </div>
             </ActionContainer>
           ) : null}
+
+          {invoiceData?.status !== 'COMPLETED' &&
+          invoiceData.assess?.assessType !== 'PROCESSING' &&
+          rejectCount < 3 ? (
+            <ActionContainer>
+              <AcceptButton onClick={() => markSatisfiedWithInvoice()}>
+                <CheckIcon />
+                <span>Accept</span>
+              </AcceptButton>
+            </ActionContainer>
+          ) : null}
+
+          {rejectCount === 3 ? (
+            <ActionContainer>
+              <ReportButton>
+                <span>Report problem</span>
+              </ReportButton>
+            </ActionContainer>
+          ) : null}
         </Box>
 
-        <InfoBox>
-          <div className="info-box">
-            <p>
-              <b>Invoice from</b>
-            </p>
-            <p className="invoice-info">{shop.name}</p>
-          </div>
-          <div className="info-box">
-            <p>
-              <b>Shipping address</b>
-            </p>
-            <p className="invoice-info">
-              {`${invoiceData?.shippingLocation?.addressLine}, ${invoiceData?.shippingLocation?.ward}, ${invoiceData?.shippingLocation?.district}, ${invoiceData?.shippingLocation?.province}`}
-            </p>
-          </div>
-          <div className="info-box">
-            <p>
-              <b>Tracking code</b>
-            </p>
-            <p className="invoice-info">{invoiceData.individualTrackingUrl}</p>
-          </div>
-        </InfoBox>
+        <InvoiceInfoBox
+          shopName={shop.name}
+          shippingLocation={invoiceData?.shippingLocation}
+          trackingUrl={invoiceData.individualTrackingUrl}
+        />
+
+        <RequestItem
+          refundRequests={invoiceData.assess?.refundRequests}
+          assessId={invoiceData.assess?.id}
+        />
 
         <Grid>
           <p className="title-info">
@@ -480,10 +483,9 @@ const Invoice = () => {
               price: totalPrice,
               product: {
                 name: productName,
-                id,
                 imageUrls: [imageUrl],
               },
-              sku: { properties, currentPrice },
+              sku: { currentPrice },
               quantity: productQuantity,
             } = x;
             return (
@@ -536,12 +538,12 @@ const Invoice = () => {
       </Page>
 
       <SobyModal open={openError} setOpen={setOpenError}>
-      {formError ? (
-        <ErrorPopup content={formError} setOpen={setOpenError} />
-      ) : null}
-    </SobyModal>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpenError} />
+        ) : null}
+      </SobyModal>
     </React.Fragment>
   );
 };
 
-export default Invoice;
+export default RequestReturnDetail;
