@@ -152,14 +152,14 @@ const ShopProfile = () => {
         phoneNumber,
         description,
         logoUrl,
-        categoryIds,
+        categories,
         shopUrls,
         kyb,
         email
       } = getShopByIdData?.getShopById?.data;
-      const categories = getAllShopCategoriesData?.getAllShopCategories?.data
-        ?.filter((x) => categoryIds?.includes(x.id))
-        ?.map((x) => x.name);
+      // const categories = getAllShopCategoriesData?.getAllShopCategories?.data
+      //   ?.filter((x) => categoryIds?.includes(x.id))
+      //   ?.map((x) => x.name);
 
       setShopInfo({
         ...shopInfo,

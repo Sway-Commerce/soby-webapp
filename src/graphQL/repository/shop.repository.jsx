@@ -14,7 +14,11 @@ export const GET_SHOP_BY_ID = gql`
         phoneNumber
         description
         logoUrl
-        categoryIds
+        categories {
+          id
+          name
+          description
+        }
         shopUrls {
           url
           verified
@@ -80,7 +84,11 @@ export const GET_SHOP_DETAILED_INFO = gql`
         logoUrl
         phoneCountryCode
         phoneNumber
-        categoryIds
+        categories {
+          id
+          name
+          description
+        }
         shopUrls {
           url
           verified
@@ -145,9 +153,9 @@ export const SEARCH = gql`
           description
           categories
           shopUrls {
-          url
-          verified
-        }
+            url
+            verified
+          }
           shippingType
           createdAt
           updatedAt

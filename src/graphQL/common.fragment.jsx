@@ -474,7 +474,11 @@ export const SHOP_PUBLIC_INFO_FRAGMENT = gql`
     description
     logoUrl
     coverUrl
-    categoryIds
+    categories {
+      id
+      name
+      description
+    }
     shopUrls {
       url
       verified
