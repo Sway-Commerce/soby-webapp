@@ -4,8 +4,8 @@ import styled from 'styled-components';
 
 export const InfoBox = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-column-gap: 30px;
+  grid-template-columns: repeat(auto-fit, 360px);
+  grid-gap: 30px;
   background: #ffffff;
 
   .info-box {
@@ -16,6 +16,14 @@ export const InfoBox = styled.div`
     .invoice-info {
       color: #828282;
       word-break: break-word;
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    justify-content: center;
+    .info-box {
+      max-width: 100%;
     }
   }
 `;

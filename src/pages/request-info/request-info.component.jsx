@@ -389,7 +389,7 @@ const RequestInfo = () => {
 
   useEffect(() => {
     if (updateReturnShippingInfoData?.updateReturnShippingInfo?.data) {
-      window.location = 'return-request';
+      window.location = '/return-request';
     }
   }, [updateReturnShippingInfoData?.updateReturnShippingInfo?.data]);
 
@@ -423,7 +423,7 @@ const RequestInfo = () => {
       variables: {
         cmd: {
           assessId: accessData?.id,
-          shippingType: 'BY_USER',
+          shippingType: 'BY_SOBY',
           shippingLocationId: selectedLocation,
           returnFeePaidBy: shippingFeePayBy,
           bankCode: null,
