@@ -14,7 +14,7 @@ pipeline {
     parameters {
       string(name: 'APP_NAME', defaultValue: 'soby-webapp', description: 'Define app name')
       string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Define branch name')
-      choice(name: 'DEPLOY_ENV', choices: ['dev', 'test', 'prod'], description: 'Define environment name')
+      choice(name: 'DEPLOY_ENV', choices: ['dev', 'prod'], description: 'Define environment name')
     }
 
     environment {
@@ -22,7 +22,7 @@ pipeline {
         GIT_CREDS          = 'github-jenkins'
         AWS_S3_BUCKET      = "soby-${params.DEPLOY_ENV}-webapp"
         DISTRIBUTION_ID_DEV   = "E1LVHEUJ0L82ET"
-        DISTRIBUTION_ID_PROD  = "E18YWXPXB0MF8F"
+        DISTRIBUTION_ID_PROD  = "E2E1RKX53S6TLB"
     }
 
     stages {
