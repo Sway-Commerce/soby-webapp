@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
+import { useSelector , useDispatch} from 'react-redux';
 import styled from 'styled-components';
 
 import KybStatus from 'components/kyb-status/kyb-status.component';
@@ -23,10 +24,18 @@ import { ReactComponent as EmailBlackIcon } from 'shared/assets/email-black.svg'
 import { ReactComponent as ArrowRightIcon } from 'shared/assets/arrow-right.svg';
 import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
 import { Link } from 'react-router-dom';
+import { useLazyQuery } from '@apollo/client';
+import { decryptIndividualModel, GETSECRET, GET_INDIVIDUAL_BASIC_INFO } from 'graphQL/repository/individual.repository';
+import { signOutStart, updateStoredUser } from 'redux/user/user.actions';
 
 export const Page = styled.div`
   background-color: #ffffff;
   padding: 0.5rem 1.2rem;
+  width: 30rem;
+  margin:0 auto;
+  @media screen and (max-width: 600px) {
+    width: auto;
+	}
 `;
 
 export const AvatarBox = styled.div`
@@ -125,8 +134,6 @@ const IndividualProfile = () => {
     return state.user;
   });
 
-  const [openNamePopup, setOpenNamePopup] = useState(false);
-  const [openPasswordPopup, setOpenPasswordPopup] = useState(false);
   const [openEditMailPopup, setOpenEditMailPopup] = useState(false);
   const [openEditPhonePopup, setOpenEditPhonePopup] = useState(false);
   const [openVerifyPhonePopup, setOpenVerifyPhonePopup] = useState(false);
@@ -135,12 +142,114 @@ const IndividualProfile = () => {
     {
       name: 'Your account',
       src: '/individual-profile',
-    },
-    // {
-    //   name: 'Edit information',
-    //   src: '/edit-profile',
-    // },
+    }
   ]);
+
+  const [
+    getBasicInfo,
+    {
+      data: loadIndividualBasicInfoData,
+      loading: loadIndividualBasicInfoLoading,
+      error: loadIndividualBasicInfoError,
+    },
+  ] = useLazyQuery(GET_INDIVIDUAL_BASIC_INFO);
+  const [
+    getSecret,
+    { data: getSecretData, loading: getSecretLoading, error: getSecretError },
+  ] = useLazyQuery(GETSECRET);
+
+  useEffect(() => {
+    if (loadIndividualBasicInfoData?.getIndividual?.data) {
+      getSecret();
+    }
+  }, [loadIndividualBasicInfoData?.getIndividual?.data]);
+
+
+  const dispatch = useDispatch();
+  const dispatchUpdateStoredUser = (payload) =>
+    dispatch(updateStoredUser(payload));
+  const dispatchSignOutStart = () =>
+    dispatch(signOutStart());
+
+  // useEffect(() => {
+  //   if (
+  //     loadIndividualBasicInfoData?.getIndividual?.data &&
+  //     getSecretData?.getSecret?.data
+  //   ) {
+
+  //     async function decryptData() {
+  //       const {
+  //         signingSecret,
+  //         encryptionSecret,
+  //         signingPublicKey,
+  //         encryptionPublicKey,
+  //       } = getSecretData?.getSecret?.data;
+
+  //       const {
+  //         firstName,
+  //         phoneNumber,
+  //         phoneCountryCode,
+  //         email,
+  //         invitationCode,
+  //         postalCode,
+  //         lastName,
+  //         middleName,
+  //         dob,
+  //         nationality,
+  //         addressLine,
+  //         city,
+  //         province,
+  //         country,
+  //         id,
+  //         imageUrl,
+  //         kycStatus,
+  //         emailStatus,
+  //         phoneStatus,
+  //         pendingIdentities,
+  //       } = await decryptIndividualModel(
+  //         encryptionSecret,
+  //         password,
+  //         loadIndividualBasicInfoData?.getIndividual?.data
+  //       );
+
+  //       dispatchUpdateStoredUser({
+  //         signingSecret,
+  //         encryptionSecret,
+  //         signingPublicKey,
+  //         encryptionPublicKey,
+  //         phoneNumber,
+  //         phoneCountryCode,
+  //         email,
+  //         invitationCode,
+  //         postalCode,
+  //         lastName,
+  //         middleName,
+  //         dob,
+  //         nationality,
+  //         addressLine,
+  //         city,
+  //         province,
+  //         country,
+  //         firstName,
+  //         id,
+  //         imageUrl,
+  //         kycStatus,
+  //         emailStatus,
+  //         phoneStatus,
+  //         pendingIdentities,
+  //       });
+
+  //       const redirectUrl = localStorage.getItem('redirectUrl');
+  //       localStorage.removeItem('redirectUrl');
+  //       window.location = redirectUrl || '/individual-profile';
+  //     }
+
+  //     decryptData();
+  //   }
+  // }, [
+  //   loadIndividualBasicInfoData?.getIndividual?.data,
+  //   getSecretData?.getSecret?.data,
+  // ]);
 
   return (
     <React.Fragment>
@@ -187,7 +296,7 @@ const IndividualProfile = () => {
           <p>Password</p>
           <ArrowRightIcon />
         </Row>
-        <Row to="/individual-shipping" pointer>
+        <Row to="/individual-shipping" pointer >
           <p>Shipping info</p>
           <ArrowRightIcon />
         </Row>
@@ -199,36 +308,13 @@ const IndividualProfile = () => {
           <p>Terms and Polices</p>
           <ArrowRightIcon />
         </Row>
+        <p className="red mg-b-24" onClick={() => {
+          dispatchSignOutStart();
+          window.location = "/phone-signin"
+        }}>Logout</p>
       </Page>
-      <SobyModal open={openNamePopup} setOpen={setOpenNamePopup}>
-        {openNamePopup ? (
-          <EditProfile
-            firstName={firstName}
-            lastName={lastName}
-            middleName={middleName}
-            accessToken={accessToken}
-            dob={dob}
-            postalCode={postalCode}
-            country={country}
-            province={province}
-            city={city}
-            addressLine={addressLine}
-            nationality={nationality}
-            imageUrl={imageUrl}
-            setOpenNamePopup={setOpenNamePopup}
-          />
-        ) : null}
-      </SobyModal>
-      <SobyModal open={openPasswordPopup} setOpen={setOpenPasswordPopup}>
-        {openPasswordPopup ? (
-          <PasswordPopup
-            setOpenPasswordPopup={setOpenPasswordPopup}
-            signingSecret={signingSecret}
-            encryptionPublicKey={encryptionPublicKey}
-            encryptionSecret={encryptionSecret}
-          />
-        ) : null}
-      </SobyModal>
+
+
       <SobyModal open={openEditMailPopup} setOpen={setOpenEditMailPopup}>
         {openEditMailPopup ? (
           <EmailPopup

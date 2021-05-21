@@ -31,7 +31,8 @@ const INITIAL_STATE = {
 
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case UserActionTypes.SIGN_IN_SUCCESS: {
+    case UserActionTypes.SIGN_IN_SUCCESS:
+    case UserActionTypes.UPDATE_STORED_USER: {
       const {
         signingSecret,
         encryptionSecret,
@@ -102,8 +103,10 @@ const userReducer = (state = INITIAL_STATE, action) => {
         accessToken: null,
       };
     }
-    case UserActionTypes.SIGN_OUT_START:
+    case UserActionTypes.SIGN_OUT_START: {
+      localStorage.clear();
       return INITIAL_STATE;
+    }
     case UserActionTypes.SIGN_IN_FAILURE:
     case UserActionTypes.SIGN_OUT_FAILURE:
     case UserActionTypes.SIGN_UP_FAILURE:
