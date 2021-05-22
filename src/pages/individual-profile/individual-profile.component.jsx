@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { useSelector , useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
 import KybStatus from 'components/kyb-status/kyb-status.component';
@@ -25,17 +25,21 @@ import { ReactComponent as ArrowRightIcon } from 'shared/assets/arrow-right.svg'
 import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
 import { Link } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
-import { decryptIndividualModel, GETSECRET, GET_INDIVIDUAL_BASIC_INFO } from 'graphQL/repository/individual.repository';
+import {
+  decryptIndividualModel,
+  GETSECRET,
+  GET_INDIVIDUAL_BASIC_INFO,
+} from 'graphQL/repository/individual.repository';
 import { signOutStart, updateStoredUser } from 'redux/user/user.actions';
 
 export const Page = styled.div`
   background-color: #ffffff;
   padding: 0.5rem 1.2rem;
   width: 30rem;
-  margin:0 auto;
+  margin: 0 auto;
   @media screen and (max-width: 600px) {
     width: auto;
-	}
+  }
 `;
 
 export const AvatarBox = styled.div`
@@ -142,7 +146,7 @@ const IndividualProfile = () => {
     {
       name: 'Your account',
       src: '/individual-profile',
-    }
+    },
   ]);
 
   const [
@@ -164,12 +168,10 @@ const IndividualProfile = () => {
     }
   }, [loadIndividualBasicInfoData?.getIndividual?.data]);
 
-
   const dispatch = useDispatch();
   const dispatchUpdateStoredUser = (payload) =>
     dispatch(updateStoredUser(payload));
-  const dispatchSignOutStart = () =>
-    dispatch(signOutStart());
+  const dispatchSignOutStart = () => dispatch(signOutStart());
 
   // useEffect(() => {
   //   if (
@@ -271,20 +273,26 @@ const IndividualProfile = () => {
           </div>
           <div className="info-row">
             <PhoneBlackIcon />
-            <p>{phoneCountryCode}&nbsp;{phoneNumber}</p>
+            <p onClick={() => setOpenEditPhonePopup(true)} className="clickable">
+              {phoneCountryCode}&nbsp;{phoneNumber}
+            </p>
             {phoneStatus === 'CONFIRMED' ? (
               <VerifiedIcon />
             ) : (
-              <VerifyBtn onClick={() => setOpenVerifyPhonePopup(true)}>Verify</VerifyBtn>
+              <VerifyBtn onClick={() => setOpenVerifyPhonePopup(true)}>
+                Verify
+              </VerifyBtn>
             )}
           </div>
           <div className="info-row">
             <EmailBlackIcon />
-            <p>{email}</p>
+            <p onClick={() => setOpenEditMailPopup(true)} className="clickable">{email}</p>
             {emailStatus === 'CONFIRMED' ? (
               <VerifiedIcon />
             ) : (
-              <VerifyBtn  onClick={() => setOpenVerifyEmailPopup(true)}>Verify</VerifyBtn>
+              <VerifyBtn onClick={() => setOpenVerifyEmailPopup(true)}>
+                Verify
+              </VerifyBtn>
             )}
           </div>
         </InfoBox>
@@ -296,24 +304,33 @@ const IndividualProfile = () => {
           <p>Password</p>
           <ArrowRightIcon />
         </Row>
-        <Row to="/individual-shipping" pointer >
+        <Row to="/individual-shipping" pointer>
           <p>Shipping info</p>
           <ArrowRightIcon />
         </Row>
         <Row
           pointer
           to="#"
-          onClick={() => window.location = "https://soby.vn/en/soby-privacy-terms%e2%80%8b/soby-terms-of-service/"}
+          onClick={() =>
+            (window.location =
+              'https://soby.vn/en/soby-privacy-terms%e2%80%8b/soby-terms-of-service/')
+          }
         >
           <p>Terms and Polices</p>
           <ArrowRightIcon />
         </Row>
-        <p className="red mg-b-24" onClick={() => {
-          dispatchSignOutStart();
-          window.location = "/phone-signin"
-        }}>Logout</p>
+        <p className="red mg-b-24 clickable">
+          <span
+            classNam=""
+            onClick={() => {
+              dispatchSignOutStart();
+              window.location = '/phone-signin';
+            }}
+          >
+            Logout
+          </span>
+        </p>
       </Page>
-
 
       <SobyModal open={openEditMailPopup} setOpen={setOpenEditMailPopup}>
         {openEditMailPopup ? (

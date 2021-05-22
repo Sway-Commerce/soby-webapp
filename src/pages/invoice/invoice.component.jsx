@@ -461,18 +461,10 @@ const RequestReturnDetail = () => {
         />
 
         <Grid>
-          <p className="title-info">
-            <b>Products list</b>
-          </p>
-          <p className="title-info">
-            <b>Subtotal</b>
-          </p>
-          <p className="title-info">
-            <b>Qty</b>
-          </p>
-          <p className="title-info last-child">
-            <b>Total</b>
-          </p>
+          <h5 className="title-info">Products list</h5>
+          <h5 className="title-info">Subtotal</h5>
+          <h5 className="title-info">Qty</h5>
+          <h5 className="title-info">Total</h5>
         </Grid>
         <BreakLine />
 
@@ -528,12 +520,8 @@ const RequestReturnDetail = () => {
         </FooterBox>
         <FooterBox>
           <div></div>
-          <p>
-            <b>Total</b>
-          </p>
-          <p className="text-right">
-            <b>{currencyFormatter(invoiceData.totalPrice)}</b>
-          </p>
+          <h5>Total</h5>
+          <h5>{currencyFormatter(invoiceData.totalPrice)}</h5>
         </FooterBox>
       </Page>
 

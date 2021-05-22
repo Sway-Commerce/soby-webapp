@@ -1,45 +1,31 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
-import { formatPhoneNumberIntl } from 'react-phone-number-input';
 
-import { ReactComponent as Phone } from 'shared/assets/phone-icon.svg';
-import { ReactComponent as Location } from 'shared/assets/location.svg';
-
-import {
-  GET_ALL_SHOP_CATEGORIES,
-  GET_SHOP_BY_ID,
-} from 'graphQL/repository/shop.repository';
+import { GET_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
 import { SEARCH_PRODUCT } from 'graphQL/repository/product.repository';
 
 import Spinner from 'components/ui/spinner/spinner.component';
-import ShopCategory from 'components/shop-category/shop-category.component';
-import WebsiteUrl from 'components/website-url/website-url.component';
-import ProductListCard from 'components/product-listcard/product-listcard.component';
-import ShopNameCard from 'components/shop-name-card/shop-name-card.component';
-import KybCard from 'components/kyb-card/kyb-card.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
-import airpod from 'shared/assets/airpod.svg';
 import facebookImg from 'shared/assets/facebook.svg';
 import instagramImg from 'shared/assets/instagram.svg';
 import locationImg from 'shared/assets/location.svg';
 import mailImg from 'shared/assets/mail-black.svg';
 import tickImg from 'shared/assets/tick.svg';
-import twowatchImg from 'shared/assets/twowatch.svg';
 import wallpaperImg from 'shared/assets/wallpaper.svg';
 import shareImg from 'shared/assets/share.svg';
-import appleImg from 'shared/assets/apple.svg';
 import phoneImg from 'shared/assets/phone-circle.svg';
 import heedImg from 'shared/assets/heed.svg';
-import greenlineImg from 'shared/assets/greenline.svg';
 import greenmarkImg from 'shared/assets/greenmark.svg';
 import id1Img from 'shared/assets/id-1.svg';
 import id2Img from 'shared/assets/id-2.svg';
 import shopeeImg from 'shared/assets/shopee.svg';
 import networkImg from 'shared/assets/network.svg';
+import buildAddressString from 'shared/utils/buildAddressString';
 
 const Container = styled.div`
   margin: auto;
@@ -48,28 +34,6 @@ const Container = styled.div`
     height: 5.2rem;
     padding: 1.2rem;
     margin-bottom: 1.2rem;
-  }
-
-  .btn-address {
-    margin-top: 1.2rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 1.4rem;
-  }
-
-  .address-1 {
-    display: flex;
-  }
-
-  .address-2 {
-    display: flex;
-    margin-left: 1.2rem;
-  }
-
-  .address-icon {
-    width: 0.8rem;
-    height: 0.8rem;
-    margin-right: 0.6rem;
   }
 
   .btn-rank {
@@ -88,7 +52,6 @@ const Container = styled.div`
 
   .point {
     color: #73cf11;
-    font-size: 1.2rem;
   }
 
   .mean {
@@ -133,13 +96,10 @@ const Row = styled.div`
   .row-header {
     display: flex;
     justify-content: space-between;
-    p {
-      color: #2b74e4;
-    }
   }
 `;
 
-const NewProductBox = styled.div`
+const NewProductBox = styled(Link)`
   img {
     width: 8.6rem;
     height: 8.6rem;
@@ -164,7 +124,9 @@ const ProductContainer = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(8.6rem, 8.6rem));
   grid-gap: 1.2rem;
   margin-top: 0.8rem;
-  justify-content: center;
+  @media screen and (max-width: 500px) {
+    justify-content: center;
+  }
 `;
 
 const HeadPromotion = styled.div`
@@ -264,11 +226,6 @@ const NewInfoBox = styled.div`
   }
 `;
 
-const ShopInfo = styled.div`
-  font-size: 0.8rem;
-  color: #4f4f4f;
-`;
-
 const TagIcon = styled.div`
   display: flex;
 `;
@@ -317,7 +274,29 @@ const TagOption = styled.div`
   display: flex;
 `;
 
+const ContactGroup = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 1.2rem;
+  grid-gap: 1.4rem;
+
+  .contact-item {
+    display: flex;
+
+    img {
+      width: 24px;
+      height: 24px;
+      margin-right: 0.6rem;
+    }
+  }
+`;
+
 const ShopProfile = () => {
+  //   enum ConfirmationStatus {
+  //     NOT_CONFIRMED
+  //     CONFIRMED
+  //     COMPLETED
+  // }
   const { shopId } = useParams();
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
@@ -332,24 +311,24 @@ const ShopProfile = () => {
     kyb: { status: null },
     records: [],
     email: '',
+    coverUrl: '',
+    shippingLocation: {
+      addressLine: '',
+      country: '',
+      district: '',
+      province: '',
+      ward: '',
+    },
   });
 
   const [
-    getShopById,
+    getAggregatedShop,
     {
-      loading: getShopByIdLoading,
-      error: getShopByIdError,
-      data: getShopByIdData,
+      loading: getAggregatedShopLoading,
+      error: getAggregatedShopError,
+      data: getAggregatedShopData,
     },
-  ] = useLazyQuery(GET_SHOP_BY_ID);
-  const [
-    getAllShopCategories,
-    {
-      loading: getAllShopCategoriesLoading,
-      error: getAllShopCategoriesError,
-      data: getAllShopCategoriesData,
-    },
-  ] = useLazyQuery(GET_ALL_SHOP_CATEGORIES);
+  ] = useLazyQuery(GET_AGGREGATED_SHOP);
   const [
     searchProduct,
     { loading: productLoading, error: productError, data: productData },
@@ -357,33 +336,21 @@ const ShopProfile = () => {
 
   useEffect(() => {
     if (shopId) {
-      getShopById({
+      getAggregatedShop({
         variables: { id: shopId },
       });
-      getAllShopCategories();
     }
   }, [shopId]);
 
   useEffect(() => {
-    if (
-      getShopByIdError?.message ||
-      productError?.message ||
-      getAllShopCategoriesError?.message
-    ) {
-      setFormError(
-        getShopByIdError?.message ??
-          productError?.message ??
-          getAllShopCategoriesError?.message
-      );
+    if (getAggregatedShopError?.message || productError?.message) {
+      setFormError(getAggregatedShopError?.message || productError?.message);
       setOpen(true);
     }
-  }, [getShopByIdError, productError, getAllShopCategoriesError]);
+  }, [getAggregatedShopError, productError]);
 
   useEffect(() => {
-    if (
-      getShopByIdData?.getShopById?.data &&
-      getAllShopCategoriesData?.getAllShopCategories?.data
-    ) {
+    if (getAggregatedShopData?.getAggregatedShop?.data) {
       const {
         name,
         phoneCountryCode,
@@ -394,10 +361,10 @@ const ShopProfile = () => {
         shopUrls,
         kyb,
         email,
-      } = getShopByIdData?.getShopById?.data;
-      // const categories = getAllShopCategoriesData?.getAllShopCategories?.data
-      //   ?.filter((x) => categoryIds?.includes(x.id))
-      //   ?.map((x) => x.name);
+        coverUrl,
+        shippingLocations,
+      } = getAggregatedShopData?.getAggregatedShop?.data;
+      const [shippingLocation] = shippingLocations;
 
       setShopInfo({
         ...shopInfo,
@@ -410,6 +377,8 @@ const ShopProfile = () => {
         shopUrls,
         kyb,
         email,
+        coverUrl,
+        shippingLocation,
       });
 
       searchProduct({
@@ -424,10 +393,7 @@ const ShopProfile = () => {
         },
       });
     }
-  }, [
-    getShopByIdData?.getShopById?.data,
-    getAllShopCategoriesData?.getAllShopCategories?.data,
-  ]);
+  }, [getAggregatedShopData?.getAggregatedShop?.data]);
 
   useEffect(() => {
     if (productData?.searchProduct?.data?.records?.length) {
@@ -438,22 +404,24 @@ const ShopProfile = () => {
     }
   }, [productData?.searchProduct?.data]);
 
-  return getShopByIdLoading || productLoading || getAllShopCategoriesLoading ? (
+  return getAggregatedShopLoading || productLoading ? (
     <Spinner />
   ) : (
     <React.Fragment>
       <Container>
         <div class="container">
           <HeadRow>
-            <HeadPromotion>
+            <HeadPromotion
+              style={{ backgroundImage: shopInfo.coverUrl || wallpaperImg }}
+            >
               <img className="share-icon" src={shareImg} alt="" />
-              <img className="avatar" src={appleImg} alt="" />
+              <img className="avatar" src={shopInfo.logoUrl} alt="" />
             </HeadPromotion>
             <NewHeadPromotion>
-              <h3>Apple shop</h3>
+              <h3>{shopInfo.name}</h3>
               <div className="phone-container">
                 <img className="phone-icon" src={phoneImg} alt="" />
-                <p>0901 *** ****</p>
+                <p>{`${shopInfo.phoneCountryCode} ${shopInfo.phoneNumber}`}</p>
                 <p className="btn-click">Click to show</p>
               </div>
             </NewHeadPromotion>
@@ -463,19 +431,13 @@ const ShopProfile = () => {
               <div className="rank-info">
                 <div className="btn-rank">
                   <div className="info-header">
-                    <p>
-                      <b>Soby Rank</b>
-                    </p>
+                    <h5>Soby Rank</h5>
                   </div>
                   <img className="heed-icon" src={heedImg} alt="" />
                 </div>
                 <div className="btn-point">
-                  <p className="point">
-                    <b>8.9</b>
-                  </p>
-                  <p className="mean">
-                    <b>Extremely Good</b>
-                  </p>
+                  <h2 className="point">8.9</h2>
+                  <h5 className="mean">Extremely Good</h5>
                 </div>
               </div>
               <p className="btn-number">01</p>
@@ -511,148 +473,63 @@ const ShopProfile = () => {
                   </p>
                 </div>
                 <TagOption>
-                  <Option>
-                    <p className="option-info">Toys</p>
-                  </Option>
-                  <Option>
-                    <p className="option-info">Technology</p>
-                  </Option>
-                  <Option>
-                    <p className="option-info">Home and Garden</p>
-                  </Option>
+                  {shopInfo.categories.length ? (
+                    shopInfo.categories.map((x) => {
+                      const { id, name } = x;
+                      return (
+                        <Option key={id}>
+                          <p className="option-info">{name}</p>
+                        </Option>
+                      );
+                    })
+                  ) : (
+                    <p className="body-color">Không có phân loại</p>
+                  )}
                 </TagOption>
               </Categories>
             </InfoBox>
             <NewInfoBox>
               <div className="info-header">
-                <p>
-                  <b>Shop description</b>
-                </p>
+                <h5>Shop description</h5>
               </div>
-              <ShopInfo>
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                diam nonumy eirmod tempor invidunt ut labore et dolore magna
-                aliquyam erat, sed diam voluptua.
-              </ShopInfo>
-              <div className="btn-address">
-                <div className="address-1">
-                  <img className="address-icon" src={locationImg} alt="" />
-                  <ShopInfo>
-                    H3 Building, 384 Hoàng Diệu, Phường 6, Quận 4, Hồ Chí Minh
-                  </ShopInfo>
+              <p>{shopInfo.description}</p>
+              <ContactGroup>
+                <div className="contact-item">
+                  <img src={locationImg} alt="" />
+                  <p className="body-color">
+                    {buildAddressString(shopInfo.shippingLocation)}
+                  </p>
                 </div>
-                <div className="address-2">
-                  <img className="address-icon" src={mailImg} alt="" />
-                  <ShopInfo>address@email.com</ShopInfo>
+                <div className="contact-item">
+                  <img src={mailImg} alt="" />
+                  <p className="body-color">address@email.com</p>
                 </div>
-              </div>
+              </ContactGroup>
             </NewInfoBox>
           </InfoContainer>
-          <Row>
-            <div className="row-header">
-              <h3>Promotion</h3>
-              <p>
-                <b>See all</b>
-              </p>
-            </div>
-            <PromotionContainer>
-              <PromotionBox>
-                <img src={airpod} alt="" />
-                <div>
-                  <Description>
-                    Amazfit GTS 2e Smartwatch with 24H Heart Rate Monitor,
-                    Sleep, Stress and SpO2...
-                  </Description>
-                  <p>
-                    <b>8.220.000 đ</b>
-                  </p>
-                  <Date>
-                    <b>Offer end in - 3 days</b>
-                  </Date>
-                </div>
-              </PromotionBox>
-              <PromotionBox>
-                <img src={airpod} alt="" />
-                <div>
-                  <Description>
-                    Amazfit GTS 2e Smartwatch with 24H Heart Rate Monitor,
-                    Sleep, Stress and SpO2...
-                  </Description>
-                  <p>
-                    <b>8.220.000 đ</b>
-                  </p>
-                  <Date>
-                    <b>Offer end in - 3 days</b>
-                  </Date>
-                </div>
-              </PromotionBox>
-              <PromotionBox>
-                <img src={airpod} alt="" />
-                <div>
-                  <Description>
-                    Amazfit GTS 2e Smartwatch with 24H Heart Rate Monitor,
-                    Sleep, Stress and SpO2...
-                  </Description>
-                  <p>
-                    <b>8.220.000 đ</b>
-                  </p>
-                  <Date>
-                    <b>Offer end in - 3 days</b>
-                  </Date>
-                </div>
-              </PromotionBox>
-            </PromotionContainer>
-          </Row>
+
           <Row>
             <div className="row-header">
               <h3>New Product</h3>
-              <p>
-                <b>See all</b>
-              </p>
+              <h5 className="primary-color">See all</h5>
             </div>
             <ProductContainer>
-              <NewProductBox>
-                <img src={twowatchImg} alt="" />
-                <Description>Apple Watch Series 6 - new</Description>
-                <p>
-                  <b>8.220.000 đ</b>
-                </p>
-              </NewProductBox>
-              <NewProductBox>
-                <img src={twowatchImg} alt="" />
-                <Description>Apple Watch Series 6 - new</Description>
-                <p>
-                  <b>8.220.000 đ</b>
-                </p>
-              </NewProductBox>
-              <NewProductBox>
-                <img src={twowatchImg} alt="" />
-                <Description>Apple Watch Series 6 - new</Description>
-                <p>
-                  <b>8.220.000 đ</b>
-                </p>
-              </NewProductBox>
-              <NewProductBox>
-                <img src={twowatchImg} alt="" />
-                <Description>Apple Watch Series 6 - new</Description>
-                <p>
-                  <b>8.220.000 đ</b>
-                </p>
-              </NewProductBox>
-              <NewProductBox>
-                <img src={twowatchImg} alt="" />
-                <Description>Apple Watch Series 6 - new</Description>
-                <p>
-                  <b>8.220.000 đ</b>
-                </p>
-              </NewProductBox>
-              <NewProductBox>
-                <img src={twowatchImg} alt="" />
-                <Description>Apple Watch Series 6 - new</Description>
-                <p>
-                  <b>8.220.000 đ</b>
-                </p>
-              </NewProductBox>
+              {shopInfo.records.map((x) => {
+                const {
+                  imageUrls: [imageUrl],
+                  name,
+                  skus: [sku],
+                  id,
+                } = x;
+                const { originPrice } = sku;
+                return (
+                  <NewProductBox key={id} to={`/product/${id}`}>
+                    <img src={imageUrl} alt="" />
+                    <Description>{name}</Description>
+                    <h5>{originPrice}</h5>
+                  </NewProductBox>
+                );
+              })}
             </ProductContainer>
           </Row>
         </div>
@@ -667,3 +544,59 @@ const ShopProfile = () => {
 };
 
 export default ShopProfile;
+
+// <Row>
+//             <div className="row-header">
+//               <h3>Promotion</h3>
+//               <p>
+//                 <b>See all</b>
+//               </p>
+//             </div>
+//             <PromotionContainer>
+//               <PromotionBox>
+//                 <img src={airpod} alt="" />
+//                 <div>
+//                   <Description>
+//                     Amazfit GTS 2e Smartwatch with 24H Heart Rate Monitor,
+//                     Sleep, Stress and SpO2...
+//                   </Description>
+//                   <p>
+//                     <b>8.220.000 đ</b>
+//                   </p>
+//                   <Date>
+//                     <b>Offer end in - 3 days</b>
+//                   </Date>
+//                 </div>
+//               </PromotionBox>
+//               <PromotionBox>
+//                 <img src={airpod} alt="" />
+//                 <div>
+//                   <Description>
+//                     Amazfit GTS 2e Smartwatch with 24H Heart Rate Monitor,
+//                     Sleep, Stress and SpO2...
+//                   </Description>
+//                   <p>
+//                     <b>8.220.000 đ</b>
+//                   </p>
+//                   <Date>
+//                     <b>Offer end in - 3 days</b>
+//                   </Date>
+//                 </div>
+//               </PromotionBox>
+//               <PromotionBox>
+//                 <img src={airpod} alt="" />
+//                 <div>
+//                   <Description>
+//                     Amazfit GTS 2e Smartwatch with 24H Heart Rate Monitor,
+//                     Sleep, Stress and SpO2...
+//                   </Description>
+//                   <p>
+//                     <b>8.220.000 đ</b>
+//                   </p>
+//                   <Date>
+//                     <b>Offer end in - 3 days</b>
+//                   </Date>
+//                 </div>
+//               </PromotionBox>
+//             </PromotionContainer>
+//           </Row>

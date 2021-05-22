@@ -51,6 +51,10 @@ export const GlobalStyle = createGlobalStyle`
 		font-size: 1rem;
 	}
 
+	h5 {
+		font-size: 0.8rem;
+	}
+
 	a {
 		text-decoration: none;
 		color: black;
@@ -258,6 +262,10 @@ export const GlobalStyle = createGlobalStyle`
 	.non-clickable {
 		pointer-events: none;
 		cursor: default;
+	}
+
+	.clickable:hover {
+		cursor: pointer;
 	}
 
 	.checkbox {

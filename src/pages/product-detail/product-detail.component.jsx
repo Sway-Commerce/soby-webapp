@@ -552,9 +552,7 @@ const ProductDetail = () => {
       </Container>
 
       <Description>
-        <p>
-          <b>About this product</b>
-        </p>
+        <h5>About this product</h5>
         <p className="main-info body-color">
           3D CURVED DESIGN & HD AMOLED SCREEN: The Amazfit GTS 2 is a curved
           1.65" hd amoled screen, covered in 3d glass, boasts a crystal-clear

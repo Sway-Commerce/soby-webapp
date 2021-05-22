@@ -477,9 +477,9 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
             : handleSubmit
         }
       >
-        <p className="title">
-          <b>Hình thức thanh toán</b>
-        </p>
+        <h5 className="title">
+          Hình thức thanh toán
+        </h5>
         <div className="checkbox-wrapper">
           <Checkbox
             handleChange={handleCheckbox}
@@ -500,9 +500,9 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
             label="Credit card"
           />
         </div>
-        <p className="title">
-          <b>Thông tin giao hàng</b>
-        </p>
+        <h5 className="title">
+          Thông tin giao hàng
+        </h5>
         {!!getIndividualShippingListData?.getIndividualShippingLocationList
           ?.data?.length ? (
           <Dropdown

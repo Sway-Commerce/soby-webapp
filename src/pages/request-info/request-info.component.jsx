@@ -29,6 +29,7 @@ import InvoiceInfoBox from 'pages/invoice/invoice-info-box';
 import { GET_INDIVIDUAL_SHIPPING_LOCATION_LIST } from 'graphQL/repository/shipping.repository';
 import CustomButton from 'components/ui/custom-button/custom-button.component';
 import Checkbox from 'components/ui/checkbox/checkbox.component';
+import buildAddressString from 'shared/utils/buildAddressString';
 
 const Page = styled.div`
   display: flex;
@@ -494,18 +495,10 @@ const RequestInfo = () => {
         ) : null}
 
         <Grid>
-          <p className="title-info">
-            <b>Return list</b>
-          </p>
-          <p className="title-info">
-            <b>Subtotal</b>
-          </p>
-          <p className="title-info">
-            <b>Qty</b>
-          </p>
-          <p className="title-info last-child">
-            <b>Total</b>
-          </p>
+          <h5 className="title-info">Return list</h5>
+          <h5 className="title-info">Subtotal</h5>
+          <h5 className="title-info">Qty</h5>
+          <h5 className="title-info">Total</h5>
         </Grid>
         <ProductContainer>
           {refundRequest?.items?.map((x) => {
@@ -543,26 +536,20 @@ const RequestInfo = () => {
           })}
         </ProductContainer>
         <DetailBox>
-          <p className="mg-b-16">
-            <b>Return reason</b>
-          </p>
+          <h5 className="mg-b-16">Return reason</h5>
           <p>{refundRequest?.requestReason}</p>
           {refundRequest?.description ? (
             <p className="gray1">{refundRequest?.description} </p>
           ) : null}
         </DetailBox>
         <DetailBox>
-          <p className="mg-b-8">
-            <b>Phone Number</b>
-          </p>
+          <h5 className="mg-b-8">Phone Number</h5>
           <p className="gray1">
             {`${refundRequest?.phoneCountryCode} | ${refundRequest?.phoneNumber}`}
           </p>
         </DetailBox>
         <DetailBox>
-          <p className="mg-b-16">
-            <b> Provide pictures of the problem</b>
-          </p>
+          <h5 className="mg-b-16">Provide pictures of the problem</h5>
           <RefundImageContainer>
             {refundRequest?.imageUrls?.map((x) => {
               return <RefundImage src={x} key={x} />;
@@ -573,9 +560,7 @@ const RequestInfo = () => {
         !refundRequest?.shippingLocation ? (
           <React.Fragment>
             <ShippingContainer>
-              <p className="mg-b-24">
-                <b>Pickup address</b>
-              </p>
+              <h5 className="mg-b-24">Pickup address</h5>
 
               {shippingLocationList.map((x) => (
                 <ShippingBox
@@ -586,7 +571,7 @@ const RequestInfo = () => {
                     {selectedLocation == x.id ? <CheckShippingIcon /> : null}
                     <p className="mg-b-16">{x.locationName}</p>
                   </div>
-                  <p>{`${x.addressLine}, ${x.ward}, ${x.district}, ${x.province}`}</p>
+                  <p>{buildAddressString(x)}</p>
                 </ShippingBox>
               ))}
 

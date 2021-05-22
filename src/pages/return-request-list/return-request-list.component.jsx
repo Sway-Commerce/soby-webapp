@@ -122,21 +122,11 @@ const ReturnRequestList = () => {
     <React.Fragment>
       <Container>
         <HeaderContainer>
-          <p>
-            <b>Invoice name</b>
-          </p>
-          <p>
-            <b>Date</b>
-          </p>
-          <p>
-            <b>Price</b>
-          </p>
-          <p>
-            <b>Seller</b>
-          </p>
-          <p className="text-right">
-            <b>Status</b>
-          </p>
+          <h5>Invoice name</h5>
+          <h5>Date</h5>
+          <h5>Price</h5>
+          <h5>Seller</h5>
+          <h5 className="text-right">Status</h5>
         </HeaderContainer>
 
         {assessList.map((x) => {

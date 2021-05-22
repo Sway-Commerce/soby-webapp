@@ -70,8 +70,8 @@ export const GET_SHOP = gql`
     }
   }
 `;
-export const GET_SHOP_DETAILED_INFO = gql`
-  query GetShopDetailedInfo($id: String!) {
+export const GET_AGGREGATED_SHOP = gql`
+  query GetAggregatedShop($id: String!) {
     getAggregatedShop(id: $id) {
       message
       data {
@@ -82,6 +82,8 @@ export const GET_SHOP_DETAILED_INFO = gql`
         phoneCountryCode
         phoneNumber
         logoUrl
+        coverUrl
+        email
         phoneCountryCode
         phoneNumber
         categories {
@@ -94,6 +96,8 @@ export const GET_SHOP_DETAILED_INFO = gql`
           verified
         }
         shippingType
+        createdAt
+        updatedAt
         shippingLocations {
           addressLine
           country
@@ -104,6 +108,28 @@ export const GET_SHOP_DETAILED_INFO = gql`
         kyb {
           status
           reason
+        }
+        kycStatus
+        allowedCod
+        shopRank {
+          shopId
+          items {
+            id
+            shopId
+            rankItem {
+              id
+              name
+              category
+              description
+              points
+            }
+            createdAt
+          }
+          totalPoints
+          rank {
+            name
+            description
+          }
         }
       }
     }

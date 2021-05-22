@@ -4,6 +4,7 @@ import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { GET_INDIVIDUAL_SHIPPING_LOCATION_LIST } from 'graphQL/repository/shipping.repository';
 import React, { useEffect, useState } from 'react';
+import buildAddressString from 'shared/utils/buildAddressString';
 import styled from 'styled-components';
 import CreateShipping from './create-shipping.component';
 
@@ -137,7 +138,7 @@ const IndividualShipping = ({ setOpenEditMailPopup, email }) => {
               {x.defaultLocation ? <PrimaryState>Primary</PrimaryState> : null}
             </Row>
             <Row sub border>
-              <p>{`${x.addressLine}, ${x.district}, ${x.ward}, ${x.country}, ${x.province}`}</p>
+              <p>{buildAddressString(x)}</p>
             </Row>
           </React.Fragment>
         ))}

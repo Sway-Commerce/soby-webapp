@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import CreateShipping from './create-shipping.component';
 import { Page } from './edit-profile.component';
 import { ReactComponent as EditPencilIcon } from 'shared/assets/edit-pencil.svg';
+import buildAddressString from 'shared/utils/buildAddressString';
 
 const Row = styled.div`
   display: flex;
@@ -148,7 +149,7 @@ const IndividualShipping = ({ setOpenEditMailPopup, email }) => {
                 <b className="txt-capitalize">{x.locationName}</b>
               </p>
               <p>
-                {`${x.addressLine}, ${x.district}, ${x.ward}, ${x.province}, ${x.country}`}
+                {buildAddressString(x)}
               </p>
               <p>{`${x.phoneCountryCode} ${x.phoneNumber}`}</p>
               <p>
