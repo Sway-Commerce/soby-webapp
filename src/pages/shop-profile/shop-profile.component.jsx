@@ -26,7 +26,14 @@ import id2Img from 'shared/assets/id-2.svg';
 import shopeeImg from 'shared/assets/shopee.svg';
 import networkImg from 'shared/assets/network.svg';
 import buildAddressString from 'shared/utils/buildAddressString';
-import { borderColor, mainColor } from 'shared/css-variable/variable';
+import {
+  borderColor,
+  greenColor,
+  mainColor,
+  orangeColor,
+  redColor,
+  yellowColor,
+} from 'shared/css-variable/variable';
 
 const Container = styled.div`
   margin: auto;
@@ -209,7 +216,7 @@ const StatusContainer = styled.div`
     width: ${(props) => (props?.percent ? `${props?.percent}%` : '0%')};
     height: 0.5rem;
     justify-content: flex-end;
-    background-color: #73cf11;
+    border-radius: 100px;
     img {
       width: 1.25rem;
       height: 1.25rem;
@@ -408,6 +415,23 @@ const ShopProfile = () => {
     }
   }, [productData?.searchProduct?.data]);
 
+  const getColor = (name) => {
+    switch (name) {
+      case 'Red':
+        return redColor;
+      case 'Orange':
+        return orangeColor;
+      case 'Yellow':
+        return yellowColor;
+      case 'Green':
+        return greenColor;
+      case 'Blue':
+        return mainColor;
+      default:
+        return redColor;
+    }
+  };
+
   return getAggregatedShopLoading || productLoading ? (
     <Spinner />
   ) : (
@@ -440,7 +464,11 @@ const ShopProfile = () => {
                   <img className="heed-icon" src={heedImg} alt="" />
                 </div>
                 <div className="btn-point">
-                  <h2 className={shopInfo.shopRank.rank.name.toLowerCase()}>
+                  <h2
+                    style={{
+                      color: getColor(shopInfo.shopRank.rank.name),
+                    }}
+                  >
                     {shopInfo.shopRank.totalPoints
                       ? +shopInfo.shopRank.totalPoints / 10
                       : ''}
@@ -450,7 +478,12 @@ const ShopProfile = () => {
               </div>
               <p className="btn-number">01</p>
               <StatusContainer percent={+shopInfo.shopRank.totalPoints}>
-                <div className="status-bar">
+                <div
+                  className="status-bar"
+                  style={{
+                    backgroundColor: getColor(shopInfo.shopRank.rank.name),
+                  }}
+                >
                   <img className="greenmark-icon" src={greenmarkImg} alt="" />
                 </div>
               </StatusContainer>
