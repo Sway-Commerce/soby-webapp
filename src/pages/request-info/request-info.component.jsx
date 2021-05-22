@@ -186,7 +186,7 @@ const DetailBox = styled.div`
 const ShippingBox = styled.div`
   margin: 16px 0;
   height: 69px;
-  border: 1px solid #e4e4e4;
+  border: 1px solid ${borderColor};
   padding: 8px;
   width: 100%;
   cursor: pointer;

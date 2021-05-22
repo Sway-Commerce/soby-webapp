@@ -5,7 +5,7 @@ import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { GET_INDIVIDUAL_SHIPPING_LOCATION_LIST } from 'graphQL/repository/shipping.repository';
 import React, { useEffect, useState } from 'react';
-import { mainColor } from 'shared/css-variable/variable';
+import { borderColor, mainColor } from 'shared/css-variable/variable';
 import styled from 'styled-components';
 import CreateShipping from './create-shipping.component';
 import { Page } from './edit-profile.component';
@@ -54,7 +54,7 @@ const AddButton = styled.button`
 
 
 const ShippingItem = styled.div`
-  border: 1px solid #e4e4e4;
+  border: 1px solid ${borderColor};
   padding: 8px 12px;
   position: relative;
   p + p {

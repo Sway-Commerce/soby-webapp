@@ -26,6 +26,7 @@ import id2Img from 'shared/assets/id-2.svg';
 import shopeeImg from 'shared/assets/shopee.svg';
 import networkImg from 'shared/assets/network.svg';
 import buildAddressString from 'shared/utils/buildAddressString';
+import { borderColor, mainColor } from 'shared/css-variable/variable';
 
 const Container = styled.div`
   margin: auto;
@@ -48,10 +49,6 @@ const Container = styled.div`
 
   .btn-point {
     display: flex;
-  }
-
-  .point {
-    color: #73cf11;
   }
 
   .mean {
@@ -166,7 +163,7 @@ const NewHeadPromotion = styled.div`
   display: flex;
   .phone-container {
     height: 2rem;
-    background: #2b74e4;
+    background: ${mainColor};
     padding: 0.2rem 0.6rem;
     display: flex;
     align-items: center;
@@ -204,11 +201,12 @@ const InfoContainer = styled.div`
   }
 `;
 
-const InfoBox = styled.div`
+const StatusContainer = styled.div`
+  background-color: ${borderColor};
+  border-radius: 100px;
   .status-bar {
     display: flex;
-    border-radius: 100px;
-    width: 100%;
+    width: ${(props) => (props?.percent ? `${props?.percent}%` : '0%')};
     height: 0.5rem;
     justify-content: flex-end;
     background-color: #73cf11;
@@ -319,6 +317,10 @@ const ShopProfile = () => {
       province: '',
       ward: '',
     },
+    shopRank: {
+      items: [],
+      rank: {},
+    },
   });
 
   const [
@@ -363,6 +365,7 @@ const ShopProfile = () => {
         email,
         coverUrl,
         shippingLocations,
+        shopRank,
       } = getAggregatedShopData?.getAggregatedShop?.data;
       const [shippingLocation] = shippingLocations;
 
@@ -379,6 +382,7 @@ const ShopProfile = () => {
         email,
         coverUrl,
         shippingLocation,
+        shopRank,
       });
 
       searchProduct({
@@ -427,7 +431,7 @@ const ShopProfile = () => {
             </NewHeadPromotion>
           </HeadRow>
           <InfoContainer>
-            <InfoBox>
+            <div>
               <div className="rank-info">
                 <div className="btn-rank">
                   <div className="info-header">
@@ -436,15 +440,27 @@ const ShopProfile = () => {
                   <img className="heed-icon" src={heedImg} alt="" />
                 </div>
                 <div className="btn-point">
-                  <h2 className="point">8.9</h2>
-                  <h5 className="mean">Extremely Good</h5>
+                  <h2 className={shopInfo.shopRank.rank.name.toLowerCase()}>
+                    {shopInfo.shopRank.totalPoints
+                      ? +shopInfo.shopRank.totalPoints / 10
+                      : ''}
+                  </h2>
+                  <h5 className="mean">{shopInfo.shopRank.rank.description}</h5>
                 </div>
               </div>
               <p className="btn-number">01</p>
-              <div className="status-bar">
-                <img className="greenmark-icon" src={greenmarkImg} alt="" />
-              </div>
+              <StatusContainer percent={+shopInfo.shopRank.totalPoints}>
+                <div className="status-bar">
+                  <img className="greenmark-icon" src={greenmarkImg} alt="" />
+                </div>
+              </StatusContainer>
+
               <TagIcon>
+                {
+                  // shopInfo.shopRank.items.map(x => {
+                  //   const {rankItem: } = x;
+                  // })
+                }
                 <Icon>
                   <img className="tick" src={tickImg} alt="" />
                   <img className="id1" src={id1Img} alt="" />
@@ -487,7 +503,7 @@ const ShopProfile = () => {
                   )}
                 </TagOption>
               </Categories>
-            </InfoBox>
+            </div>
             <NewInfoBox>
               <div className="info-header">
                 <h5>Shop description</h5>

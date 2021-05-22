@@ -29,6 +29,7 @@ import { ReactComponent as TalkIcon } from 'shared/assets/talk.svg';
 import { ReactComponent as LocationIcon } from 'shared/assets/location.svg';
 import { ReactComponent as InboxIcon } from 'shared/assets/inbox.svg';
 import { ReactComponent as CallIcon } from 'shared/assets/call.svg';
+import { borderColor } from 'shared/css-variable/variable';
 
 const Container = styled.div`
   display: grid;
@@ -79,11 +80,11 @@ const Container = styled.div`
     font-weight: normal;
     font-size: 14px;
     line-height: 24px;
-    color: #4f4f4f;
+    color: ${borderColor};
   }
 
   .box-1 {
-    background: #e4e4e4;
+    background: ${borderColor};
     border-radius: 3px;
     padding: 6px 16px;
     margin-left: 8px;
