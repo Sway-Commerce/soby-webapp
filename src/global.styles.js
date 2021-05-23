@@ -38,7 +38,7 @@ export const GlobalStyle = createGlobalStyle`
 		@media screen and (max-width: 1200px) {
 			.body-container {
 				width: auto;
-				margin:0 .6rem;
+				// margin:0 .6rem;
 			}
 		}
 	}

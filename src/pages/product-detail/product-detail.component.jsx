@@ -23,7 +23,7 @@ import { ReactComponent as FbIcon } from 'shared/assets/facebook.svg';
 import { ReactComponent as ZaloIcon } from 'shared/assets/zalo.svg';
 import { ReactComponent as LinkIcon } from 'shared/assets/link.svg';
 import { ReactComponent as MailIcon } from 'shared/assets/mail.svg';
-import { ReactComponent as InstaIcon } from 'shared/assets/instagram.svg';
+import { ReactComponent as InstaIcon } from 'shared/assets/instagram-icon.svg';
 import { ReactComponent as BlueBirdIcon } from 'shared/assets/bluebird.svg';
 import { ReactComponent as TalkIcon } from 'shared/assets/talk.svg';
 import { ReactComponent as LocationIcon } from 'shared/assets/location.svg';

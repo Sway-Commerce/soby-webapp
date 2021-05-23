@@ -11,8 +11,6 @@ import { SEARCH_PRODUCT } from 'graphQL/repository/product.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
-import facebookImg from 'shared/assets/facebook.svg';
-import instagramImg from 'shared/assets/instagram.svg';
 import locationImg from 'shared/assets/location.svg';
 import mailImg from 'shared/assets/mail-black.svg';
 import tickImg from 'shared/assets/tick.svg';
@@ -21,10 +19,16 @@ import shareImg from 'shared/assets/share.svg';
 import phoneImg from 'shared/assets/phone-circle.svg';
 import heedImg from 'shared/assets/heed.svg';
 import greenmarkImg from 'shared/assets/greenmark.svg';
-import id1Img from 'shared/assets/id-1.svg';
-import id2Img from 'shared/assets/id-2.svg';
-import shopeeImg from 'shared/assets/shopee.svg';
-import networkImg from 'shared/assets/network.svg';
+import KybImg from 'shared/assets/id-1.svg';
+import KycImg from 'shared/assets/id-2.svg';
+import ShopeeIcon from 'shared/assets/shopee.svg';
+import NetworkIcon from 'shared/assets/network.svg';
+import TikiIcon from 'shared/assets/tiki-icon.svg';
+import LazadaIcon from 'shared/assets/lazada-icon.svg';
+import ZaloIcon from 'shared/assets/zalo-icon.svg';
+import TiktokIcon from 'shared/assets/tiktok-icon.svg';
+import InstagramIcon from 'shared/assets/instagram-icon.svg';
+import FacebookIcon from 'shared/assets/facebook.svg';
 import buildAddressString from 'shared/utils/buildAddressString';
 import {
   borderColor,
@@ -235,7 +239,7 @@ const TagIcon = styled.div`
   display: flex;
 `;
 
-const Icon = styled.div`
+const Icon = styled(Link)`
   width: 2rem;
   height: 2rem;
   margin-top: 1.5rem;
@@ -247,6 +251,7 @@ const Icon = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
+  pointer-events: ${(props) => props.default && 'none'};
   img.tick {
     width: 0.5rem;
     height: 0.5rem;
@@ -328,6 +333,7 @@ const ShopProfile = () => {
       items: [],
       rank: {},
     },
+    kycStatus: '',
   });
 
   const [
@@ -373,6 +379,7 @@ const ShopProfile = () => {
         coverUrl,
         shippingLocations,
         shopRank,
+        kycStatus,
       } = getAggregatedShopData?.getAggregatedShop?.data;
       const [shippingLocation] = shippingLocations;
 
@@ -390,6 +397,7 @@ const ShopProfile = () => {
         coverUrl,
         shippingLocation,
         shopRank,
+        kycStatus,
       });
 
       searchProduct({
@@ -489,31 +497,51 @@ const ShopProfile = () => {
               </StatusContainer>
 
               <TagIcon>
-                {
-                  // shopInfo.shopRank.items.map(x => {
-                  //   const {rankItem: } = x;
-                  // })
-                }
-                <Icon>
-                  <img className="tick" src={tickImg} alt="" />
-                  <img className="id1" src={id1Img} alt="" />
+                <Icon default>
+                  {shopInfo.kyb && shopInfo.kycStatus === 'APPROVED' && (
+                    <img className="tick" src={tickImg} alt="" />
+                  )}
+                  <img className="id1" src={KybImg} alt="" />
                 </Icon>
-                <Icon>
-                  <img className="id2" src={id2Img} alt="" />
+                <Icon default>
+                  {shopInfo.kycStatus &&
+                    shopInfo.kycStatus !== 'NOT_CONFIRMED' && (
+                      <img className="tick" src={tickImg} alt="" />
+                    )}
+                  <img className="id2" src={KycImg} alt="" />
                 </Icon>
-                <Icon>
-                  <img className="tick" src={tickImg} alt="" />
-                  <img className="shopee" src={shopeeImg} alt="" />
-                </Icon>
-                <Icon>
-                  <img className="id2" src={facebookImg} alt="" />
-                </Icon>
-                <Icon>
-                  <img className="id2" src={networkImg} alt="" />
-                </Icon>
-                <Icon>
-                  <img className="id2" src={instagramImg} alt="" />
-                </Icon>
+
+                {shopInfo.shopUrls.map((x) => {
+                  let imgPath = '';
+                  switch (x.type) {
+                    case 'facebook':
+                      imgPath = FacebookIcon;
+                      break;
+                    case 'instagram':
+                      imgPath = InstagramIcon;
+                      break;
+                    case 'tiktok':
+                      imgPath = TiktokIcon;
+                      break;
+                    case 'zalo':
+                      imgPath = ZaloIcon;
+                      break;
+                    case 'shopee':
+                      imgPath = ShopeeIcon;
+                      break;
+                    default:
+                      imgPath = NetworkIcon;
+                      break;
+                  }
+                  return (
+                    <Icon to={{ pathname: x.url }} key={x.url} target="_blank">
+                      {x.verified && (
+                        <img className="tick" src={tickImg} alt="" />
+                      )}
+                      <img src={imgPath} alt="" />
+                    </Icon>
+                  );
+                })}
               </TagIcon>
               <Categories>
                 <div className="info-header">
