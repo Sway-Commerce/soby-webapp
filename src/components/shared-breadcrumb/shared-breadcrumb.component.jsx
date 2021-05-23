@@ -22,13 +22,17 @@ export const Container = styled.div`
       color: ${gray1Color};
     }
   }
+
+  @media screen and (max-width: 1200px) {
+    padding: 0 1.2rem;
+  }
 `;
 
 const SharedBreadcrumb = ({ breadcrumbs = [] }) => {
   return (
     <Container>
       {breadcrumbs.map((x, i) => (
-        <React.Fragment>
+        <React.Fragment key={x.name}>
           <Link to={x.src} key={x.name} className="truncate">
             {x.name}
           </Link>

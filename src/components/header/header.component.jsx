@@ -18,7 +18,7 @@ const HeaderContainer = styled.div`
   padding: 0 calc((100vw - 1200px) / 2);
   background-color: ${mainColor};
   @media screen and (max-width: 1200px) {
-    padding: 0 0.6rem;
+    padding: 0 1.2rem;
   }
 `;
 
@@ -116,7 +116,7 @@ export const Header = () => {
       </HamburgerMenu>
 
       <OptionsContainer>
-        <Link>
+        <Link to="/">
           <SwitchBtn>Start selling</SwitchBtn>
         </Link>
         <IconBtn to="/">

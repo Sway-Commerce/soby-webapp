@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
 import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
+import { formatPhoneNumberIntl } from 'react-phone-number-input';
 
 import { GET_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
 import { SEARCH_PRODUCT } from 'graphQL/repository/product.repository';
@@ -13,24 +14,15 @@ import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import locationImg from 'shared/assets/location.svg';
 import mailImg from 'shared/assets/mail-black.svg';
-import tickImg from 'shared/assets/tick.svg';
 import wallpaperImg from 'shared/assets/wallpaper.svg';
 import shareImg from 'shared/assets/share.svg';
 import phoneImg from 'shared/assets/phone-circle.svg';
 import heedImg from 'shared/assets/heed.svg';
 import greenmarkImg from 'shared/assets/greenmark.svg';
-import KybImg from 'shared/assets/id-1.svg';
-import KycImg from 'shared/assets/id-2.svg';
-import ShopeeIcon from 'shared/assets/shopee.svg';
-import NetworkIcon from 'shared/assets/network.svg';
-import TikiIcon from 'shared/assets/tiki-icon.svg';
-import LazadaIcon from 'shared/assets/lazada-icon.svg';
-import ZaloIcon from 'shared/assets/zalo-icon.svg';
-import TiktokIcon from 'shared/assets/tiktok-icon.svg';
-import InstagramIcon from 'shared/assets/instagram-icon.svg';
-import FacebookIcon from 'shared/assets/facebook.svg';
+
 import buildAddressString from 'shared/utils/buildAddressString';
 import {
+  bodyColor,
   borderColor,
   greenColor,
   mainColor,
@@ -39,6 +31,7 @@ import {
   yellowColor,
 } from 'shared/css-variable/variable';
 import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
+import ShopVerifies from 'components/shop-verifies/shop-verifies.component';
 
 const Container = styled.div`
   margin: auto;
@@ -46,7 +39,6 @@ const Container = styled.div`
     background-color: white;
     height: 5.2rem;
     padding: 1.2rem;
-    margin-bottom: 1.2rem;
   }
 
   .btn-rank {
@@ -66,7 +58,7 @@ const Container = styled.div`
 
   .mean {
     margin-left: 0.4rem;
-    color: #4f4f4f;
+    color: ${bodyColor};
     font-size: 1rem;
   }
 
@@ -82,7 +74,7 @@ const Container = styled.div`
 `;
 
 const Description = styled.p`
-  color: #4f4f4f;
+  color: ${bodyColor};
 `;
 
 const PromotionBox = styled.div`
@@ -102,7 +94,6 @@ const Date = styled.p`
 const Row = styled.div`
   background-color: white;
   padding: 1.2rem;
-  margin-bottom: 1.2rem;
   .row-header {
     display: flex;
     justify-content: space-between;
@@ -110,16 +101,18 @@ const Row = styled.div`
 `;
 
 const NewProductBox = styled(Link)`
+  display: grid;
+  justify-content: center;
   img {
-    width: 8.6rem;
-    height: 8.6rem;
+    width: 172px;
+    height: 172px;
     margin-bottom: 13.6.4rem;
   }
 `;
 
 const PromotionContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(18.4rem, 18.4rem));
+  grid-template-columns: repeat(auto-fit, minmax(172px, 172px));
   grid-gap: 1.2rem;
   margin-top: 0.8rem;
   justify-content: center;
@@ -131,10 +124,12 @@ const PromotionContainer = styled.div`
 
 const ProductContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(8.6rem, 8.6rem));
+  grid-template-columns: repeat(auto-fit, minmax(172px, 172px));
   grid-gap: 1.2rem;
   margin-top: 0.8rem;
   @media screen and (max-width: 500px) {
+    justify-content: center;
+    grid-template-columns: 1fr;
     justify-content: center;
   }
 `;
@@ -171,35 +166,11 @@ const NewHeadPromotion = styled.div`
   height: 4.2rem;
   display: flex;
   justify-content: space-between;
+  padding: 0 1.2rem;
   h3 {
-    padding: 1.85rem 0 0 8.55rem;
+    padding: 1.85rem 0 0 7.35rem;
   }
   display: flex;
-  .phone-container {
-    height: 2rem;
-    background: ${mainColor};
-    padding: 0.2rem 0.6rem;
-    display: flex;
-    align-items: center;
-    color: white;
-    border-radius: 3px;
-    img.phone-icon {
-      width: 0.8rem;
-      height: 0.8rem;
-      margin-right: 0.5rem;
-    }
-    .btn-click {
-      font-size: 0.7rem;
-      margin-left: 1.2rem;
-      text-transform: uppercase;
-    }
-    margin: 1rem 1.25rem 0 0;
-    @media screen and (max-width: 500px) {
-      .btn-click {
-        display: none;
-      }
-    }
-  }
 `;
 
 const InfoContainer = styled.div`
@@ -212,6 +183,7 @@ const InfoContainer = styled.div`
   justify-content: center;
   @media screen and (max-width: 1024px) {
     grid-template-columns: 1fr;
+    grid-gap: 0;
   }
 `;
 
@@ -229,11 +201,13 @@ const StatusContainer = styled.div`
       height: 1.25rem;
       margin: -0.3rem -0.15rem 0 0;
     }
-  }
-`;
 
-const TagIcon = styled.div`
-  display: flex;
+    h2 {
+      position: relative;
+      top: -24px;
+      right: -22px;
+    }
+  }
 `;
 
 const Icon = styled(Link)`
@@ -265,20 +239,20 @@ const Categories = styled.div`
 const Option = styled.div`
   background: #f2f2f2;
   border-radius: 0.15rem;
-  padding: 0.5rem 1.6rem;
+  padding: 0.525rem 1.6rem;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: 0.8rem;
-  .option-info {
-    color: #4f4f4f;
-    font-size: 0.8rem;
-  }
+  color: ${bodyColor};
+  font-size: 0.8rem;
 `;
 
 const TagOption = styled.div`
   margin-top: 0.4rem;
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 `;
 
 const ContactGroup = styled.div`
@@ -296,10 +270,60 @@ const ContactGroup = styled.div`
       margin-right: 0.6rem;
     }
   }
+
+  @media screen and (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    grid-gap: 0.4rem;
+  }
 `;
 
 const TooltipData = styled.div`
   background-color: white;
+`;
+
+const PhoneBtn = styled.div`
+  height: 2rem;
+  background: ${mainColor};
+  padding: 0.2rem 0.6rem;
+  display: ${(props) => (props.show ? 'flex' : 'none')};
+  align-items: center;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+  img.phone-icon {
+    width: 0.8rem;
+    height: 0.8rem;
+    margin-right: 0.5rem;
+  }
+  .btn-click {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    flex: 1;
+    text-align: right;
+    margin-left: 1.2rem;
+  }
+  margin-top: 1rem;
+  @media screen and (max-width: 600px) {
+    display: ${(props) => (props.hide ? 'flex' : 'none')};
+  }
+`;
+
+const MobileSection = styled.div`
+  display: ${(props) => (props.show ? 'block' : 'none')};
+  background-color: white;
+  @media screen and (max-width: 1024px) {
+    margin: 1rem 0;
+    padding: 0.8rem 1.2rem;
+    display: ${(props) => (props.hide ? 'block' : 'none')};
+    color: ${bodyColor};
+  }
+`;
+
+const RankPoint = styled.h2`
+  display: ${(props) => (props.show ? 'block' : 'none')};
+  @media screen and (max-width: 1024px) {
+    display: ${(props) => (props.hide ? 'block' : 'none')};
+  }
 `;
 
 const ShopProfile = () => {
@@ -336,6 +360,8 @@ const ShopProfile = () => {
     },
     kycStatus: '',
   });
+  const [phoneString, setPhoneString] = useState('');
+  const [togglePhone, setTogglePhone] = useState(false);
 
   const [breadcrumbs, setBreadcrumb] = useState([
     {
@@ -408,6 +434,8 @@ const ShopProfile = () => {
         kycStatus,
       });
 
+      setPhoneString(`${phoneCountryCode} ${phoneNumber.slice(0, 4)} *** ****`);
+
       setBreadcrumb([
         {
           name: 'Home',
@@ -465,121 +493,101 @@ const ShopProfile = () => {
     <React.Fragment>
       <SharedBreadcrumb breadcrumbs={breadcrumbs} />
       <Container>
-        <div class="container">
-          <HeadRow>
-            <HeadPromotion
-              style={{ backgroundImage: shopInfo.coverUrl || wallpaperImg }}
-            >
-              <img
-                className="share-icon"
-                src={shareImg}
-                alt=""
-                onClick={() => {
-                  navigator.clipboard.writeText(window.location.href);
-                  window.alert('Shop url is copied');
-                }}
-              />
-              <img className="avatar" src={shopInfo.logoUrl} alt="" />
-            </HeadPromotion>
-            <NewHeadPromotion>
-              <h3>{shopInfo.name}</h3>
-              <div className="phone-container">
-                <img className="phone-icon" src={phoneImg} alt="" />
-                <p>{`${shopInfo.phoneCountryCode} ${shopInfo.phoneNumber}`}</p>
-                <p className="btn-click">Click to show</p>
+        <HeadRow>
+          <HeadPromotion
+            style={{ backgroundImage: shopInfo.coverUrl || wallpaperImg }}
+          >
+            <img
+              className="share-icon"
+              src={shareImg}
+              alt=""
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                window.alert('Shop url is copied');
+              }}
+            />
+            <img className="avatar" src={shopInfo.logoUrl} alt="" />
+          </HeadPromotion>
+          <NewHeadPromotion>
+            <h3>{shopInfo.name}</h3>
+            <PhoneBtn show>
+              <img className="phone-icon" src={phoneImg} alt="" />
+              <p>
+                {togglePhone
+                  ? formatPhoneNumberIntl(
+                      `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
+                    )
+                  : phoneString}
+              </p>
+              <p
+                className="btn-click"
+                onClick={() => setTogglePhone(!togglePhone)}
+              >
+                {togglePhone ? 'Click to hide' : 'Click to show'}
+              </p>
+            </PhoneBtn>
+          </NewHeadPromotion>
+        </HeadRow>
+        <InfoContainer>
+          <div>
+            <div className="rank-info">
+              <div className="btn-rank">
+                <h5>Soby Rank</h5>
+                <img
+                  className="heed-icon"
+                  src={heedImg}
+                  alt=""
+                  data-tip
+                  data-for="rank-info"
+                  data-event="click focus"
+                />
               </div>
-            </NewHeadPromotion>
-          </HeadRow>
-          <InfoContainer>
-            <div>
-              <div className="rank-info">
-                <div className="btn-rank">
-                  <h5>Soby Rank</h5>
-                  <img
-                    className="heed-icon"
-                    src={heedImg}
-                    alt=""
-                    data-tip
-                    data-for="rank-info"
-                    data-event="click focus"
-                  />
-                </div>
-                <div className="btn-point">
-                  <h2
-                    style={{
-                      color: getColor(shopInfo.shopRank.rank.name),
-                    }}
-                  >
-                    {shopInfo.shopRank.totalPoints
-                      ? +shopInfo.shopRank.totalPoints / 10
-                      : ''}
-                  </h2>
-                  <h5 className="mean">{shopInfo.shopRank.rank.description}</h5>
-                </div>
-              </div>
-              <p className="btn-number">01</p>
-              <StatusContainer percent={+shopInfo.shopRank.totalPoints}>
-                <div
-                  className="status-bar"
+              <div className="btn-point">
+                <RankPoint
                   style={{
-                    backgroundColor: getColor(shopInfo.shopRank.rank.name),
+                    color: getColor(shopInfo.shopRank.rank.name),
                   }}
+                  show
                 >
-                  <img className="greenmark-icon" src={greenmarkImg} alt="" />
-                </div>
-              </StatusContainer>
+                  {shopInfo.shopRank.totalPoints
+                    ? +shopInfo.shopRank.totalPoints / 10
+                    : ''}
+                </RankPoint>
 
-              <TagIcon>
-                <Icon default>
-                  {shopInfo.kyb && shopInfo.kycStatus === 'APPROVED' && (
-                    <img className="tick" src={tickImg} alt="" />
-                  )}
-                  <img className="id1" src={KybImg} alt="" />
-                </Icon>
-                <Icon default>
-                  {shopInfo.kycStatus &&
-                    shopInfo.kycStatus !== 'NOT_CONFIRMED' && (
-                      <img className="tick" src={tickImg} alt="" />
-                    )}
-                  <img className="id2" src={KycImg} alt="" />
-                </Icon>
+                <h5 className="mean">{shopInfo.shopRank.rank.description}</h5>
+              </div>
+            </div>
+            <p className="btn-number">01</p>
+            <StatusContainer percent={+shopInfo.shopRank.totalPoints}>
+              <div
+                className="status-bar"
+                style={{
+                  backgroundColor: getColor(shopInfo.shopRank.rank.name),
+                }}
+              >
+                <RankPoint
+                  style={{
+                    color: getColor(shopInfo.shopRank.rank.name),
+                  }}
+                  hide
+                >
+                  {shopInfo.shopRank.totalPoints
+                    ? +shopInfo.shopRank.totalPoints / 10
+                    : ''}
+                </RankPoint>
+                <img src={greenmarkImg} alt="" />
+              </div>
+            </StatusContainer>
 
-                {shopInfo.shopUrls.map((x) => {
-                  let imgPath = '';
-                  switch (x.type) {
-                    case 'facebook':
-                      imgPath = FacebookIcon;
-                      break;
-                    case 'instagram':
-                      imgPath = InstagramIcon;
-                      break;
-                    case 'tiktok':
-                      imgPath = TiktokIcon;
-                      break;
-                    case 'zalo':
-                      imgPath = ZaloIcon;
-                      break;
-                    case 'shopee':
-                      imgPath = ShopeeIcon;
-                      break;
-                    default:
-                      imgPath = NetworkIcon;
-                      break;
-                  }
-                  return (
-                    <Icon to={{ pathname: x.url }} key={x.url} target="_blank">
-                      {x.verified && (
-                        <img className="tick" src={tickImg} alt="" />
-                      )}
-                      <img src={imgPath} alt="" />
-                    </Icon>
-                  );
-                })}
-              </TagIcon>
+            <ShopVerifies
+              status={shopInfo.kyb?.status}
+              kycStatus={shopInfo.kycStatus}
+              shopUrls={shopInfo.shopUrls}
+            />
+
+            <MobileSection show>
               <Categories>
-                <p>
-                  <b>Shop categories</b>
-                </p>
+                <h5>Shop categories</h5>
                 <TagOption>
                   {shopInfo.categories.length ? (
                     shopInfo.categories.map((x) => {
@@ -595,50 +603,92 @@ const ShopProfile = () => {
                   )}
                 </TagOption>
               </Categories>
-            </div>
-            <div>
+            </MobileSection>
+          </div>
+          <PhoneBtn hide>
+            <img className="phone-icon" src={phoneImg} alt="" />
+            <p>
+              {togglePhone
+                ? formatPhoneNumberIntl(
+                    `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
+                  )
+                : phoneString}
+            </p>
+            <p
+              className="btn-click"
+              onClick={() => setTogglePhone(!togglePhone)}
+            >
+              {togglePhone ? 'Hide' : 'Show'}
+            </p>
+          </PhoneBtn>
+          <div>
+            <MobileSection show>
               <h5>Shop description</h5>
               <p>{shopInfo.description}</p>
-              <ContactGroup>
-                <div className="contact-item">
-                  <img src={locationImg} alt="" />
-                  <p className="body-color">
-                    {buildAddressString(shopInfo.shippingLocation)}
-                  </p>
-                </div>
-                <div className="contact-item">
-                  <img src={mailImg} alt="" />
-                  <p className="body-color">address@email.com</p>
-                </div>
-              </ContactGroup>
-            </div>
-          </InfoContainer>
+            </MobileSection>
 
-          <Row>
-            <div className="row-header">
-              <h3>New Product</h3>
-              <h5 className="primary-color">See all</h5>
-            </div>
-            <ProductContainer>
-              {shopInfo.records.map((x) => {
-                const {
-                  imageUrls: [imageUrl],
-                  name,
-                  skus: [sku],
-                  id,
-                } = x;
-                const { originPrice } = sku;
+            <ContactGroup>
+              <div className="contact-item">
+                <img src={locationImg} alt="" />
+                <p className="body-color">
+                  {buildAddressString(shopInfo.shippingLocation)}
+                </p>
+              </div>
+              <div className="contact-item">
+                <img src={mailImg} alt="" />
+                <p className="body-color">address@email.com</p>
+              </div>
+            </ContactGroup>
+          </div>
+        </InfoContainer>
+
+        <MobileSection hide>
+          <h3>Shop description</h3>
+          <p>{shopInfo.description}</p>
+        </MobileSection>
+
+        <MobileSection hide>
+          <h3>Shop categories</h3>
+          <TagOption>
+            {shopInfo.categories.length ? (
+              shopInfo.categories.map((x) => {
+                const { id, name } = x;
                 return (
-                  <NewProductBox key={id} to={`/product/${id}`}>
-                    <img src={imageUrl} alt="" />
-                    <Description>{name}</Description>
-                    <h5>{originPrice}</h5>
-                  </NewProductBox>
+                  <Option key={id} className="truncate">
+                    {name}
+                  </Option>
                 );
-              })}
-            </ProductContainer>
-          </Row>
-        </div>
+              })
+            ) : (
+              <p className="body-color">Không có phân loại</p>
+            )}
+          </TagOption>
+        </MobileSection>
+
+        <Row>
+          <div className="row-header">
+            <h3>New Product</h3>
+            <h5 className="primary-color">See all</h5>
+          </div>
+          <ProductContainer>
+            {shopInfo.records.map((x) => {
+              const {
+                imageUrls: [imageUrl],
+                name,
+                skus: [sku],
+                id,
+              } = x;
+              const { originPrice } = sku;
+              return (
+                <NewProductBox key={id} to={`/product/${id}`}>
+                  <img src={imageUrl} alt="" />
+                  <Description>{name}</Description>
+                  <h5>{originPrice}</h5>
+                </NewProductBox>
+              );
+            })}
+          </ProductContainer>
+        </Row>
       </Container>
       <SobyModal open={open} setOpen={setOpen}>
         {formError ? (
@@ -650,7 +700,7 @@ const ShopProfile = () => {
         id="rank-info"
         aria-haspopup="true"
         role="example"
-        place="bottom"
+        place="right"
         type="light"
         effect="solid"
         globalEventOff="dbclick"
