@@ -71,6 +71,20 @@ const Container = styled.div`
     color: #bdbdbd;
     font-size: 0.6rem;
   }
+
+  @media screen and (max-width: 1024px) {
+    .rank-info {
+      justify-content: flex-start;
+      .mean {
+        font-weight: normal;
+        font-size: 14px;
+        color: ${bodyColor};
+        &::before {
+          content: '- ';
+        }
+      }
+    }
+  }
 `;
 
 const Description = styled.p`
@@ -154,6 +168,14 @@ const HeadPromotion = styled.div`
     bottom: -3rem;
     left: 1.35rem;
   }
+
+  @media screen and (max-width: 600px) {
+    img.avatar {
+      width: 56px;
+      height: 56px;
+      bottom: -33px;
+    }
+  }
 `;
 
 const HeadRow = styled.div`
@@ -171,6 +193,13 @@ const NewHeadPromotion = styled.div`
     padding: 1.85rem 0 0 7.35rem;
   }
   display: flex;
+
+  @media screen and (max-width: 600px) {
+    h3 {
+      padding: 10px 0 0 76.8px;
+    }
+    height: 49px;
+  }
 `;
 
 const InfoContainer = styled.div`
