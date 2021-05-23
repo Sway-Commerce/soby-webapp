@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
+import ReactTooltip from 'react-tooltip';
 import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 
@@ -38,6 +38,7 @@ import {
   redColor,
   yellowColor,
 } from 'shared/css-variable/variable';
+import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
 
 const Container = styled.div`
   margin: auto;
@@ -56,6 +57,7 @@ const Container = styled.div`
     margin-left: 0.2665rem;
     width: 0.6665rem;
     height: 0.6665rem;
+    cursor: pointer;
   }
 
   .btn-point {
@@ -148,6 +150,7 @@ const HeadPromotion = styled.div`
     width: 2.2rem;
     height: 2.2rem;
     margin: 0.8rem 0.8rem 0 0;
+    cursor: pointer;
   }
   img.avatar {
     width: 6rem;
@@ -229,12 +232,6 @@ const StatusContainer = styled.div`
   }
 `;
 
-const NewInfoBox = styled.div`
-  .info-header {
-    font-size: 0.8rem;
-  }
-`;
-
 const TagIcon = styled.div`
   display: flex;
 `;
@@ -301,6 +298,10 @@ const ContactGroup = styled.div`
   }
 `;
 
+const TooltipData = styled.div`
+  background-color: white;
+`;
+
 const ShopProfile = () => {
   //   enum ConfirmationStatus {
   //     NOT_CONFIRMED
@@ -335,6 +336,13 @@ const ShopProfile = () => {
     },
     kycStatus: '',
   });
+
+  const [breadcrumbs, setBreadcrumb] = useState([
+    {
+      name: 'Home',
+      src: '/',
+    },
+  ]);
 
   const [
     getAggregatedShop,
@@ -400,6 +408,17 @@ const ShopProfile = () => {
         kycStatus,
       });
 
+      setBreadcrumb([
+        {
+          name: 'Home',
+          src: '/',
+        },
+        {
+          name: name,
+          src: `/shop-profile/${shopId}`,
+        },
+      ]);
+
       searchProduct({
         variables: {
           searchInput: {
@@ -444,13 +463,22 @@ const ShopProfile = () => {
     <Spinner />
   ) : (
     <React.Fragment>
+      <SharedBreadcrumb breadcrumbs={breadcrumbs} />
       <Container>
         <div class="container">
           <HeadRow>
             <HeadPromotion
               style={{ backgroundImage: shopInfo.coverUrl || wallpaperImg }}
             >
-              <img className="share-icon" src={shareImg} alt="" />
+              <img
+                className="share-icon"
+                src={shareImg}
+                alt=""
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  window.alert('Shop url is copied');
+                }}
+              />
               <img className="avatar" src={shopInfo.logoUrl} alt="" />
             </HeadPromotion>
             <NewHeadPromotion>
@@ -466,10 +494,15 @@ const ShopProfile = () => {
             <div>
               <div className="rank-info">
                 <div className="btn-rank">
-                  <div className="info-header">
-                    <h5>Soby Rank</h5>
-                  </div>
-                  <img className="heed-icon" src={heedImg} alt="" />
+                  <h5>Soby Rank</h5>
+                  <img
+                    className="heed-icon"
+                    src={heedImg}
+                    alt=""
+                    data-tip
+                    data-for="rank-info"
+                    data-event="click focus"
+                  />
                 </div>
                 <div className="btn-point">
                   <h2
@@ -544,11 +577,9 @@ const ShopProfile = () => {
                 })}
               </TagIcon>
               <Categories>
-                <div className="info-header">
-                  <p>
-                    <b>Shop categories</b>
-                  </p>
-                </div>
+                <p>
+                  <b>Shop categories</b>
+                </p>
                 <TagOption>
                   {shopInfo.categories.length ? (
                     shopInfo.categories.map((x) => {
@@ -565,10 +596,8 @@ const ShopProfile = () => {
                 </TagOption>
               </Categories>
             </div>
-            <NewInfoBox>
-              <div className="info-header">
-                <h5>Shop description</h5>
-              </div>
+            <div>
+              <h5>Shop description</h5>
               <p>{shopInfo.description}</p>
               <ContactGroup>
                 <div className="contact-item">
@@ -582,7 +611,7 @@ const ShopProfile = () => {
                   <p className="body-color">address@email.com</p>
                 </div>
               </ContactGroup>
-            </NewInfoBox>
+            </div>
           </InfoContainer>
 
           <Row>
@@ -616,6 +645,26 @@ const ShopProfile = () => {
           <ErrorPopup content={formError} setOpen={setOpen} />
         ) : null}
       </SobyModal>
+
+      <ReactTooltip
+        id="rank-info"
+        aria-haspopup="true"
+        role="example"
+        place="bottom"
+        type="light"
+        effect="solid"
+        globalEventOff="dbclick"
+      >
+        <TooltipData>
+          <h5>Soby Rank – Chỉ số uy tín</h5>
+          <p className="mg-b-8">
+            Giá trị của Soby Rank đối với một cửa hàng sẽ tương đương với tầm
+            quan trọng của điểm IMDB đối với một bộ phim, hay của số sao
+            Michelin đối với một nhà hàng.
+          </p>
+          <h5 className="primary-color clickable">Read more</h5>
+        </TooltipData>
+      </ReactTooltip>
     </React.Fragment>
   );
 };

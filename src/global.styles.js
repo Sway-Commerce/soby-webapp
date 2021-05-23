@@ -353,4 +353,16 @@ export const GlobalStyle = createGlobalStyle`
 	.fs-14 {
 		font-size: 0.7rem;
 	}
+
+	.__react_component_tooltip#rank-info {
+		opacity: 1;
+		border-radius: 3px;
+		padding: 0.8rem;
+		box-shadow: 4px 4px 16px 0px rgba(0, 0, 0, 0.16);
+		width: 17.6rem;
+		pointer-events: all;
+		@media screen and (max-width: 600px) {
+			width: 70vw;
+		}
+	}
 `;
