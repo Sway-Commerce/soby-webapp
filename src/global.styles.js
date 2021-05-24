@@ -27,9 +27,10 @@ export const GlobalStyle = createGlobalStyle`
 		font-weight: regular;
 		line-height: 24px;
 		color: #000000;
-		background-color: #E5E5E5;
+		background-color: #F2F2F2;
 		.body-container {
 			width: 1200px;
+			min-height: 100vh;
 			margin: auto;
 			* {
 				box-sizing: border-box;

@@ -37,6 +37,7 @@ import NewProductList from 'components/product-listcard/new-product-list.compone
 const Container = styled.div`
   margin: auto;
   color: ${bodyColor};
+  padding-bottom: 92px;
   .container-1 {
     background-color: white;
     height: 5.2rem;
@@ -86,6 +87,10 @@ const Container = styled.div`
         }
       }
     }
+  }
+
+  @media screen and (max-width: 600px) {
+    padding-bottom: 40px;
   }
 `;
 

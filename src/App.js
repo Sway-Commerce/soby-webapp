@@ -3,18 +3,19 @@ import { Switch, Route } from 'react-router-dom';
 import 'react-phone-number-input/style.css';
 
 import { GlobalStyle } from './global.styles';
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from 'styled-components';
 
 import Header from 'components/header/header.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import JwtRoute from './jwt-route';
 import ErrorBoundary from 'components/error-boundary/error-boundary.component';
+import FooterSection from 'components/footer/footer.component';
 
 const theme = {
-  primary: "#2B74E4",
-  stoke: "#828282",
-  red: "#F53535",
-  green: "#27AE60"
+  primary: '#2B74E4',
+  stoke: '#828282',
+  red: '#F53535',
+  green: '#27AE60',
 };
 
 const SignUp = lazy(() =>
@@ -53,9 +54,7 @@ const MobilePaymentResult = lazy(() =>
 const ReturnRequestPage = lazy(() =>
   import('pages/return-request/return-request.component')
 );
-const Invoice = lazy(() =>
-  import('pages/invoice/invoice.component')
-);
+const Invoice = lazy(() => import('pages/invoice/invoice.component'));
 const ReturnRequestList = lazy(() =>
   import('pages/return-request-list/return-request-list.component')
 );
@@ -68,9 +67,7 @@ const EditProfile = lazy(() =>
 const ChangePassword = lazy(() =>
   import('pages/individual-profile/edit-password.component')
 );
-const HomePage = lazy(() =>
-  import('pages/homepage/homepage.component')
-);
+const HomePage = lazy(() => import('pages/homepage/homepage.component'));
 
 const App = () => {
   return (
@@ -111,9 +108,20 @@ const App = () => {
                 path="/transaction/vnpay-mobile"
                 component={MobilePaymentResult}
               />
-              <JwtRoute path="/return-request/:invoiceId" component={ReturnRequestPage} />
-              <JwtRoute path="/return-request" exact component={ReturnRequestList} />
-              <JwtRoute path="/return-info/:assessId/:requestId" exact component={ReturnRequestInfo} />
+              <JwtRoute
+                path="/return-request/:invoiceId"
+                component={ReturnRequestPage}
+              />
+              <JwtRoute
+                path="/return-request"
+                exact
+                component={ReturnRequestList}
+              />
+              <JwtRoute
+                path="/return-info/:assessId/:requestId"
+                exact
+                component={ReturnRequestInfo}
+              />
               <Route path="/invoice/:invoiceId" component={Invoice} />
               <JwtRoute path="/edit-profile" component={EditProfile} />
               <JwtRoute path="/change-password" component={ChangePassword} />
@@ -121,6 +129,7 @@ const App = () => {
           </ErrorBoundary>
         </Switch>
       </div>
+      <FooterSection />
     </ThemeProvider>
   );
 };
