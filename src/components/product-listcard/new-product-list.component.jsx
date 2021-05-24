@@ -9,7 +9,7 @@ const ProductContainer = styled.div`
   flex-wrap: wrap;
   gap: 1.2rem;
   margin-top: 0.8rem;
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 400px) {
     justify-content: center;
   }
 `;
@@ -22,6 +22,7 @@ const NewProductBox = styled(Link)`
     width: 172px;
     height: 172px;
     margin-bottom: 14px;
+    object-fit: cover;
   }
 
   p {

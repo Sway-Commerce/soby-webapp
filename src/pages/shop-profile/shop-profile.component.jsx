@@ -18,7 +18,7 @@ import wallpaperImg from 'shared/assets/wallpaper.svg';
 import shareImg from 'shared/assets/share.svg';
 import phoneImg from 'shared/assets/phone-circle.svg';
 import heedImg from 'shared/assets/heed.svg';
-import greenmarkImg from 'shared/assets/greenmark.svg';
+import { ReactComponent as MarkIcon } from 'shared/assets/greenmark.svg';
 
 import buildAddressString from 'shared/utils/buildAddressString';
 import {
@@ -89,7 +89,6 @@ const Container = styled.div`
   }
 `;
 
-
 const Row = styled.div`
   background-color: white;
   padding: 1.2rem;
@@ -101,7 +100,6 @@ const Row = styled.div`
     }
   }
 `;
-
 
 const HeadPromotion = styled.div`
   height: 10rem;
@@ -122,6 +120,7 @@ const HeadPromotion = styled.div`
     position: absolute;
     bottom: -3rem;
     left: 1.35rem;
+    object-fit: cover;
   }
 
   @media screen and (max-width: 600px) {
@@ -180,10 +179,14 @@ const StatusContainer = styled.div`
     height: 0.5rem;
     justify-content: flex-end;
     border-radius: 100px;
-    img {
+    background-color: ${(props) => props?.color || redColor};
+    svg {
       width: 25px;
       height: 25px;
       margin: -6px -3px 0 0;
+      g rect {
+        fill: ${(props) => props?.color || redColor};
+      }
     }
 
     h2 {
@@ -205,7 +208,7 @@ const Option = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 0.8rem;
+  margin-right: 8px;
   color: ${bodyColor};
   font-size: 0.8rem;
 `;
@@ -214,7 +217,7 @@ const TagOption = styled.div`
   margin-top: 0.4rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 8px;
 `;
 
 const ContactGroup = styled.div`
@@ -520,13 +523,11 @@ const ShopProfile = () => {
               </div>
             </div>
             <p className="btn-number">01</p>
-            <StatusContainer percent={+shopInfo.shopRank.totalPoints}>
-              <div
-                className="status-bar"
-                style={{
-                  backgroundColor: getColor(shopInfo.shopRank.rank.name),
-                }}
-              >
+            <StatusContainer
+              percent={+shopInfo.shopRank.totalPoints}
+              color={getColor(shopInfo.shopRank.rank.name)}
+            >
+              <div className="status-bar">
                 <RankPoint
                   style={{
                     color: getColor(shopInfo.shopRank.rank.name),
@@ -537,7 +538,7 @@ const ShopProfile = () => {
                     ? +shopInfo.shopRank.totalPoints / 10
                     : ''}
                 </RankPoint>
-                <img src={greenmarkImg} alt="" />
+                <MarkIcon />
               </div>
             </StatusContainer>
 
@@ -632,7 +633,7 @@ const ShopProfile = () => {
             <h3>New Product</h3>
             <h5 className="primary-color">See all</h5>
           </div>
-          <NewProductList records={shopInfo.records}/>
+          <NewProductList records={shopInfo.records} />
         </Row>
       </Container>
       <SobyModal open={open} setOpen={setOpen}>
