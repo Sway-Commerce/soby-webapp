@@ -208,7 +208,6 @@ const Option = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 8px;
   color: ${bodyColor};
   font-size: 0.8rem;
 `;
@@ -217,7 +216,7 @@ const TagOption = styled.div`
   margin-top: 0.4rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 16px;
 `;
 
 const ContactGroup = styled.div`
