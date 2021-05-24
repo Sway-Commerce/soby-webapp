@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
 
@@ -32,9 +32,11 @@ import {
 } from 'shared/css-variable/variable';
 import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
 import ShopVerifies from 'components/shop-verifies/shop-verifies.component';
+import NewProductList from 'components/product-listcard/new-product-list.component';
 
 const Container = styled.div`
   margin: auto;
+  color: ${bodyColor};
   .container-1 {
     background-color: white;
     height: 5.2rem;
@@ -87,23 +89,6 @@ const Container = styled.div`
   }
 `;
 
-const Description = styled.p`
-  color: ${bodyColor};
-`;
-
-const PromotionBox = styled.div`
-  display: flex;
-  img {
-    width: 5.4rem;
-    height: 5.4rem;
-    margin-right: 1.15rem;
-  }
-`;
-
-const Date = styled.p`
-  font-size: 0.7rem;
-  color: #f53535;
-`;
 
 const Row = styled.div`
   background-color: white;
@@ -114,39 +99,6 @@ const Row = styled.div`
   }
 `;
 
-const NewProductBox = styled(Link)`
-  display: grid;
-  justify-content: center;
-  img {
-    width: 172px;
-    height: 172px;
-    margin-bottom: 13.6.4rem;
-  }
-`;
-
-const PromotionContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(172px, 172px));
-  grid-gap: 1.2rem;
-  margin-top: 0.8rem;
-  justify-content: center;
-  @media screen and (max-width: 785px) {
-    grid-template-columns: 1fr;
-    justify-content: center;
-  }
-`;
-
-const ProductContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(172px, 172px));
-  grid-gap: 1.2rem;
-  margin-top: 0.8rem;
-  @media screen and (max-width: 500px) {
-    justify-content: center;
-    grid-template-columns: 1fr;
-    justify-content: center;
-  }
-`;
 
 const HeadPromotion = styled.div`
   height: 10rem;
@@ -226,38 +178,16 @@ const StatusContainer = styled.div`
     justify-content: flex-end;
     border-radius: 100px;
     img {
-      width: 1.25rem;
-      height: 1.25rem;
-      margin: -0.3rem -0.15rem 0 0;
+      width: 25px;
+      height: 25px;
+      margin: -6px -3px 0 0;
     }
 
     h2 {
       position: relative;
       top: -24px;
-      right: -22px;
+      right: -26px;
     }
-  }
-`;
-
-const Icon = styled(Link)`
-  width: 2rem;
-  height: 2rem;
-  margin-top: 1.5rem;
-  margin-right: 0.4rem;
-  background: #f2f2f2;
-  border-radius: 0.15rem;
-  padding: 0.4rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  pointer-events: ${(props) => props.default && 'none'};
-  img.tick {
-    width: 0.5rem;
-    height: 0.5rem;
-    position: absolute;
-    top: 0;
-    right: 0;
   }
 `;
 
@@ -699,24 +629,7 @@ const ShopProfile = () => {
             <h3>New Product</h3>
             <h5 className="primary-color">See all</h5>
           </div>
-          <ProductContainer>
-            {shopInfo.records.map((x) => {
-              const {
-                imageUrls: [imageUrl],
-                name,
-                skus: [sku],
-                id,
-              } = x;
-              const { originPrice } = sku;
-              return (
-                <NewProductBox key={id} to={`/product/${id}`}>
-                  <img src={imageUrl} alt="" />
-                  <Description>{name}</Description>
-                  <h5>{originPrice}</h5>
-                </NewProductBox>
-              );
-            })}
-          </ProductContainer>
+          <NewProductList records={shopInfo.records}/>
         </Row>
       </Container>
       <SobyModal open={open} setOpen={setOpen}>
@@ -749,59 +662,3 @@ const ShopProfile = () => {
 };
 
 export default ShopProfile;
-
-// <Row>
-//             <div className="row-header">
-//               <h3>Promotion</h3>
-//               <p>
-//                 <b>See all</b>
-//               </p>
-//             </div>
-//             <PromotionContainer>
-//               <PromotionBox>
-//                 <img src={airpod} alt="" />
-//                 <div>
-//                   <Description>
-//                     Amazfit GTS 2e Smartwatch with 24H Heart Rate Monitor,
-//                     Sleep, Stress and SpO2...
-//                   </Description>
-//                   <p>
-//                     <b>8.220.000 đ</b>
-//                   </p>
-//                   <Date>
-//                     <b>Offer end in - 3 days</b>
-//                   </Date>
-//                 </div>
-//               </PromotionBox>
-//               <PromotionBox>
-//                 <img src={airpod} alt="" />
-//                 <div>
-//                   <Description>
-//                     Amazfit GTS 2e Smartwatch with 24H Heart Rate Monitor,
-//                     Sleep, Stress and SpO2...
-//                   </Description>
-//                   <p>
-//                     <b>8.220.000 đ</b>
-//                   </p>
-//                   <Date>
-//                     <b>Offer end in - 3 days</b>
-//                   </Date>
-//                 </div>
-//               </PromotionBox>
-//               <PromotionBox>
-//                 <img src={airpod} alt="" />
-//                 <div>
-//                   <Description>
-//                     Amazfit GTS 2e Smartwatch with 24H Heart Rate Monitor,
-//                     Sleep, Stress and SpO2...
-//                   </Description>
-//                   <p>
-//                     <b>8.220.000 đ</b>
-//                   </p>
-//                   <Date>
-//                     <b>Offer end in - 3 days</b>
-//                   </Date>
-//                 </div>
-//               </PromotionBox>
-//             </PromotionContainer>
-//           </Row>

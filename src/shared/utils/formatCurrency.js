@@ -1,8 +1,8 @@
 const defaultOptions = {
   significantDigits: 0,
-  thousandsSeparator: ',',
-  decimalSeparator: '.',
-  symbol: 'vnd'
+  thousandsSeparator: '.',
+  decimalSeparator: ',',
+  symbol: 'đ'
 }
 
 export const currencyFormatter = (value, options) => {
