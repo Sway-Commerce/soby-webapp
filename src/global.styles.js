@@ -315,8 +315,8 @@ export const GlobalStyle = createGlobalStyle`
       left: 0;
       &:checked ~ label {
         &:before {
-          background-color: #2b74e4;
-          border: 2px solid #2b74e4;
+          background-color: ${mainColor};
+          border: 2px solid ${mainColor};
         }
         &:after {
           transform: rotate(-45deg) scale(1);

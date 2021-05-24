@@ -12,6 +12,7 @@ import Spinner from 'components/ui/spinner/spinner.component';
 
 import { setNameAndImage } from 'redux/user/user.actions';
 import { Box, PopupButton } from './shared-style.component';
+import { mainColor } from 'shared/css-variable/variable';
 
 const Row = styled.div`
   display: flex;
@@ -69,7 +70,7 @@ const EditIcon = styled.div`
     right: -15px;
     cursor: pointer;
     border-radius: 50%;
-    background-color: #2b74e4;
+    background-color: ${mainColor};
     border: 2.5px solid #fff;
     color: #fff;
     height: 30px;

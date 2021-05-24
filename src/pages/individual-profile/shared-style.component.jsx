@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {mainColor} from '../../shared/css-variable/variable';
 
 export const Box = styled.form`
   width: 700px;
@@ -21,7 +22,7 @@ export const PopupButton = styled.input.attrs((props) => ({
 }))`
   width: 100%;
   background-color: #f1f1f1;
-  color: #2b74e4;
+  color: ${mainColor};
   font-weight: 700;
   padding: 14px 0 12px;
   border: 0;

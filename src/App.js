@@ -38,7 +38,6 @@ const ShopProfile = lazy(() =>
 const ProductDetail = lazy(() =>
   import('pages/product-detail/product-detail.component')
 );
-const InvoiceLast = lazy(() => import('pages/invoice/invoice-last.component'));
 const YourTransaction = lazy(() =>
   import('pages/your-transactions/your-transactions.component')
 );
