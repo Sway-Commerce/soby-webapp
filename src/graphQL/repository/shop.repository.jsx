@@ -22,6 +22,7 @@ export const GET_SHOP_BY_ID = gql`
         shopUrls {
           url
           verified
+          type
         }
         createdAt
         updatedAt
@@ -94,6 +95,7 @@ export const GET_AGGREGATED_SHOP = gql`
         shopUrls {
           url
           verified
+          type
         }
         shippingType
         createdAt
@@ -153,6 +155,7 @@ export const GET_SHOP_PUBLIC = gql`
         shopUrls {
           url
           verified
+          type
         }
         shippingType
         kyb {
@@ -181,6 +184,7 @@ export const SEARCH = gql`
           shopUrls {
             url
             verified
+            type
           }
           shippingType
           createdAt

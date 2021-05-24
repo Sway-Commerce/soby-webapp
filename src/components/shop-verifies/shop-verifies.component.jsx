@@ -56,25 +56,25 @@ const ShopVerifies = ({ status, kycStatus, shopUrls }) => {
       {shopUrls.map((x) => {
         let imgPath = '';
         switch (x.type) {
-          case 'facebook':
+          case 'FACEBOOK':
             imgPath = FacebookIcon;
             break;
-          case 'instagram':
+          case 'INSTAGRAM':
             imgPath = InstagramIcon;
             break;
-          case 'tiktok':
+          case 'TIKTOK':
             imgPath = TiktokIcon;
             break;
-          case 'zalo':
+          case 'ZALO':
             imgPath = ZaloIcon;
             break;
-          case 'shopee':
+          case 'SHOPEE':
             imgPath = ShopeeIcon;
             break;
-          case 'lazada':
+          case 'LAZADA':
             imgPath = LazadaIcon;
             break;
-          case 'tiki':
+          case 'TIKI':
             imgPath = TikiIcon;
             break;
           default:

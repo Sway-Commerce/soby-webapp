@@ -96,6 +96,9 @@ const Row = styled.div`
   .row-header {
     display: flex;
     justify-content: space-between;
+    h3 {
+      color: #000000;
+    }
   }
 `;
 
