@@ -2,7 +2,6 @@ import { createGlobalStyle } from 'styled-components';
 import {
   borderColor,
   cyanColor,
-  grayColor,
   mainColor,
   orangeColor,
   subColor,
@@ -10,6 +9,7 @@ import {
   bodyColor,
   redColor,
   gray1Color,
+  stokeColor,
 } from './shared/css-variable/variable';
 
 export const GlobalStyle = createGlobalStyle`
@@ -27,23 +27,33 @@ export const GlobalStyle = createGlobalStyle`
 		font-weight: regular;
 		line-height: 24px;
 		color: #000000;
-		background-color: #E5E5E5;
+		background-color: #F2F2F2;
 		.body-container {
 			width: 1200px;
+			min-height: 100vh;
 			margin: auto;
 			* {
 				box-sizing: border-box;
 			}
 		}
-		@media screen and (max-width: 1024px) {
+		@media screen and (max-width: 1200px) {
 			.body-container {
 				width: auto;
+				// margin:0 .6rem;
 			}
 		}
 	}
 
 	h2 {
 		font-size: 1.2rem;
+	}
+
+	h3 {
+		font-size: 1rem;
+	}
+
+	h5 {
+		font-size: 0.8rem;
 	}
 
 	a {
@@ -139,7 +149,7 @@ export const GlobalStyle = createGlobalStyle`
 		margin-bottom: 24px;
 	}
 
-	p {
+	p, a {
 		font-style: normal;
 		font-weight: normal;
 		font-size: 0.8rem;
@@ -147,9 +157,12 @@ export const GlobalStyle = createGlobalStyle`
 	}
 
 	.Soby__dropdown {
-		border: 1px solid rgb(112,112,112,0.5);
-		box-sizing: border-box;
-		border-radius: 8px;
+		font-size: 0.8rem;
+		color: #000000;
+		.Dropdown-control {
+			border-radius: 6px;
+			border: 1px solid #828282;
+		}
 	}
 
 	.text-truncation {
@@ -176,9 +189,10 @@ export const GlobalStyle = createGlobalStyle`
 		margin-top: 4px;
 	}
 
-	h5.error-title {
+	p.error-title {
 		color: red;
   	margin: 5px 0;
+		font-size: 0.7rem;
 	}
 
 	.main-btn {
@@ -207,7 +221,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .gray {
-    color: ${grayColor};
+    color: ${stokeColor};
   }
 
   .green {
@@ -223,19 +237,23 @@ export const GlobalStyle = createGlobalStyle`
   }
 
 	.mg-b-8 {
-		margin-bottom: 8px;
+		margin-bottom: .4rem;
 	}
 
 	.mg-b-16 {
-		margin-bottom: 8px;
+		margin-bottom: .8rem;
 	}
 
 	.mg-b-4 {
-		margin-bottom: 8px;
+		margin-bottom: .2rem;
 	}
 
 	.mg-b-24 {
-		margin-bottom: 8px;
+		margin-bottom: 1.2rem;
+	}
+
+	.mg-b-48 {
+		margin-bottom: 2.4rem;
 	}
 
 	.flex-display {
@@ -245,6 +263,10 @@ export const GlobalStyle = createGlobalStyle`
 	.non-clickable {
 		pointer-events: none;
 		cursor: default;
+	}
+
+	.clickable:hover {
+		cursor: pointer;
 	}
 
 	.checkbox {
@@ -293,8 +315,8 @@ export const GlobalStyle = createGlobalStyle`
       left: 0;
       &:checked ~ label {
         &:before {
-          background-color: #2b74e4;
-          border: 2px solid #2b74e4;
+          background-color: ${mainColor};
+          border: 2px solid ${mainColor};
         }
         &:after {
           transform: rotate(-45deg) scale(1);
@@ -305,4 +327,43 @@ export const GlobalStyle = createGlobalStyle`
       }
     }
   }
+
+	.truncate {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
+		display: -webkit-box;
+	}
+
+	button.global-btn {
+		max-width: 23.75rem;
+		@media screen and (max-width: 500px) {
+			width: 100%;
+		}
+	}
+
+	.txt-capitalize {
+		text-transform: capitalize;
+	}
+
+	.txt-center {
+		text-align: center;
+	}
+
+	.fs-14 {
+		font-size: 0.7rem;
+	}
+
+	.__react_component_tooltip#rank-info {
+		opacity: 1;
+		border-radius: 3px;
+		padding: 0.8rem;
+		box-shadow: 4px 4px 16px 0px rgba(0, 0, 0, 0.16);
+		width: 17.6rem;
+		pointer-events: all;
+		@media screen and (max-width: 600px) {
+			width: 70vw;
+		}
+	}
 `;

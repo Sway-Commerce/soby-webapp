@@ -9,6 +9,7 @@ export default function Dropdown({
   onChange,
   label,
   validate = () => {},
+  className
 }) {
   return (
     <ReactDropdown
@@ -17,7 +18,7 @@ export default function Dropdown({
       onChange={(option) => onChange(option.value)}
       value={value}
       onSubmit={() => validate()}
-      className="Soby__dropdown"
+      className={`Soby__dropdown ${className}`}
     />
   );
 }

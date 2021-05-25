@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useMutation } from '@apollo/client';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
@@ -8,8 +9,6 @@ import { useDispatch } from 'react-redux';
 import { setEmail } from 'redux/user/user.actions';
 import emailValidation from 'shared/utils/emailValidation';
 import styled from 'styled-components';
-import { Box, PopupButton } from './shared-style.component';
-
 
 const InputContainer = styled.div`
   width: 100%;
@@ -26,6 +25,26 @@ const Input = styled.input.attrs((props) => ({
   border-radius: 0;
   border-bottom: 0.5px solid #c2c2c2;
   font-size: 0.9rem;
+`;
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.2rem;
+`;
+
+const Box = styled.form`
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+
+  h2 {
+    margin: 0.8rem 0 2rem;
+  }
+
+  @media (max-width: 800px) {
+    width: auto;
+  }
 `;
 
 const EmailPopup = ({ setOpenEditMailPopup, email }) => {
@@ -88,11 +107,15 @@ const EmailPopup = ({ setOpenEditMailPopup, email }) => {
   ) : (
     <React.Fragment>
       <Box onSubmit={handleSubmit}>
-        <h2>Edit Email</h2>
-        <InputContainer>
-          <span>Your current email</span>
-          <Input value={email} disabled />
-        </InputContainer>
+        <h2 className="soby-title">Edit Email</h2>
+        <h5>Email address</h5>
+        <p className="body-color">{email}</p>
+        {
+          // <InputContainer>
+        //   <span>Your current email</span>
+        //   <Input value={email} disabled />
+        // </InputContainer>
+      }
 
         <InputContainer>
           <span>New email</span>
@@ -100,10 +123,9 @@ const EmailPopup = ({ setOpenEditMailPopup, email }) => {
         </InputContainer>
 
         {!isEmailValid ? (
-          <h5 className="error-title">Your email is not correct</h5>
+          <p className="error-title">*Your email is not correct</p>
         ) : null}
 
-        <PopupButton />
       </Box>
 
       <SobyModal open={open} setOpen={setOpen}>

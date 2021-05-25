@@ -401,6 +401,7 @@ export const SHOP_PROFILE_FRAGMENT = gql`
     shopUrls {
       url
       verified
+      type
     }
     status
     shippingType
@@ -482,6 +483,7 @@ export const SHOP_PUBLIC_INFO_FRAGMENT = gql`
     shopUrls {
       url
       verified
+      type
     }
     shippingType
     createdAt

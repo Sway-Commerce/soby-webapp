@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { ReactComponent as CloseIcon } from 'shared/assets/close-icon.svg';
 
 export const ModalContainer = styled.div`
   position: absolute;
@@ -20,8 +21,13 @@ export const ModalContainer = styled.div`
     position: relative;
     .close-wrapper {
       position: absolute;
-      top: 15px;
-      right: 15px;
+      top: 1rem;
+      right: 1rem;
+      cursor: pointer;
+      svg {
+        width: 1.2rem;
+        height: 1.2rem;
+      }
     }
   }
 `;
@@ -44,9 +50,17 @@ const SobyModal = ({ open, setOpen, children }) => {
   return (
     <React.Fragment>
       <ModalContainer className={open ? 'show' : null}>
-        <div className="contract-detail">{children}</div>
+        <div className="contract-detail">
+          {children}
+          <div className="close-wrapper" onClick={() => setOpen(false)}>
+            <CloseIcon />
+          </div>
+        </div>
       </ModalContainer>
-      <ScreenWrapper className={open ? 'show' : null}  onClick={() => setOpen(false)}/>
+      <ScreenWrapper
+        className={open ? 'show' : null}
+        onClick={() => setOpen(false)}
+      />
     </React.Fragment>
   );
 };

@@ -242,9 +242,9 @@ const PhoneSignin = () => {
                 onChange={(value) => setPhoneNumberIntl(value)}
               />
               {!isPhoneValid ? (
-                <h5 className="error-title">
-                  Your phone number is not correct
-                </h5>
+                <p className="error-title">
+                  *Your phone number is not correct
+                </p>
               ) : null}
 
               <InputContainer>
@@ -257,12 +257,18 @@ const PhoneSignin = () => {
                   required
                 />
                 {!isPasswordValid ? (
-                  <h5 className="error-title">
+                  <p className="error-title">
+                    *Your password must be between 8 to 20 characters which
+                    contain at least one numeric digit, one uppercase and one
+                    lowercase letter
+                  </p>
+                ) : (
+                  <p className="fs-14">
                     Your password must be between 8 to 20 characters which
                     contain at least one numeric digit, one uppercase and one
                     lowercase letter
-                  </h5>
-                ) : null}
+                  </p>
+                )}
               </InputContainer>
               <CustomButton className="main-btn" type="submit">
                 Login

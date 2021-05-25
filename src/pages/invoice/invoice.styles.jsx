@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { mainColor } from 'shared/css-variable/variable';
+import { redColor } from '../../shared/css-variable/variable';
 
 export const Container = styled.div`
   font-family: 'Work Sans', sans-serif;
@@ -182,10 +183,10 @@ export const Row = styled.div`
 
 export const InvoiceButton = styled.div`
   display: flex;
-  background-color: ${(props) => (props.accept ? '#2B74E4' : '#f53535')};
+  background-color: ${(props) => (props.accept ? mainColor : redColor)};
   border-radius: 8px;
   color: white;
-  padding:16.5px 72px 0;
+  padding: 16.5px 72px 0;
   width: 198px;
   height: 50px;
 `;

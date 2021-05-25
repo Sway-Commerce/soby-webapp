@@ -262,10 +262,7 @@ const InvoiceLast = ({ invoiceIndividualId }) => {
                 <Extra />
               </div>
 
-              <p>
-                <b>{shopData.name}</b>
-              </p>
-
+              <h5>{shopData.name}</h5>
               {
                 // Status
               }

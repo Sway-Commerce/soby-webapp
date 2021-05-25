@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { mainColor, subColor } from 'shared/css-variable/variable';
+import {borderColor} from '../../shared/css-variable/variable';
 
 export const BoxContainer = styled.div`
   display: grid;
@@ -14,7 +15,7 @@ export const NumberBox = styled.input`
     font-size: 0.9rem;
     text-align: center;
     background: #ffffff;
-    border: 1.04651px solid #E4E4E4;
+    border: 1.04651px solid ${borderColor};
     box-sizing: border-box;
     border-radius: 8px;
 

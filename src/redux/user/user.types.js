@@ -18,6 +18,7 @@ const UserActionTypes = {
   SET_EMAIL: "SET_EMAIL",
   SET_PHONE_NUMBER: "SET_PHONE_NUMBER",
   VERIFY_EMAIL: "SET_PHONE_NUMBER",
+  UPDATE_STORED_USER: "UPDATE_STORED_USER"
 };
 
 export default UserActionTypes;

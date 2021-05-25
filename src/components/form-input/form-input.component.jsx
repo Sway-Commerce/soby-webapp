@@ -13,7 +13,7 @@ const FormInput = ({ handleChange, placeholder, label, withoutTitle, withoutBord
     <GroupContainer>
       <FormInputContainer withoutBorder={withoutBorder} onChange={handleChange} {...props} />
       {placeholder ? (
-        <FormInputLabel className={props.value.length ? 'shrink' : ''}>
+        <FormInputLabel className={props.value?.length ? 'shrink' : ''}>
           {placeholder}
         </FormInputLabel>
       ) : null}

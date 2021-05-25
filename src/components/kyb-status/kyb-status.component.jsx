@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import {mainColor, redColor} from '../../shared/css-variable/variable';
 
 export const Container = styled.div`
   padding: 4px 12px;
@@ -12,22 +13,22 @@ export const Container = styled.div`
 
 const KybStatus = ({ status = '' }) => {
   const [state, setState] = useState('Approved');
-  const [bgColor, setBgColor] = useState("#2b74e4");
+  const [bgColor, setBgColor] = useState(mainColor);
 
   useEffect(() => {
     switch (status) {
       case 'NOT_CONFIRMED': {
         setState('Not Confirmed');
-        setBgColor('#F53535');
+        setBgColor(redColor);
         break;
       }
       case 'APPROVED':
         setState('Approved');
-        setBgColor('##2b74e4');
+        setBgColor(mainColor);
         break;
       default:
         setState('Not verified');
-        setBgColor('#F53535');
+        setBgColor(redColor);
     }
   }, [status]);
 

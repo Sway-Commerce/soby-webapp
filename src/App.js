@@ -3,18 +3,19 @@ import { Switch, Route } from 'react-router-dom';
 import 'react-phone-number-input/style.css';
 
 import { GlobalStyle } from './global.styles';
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from 'styled-components';
 
 import Header from 'components/header/header.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import JwtRoute from './jwt-route';
 import ErrorBoundary from 'components/error-boundary/error-boundary.component';
+import FooterSection from 'components/footer/footer.component';
 
 const theme = {
-  primary: "#2B74E4",
-  stoke: "#828282",
-  red: "#F53535",
-  green: "#27AE60"
+  primary: '#2B74E4',
+  stoke: '#828282',
+  red: '#F53535',
+  green: '#27AE60',
 };
 
 const SignUp = lazy(() =>
@@ -37,7 +38,6 @@ const ShopProfile = lazy(() =>
 const ProductDetail = lazy(() =>
   import('pages/product-detail/product-detail.component')
 );
-const InvoiceLast = lazy(() => import('pages/invoice/invoice-last.component'));
 const YourTransaction = lazy(() =>
   import('pages/your-transactions/your-transactions.component')
 );
@@ -53,15 +53,20 @@ const MobilePaymentResult = lazy(() =>
 const ReturnRequestPage = lazy(() =>
   import('pages/return-request/return-request.component')
 );
-const Invoice = lazy(() =>
-  import('pages/invoice/invoice.component')
-);
+const Invoice = lazy(() => import('pages/invoice/invoice.component'));
 const ReturnRequestList = lazy(() =>
   import('pages/return-request-list/return-request-list.component')
 );
 const ReturnRequestInfo = lazy(() =>
   import('pages/request-info/request-info.component')
 );
+const EditProfile = lazy(() =>
+  import('pages/individual-profile/edit-profile.component')
+);
+const ChangePassword = lazy(() =>
+  import('pages/individual-profile/edit-password.component')
+);
+const HomePage = lazy(() => import('pages/homepage/homepage.component'));
 
 const App = () => {
   return (
@@ -72,7 +77,8 @@ const App = () => {
         <Switch>
           <ErrorBoundary>
             <Suspense fallback={<Spinner />}>
-              <Route exact path="/" component={PhoneSignin} />
+              <Route exact path="/" component={HomePage} />
+              <Route path="/phone-signin" component={PhoneSignin} />
               <Route
                 exact
                 path="/phone-verification"
@@ -101,14 +107,28 @@ const App = () => {
                 path="/transaction/vnpay-mobile"
                 component={MobilePaymentResult}
               />
-              <JwtRoute path="/return-request/:invoiceId" component={ReturnRequestPage} />
-              <JwtRoute path="/return-request" exact component={ReturnRequestList} />
-              <JwtRoute path="/return-info/:assessId/:requestId" exact component={ReturnRequestInfo} />
+              <JwtRoute
+                path="/return-request/:invoiceId"
+                component={ReturnRequestPage}
+              />
+              <JwtRoute
+                path="/return-request"
+                exact
+                component={ReturnRequestList}
+              />
+              <JwtRoute
+                path="/return-info/:assessId/:requestId"
+                exact
+                component={ReturnRequestInfo}
+              />
               <Route path="/invoice/:invoiceId" component={Invoice} />
+              <JwtRoute path="/edit-profile" component={EditProfile} />
+              <JwtRoute path="/change-password" component={ChangePassword} />
             </Suspense>
           </ErrorBoundary>
         </Switch>
       </div>
+      <FooterSection />
     </ThemeProvider>
   );
 };

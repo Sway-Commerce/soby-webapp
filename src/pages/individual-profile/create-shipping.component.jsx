@@ -8,9 +8,7 @@ import {
   GET_PROVINCE_LIST,
   GET_WARD_LIST,
 } from 'graphQL/repository/invoice.repository';
-import {
-  CREATE_INDIVIDUAL_SHIPPING_LOCATION,
-} from 'graphQL/repository/shipping.repository';
+import { CREATE_INDIVIDUAL_SHIPPING_LOCATION } from 'graphQL/repository/shipping.repository';
 
 import usePhoneNumber from 'shared/hooks/usePhoneNumber';
 import FormInput from 'components/form-input/form-input.component';
@@ -19,12 +17,14 @@ import PhoneInput from 'react-phone-number-input';
 import Spinner from 'components/ui/spinner/spinner.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import CustomButton from 'components/ui/custom-button/custom-button.component';
 
 export const Container = styled.div`
-  padding: 40px 48px;
-  width: 751px;
+  padding: 2.8rem 2rem;
+  min-width: 22rem;
   h2 {
-    margin-bottom: 24px;
+    margin-bottom: 3.2rem;
+    text-align: center;
   }
 
   .col {
@@ -73,7 +73,6 @@ export const Container = styled.div`
     display: grid;
     grid-gap: 16px;
     grid-template-columns: repeat(2, 1fr);
-    margin: 0 0 20px;
   }
 
   .checkbox-wrapper {
@@ -108,23 +107,16 @@ const CreateShipping = ({ setOpenCreate }) => {
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
 
-  const {
-    isPhoneValid,
-  } = inputValidation;
+  const { isPhoneValid } = inputValidation;
 
-  const [
-    loadProvince,
-    { data: provinceData, error: loadProvinceError },
-  ] = useLazyQuery(GET_PROVINCE_LIST);
+  const [loadProvince, { data: provinceData, error: loadProvinceError }] =
+    useLazyQuery(GET_PROVINCE_LIST);
 
   const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
 
   const [
     loadDistrictList,
-    {
-      data: districtData,
-      error: loadDistrictListError,
-    },
+    { data: districtData, error: loadDistrictListError },
   ] = useLazyQuery(GET_DISTRICT_LIST);
   const [loadWardList, { data: wardData }] = useLazyQuery(GET_WARD_LIST);
 
@@ -257,41 +249,19 @@ const CreateShipping = ({ setOpenCreate }) => {
     <Spinner />
   ) : (
     <Container>
-      <h2>New Shipping address</h2>
+      <h2>Shipping info</h2>
       <form onSubmit={handleSubmit}>
         <React.Fragment>
-          <label htmlFor="">Tên người nhận</label>
           <FormInput
             type="text"
-            name="locationName"
             value={shippingInfo.locationName}
             onChange={handleChange}
+            label="Location name"
+            placeholder="Work, home..."
+            name="locationName"
+            required
           />
-          <label htmlFor="">Địa chỉ</label>
-          <FormInput
-            type="text"
-            name="addressLine"
-            value={shippingInfo.addressLine}
-            onChange={handleChange}
-          />
-
-          <div className="select-wrapper">
-            {provinceList?.length ? (
-              <Dropdown
-                options={provinceList}
-                onChange={onSelectProvinceChange}
-                value={provinceId}
-              />
-            ) : null}
-            <Dropdown
-              options={districtList}
-              onChange={onSelectDistrictChange}
-              value={districtId}
-            />
-            <Dropdown options={wardList} onChange={setWard} value={wardId} />
-          </div>
-
-          <label htmlFor="">Số điện thoại</label>
+          <label className="form-label">Phone number</label>
           <PhoneInput
             country="US"
             international
@@ -303,12 +273,37 @@ const CreateShipping = ({ setOpenCreate }) => {
             value={phoneNumberIntl}
             onChange={(value) => setPhoneNumberIntl(value)}
           />
+          <FormInput
+            type="text"
+            value={shippingInfo.addressLine}
+            onChange={handleChange}
+            name="addressLine"
+            label="Address"
+            placeholder="123 Ly Tu Trong Str,"
+            required
+          />
+          {provinceList?.length ? (
+            <Dropdown
+              options={provinceList}
+              onChange={onSelectProvinceChange}
+              value={provinceId}
+              className="mg-b-16"
+            />
+          ) : null}
+          <div className="select-wrapper mg-b-48">
+            <Dropdown
+              options={districtList}
+              onChange={onSelectDistrictChange}
+              value={districtId}
+            />
+            <Dropdown options={wardList} onChange={setWard} value={wardId} />
+          </div>
         </React.Fragment>
 
         {!isPhoneValid ? (
-          <h5 className="error-title">Your phone number is not correct</h5>
+          <p className="error-title">*Your phone number is not correct</p>
         ) : null}
-        <button className={'shipping-button'}>Add</button>
+        <CustomButton>Add</CustomButton>
       </form>
       <SobyModal open={open} setOpen={setOpen}>
         {formError ? (

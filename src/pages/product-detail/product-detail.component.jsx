@@ -23,12 +23,13 @@ import { ReactComponent as FbIcon } from 'shared/assets/facebook.svg';
 import { ReactComponent as ZaloIcon } from 'shared/assets/zalo.svg';
 import { ReactComponent as LinkIcon } from 'shared/assets/link.svg';
 import { ReactComponent as MailIcon } from 'shared/assets/mail.svg';
-import { ReactComponent as InstaIcon } from 'shared/assets/instagram.svg';
+import { ReactComponent as InstaIcon } from 'shared/assets/instagram-icon.svg';
 import { ReactComponent as BlueBirdIcon } from 'shared/assets/bluebird.svg';
 import { ReactComponent as TalkIcon } from 'shared/assets/talk.svg';
 import { ReactComponent as LocationIcon } from 'shared/assets/location.svg';
 import { ReactComponent as InboxIcon } from 'shared/assets/inbox.svg';
 import { ReactComponent as CallIcon } from 'shared/assets/call.svg';
+import { borderColor } from 'shared/css-variable/variable';
 
 const Container = styled.div`
   display: grid;
@@ -79,11 +80,11 @@ const Container = styled.div`
     font-weight: normal;
     font-size: 14px;
     line-height: 24px;
-    color: #4f4f4f;
+    color: ${borderColor};
   }
 
   .box-1 {
-    background: #e4e4e4;
+    background: ${borderColor};
     border-radius: 3px;
     padding: 6px 16px;
     margin-left: 8px;
@@ -552,9 +553,7 @@ const ProductDetail = () => {
       </Container>
 
       <Description>
-        <p>
-          <b>About this product</b>
-        </p>
+        <h5>About this product</h5>
         <p className="main-info body-color">
           3D CURVED DESIGN & HD AMOLED SCREEN: The Amazfit GTS 2 is a curved
           1.65" hd amoled screen, covered in 3d glass, boasts a crystal-clear

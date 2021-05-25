@@ -1,79 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useMutation } from '@apollo/client';
 
-import { ReactComponent as EditWhiteIcon } from 'shared/assets/edit-white.svg';
+import { ReactComponent as AddImgIcon } from 'shared/assets/add-img.svg';
 
 import { UPDATE_INDIVIDUAL } from 'graphQL/repository/individual.repository';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import Spinner from 'components/ui/spinner/spinner.component';
+import { Avatar } from './individual-profile.component';
 
 import { setNameAndImage } from 'redux/user/user.actions';
-import { Box, PopupButton } from './shared-style.component';
+import FormInput from 'components/form-input/form-input.component';
+import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
+import CustomButton from 'components/ui/custom-button/custom-button.component';
 
-const Row = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 40px;
-
-  @media (max-width: 700px) {
-    flex-direction: column;
-    margin-bottom: 0;
-  }
-`;
-
-const InputContainer = styled.div`
-  width: ${(props) => props.width || '100%'};
-
-  @media (max-width: 700px) {
-    width: 100%;
-    margin-bottom: 30px;
-  }
-`;
-
-const Input = styled.input.attrs((props) => ({
-  type: 'text',
-}))`
-  width: 100%;
-  padding: 8px 0;
-  outline: 0;
-  border: 0;
-  border-radius: 0;
-  border-bottom: 0.5px solid #c2c2c2;
-  font-size: 0.9rem;
+export const Page = styled.div`
+  background-color: #ffffff;
+  padding: 1.2rem;
 `;
 
 const AvatarBox = styled.div`
   position: relative;
-  height: 100px;
-  width: 100px;
-
-  @media (max-width: 700px) {
-    margin-bottom: 20px;
-  }
-`;
-
-const Avatar = styled.img`
-  height: 100px;
-  width: 100px;
-  border-radius: 8px;
+  height: 4rem;
+  width: 4rem;
 `;
 
 const EditIcon = styled.div`
   label {
     position: absolute;
-    bottom: -8px;
-    right: -15px;
+    bottom: -20px;
+    right: -20px;
     cursor: pointer;
     border-radius: 50%;
-    background-color: #2b74e4;
     border: 2.5px solid #fff;
     color: #fff;
-    height: 30px;
-    width: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -86,21 +48,44 @@ const EditIcon = styled.div`
   }
 `;
 
-const NamePopup = ({
-  firstName,
-  lastName,
-  middleName,
-  accessToken,
-  dob,
-  postalCode,
-  country,
-  province,
-  city,
-  addressLine,
-  nationality,
-  imageUrl,
-  setOpenNamePopup,
-}) => {
+const InputBox = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18.4rem, 1fr));
+  grid-gap: 1.2rem;
+  margin-top: 32px;
+  align-items: center;
+  @media (max-width: 768px) {
+    align-items: flex-start;
+
+    &.column {
+      flex-direction: column;
+    }
+  }
+`;
+
+export const PageFooter = styled.div`
+  margin: 40px auto 24px;
+  display: flex;
+  justify-content: center;
+`;
+
+const EditProfile = () => {
+  const {
+    postalCode,
+    lastName,
+    middleName,
+    dob,
+    nationality,
+    addressLine,
+    city,
+    province,
+    country,
+    firstName,
+    imageUrl,
+    accessToken,
+  } = useSelector((state) => {
+    return state.user;
+  });
   const [state, setstate] = useState({
     firstName,
     lastName,
@@ -121,7 +106,18 @@ const NamePopup = ({
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
   const dispatch = useDispatch();
-  const dispatchSetNameAndImage = (payload) => dispatch(setNameAndImage(payload));
+  const dispatchSetNameAndImage = (payload) =>
+    dispatch(setNameAndImage(payload));
+  const [breadcrumbs] = useState([
+    {
+      name: 'Your account',
+      src: '/individual-profile',
+    },
+    {
+      name: 'Edit information',
+      src: '/edit-profile',
+    },
+  ]);
 
   // UPDATE_INDIVIDUAL
   const [
@@ -132,11 +128,6 @@ const NamePopup = ({
       error: updateIndividualError,
     },
   ] = useMutation(UPDATE_INDIVIDUAL);
-  useEffect(() => {
-    if (updateIndividualData?.updateIndividual?.data) {
-      setOpenNamePopup(false);
-    }
-  }, [updateIndividualData?.updateIndividual?.data, updateIndividual]);
 
   useEffect(() => {
     if (updateIndividualError?.message) {
@@ -253,13 +244,15 @@ const NamePopup = ({
     <Spinner />
   ) : (
     <React.Fragment>
-      <Box onSubmit={handleSubmit}>
-        <Row>
+      <SharedBreadcrumb breadcrumbs={breadcrumbs} />
+      <Page>
+        <h4 className="mg-b-24">Edit information</h4>
+        <form onSubmit={handleSubmit}>
           <AvatarBox>
             <Avatar src={picture.picturePreview} />
             <EditIcon>
               <label for="upload-photo">
-                <EditWhiteIcon />
+                <AddImgIcon />
               </label>
               <input
                 type="file"
@@ -269,38 +262,44 @@ const NamePopup = ({
               />
             </EditIcon>
           </AvatarBox>
-          <InputContainer width="80%">
-            <span>First name</span>
-            <Input
-              value={state.firstName}
-              name="firstName"
-              onChange={handleChange}
-            />
-          </InputContainer>
-        </Row>
 
-        <Row>
-          <InputContainer width="48%">
-            <span>Middle name</span>
-            <Input
-              value={state.middleName}
-              name="middleName"
-              onChange={handleChange}
-            />
-          </InputContainer>
-
-          <InputContainer width="48%">
-            <span>Last name</span>
-            <Input
-              value={state.lastName}
-              name="lastName"
-              onChange={handleChange}
-            />
-          </InputContainer>
-        </Row>
-        <PopupButton />
-      </Box>
-
+          <InputBox>
+            <div>
+              <FormInput
+                type="text"
+                value={state.firstName}
+                onChange={handleChange}
+                label="First Name"
+                placeholder="Lan"
+                name="firstName"
+              />
+            </div>
+            <div>
+              <FormInput
+                type="text"
+                value={state.middleName}
+                onChange={handleChange}
+                label="Middle Name"
+                placeholder="Hoang"
+                name="middleName"
+              />
+            </div>
+            <div>
+              <FormInput
+                type="text"
+                value={state.lastName}
+                onChange={handleChange}
+                label="Last Name"
+                placeholder="Nguyen"
+                name="lastName"
+              />
+            </div>
+          </InputBox>
+          <PageFooter>
+            <CustomButton className="global-btn">Save</CustomButton>
+          </PageFooter>
+        </form>
+      </Page>
       <SobyModal open={open} setOpen={setOpen}>
         {formError ? (
           <ErrorPopup content={formError} setOpen={setOpen} />
@@ -310,4 +309,4 @@ const NamePopup = ({
   );
 };
 
-export default NamePopup;
+export default EditProfile;
