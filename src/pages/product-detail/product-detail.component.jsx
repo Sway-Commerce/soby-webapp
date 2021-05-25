@@ -12,12 +12,15 @@ import ProductCard from 'components/product-card/product-card.component';
 import { GET_SHOP_BY_ID } from 'graphQL/repository/shop.repository';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
-import phoneImg from 'shared/assets/phone-circle.svg';
 import locationImg from 'shared/assets/location.svg';
 import mailImg from 'shared/assets/mail-black.svg';
+import heedImg from 'shared/assets/heed.svg';
 
 import NewProductList from 'components/product-listcard/new-product-list.component';
 import ShopVerifies from 'components/shop-verifies/shop-verifies.component';
+import { formatPhoneNumberIntl } from 'react-phone-number-input';
+import PhoneButton from 'pages/shop-profile/phone-button.component';
+import ReactTooltip from 'react-tooltip';
 
 const Container = styled.div`
   margin: auto;
@@ -172,6 +175,10 @@ const HeadContact = styled.div`
   }
 `;
 
+const TooltipData = styled.div`
+  background-color: white;
+`;
+
 const ProductDetail = () => {
   const { productId } = useParams();
   const [open, setOpen] = useState(false);
@@ -192,6 +199,8 @@ const ProductDetail = () => {
     sku: { currentPrice: 0 },
     records: [],
   });
+  const [phoneString, setPhoneString] = useState('');
+  const [togglePhone, setTogglePhone] = useState(false);
 
   const {
     loading: getProductLoading,
@@ -275,9 +284,10 @@ const ProductDetail = () => {
   useEffect(() => {
     if (getShopByIdData?.getShopById?.data) {
       const shopInfo = getShopByIdData?.getShopById?.data;
-      const { status } = shopInfo.kyb ?? { status: null };
+      const { phoneNumber, phoneCountryCode } = shopInfo;
+      setPhoneString(`${phoneCountryCode} ${phoneNumber.slice(0, 4)} *** ****`);
 
-      setProductData({ ...productData, shopInfo, status });
+      setProductData({ ...productData, shopInfo });
     }
   }, [getShopByIdData?.getShopById?.data]);
 
@@ -348,47 +358,61 @@ const ProductDetail = () => {
               <Tag>GTS 2e</Tag>
             </TagBox>
           </div>
-          <HeadContact>
-            <div className="contact">
-              <div className="head">
-                <img className="avatarImg" alt="" />
-                <div className="sign">
-                  <h3>Blue Bird Shop</h3>
-                  <div className="contact-wrapper">
-                    <img className="creditImg" alt="" />
-                    <p className="status">
-                      <b>Good</b>
-                    </p>
-                    <img className="heedImg" alt="" />
+          {productData.shopInfo && (
+            <HeadContact>
+              <div className="contact">
+                <div className="head">
+                  <img className="avatarImg" alt="" />
+                  <div className="sign">
+                    <h3>Blue Bird Shop</h3>
+                    <div className="contact-wrapper">
+                      <img className="creditImg" alt="" />
+                      <p className="status">
+                        <b>Good</b>
+                      </p>
+                      <img
+                        className="heed-icon"
+                        src={heedImg}
+                        alt=""
+                        data-tip
+                        data-for="rank-info"
+                        data-event="click focus"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-              {productData.shopInfo && (
+
                 <ShopVerifies
                   status={productData.shopInfo.kyb?.status}
                   kycStatus={productData.shopInfo?.kycStatus}
                   shopUrls={productData.shopInfo?.shopUrls}
                 />
-              )}
 
-              <div className="phone-container">
-                <img className="phoneImg" src={phoneImg} alt="" />
-                <p>0901 *** ****</p>
-                <p className="btn-click">Show</p>
+                <PhoneButton
+                  togglePhone={togglePhone}
+                  phoneNumber={formatPhoneNumberIntl(
+                    `${productData.shopInfo.phoneCountryCode}${productData.shopInfo.phoneNumber}`
+                  )}
+                  phoneNumberCovered={phoneString}
+                  setTogglePhone={setTogglePhone}
+                  showText="Show"
+                  hideText="Hide"
+                  show
+                />
+                <div className="btn-info">
+                  <img src={locationImg} alt="" />
+                  <p>
+                    CirCo Coworking Space, H3 Building, 384 Hoàng Diệu, Phường
+                    6, Quận 4, tp Hồ Chí Minh, Việt Nam
+                  </p>
+                </div>
+                <div className="btn-info">
+                  <img src={mailImg} alt="" />
+                  <p>address@email.com</p>
+                </div>
               </div>
-              <div className="btn-info">
-                <img src={locationImg} alt="" />
-                <p>
-                  CirCo Coworking Space, H3 Building, 384 Hoàng Diệu, Phường 6,
-                  Quận 4, tp Hồ Chí Minh, Việt Nam
-                </p>
-              </div>
-              <div className="btn-info">
-                <img src={mailImg} alt="" />
-                <p>address@email.com</p>
-              </div>
-            </div>
-          </HeadContact>
+            </HeadContact>
+          )}
         </HeadRow>
         <Row>
           <p>
@@ -427,6 +451,25 @@ const ProductDetail = () => {
           <ErrorPopup content={formError} setOpen={setOpen} />
         ) : null}
       </SobyModal>
+      <ReactTooltip
+        id="rank-info"
+        aria-haspopup="true"
+        role="example"
+        place="left"
+        type="light"
+        effect="solid"
+        globalEventOff="dbclick"
+      >
+        <TooltipData>
+          <h5>Soby Rank – Chỉ số uy tín</h5>
+          <p className="mg-b-8">
+            Giá trị của Soby Rank đối với một cửa hàng sẽ tương đương với tầm
+            quan trọng của điểm IMDB đối với một bộ phim, hay của số sao
+            Michelin đối với một nhà hàng.
+          </p>
+          <h5 className="primary-color clickable">Read more</h5>
+        </TooltipData>
+      </ReactTooltip>
     </React.Fragment>
   );
 };

@@ -16,7 +16,6 @@ import locationImg from 'shared/assets/location.svg';
 import mailImg from 'shared/assets/mail-black.svg';
 import wallpaperImg from 'shared/assets/wallpaper.svg';
 import shareImg from 'shared/assets/share.svg';
-import phoneImg from 'shared/assets/phone-circle.svg';
 import heedImg from 'shared/assets/heed.svg';
 import { ReactComponent as MarkIcon } from 'shared/assets/greenmark.svg';
 
@@ -33,6 +32,7 @@ import {
 import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
 import ShopVerifies from 'components/shop-verifies/shop-verifies.component';
 import NewProductList from 'components/product-listcard/new-product-list.component';
+import PhoneButton from './phone-button.component';
 
 const Container = styled.div`
   margin: auto;
@@ -246,37 +246,6 @@ const ContactGroup = styled.div`
   }
 `;
 
-const TooltipData = styled.div`
-  background-color: white;
-`;
-
-const PhoneBtn = styled.div`
-  height: 2rem;
-  background: ${mainColor};
-  padding: 0.2rem 0.6rem;
-  display: ${(props) => (props.show ? 'flex' : 'none')};
-  align-items: center;
-  color: white;
-  border-radius: 3px;
-  cursor: pointer;
-  img.phone-icon {
-    width: 0.8rem;
-    height: 0.8rem;
-    margin-right: 0.5rem;
-  }
-  .btn-click {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    flex: 1;
-    text-align: right;
-    margin-left: 1.2rem;
-  }
-  margin-top: 1rem;
-  @media screen and (max-width: 600px) {
-    display: ${(props) => (props.hide ? 'flex' : 'none')};
-  }
-`;
-
 const MobileSection = styled.div`
   display: ${(props) => (props.show ? 'block' : 'none')};
   background-color: white;
@@ -293,6 +262,10 @@ const RankPoint = styled.h2`
   @media screen and (max-width: 1024px) {
     display: ${(props) => (props.hide ? 'block' : 'none')};
   }
+`;
+
+const TooltipData = styled.div`
+  background-color: white;
 `;
 
 const ShopProfile = () => {
@@ -479,22 +452,17 @@ const ShopProfile = () => {
           </HeadPromotion>
           <NewHeadPromotion>
             <h3>{shopInfo.name}</h3>
-            <PhoneBtn show>
-              <img className="phone-icon" src={phoneImg} alt="" />
-              <p>
-                {togglePhone
-                  ? formatPhoneNumberIntl(
-                      `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
-                    )
-                  : phoneString}
-              </p>
-              <p
-                className="btn-click"
-                onClick={() => setTogglePhone(!togglePhone)}
-              >
-                {togglePhone ? 'Click to hide' : 'Click to show'}
-              </p>
-            </PhoneBtn>
+            <PhoneButton
+              togglePhone={togglePhone}
+              phoneNumber={formatPhoneNumberIntl(
+                `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
+              )}
+              phoneNumberCovered={phoneString}
+              setTogglePhone={setTogglePhone}
+              showText="Click to show"
+              hideText="Click to hide"
+              show
+            />
           </NewHeadPromotion>
         </HeadRow>
         <InfoContainer>
@@ -572,22 +540,17 @@ const ShopProfile = () => {
               </Categories>
             </MobileSection>
           </div>
-          <PhoneBtn hide>
-            <img className="phone-icon" src={phoneImg} alt="" />
-            <p>
-              {togglePhone
-                ? formatPhoneNumberIntl(
-                    `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
-                  )
-                : phoneString}
-            </p>
-            <p
-              className="btn-click"
-              onClick={() => setTogglePhone(!togglePhone)}
-            >
-              {togglePhone ? 'Hide' : 'Show'}
-            </p>
-          </PhoneBtn>
+          <PhoneButton
+            togglePhone={togglePhone}
+            phoneNumber={formatPhoneNumberIntl(
+              `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
+            )}
+            phoneNumberCovered={phoneString}
+            setTogglePhone={setTogglePhone}
+            showText="Show"
+            hideText="Hide"
+            hide
+          />
           <div>
             <MobileSection show>
               <h5>Shop description</h5>
@@ -645,7 +608,6 @@ const ShopProfile = () => {
           <ErrorPopup content={formError} setOpen={setOpen} />
         ) : null}
       </SobyModal>
-
       <ReactTooltip
         id="rank-info"
         aria-haspopup="true"

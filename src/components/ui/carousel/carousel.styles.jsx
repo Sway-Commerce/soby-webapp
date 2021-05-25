@@ -16,10 +16,11 @@ export const Container = styled.div`
       li.thumb {
         height: 45px;
         width: 45px !important;
+        cursor: pointer;
         img {
           height: inherit;
           width: inherit;
-          object-fit: scale-down;
+          object-fit: cover;
         }
         margin-right: 5px !important;
         border: none !important;
