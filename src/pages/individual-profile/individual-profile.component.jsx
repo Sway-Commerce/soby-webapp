@@ -3,16 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
-import KybStatus from 'components/kyb-status/kyb-status.component';
 import SobyModal from 'components/ui/modal/modal.component';
-import EditProfile from './edit-profile.component';
-import PasswordPopup from './edit-password.component';
 import EmailPopup from './edit-mail-popup.component';
 import PhonePopup from './edit-phone-popup.component';
 import EmailCodePopup from './verify-email-popup.component';
 import PhoneCodePopup from './verify-phone-popup.component';
 import {
-  subColor,
   bodyColor,
   stokeColor,
 } from '../../shared/css-variable/variable';
@@ -26,7 +22,6 @@ import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.com
 import { Link } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import {
-  decryptIndividualModel,
   GETSECRET,
   GET_INDIVIDUAL_BASIC_INFO,
 } from 'graphQL/repository/individual.repository';
@@ -273,7 +268,10 @@ const IndividualProfile = () => {
           </div>
           <div className="info-row">
             <PhoneBlackIcon />
-            <p onClick={() => setOpenEditPhonePopup(true)} className="clickable">
+            <p
+              onClick={() => setOpenEditPhonePopup(true)}
+              className="clickable"
+            >
               {phoneCountryCode}&nbsp;{phoneNumber}
             </p>
             {phoneStatus === 'CONFIRMED' ? (
@@ -286,7 +284,9 @@ const IndividualProfile = () => {
           </div>
           <div className="info-row">
             <EmailBlackIcon />
-            <p onClick={() => setOpenEditMailPopup(true)} className="clickable">{email}</p>
+            <p onClick={() => setOpenEditMailPopup(true)} className="clickable">
+              {email}
+            </p>
             {emailStatus === 'CONFIRMED' ? (
               <VerifiedIcon />
             ) : (
@@ -296,20 +296,20 @@ const IndividualProfile = () => {
             )}
           </div>
         </InfoBox>
-        <Row to="/edit-profile" pointer>
+        <Row to="/edit-profile" pointer="true">
           <p>Edit information</p>
           <ArrowRightIcon />
         </Row>
-        <Row to="/change-password" pointer>
+        <Row to="/change-password" pointer="true">
           <p>Password</p>
           <ArrowRightIcon />
         </Row>
-        <Row to="/individual-shipping" pointer>
+        <Row to="/individual-shipping" pointer="true">
           <p>Shipping info</p>
           <ArrowRightIcon />
         </Row>
         <Row
-          pointer
+          pointer="true"
           to="#"
           onClick={() =>
             (window.location =
@@ -321,7 +321,7 @@ const IndividualProfile = () => {
         </Row>
         <p className="red mg-b-24 clickable">
           <span
-            classNam=""
+            className=""
             onClick={() => {
               dispatchSignOutStart();
               window.location = '/phone-signin';
