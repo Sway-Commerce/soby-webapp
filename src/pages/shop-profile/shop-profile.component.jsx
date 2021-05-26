@@ -20,19 +20,12 @@ import heedImg from 'shared/assets/heed.svg';
 import { ReactComponent as MarkIcon } from 'shared/assets/greenmark.svg';
 
 import buildAddressString from 'shared/utils/buildAddressString';
-import {
-  bodyColor,
-  borderColor,
-  greenColor,
-  mainColor,
-  orangeColor,
-  redColor,
-  yellowColor,
-} from 'shared/css-variable/variable';
+import { bodyColor, borderColor, redColor } from 'shared/css-variable/variable';
 import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
 import ShopVerifies from 'components/shop-verifies/shop-verifies.component';
 import NewProductList from 'components/product-listcard/new-product-list.component';
 import PhoneButton from './phone-button.component';
+import { getColor } from 'shared/constants/shop.constant';
 
 const Container = styled.div`
   margin: auto;
@@ -412,27 +405,29 @@ const ShopProfile = () => {
     }
   }, [productData?.searchProduct?.data]);
 
-  const getColor = (name) => {
-    switch (name) {
-      case 'Red':
-        return redColor;
-      case 'Orange':
-        return orangeColor;
-      case 'Yellow':
-        return yellowColor;
-      case 'Green':
-        return greenColor;
-      case 'Blue':
-        return mainColor;
-      default:
-        return redColor;
-    }
-  };
-
   return getAggregatedShopLoading || productLoading ? (
     <Spinner />
   ) : (
     <React.Fragment>
+      <ReactTooltip
+        id="rank-info"
+        aria-haspopup="true"
+        role="example"
+        place="right"
+        type="light"
+        effect="solid"
+        globalEventOff="dbclick"
+      >
+        <TooltipData>
+          <h5>Soby Rank – Chỉ số uy tín</h5>
+          <p className="mg-b-8">
+            Giá trị của Soby Rank đối với một cửa hàng sẽ tương đương với tầm
+            quan trọng của điểm IMDB đối với một bộ phim, hay của số sao
+            Michelin đối với một nhà hàng.
+          </p>
+          <h5 className="primary-color clickable">Read more</h5>
+        </TooltipData>
+      </ReactTooltip>
       <SharedBreadcrumb breadcrumbs={breadcrumbs} />
       <Container>
         <HeadRow>
@@ -461,6 +456,7 @@ const ShopProfile = () => {
               setTogglePhone={setTogglePhone}
               showText="Click to show"
               hideText="Click to hide"
+              wide
               show
             />
           </NewHeadPromotion>
@@ -518,6 +514,7 @@ const ShopProfile = () => {
               status={shopInfo.kyb?.status}
               kycStatus={shopInfo.kycStatus}
               shopUrls={shopInfo.shopUrls}
+              className="mg-t-30"
             />
 
             <MobileSection show>
@@ -608,25 +605,6 @@ const ShopProfile = () => {
           <ErrorPopup content={formError} setOpen={setOpen} />
         ) : null}
       </SobyModal>
-      <ReactTooltip
-        id="rank-info"
-        aria-haspopup="true"
-        role="example"
-        place="right"
-        type="light"
-        effect="solid"
-        globalEventOff="dbclick"
-      >
-        <TooltipData>
-          <h5>Soby Rank – Chỉ số uy tín</h5>
-          <p className="mg-b-8">
-            Giá trị của Soby Rank đối với một cửa hàng sẽ tương đương với tầm
-            quan trọng của điểm IMDB đối với một bộ phim, hay của số sao
-            Michelin đối với một nhà hàng.
-          </p>
-          <h5 className="primary-color clickable">Read more</h5>
-        </TooltipData>
-      </ReactTooltip>
     </React.Fragment>
   );
 };

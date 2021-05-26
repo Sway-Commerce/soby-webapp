@@ -22,7 +22,7 @@ const PhoneBtn = styled.div`
     text-transform: uppercase;
     flex: 1;
     text-align: right;
-    margin-left: 1.2rem;
+    margin-left: ${(props) => (props.wide ? '1.2rem' : '0')};;
   }
   margin-top: 1rem;
   @media screen and (max-width: 600px) {

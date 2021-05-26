@@ -366,4 +366,8 @@ export const GlobalStyle = createGlobalStyle`
 			width: 70vw;
 		}
 	}
+
+	.mg-t-30 {
+		margin-top: 1.5rem;
+	}
 `;

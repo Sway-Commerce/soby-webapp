@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import styled from 'styled-components';
 
@@ -9,30 +9,26 @@ import {
 } from 'graphQL/repository/product.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import ProductCard from 'components/product-card/product-card.component';
-import { GET_SHOP_BY_ID } from 'graphQL/repository/shop.repository';
+import { GET_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import locationImg from 'shared/assets/location.svg';
 import mailImg from 'shared/assets/mail-black.svg';
 import heedImg from 'shared/assets/heed.svg';
+import { ReactComponent as ShopBadgeIcon } from 'shared/assets/badge-vector.svg';
 
 import NewProductList from 'components/product-listcard/new-product-list.component';
 import ShopVerifies from 'components/shop-verifies/shop-verifies.component';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
 import PhoneButton from 'pages/shop-profile/phone-button.component';
 import ReactTooltip from 'react-tooltip';
+import { getColor } from 'shared/constants/shop.constant';
+import { redColor } from 'shared/css-variable/variable';
+import buildAddressString from 'shared/utils/buildAddressString';
+import { currencyFormatter } from 'shared/utils/formatCurrency';
 
 const Container = styled.div`
   margin: auto;
-
-  .btn-info {
-    margin-top: 16px;
-    display: flex;
-    #locationImg {
-      align-self: flex-start;
-      padding-top: 4px;
-    }
-  }
 
   .status {
     color: #4f4f4f;
@@ -47,22 +43,9 @@ const Container = styled.div`
     margin-right: 24px;
   }
 
-  .title {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 24px;
-    line-height: 32px;
-    color: #000000;
-  }
-
-  .cost {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: bold;
+  .price {
     font-size: 32px;
     line-height: 36px;
-    color: #000000;
     margin-top: 16px;
   }
 
@@ -72,16 +55,12 @@ const Container = styled.div`
     border-radius: 3px;
     width: 98px;
     height: 22px;
-    img.heedImg {
+    img.heed-icon {
       width: 11.67px;
       height: 11.67px;
       margin-left: 5.17px;
+      cursor: pointer;
     }
-  }
-
-  .creditImg {
-    width: 55px;
-    height: 24px;
   }
 `;
 
@@ -145,7 +124,7 @@ const Title = styled.div`
 
 const HeadRow = styled.div`
   display: grid;
-  grid-template-columns: 367px 471px 260px;
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 24px;
   background: #ffffff;
   margin-bottom: 24px;
@@ -155,7 +134,7 @@ const HeadRow = styled.div`
 const HeadContact = styled.div`
   padding: 24px;
   width: 260px;
-  height: 403px;
+  height: fit-content;
   border: 1px solid #e4e4e4;
   box-sizing: border-box;
   border-radius: 3px;
@@ -164,6 +143,7 @@ const HeadContact = styled.div`
 
   .contact {
     height: 403px;
+    width: 212px;
   }
 
   .head {
@@ -172,6 +152,50 @@ const HeadContact = styled.div`
 
   .sign {
     margin-left: 16px;
+    h3 {
+      line-height: 19.44px;
+    }
+  }
+
+  .avatarImg {
+    width: 48px;
+    height: 48px;
+    border-radius: 3px;
+    object-fit: cover;
+  }
+
+  .badge {
+    width: 55px;
+    height: 24px;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    background-color: ${(props) => props?.color || redColor};
+    p {
+      font-size: 0.7rem;
+      color: white;
+      line-height: 24px;
+    }
+    svg {
+      margin-right: 4px;
+      path:last-child {
+        fill: ${(props) => props?.color || redColor};
+      }
+    }
+  }
+
+  .contact-item {
+    margin-top: 16px;
+    display: flex;
+    align-items: flex-start;
+    img {
+      margin-right: 12px;
+    }
+
+    p {
+      -webkit-line-clamp: 5;
+    }
   }
 `;
 
@@ -238,7 +262,7 @@ const ProductDetail = () => {
         },
       });
 
-      getShopById({ variables: { id: shopId } });
+      getAggregatedShop({ variables: { id: shopId } });
     }
   }, [getProductData?.getProduct?.data]);
 
@@ -252,27 +276,27 @@ const ProductDetail = () => {
   ] = useLazyQuery(SEARCH_PRODUCT);
 
   const [
-    getShopById,
+    getAggregatedShop,
     {
-      loading: getShopByIdLoading,
-      error: getShopByIdError,
-      data: getShopByIdData,
+      loading: getAggregatedShopLoading,
+      error: getAggregatedShopError,
+      data: getAggregatedShopData,
     },
-  ] = useLazyQuery(GET_SHOP_BY_ID);
+  ] = useLazyQuery(GET_AGGREGATED_SHOP);
 
   useEffect(() => {
     if (
       getProductError?.message ||
       searchProductError?.message ||
-      getShopByIdError?.message
+      getAggregatedShopError?.message
     ) {
       setFormError(
         getProductError?.message ??
           searchProductError?.message ??
-          getShopByIdError?.message
+          getAggregatedShopError?.message
       );
     }
-  }, [getProductError, searchProductError, getShopByIdError]);
+  }, [getProductError, searchProductError, getAggregatedShopError]);
 
   useEffect(() => {
     if (searchProductData?.searchProduct?.data?.records) {
@@ -282,14 +306,14 @@ const ProductDetail = () => {
   }, [searchProductData?.searchProduct?.data]);
 
   useEffect(() => {
-    if (getShopByIdData?.getShopById?.data) {
-      const shopInfo = getShopByIdData?.getShopById?.data;
+    if (getAggregatedShopData?.getAggregatedShop?.data) {
+      const shopInfo = getAggregatedShopData?.getAggregatedShop?.data;
       const { phoneNumber, phoneCountryCode } = shopInfo;
-      setPhoneString(`${phoneCountryCode} ${phoneNumber.slice(0, 4)} *** ****`);
+      setPhoneString(`${phoneCountryCode} ${phoneNumber.slice(0, 4)} ****`);
 
       setProductData({ ...productData, shopInfo });
     }
-  }, [getShopByIdData?.getShopById?.data]);
+  }, [getAggregatedShopData?.getAggregatedShop?.data]);
 
   useEffect(() => {
     if (productData.skus.length) {
@@ -322,10 +346,31 @@ const ProductDetail = () => {
     }
   }, [productData.skus]);
 
-  return searchProductLoading || getProductLoading || getShopByIdLoading ? (
+  return searchProductLoading ||
+    getProductLoading ||
+    getAggregatedShopLoading ? (
     <Spinner />
   ) : (
     <React.Fragment>
+      <ReactTooltip
+        id="rank-info"
+        aria-haspopup="true"
+        role="example"
+        place="left"
+        type="light"
+        effect="solid"
+        globalEventOff="click"
+      >
+        <TooltipData>
+          <h5>Soby Rank – Chỉ số uy tín</h5>
+          <p className="mg-b-8">
+            Giá trị của Soby Rank đối với một cửa hàng sẽ tương đương với tầm
+            quan trọng của điểm IMDB đối với một bộ phim, hay của số sao
+            Michelin đối với một nhà hàng.
+          </p>
+          <h5 className="primary-color clickable">Read more</h5>
+        </TooltipData>
+      </ReactTooltip>
       <Container>
         <HeadRow>
           <ProductCard
@@ -337,11 +382,9 @@ const ProductDetail = () => {
           />
           <div>
             <Title>
-              Amazfit GTS 2e Smartwatch with 24H Heart Rate Monitor, Sleep,
-              Stress and SpO2 Monitor, Activity Tracker Sports Watch with 90
-              Sports Modes, 14 Day Battery Life, Black
+              {productData.name}
             </Title>
-            <p className="cost">13.150.000 đ</p>
+            <h1 className="price">{currencyFormatter(productData.sku.currentPrice)}</h1>
             <ProductBox>
               <SkuType>Product category:</SkuType>
               <div className="item">Sport, Watch, fashion</div>
@@ -359,16 +402,33 @@ const ProductDetail = () => {
             </TagBox>
           </div>
           {productData.shopInfo && (
-            <HeadContact>
+            <HeadContact
+              color={getColor(productData.shopInfo.shopRank.rank.name)}
+            >
               <div className="contact">
-                <div className="head">
-                  <img className="avatarImg" alt="" />
+                <div className="head mg-b-16">
+                  <img
+                    className="avatarImg"
+                    src={productData.shopInfo.logoUrl}
+                    alt=""
+                  />
                   <div className="sign">
-                    <h3>Blue Bird Shop</h3>
+                    <Link to={`/shop-profile/${productData.shopInfo.id}`}>
+                      <h3
+                        className="truncate"
+                        data-tip={productData.shopInfo.name}
+                      >
+                        {productData.shopInfo.name}
+                      </h3>
+                    </Link>
+
                     <div className="contact-wrapper">
-                      <img className="creditImg" alt="" />
+                      <div className="badge">
+                        <ShopBadgeIcon />
+                        <p>{+productData.shopInfo.shopRank.totalPoints / 10}</p>
+                      </div>
                       <p className="status">
-                        <b>Good</b>
+                        <b>{productData.shopInfo.shopRank.rank.description}</b>
                       </p>
                       <img
                         className="heed-icon"
@@ -399,16 +459,17 @@ const ProductDetail = () => {
                   hideText="Hide"
                   show
                 />
-                <div className="btn-info">
+                <div className="contact-item">
                   <img src={locationImg} alt="" />
-                  <p>
-                    CirCo Coworking Space, H3 Building, 384 Hoàng Diệu, Phường
-                    6, Quận 4, tp Hồ Chí Minh, Việt Nam
+                  <p className="truncate" data-tip={productData.shopInfo.name}>
+                    {buildAddressString(
+                      productData.shopInfo.shippingLocations[0]
+                    )}
                   </p>
                 </div>
-                <div className="btn-info">
+                <div className="contact-item">
                   <img src={mailImg} alt="" />
-                  <p>address@email.com</p>
+                  <p>{productData.shopInfo.email}</p>
                 </div>
               </div>
             </HeadContact>
@@ -451,25 +512,6 @@ const ProductDetail = () => {
           <ErrorPopup content={formError} setOpen={setOpen} />
         ) : null}
       </SobyModal>
-      <ReactTooltip
-        id="rank-info"
-        aria-haspopup="true"
-        role="example"
-        place="left"
-        type="light"
-        effect="solid"
-        globalEventOff="dbclick"
-      >
-        <TooltipData>
-          <h5>Soby Rank – Chỉ số uy tín</h5>
-          <p className="mg-b-8">
-            Giá trị của Soby Rank đối với một cửa hàng sẽ tương đương với tầm
-            quan trọng của điểm IMDB đối với một bộ phim, hay của số sao
-            Michelin đối với một nhà hàng.
-          </p>
-          <h5 className="primary-color clickable">Read more</h5>
-        </TooltipData>
-      </ReactTooltip>
     </React.Fragment>
   );
 };
