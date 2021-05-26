@@ -409,25 +409,6 @@ const ShopProfile = () => {
     <Spinner />
   ) : (
     <React.Fragment>
-      <ReactTooltip
-        id="rank-info"
-        aria-haspopup="true"
-        role="example"
-        place="right"
-        type="light"
-        effect="solid"
-        globalEventOff="dbclick"
-      >
-        <TooltipData>
-          <h5>Soby Rank – Chỉ số uy tín</h5>
-          <p className="mg-b-8">
-            Giá trị của Soby Rank đối với một cửa hàng sẽ tương đương với tầm
-            quan trọng của điểm IMDB đối với một bộ phim, hay của số sao
-            Michelin đối với một nhà hàng.
-          </p>
-          <h5 className="primary-color clickable">Read more</h5>
-        </TooltipData>
-      </ReactTooltip>
       <SharedBreadcrumb breadcrumbs={breadcrumbs} />
       <Container>
         <HeadRow>
@@ -474,6 +455,25 @@ const ShopProfile = () => {
                   data-for="rank-info"
                   data-event="click focus"
                 />
+                <ReactTooltip
+                  id="rank-info"
+                  aria-haspopup="true"
+                  role="example"
+                  place="right"
+                  type="light"
+                  effect="solid"
+                  globalEventOff="dbclick"
+                >
+                  <TooltipData>
+                    <h5>Soby Rank – Chỉ số uy tín</h5>
+                    <p className="mg-b-8">
+                      Giá trị của Soby Rank đối với một cửa hàng sẽ tương đương
+                      với tầm quan trọng của điểm IMDB đối với một bộ phim, hay
+                      của số sao Michelin đối với một nhà hàng.
+                    </p>
+                    <h5 className="primary-color clickable">Read more</h5>
+                  </TooltipData>
+                </ReactTooltip>
               </div>
               <div className="btn-point">
                 <RankPoint

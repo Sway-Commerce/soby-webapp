@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import styled from 'styled-components';
+import ReactTooltip from 'react-tooltip';
 
 import {
   GET_PRODUCT,
@@ -21,7 +22,6 @@ import NewProductList from 'components/product-listcard/new-product-list.compone
 import ShopVerifies from 'components/shop-verifies/shop-verifies.component';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
 import PhoneButton from 'pages/shop-profile/phone-button.component';
-import ReactTooltip from 'react-tooltip';
 import { getColor } from 'shared/constants/shop.constant';
 import { redColor } from 'shared/css-variable/variable';
 import buildAddressString from 'shared/utils/buildAddressString';
@@ -352,25 +352,6 @@ const ProductDetail = () => {
     <Spinner />
   ) : (
     <React.Fragment>
-      <ReactTooltip
-        id="rank-info"
-        aria-haspopup="true"
-        role="example"
-        place="left"
-        type="light"
-        effect="solid"
-        globalEventOff="click"
-      >
-        <TooltipData>
-          <h5>Soby Rank – Chỉ số uy tín</h5>
-          <p className="mg-b-8">
-            Giá trị của Soby Rank đối với một cửa hàng sẽ tương đương với tầm
-            quan trọng của điểm IMDB đối với một bộ phim, hay của số sao
-            Michelin đối với một nhà hàng.
-          </p>
-          <h5 className="primary-color clickable">Read more</h5>
-        </TooltipData>
-      </ReactTooltip>
       <Container>
         <HeadRow>
           <ProductCard
@@ -381,13 +362,13 @@ const ProductDetail = () => {
             isMain
           />
           <div>
-            <Title>
-              {productData.name}
-            </Title>
-            <h1 className="price">{currencyFormatter(productData.sku.currentPrice)}</h1>
+            <Title>{productData.name}</Title>
+            <h1 className="price">
+              {currencyFormatter(productData.sku.currentPrice)}
+            </h1>
             <ProductBox>
               <SkuType>Product category:</SkuType>
-              <div className="item">Sport, Watch, fashion</div>
+              <div className="item">{productData.category.name}</div>
             </ProductBox>
             <SkuType>Colours:</SkuType>
             <TagBox>
@@ -420,6 +401,7 @@ const ProductDetail = () => {
                       >
                         {productData.shopInfo.name}
                       </h3>
+                      <ReactTooltip />
                     </Link>
 
                     <div className="contact-wrapper">
@@ -438,6 +420,26 @@ const ProductDetail = () => {
                         data-for="rank-info"
                         data-event="click focus"
                       />
+                      <ReactTooltip
+                        id="rank-info"
+                        aria-haspopup="true"
+                        role="example"
+                        place="left"
+                        type="light"
+                        effect="solid"
+                        globalEventOff="dbclick"
+                      >
+                        <TooltipData>
+                          <h5>Soby Rank – Chỉ số uy tín</h5>
+                          <p className="mg-b-8">
+                            Giá trị của Soby Rank đối với một cửa hàng sẽ tương
+                            đương với tầm quan trọng của điểm IMDB đối với một
+                            bộ phim, hay của số sao Michelin đối với một nhà
+                            hàng.
+                          </p>
+                          <h5 className="primary-color clickable">Read more</h5>
+                        </TooltipData>
+                      </ReactTooltip>
                     </div>
                   </div>
                 </div>

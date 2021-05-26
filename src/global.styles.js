@@ -355,7 +355,7 @@ export const GlobalStyle = createGlobalStyle`
 		font-size: 0.7rem;
 	}
 
-	.__react_component_tooltip#rank-info {
+	.__react_component_tooltip#rank-info, .__react_component_tooltip#shop-rank-info {
 		opacity: 1;
 		border-radius: 3px;
 		padding: 0.8rem;

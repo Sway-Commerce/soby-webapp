@@ -49,12 +49,12 @@ const NewProductList = ({ records = [] }) => {
               <p className="body-color truncate" data-tip={name}>
                 {name}
               </p>
+              <ReactTooltip place="top" effect="solid" />
               <h5>{currencyFormatter(originPrice)}</h5>
             </NewProductBox>
           );
         })}
       </ProductContainer>
-      <ReactTooltip place="top" effect="solid"/>
     </React.Fragment>
   );
 };
