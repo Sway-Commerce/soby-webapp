@@ -6,11 +6,12 @@ import { currencyFormatter } from 'shared/utils/formatCurrency';
 
 const ProductContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
   gap: 1.2rem;
   margin-top: 0.8rem;
-  @media screen and (max-width: 400px) {
-    justify-content: center;
+  flex-wrap: wrap;
+  @media screen and (max-width: 600px) {
+    overflow-x: auto;
+    flex-wrap: nowrap;
   }
 `;
 

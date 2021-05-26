@@ -208,13 +208,21 @@ const Option = styled.div`
   align-items: center;
   color: ${bodyColor};
   font-size: 0.8rem;
+  @media screen and (max-width: 600px) {
+    flex: 1;
+    min-width: max-content;
+  }
 `;
 
 const TagOption = styled.div`
   margin-top: 0.4rem;
   display: flex;
-  flex-wrap: wrap;
   gap: 16px;
+  flex-wrap: wrap;
+  @media screen and (max-width: 600px) {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
 `;
 
 const ContactGroup = styled.div`

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import styled from 'styled-components';
-import ReactTooltip from 'react-tooltip';
 
 import {
   GET_PRODUCT,
@@ -13,19 +12,11 @@ import ProductCard from 'components/product-card/product-card.component';
 import { GET_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
-import locationImg from 'shared/assets/location.svg';
-import mailImg from 'shared/assets/mail-black.svg';
-import heedImg from 'shared/assets/heed.svg';
-import { ReactComponent as ShopBadgeIcon } from 'shared/assets/badge-vector.svg';
 
 import NewProductList from 'components/product-listcard/new-product-list.component';
-import ShopVerifies from 'components/shop-verifies/shop-verifies.component';
-import { formatPhoneNumberIntl } from 'react-phone-number-input';
-import PhoneButton from 'pages/shop-profile/phone-button.component';
 import { getColor } from 'shared/constants/shop.constant';
-import { redColor } from 'shared/css-variable/variable';
-import buildAddressString from 'shared/utils/buildAddressString';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
+import ShopCard from 'pages/shop-profile/shop-card.component';
 
 const Container = styled.div`
   margin: auto;
@@ -75,9 +66,6 @@ const Row = styled.div`
   .row-header {
     display: flex;
     justify-content: space-between;
-    p {
-      color: #2b74e4;
-    }
   }
 `;
 
@@ -108,9 +96,6 @@ const ProductBox = styled.div`
   .item {
     margin-top: 20px;
     margin-left: 8px;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
     line-height: 24px;
     color: #4f4f4f;
   }
@@ -123,84 +108,16 @@ const Title = styled.div`
 `;
 
 const HeadRow = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 24px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
   background: #ffffff;
   margin-bottom: 24px;
   padding: 32px 24px 24px;
 `;
 
-const HeadContact = styled.div`
-  padding: 24px;
-  width: 260px;
-  height: fit-content;
-  border: 1px solid #e4e4e4;
-  box-sizing: border-box;
-  border-radius: 3px;
-  display: flex;
-  justify-content: center;
-
-  .contact {
-    height: 403px;
-    width: 212px;
-  }
-
-  .head {
-    display: flex;
-  }
-
-  .sign {
-    margin-left: 16px;
-    h3 {
-      line-height: 19.44px;
-    }
-  }
-
-  .avatarImg {
-    width: 48px;
-    height: 48px;
-    border-radius: 3px;
-    object-fit: cover;
-  }
-
-  .badge {
-    width: 55px;
-    height: 24px;
-    border-radius: 100px;
-    display: flex;
-    align-items: center;
-    padding: 0 8px;
-    background-color: ${(props) => props?.color || redColor};
-    p {
-      font-size: 0.7rem;
-      color: white;
-      line-height: 24px;
-    }
-    svg {
-      margin-right: 4px;
-      path:last-child {
-        fill: ${(props) => props?.color || redColor};
-      }
-    }
-  }
-
-  .contact-item {
-    margin-top: 16px;
-    display: flex;
-    align-items: flex-start;
-    img {
-      margin-right: 12px;
-    }
-
-    p {
-      -webkit-line-clamp: 5;
-    }
-  }
-`;
-
-const TooltipData = styled.div`
-  background-color: white;
+const InfoBox = styled.div`
+  flex: 1;
 `;
 
 const ProductDetail = () => {
@@ -225,6 +142,12 @@ const ProductDetail = () => {
   });
   const [phoneString, setPhoneString] = useState('');
   const [togglePhone, setTogglePhone] = useState(false);
+  const [breadcrumbs, setBreadcrumb] = useState([
+    {
+      name: 'Home',
+      src: '/',
+    },
+  ]);
 
   const {
     loading: getProductLoading,
@@ -361,7 +284,7 @@ const ProductDetail = () => {
             description={productData.description}
             isMain
           />
-          <div>
+          <InfoBox>
             <Title>{productData.name}</Title>
             <h1 className="price">
               {currencyFormatter(productData.sku.currentPrice)}
@@ -381,130 +304,39 @@ const ProductDetail = () => {
               <Tag>GTS 2</Tag>
               <Tag>GTS 2e</Tag>
             </TagBox>
-          </div>
+          </InfoBox>
           {productData.shopInfo && (
-            <HeadContact
+            <ShopCard
               color={getColor(productData.shopInfo.shopRank.rank.name)}
-            >
-              <div className="contact">
-                <div className="head mg-b-16">
-                  <img
-                    className="avatarImg"
-                    src={productData.shopInfo.logoUrl}
-                    alt=""
-                  />
-                  <div className="sign">
-                    <Link to={`/shop-profile/${productData.shopInfo.id}`}>
-                      <h3
-                        className="truncate"
-                        data-tip={productData.shopInfo.name}
-                      >
-                        {productData.shopInfo.name}
-                      </h3>
-                      <ReactTooltip />
-                    </Link>
-
-                    <div className="contact-wrapper">
-                      <div className="badge">
-                        <ShopBadgeIcon />
-                        <p>{+productData.shopInfo.shopRank.totalPoints / 10}</p>
-                      </div>
-                      <p className="status">
-                        <b>{productData.shopInfo.shopRank.rank.description}</b>
-                      </p>
-                      <img
-                        className="heed-icon"
-                        src={heedImg}
-                        alt=""
-                        data-tip
-                        data-for="rank-info"
-                        data-event="click focus"
-                      />
-                      <ReactTooltip
-                        id="rank-info"
-                        aria-haspopup="true"
-                        role="example"
-                        place="left"
-                        type="light"
-                        effect="solid"
-                        globalEventOff="dbclick"
-                      >
-                        <TooltipData>
-                          <h5>Soby Rank – Chỉ số uy tín</h5>
-                          <p className="mg-b-8">
-                            Giá trị của Soby Rank đối với một cửa hàng sẽ tương
-                            đương với tầm quan trọng của điểm IMDB đối với một
-                            bộ phim, hay của số sao Michelin đối với một nhà
-                            hàng.
-                          </p>
-                          <h5 className="primary-color clickable">Read more</h5>
-                        </TooltipData>
-                      </ReactTooltip>
-                    </div>
-                  </div>
-                </div>
-
-                <ShopVerifies
-                  status={productData.shopInfo.kyb?.status}
-                  kycStatus={productData.shopInfo?.kycStatus}
-                  shopUrls={productData.shopInfo?.shopUrls}
-                />
-
-                <PhoneButton
-                  togglePhone={togglePhone}
-                  phoneNumber={formatPhoneNumberIntl(
-                    `${productData.shopInfo.phoneCountryCode}${productData.shopInfo.phoneNumber}`
-                  )}
-                  phoneNumberCovered={phoneString}
-                  setTogglePhone={setTogglePhone}
-                  showText="Show"
-                  hideText="Hide"
-                  show
-                />
-                <div className="contact-item">
-                  <img src={locationImg} alt="" />
-                  <p className="truncate" data-tip={productData.shopInfo.name}>
-                    {buildAddressString(
-                      productData.shopInfo.shippingLocations[0]
-                    )}
-                  </p>
-                </div>
-                <div className="contact-item">
-                  <img src={mailImg} alt="" />
-                  <p>{productData.shopInfo.email}</p>
-                </div>
-              </div>
-            </HeadContact>
+              shopInfo={productData.shopInfo}
+              togglePhone={togglePhone}
+              phoneString={phoneString}
+              setTogglePhone={setTogglePhone}
+              show
+            />
           )}
         </HeadRow>
         <Row>
           <p>
             <b>About this product</b>
           </p>
-          <Description>
-            3D CURVED DESIGN & HD AMOLED SCREEN: The Amazfit GTS 2 is a curved
-            1.65" hd amoled screen, covered in 3d glass, boasts a crystal-clear
-            341ppi pixel density, the bezel-less design naturally transitions to
-            the aluminum alloy watch body for an enhanced visual aesthetic."
-            LONG 7-DAY BATTERY LIFE & GPS BUILT-IN: The GTS 2 is equipped with a
-            powerful 246mah battery that can last 7 days with typical use, and
-            is always ready to escort you on your journeys and track your
-            progress. Basic usage battery life-20 days. Heavy usage battery
-            life-3.5 days
-          </Description>
-          <div className="btn-readmore">
-            <p>
-              <b>Read more</b>
-            </p>
-          </div>
+          <Description>{productData.description}</Description>
         </Row>
+        {productData.shopInfo && (
+          <ShopCard
+            color={getColor(productData.shopInfo.shopRank.rank.name)}
+            shopInfo={productData.shopInfo}
+            togglePhone={togglePhone}
+            phoneString={phoneString}
+            setTogglePhone={setTogglePhone}
+            hide
+          />
+        )}
 
         <Row>
           <div className="row-header">
             <h3>New Product</h3>
-            <p>
-              <b>See all</b>
-            </p>
+            <h5 className="primary-color">See all</h5>
           </div>
           <NewProductList records={productData.records} />
         </Row>

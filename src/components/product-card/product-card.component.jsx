@@ -6,15 +6,15 @@ import { currencyFormatter } from 'shared/utils/formatCurrency';
 import { Link } from 'react-router-dom';
 
 const Container = styled.div`
-  width: 170px;
+  width: 367px;
   .card {
     img {
-      width: 170px;
+      width: 367px;
       height: 229px;
       object-fit: cover;
 
       &.main-image {
-        width: 170px;
+        width: 367px;
         height: 325px;
       }
     }
@@ -22,7 +22,7 @@ const Container = styled.div`
 `;
 
 const ImageItem = styled.img`
-  width: 170px;
+  width: 367px;
   height: ${(props) => (props.isMain ? '229px' : '325px')};
   object-fit: cover;
 `;
