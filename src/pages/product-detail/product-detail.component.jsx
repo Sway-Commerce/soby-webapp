@@ -17,9 +17,12 @@ import NewProductList from 'components/product-listcard/new-product-list.compone
 import { getColor } from 'shared/constants/shop.constant';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
 import ShopCard from 'pages/shop-profile/shop-card.component';
+import { bodyColor } from 'shared/css-variable/variable';
+import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
 
 const Container = styled.div`
   margin: auto;
+  padding-bottom: 92px;
 
   .status {
     color: #4f4f4f;
@@ -35,7 +38,7 @@ const Container = styled.div`
   }
 
   .price {
-    font-size: 32px;
+    font-size: 1.6rem;
     line-height: 36px;
     margin-top: 16px;
   }
@@ -53,6 +56,11 @@ const Container = styled.div`
       cursor: pointer;
     }
   }
+
+  @media screen and (max-width: 600px) {
+    color: ${bodyColor};
+    padding-bottom: 40px;
+  }
 `;
 
 const Description = styled.p`
@@ -69,42 +77,42 @@ const Row = styled.div`
   }
 `;
 
-const SkuType = styled.div`
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 20px;
-`;
-
 const Tag = styled.div`
   background: #e4e4e4;
   border-radius: 3px;
   padding: 6px 16px;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  font-size: 14px;
-  margin-right: 8px;
+  font-size: 0.7rem;
+  @media screen and (max-width: 600px) {
+    flex: 1;
+    min-width: max-content;
+  }
 `;
 
 const TagBox = styled.div`
   display: flex;
   margin-top: 8px;
+  flex-wrap: wrap;
+  @media screen and (max-width: 600px) {
+    margin-bottom: 16px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  gap: 8px;
 `;
 
 const ProductBox = styled.div`
   display: flex;
-  .item {
-    margin-top: 20px;
+  margin-top: 20px;
+  h5 + p {
     margin-left: 8px;
-    line-height: 24px;
-    color: #4f4f4f;
   }
 `;
 
-const Title = styled.div`
+const Title = styled.h2`
   margin: 16px 0px;
-  line-height: 32px;
-  font-size: 24px;
+  @media screen and (max-width: 600px) {
+    -webkit-line-clamp: 2;
+  }
 `;
 
 const HeadRow = styled.div`
@@ -118,6 +126,18 @@ const HeadRow = styled.div`
 
 const InfoBox = styled.div`
   flex: 1;
+`;
+
+const MobileSection = styled.div`
+  display: ${(props) => (props.show ? 'block' : 'none')};
+  background-color: white;
+  margin-bottom: ${(props) => (props.show ? '16px' : '0')};
+  @media screen and (max-width: 1024px) {
+    margin: 1rem 0;
+    padding: 0.8rem 1.2rem;
+    display: ${(props) => (props.hide ? 'block' : 'none')};
+    color: ${bodyColor};
+  }
 `;
 
 const ProductDetail = () => {
@@ -185,6 +205,17 @@ const ProductDetail = () => {
         },
       });
 
+      setBreadcrumb([
+        {
+          name: 'Home',
+          src: '/',
+        },
+        {
+          name: name,
+          src: `/product/${productId}`,
+        },
+      ]);
+
       getAggregatedShop({ variables: { id: shopId } });
     }
   }, [getProductData?.getProduct?.data]);
@@ -242,26 +273,17 @@ const ProductDetail = () => {
     if (productData.skus.length) {
       let sizes = [];
       let colors = [];
+      let types = [];
       productData.skus.map((x) =>
         x.properties.map((y) => {
-          switch (y.name) {
-            case 'SIZE': {
-              if (!sizes.includes(y.value)) {
-                sizes = [...sizes, y.value];
-              }
-              return null;
-            }
-            case 'COLOR': {
-              if (!colors.includes(y.value)) {
-                colors = [...colors, y.value];
-              }
-              return null;
-            }
-            default:
-              return null;
+          if(!types.includes(y.name)) {
+            types = [...types, y.name]
           }
+          return null;
         })
       );
+      let typesObj = {};
+      types.map(x => typesObj)
 
       const sku = productData.skus[productData.skus.length - 1];
 
@@ -275,6 +297,7 @@ const ProductDetail = () => {
     <Spinner />
   ) : (
     <React.Fragment>
+      <SharedBreadcrumb breadcrumbs={breadcrumbs} />
       <Container>
         <HeadRow>
           <ProductCard
@@ -285,27 +308,33 @@ const ProductDetail = () => {
             isMain
           />
           <InfoBox>
-            <Title>{productData.name}</Title>
+            <Title className="truncate">{productData.name}</Title>
             <h1 className="price">
               {currencyFormatter(productData.sku.currentPrice)}
             </h1>
-            <ProductBox>
-              <SkuType>Product category:</SkuType>
-              <div className="item">{productData.category.name}</div>
-            </ProductBox>
-            <SkuType>Colours:</SkuType>
-            <TagBox>
-              <Tag>Steel Blue</Tag>
-              <Tag>Urban Grey</Tag>
-            </TagBox>
-            <SkuType>Style</SkuType>
-            <TagBox>
-              <Tag>GTS</Tag>
-              <Tag>GTS 2</Tag>
-              <Tag>GTS 2e</Tag>
-            </TagBox>
+            <MobileSection show>
+              <ProductBox>
+                <h5>Product category:</h5>
+                <p>{productData.category.name}</p>
+              </ProductBox>
+            </MobileSection>
+            <MobileSection show>
+              <h5>Colours:</h5>
+              <TagBox>
+                <Tag>Steel Blue</Tag>
+                <Tag>Urban Grey</Tag>
+              </TagBox>
+            </MobileSection>
+            <MobileSection show>
+              <h5>Style</h5>
+              <TagBox>
+                <Tag>GTS</Tag>
+                <Tag>GTS 2</Tag>
+                <Tag>GTS 2e</Tag>
+              </TagBox>
+            </MobileSection>
           </InfoBox>
-          {productData.shopInfo && (
+          {productData.shopInfo && window.innerWidth > 600 && (
             <ShopCard
               color={getColor(productData.shopInfo.shopRank.rank.name)}
               shopInfo={productData.shopInfo}
@@ -316,13 +345,40 @@ const ProductDetail = () => {
             />
           )}
         </HeadRow>
+        <MobileSection hide>
+          <h5>Product category</h5>
+          <p className="mg-b-16">{productData.category.name}</p>
+          <h5>Colours:</h5>
+          <TagBox>
+            <Tag>Steel Blue</Tag>
+            <Tag>Urban Grey</Tag>
+            <Tag>Urban Grey</Tag>
+            <Tag>Urban Grey</Tag>
+            <Tag>Urban Grey</Tag>
+            <Tag>Urban Grey</Tag>
+            <Tag>Urban Grey</Tag>
+            <Tag>Urban Grey</Tag>
+            <Tag>Urban Grey</Tag>
+            <Tag>Urban Grey</Tag>
+          </TagBox>
+          <h5>Style</h5>
+          <TagBox>
+            <Tag>GTS</Tag>
+            <Tag>GTS 2</Tag>
+            <Tag>GTS 2e</Tag>
+            <Tag>GTS 2e</Tag>
+            <Tag>GTS 2e</Tag>
+            <Tag>GTS 2e</Tag>
+            <Tag>GTS 2e</Tag>
+            <Tag>GTS 2e</Tag>
+          </TagBox>
+        </MobileSection>
+
         <Row>
-          <p>
-            <b>About this product</b>
-          </p>
+          <h5>About this product</h5>
           <Description>{productData.description}</Description>
         </Row>
-        {productData.shopInfo && (
+        {productData.shopInfo && window.innerWidth <= 600 && (
           <ShopCard
             color={getColor(productData.shopInfo.shopRank.rank.name)}
             shopInfo={productData.shopInfo}

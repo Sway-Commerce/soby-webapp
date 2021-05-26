@@ -106,18 +106,19 @@ const ShopCard = ({
     <HeadContact {...rest}>
       <div className="contact">
         <div className="head mg-b-16">
-          <img className="avatarImg" src={shopInfo.logoUrl} alt="" />
+          <Link to={`/shop-profile/${shopInfo.id}`}>
+            <img className="avatarImg" src={shopInfo.logoUrl} alt="" />
+          </Link>
+
           <div className="sign">
-            <Link to={`/shop-profile/${shopInfo.id}`}>
-              <h3
-                className="truncate"
-                data-tip={shopInfo.name}
-                data-for="shop-name"
-              >
-                {shopInfo.name}
-              </h3>
-              <ReactTooltip id="shop-name" />
-            </Link>
+            <h3
+              className="truncate"
+              data-tip={shopInfo.name}
+              data-for="shop-name"
+            >
+              {shopInfo.name}
+            </h3>
+            <ReactTooltip id="shop-name" />
 
             <div className="contact-wrapper">
               <div className="badge">
@@ -132,11 +133,11 @@ const ShopCard = ({
                 src={heedImg}
                 alt=""
                 data-tip
-                data-for="rank-info"
+                data-for="shop-rank-info"
                 data-event="click focus"
               />
               <ReactTooltip
-                id="rank-info"
+                id="shop-rank-info"
                 aria-haspopup="true"
                 role="example"
                 place="left"
