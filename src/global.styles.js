@@ -35,6 +35,17 @@ export const GlobalStyle = createGlobalStyle`
 			* {
 				box-sizing: border-box;
 			}
+			.__react_component_tooltip {
+				opacity: 1;
+				border-radius: 3px;
+				padding: 0.8rem;
+				box-shadow: 4px 4px 16px 0px rgba(0, 0, 0, 0.16);
+				width: 17.6rem;
+				pointer-events: all;
+				@media screen and (max-width: 600px) {
+					width: 70vw;
+				}
+			}
 		}
 		@media screen and (max-width: 1200px) {
 			.body-container {
@@ -355,15 +366,7 @@ export const GlobalStyle = createGlobalStyle`
 		font-size: 0.7rem;
 	}
 
-	.__react_component_tooltip#rank-info {
-		opacity: 1;
-		border-radius: 3px;
-		padding: 0.8rem;
-		box-shadow: 4px 4px 16px 0px rgba(0, 0, 0, 0.16);
-		width: 17.6rem;
-		pointer-events: all;
-		@media screen and (max-width: 600px) {
-			width: 70vw;
-		}
+	.mg-t-30 {
+		margin-top: 1.5rem;
 	}
 `;

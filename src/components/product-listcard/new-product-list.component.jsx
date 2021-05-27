@@ -6,11 +6,12 @@ import { currencyFormatter } from 'shared/utils/formatCurrency';
 
 const ProductContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
   gap: 1.2rem;
   margin-top: 0.8rem;
-  @media screen and (max-width: 400px) {
-    justify-content: center;
+  flex-wrap: wrap;
+  @media screen and (max-width: 768px) {
+    overflow-x: auto;
+    flex-wrap: nowrap;
   }
 `;
 
@@ -49,12 +50,12 @@ const NewProductList = ({ records = [] }) => {
               <p className="body-color truncate" data-tip={name}>
                 {name}
               </p>
+              <ReactTooltip place="top" effect="solid" />
               <h5>{currencyFormatter(originPrice)}</h5>
             </NewProductBox>
           );
         })}
       </ProductContainer>
-      <ReactTooltip place="top" effect="solid"/>
     </React.Fragment>
   );
 };

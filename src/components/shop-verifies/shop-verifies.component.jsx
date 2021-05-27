@@ -15,13 +15,13 @@ import FacebookIcon from 'shared/assets/facebook.svg';
 
 const Container = styled.div`
   display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 `;
 
 const Icon = styled(Link)`
   width: 2rem;
   height: 2rem;
-  margin-top: 1.5rem;
-  margin-right: 0.4rem;
   background: #f2f2f2;
   border-radius: 0.15rem;
   padding: 0.4rem;
@@ -39,9 +39,9 @@ const Icon = styled(Link)`
   }
 `;
 
-const ShopVerifies = ({ status, kycStatus, shopUrls }) => {
+const ShopVerifies = ({ status, kycStatus, shopUrls, ...rest }) => {
   return (
-    <Container>
+    <Container {...rest}>
       <Icon default to="#">
         {status === 'APPROVED' && <img className="tick" src={tickImg} alt="" />}
         <img className="id1" src={KybImg} alt="" />

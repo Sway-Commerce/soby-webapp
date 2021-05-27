@@ -10,10 +10,9 @@ const ImageGallery = ({ imageUrls = [], isLarge }) => {
     <Container>
       <div className="card">
         <Carousel
-          showArrows={false}
           showStatus={false}
           showIndicators={false}
-          className={`${isLarge ? "large" : null }`}
+          className={`${isLarge ? 'large' : null}`}
         >
           {imageUrls.map((x) => (
             <img src={x} alt="" key={x} />

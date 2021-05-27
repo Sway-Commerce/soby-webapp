@@ -384,7 +384,7 @@ const InvoiceLast = ({ invoiceIndividualId }) => {
                         <div
                           className="method"
                           onClick={() => {
-                            navigator.clipboard.writeText(
+                            navigator?.clipboard?.writeText(
                               shopData.individualTrackingUrl
                             );
                             window.alert('Shipping tracking url is copied');

@@ -9,308 +9,144 @@ import {
 } from 'graphQL/repository/product.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import ProductCard from 'components/product-card/product-card.component';
-import { currencyFormatter } from 'shared/utils/formatCurrency';
-import SkuChip from 'components/sku-chip/sku-chip.component';
-import ShopCategory from 'components/shop-category/shop-category.component';
-import { GET_SHOP_BY_ID } from 'graphQL/repository/shop.repository';
-import ProductListCard from 'components/product-listcard/product-listcard.component';
-import ShopNameCard from 'components/shop-name-card/shop-name-card.component';
-import KybCard from 'components/kyb-card/kyb-card.component';
+import { GET_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
-import { ReactComponent as FbIcon } from 'shared/assets/facebook.svg';
-import { ReactComponent as ZaloIcon } from 'shared/assets/zalo.svg';
-import { ReactComponent as LinkIcon } from 'shared/assets/link.svg';
-import { ReactComponent as MailIcon } from 'shared/assets/mail.svg';
-import { ReactComponent as InstaIcon } from 'shared/assets/instagram-icon.svg';
-import { ReactComponent as BlueBirdIcon } from 'shared/assets/bluebird.svg';
-import { ReactComponent as TalkIcon } from 'shared/assets/talk.svg';
-import { ReactComponent as LocationIcon } from 'shared/assets/location.svg';
-import { ReactComponent as InboxIcon } from 'shared/assets/inbox.svg';
-import { ReactComponent as CallIcon } from 'shared/assets/call.svg';
-import { borderColor } from 'shared/css-variable/variable';
+import NewProductList from 'components/product-listcard/new-product-list.component';
+import { getColor } from 'shared/constants/shop.constant';
+import { currencyFormatter } from 'shared/utils/formatCurrency';
+import ShopCard from 'pages/shop-profile/shop-card.component';
+import { bodyColor } from 'shared/css-variable/variable';
+import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
+import shareImg from 'shared/assets/product-share.svg';
 
 const Container = styled.div`
-  display: grid;
-  background: #ffffff;
-  padding: 28px;
-  grid-template-columns: 367px 471px 260px;
-  grid-column-gap: 28px;
-  margin-top: 40px;
+  margin: auto;
+  padding-bottom: 92px;
 
-  .cost {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 32px;
-    line-height: 36px;
-    color: #000000;
-    margin-top: 16px;
-  }
-
-  .product-info {
-    margin-top: 16px;
-    display: flex;
-  }
-
-  .product {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 24px;
-    color: #000000;
-  }
-
-  .item {
-    margin-left: 8px;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
+  .status {
     color: #4f4f4f;
-  }
-
-  .options {
-    display: flex;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
     font-size: 14px;
-    line-height: 24px;
-    color: ${borderColor};
-  }
-
-  .box-1 {
-    background: ${borderColor};
-    border-radius: 3px;
-    padding: 6px 16px;
     margin-left: 8px;
   }
 
-  .steel-blue {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 24px;
-    color: #4f4f4f;
-    text-align: center;
-  }
-
-  .urban-grey {
-    display: flex;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 24px;
-    color: #4f4f4f;
-  }
-
-  .obsidian-black {
-    display: flex;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 24px;
-    color: #4f4f4f;
-  }
-
-  .lava-grey {
-    display: flex;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 24px;
-    color: #4f4f4f;
-  }
-
-  .vermillion-orange {
-    display: flex;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 24px;
-    color: #4f4f4f;
-  }
-
-  .color-info {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 24px;
-    color: #000000;
-    margin-top: 16px;
-    margin-bottom: 14px;
-  }
-
-  .style-info {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 24px;
-    color: #000000;
-    margin-top: 16px;
-    margin-bottom: 14px;
-  }
-
-  .share-info {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 24px;
-    color: #000000;
-    margin-top: 22px;
-    margin-bottom: 30px;
-  }
-
-  .share {
-    display: flex;
-  }
-
-  .fb {
-    margin-left: 16px;
-    width: 36px;
-    height: 36px;
-  }
-
-  .zalo {
-    margin-left: 8px;
-    width: 36px;
-    height: 36px;
-  }
-
-  .link {
-    margin-left: 8px;
-    width: 36px;
-    height: 36px;
-  }
-
-  .mail {
-    margin-left: 8px;
-    width: 36px;
-    height: 36px;
-  }
-
-  .ins {
-    margin-left: 8px;
-    width: 36px;
-    height: 36px;
-  }
-
-  .head {
-    display: flex;
+  .info-wrapper {
+    flex-wrap: wrap;
+    width: 400px;
+    margin-left: 24px;
+    margin-right: 24px;
   }
 
   .contact-wrapper {
     margin-top: 4px;
     display: flex;
-    background: #f2f2f2;
     border-radius: 3px;
-    padding: 4px 12px;
     width: 98px;
     height: 22px;
+    img.heed-icon {
+      width: 11.67px;
+      height: 11.67px;
+      margin-left: 5.17px;
+      cursor: pointer;
+    }
   }
 
-  .sign {
-    margin-left: 16px;
-  }
-
-  .talk {
-    margin-right: 10px;
-    width: 10px;
-    height: 10px;
-    margin-top: 2px;
-  }
-
-  .shop {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 23px;
-    color: #000000;
-  }
-
-  .contact-info {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 14px;
-    text-transform: uppercase;
-    color: #000000;
-  }
-
-  .head {
-    margin-left: 46px;
-  }
-
-  .location-info {
-    display: flex;
-    margin-top: 24px;
-  }
-
-  .location {
-    width: 16px;
-    height: 16px;
-    margin-top: 3px;
-  }
-
-  .address {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
-    color: #4f4f4f;
-    margin-left: 12px;
-  }
-
-  .inbox-info {
-    display: flex;
-    margin-top: 8px;
-    margin-right: 20px;
-  }
-
-  .call-info {
-    display: flex;
-    margin-top: 8px;
-  }
-
-  .inbox {
-    width: 25px;
-    height: 25px;
-    margin-top: 3px;
-    margin-left: -4px;
+  @media screen and (max-width: 768px) {
+    color: ${bodyColor};
+    padding-bottom: 40px;
   }
 `;
 
-const ShareTo = styled.div`
-  padding: 15px 0 0 0;
-  margin-left: 16px;
-  * + * {
+const Description = styled.p`
+  color: #4f4f4f;
+`;
+
+const Row = styled.div`
+  background-color: white;
+  padding: 1.2rem;
+  margin-bottom: 1.2rem;
+  .row-header {
+    display: flex;
+    justify-content: space-between;
+  }
+`;
+
+const Tag = styled.div`
+  background: #e4e4e4;
+  border-radius: 3px;
+  padding: 6px 16px;
+  font-size: 0.7rem;
+  @media screen and (max-width: 768px) {
+    min-width: max-content;
+  }
+`;
+
+const TagBox = styled.div`
+  display: flex;
+  margin-top: 8px;
+  flex-wrap: wrap;
+  @media screen and (max-width: 760px) {
+    margin-bottom: 16px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  gap: 8px;
+`;
+
+const ProductBox = styled.div`
+  display: flex;
+  margin-top: 20px;
+  h5 + p {
     margin-left: 8px;
   }
 `;
 
-const Description = styled.div`
-  height: 204px;
-  background: #ffffff;
-  padding: 28px;
-  margin-top: 24px;
+const Title = styled.h2`
+  margin: 16px 0px;
+  @media screen and (max-width: 600px) {
+    -webkit-line-clamp: 2;
+  }
+`;
 
-  .main-info {
-    margin: 8px 0 4px;
+const HeadRow = styled.div`
+  display: flex;
+  column-gap: 24px;
+  flex-wrap: wrap;
+  background: #ffffff;
+  margin-bottom: 24px;
+  padding: 32px 24px 24px;
+`;
+
+const InfoBox = styled.div`
+  flex: 1;
+  .sub-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    img {
+      width: 2.2rem;
+      height: 2.2rem;
+      cursor: pointer;
+    }
+
+    .price {
+      font-size: 1.6rem;
+      line-height: 36px;
+    }
+  }
+`;
+
+const MobileSection = styled.div`
+  display: ${(props) => (props.show ? 'block' : 'none')};
+  background-color: white;
+  margin-bottom: ${(props) => (props.show ? '16px' : '0')};
+  @media screen and (max-width: 760px) {
+    margin: 1rem 0;
+    padding: 0.8rem 1.2rem;
+    display: ${(props) => (props.hide ? 'block' : 'none')};
+    color: ${bodyColor};
   }
 `;
 
@@ -327,16 +163,23 @@ const ProductDetail = () => {
     category: { id: '', name: '' },
     shopId: '',
     productsRelate: [],
-    shopInfo: {
-      name: '',
-      logoUrl: '',
-      id: '',
-    },
+    shopInfo: null,
     sizes: [],
     colors: [],
     status: null,
     sku: { currentPrice: 0 },
+    records: [],
+    typesObj: null,
   });
+  const [phoneString, setPhoneString] = useState('');
+  const [togglePhone, setTogglePhone] = useState(false);
+  const [breadcrumbs, setBreadcrumb] = useState([
+    {
+      name: 'Home',
+      src: '/',
+    },
+  ]);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const {
     loading: getProductLoading,
@@ -348,15 +191,14 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (getProductData?.getProduct?.data) {
-      const {
-        skus,
-        id,
-        imageUrls,
-        description,
-        name,
-        category,
-        shopId,
-      } = getProductData?.getProduct?.data;
+      window.addEventListener('resize', update);
+      const { skus, id, imageUrls, description, name, category, shopId } =
+        getProductData?.getProduct?.data;
+      for (const tooltip of document.querySelectorAll(
+        '.__react_component_tooltip'
+      )) {
+        tooltip.addEventListener('click', (e) => e.stopPropagation());
+      }
 
       setProductData({
         ...productData,
@@ -381,8 +223,27 @@ const ProductDetail = () => {
         },
       });
 
-      getShopById({ variables: { id: shopId } });
+      setBreadcrumb([
+        {
+          name: 'Home',
+          src: '/',
+        },
+        {
+          name: name,
+          src: `/product/${productId}`,
+        },
+      ]);
+
+      getAggregatedShop({ variables: { id: shopId } });
     }
+    return () => {
+      window.removeEventListener('resize', update);
+      for (const tooltip of document.querySelectorAll(
+        '.__react_component_tooltip'
+      )) {
+        tooltip.removeEventListener('click', (e) => e.stopPropagation());
+      }
+    };
   }, [getProductData?.getProduct?.data]);
 
   const [
@@ -395,27 +256,27 @@ const ProductDetail = () => {
   ] = useLazyQuery(SEARCH_PRODUCT);
 
   const [
-    getShopById,
+    getAggregatedShop,
     {
-      loading: getShopByIdLoading,
-      error: getShopByIdError,
-      data: getShopByIdData,
+      loading: getAggregatedShopLoading,
+      error: getAggregatedShopError,
+      data: getAggregatedShopData,
     },
-  ] = useLazyQuery(GET_SHOP_BY_ID);
+  ] = useLazyQuery(GET_AGGREGATED_SHOP);
 
   useEffect(() => {
     if (
       getProductError?.message ||
       searchProductError?.message ||
-      getShopByIdError?.message
+      getAggregatedShopError?.message
     ) {
       setFormError(
         getProductError?.message ??
           searchProductError?.message ??
-          getShopByIdError?.message
+          getAggregatedShopError?.message
       );
     }
-  }, [getProductError, searchProductError, getShopByIdError]);
+  }, [getProductError, searchProductError, getAggregatedShopError]);
 
   useEffect(() => {
     if (searchProductData?.searchProduct?.data?.records) {
@@ -425,147 +286,147 @@ const ProductDetail = () => {
   }, [searchProductData?.searchProduct?.data]);
 
   useEffect(() => {
-    if (getShopByIdData?.getShopById?.data) {
-      const shopInfo = getShopByIdData?.getShopById?.data;
-      const { status } = shopInfo.kyb ?? { status: null };
+    if (getAggregatedShopData?.getAggregatedShop?.data) {
+      const shopInfo = getAggregatedShopData?.getAggregatedShop?.data;
+      const { phoneNumber, phoneCountryCode } = shopInfo;
+      setPhoneString(`${phoneCountryCode} ${phoneNumber.slice(0, 4)} ****`);
 
-      setProductData({ ...productData, shopInfo, status });
+      setProductData({ ...productData, shopInfo });
     }
-  }, [getShopByIdData?.getShopById?.data]);
+  }, [getAggregatedShopData?.getAggregatedShop?.data]);
 
   useEffect(() => {
     if (productData.skus.length) {
-      let sizes = [];
-      let colors = [];
+      let types = {};
       productData.skus.map((x) =>
         x.properties.map((y) => {
-          switch (y.name) {
-            case 'SIZE': {
-              if (!sizes.includes(y.value)) {
-                sizes = [...sizes, y.value];
-              }
-              return null;
-            }
-            case 'COLOR': {
-              if (!colors.includes(y.value)) {
-                colors = [...colors, y.value];
-              }
-              return null;
-            }
-            default:
-              return null;
-          }
+          const array = types[y.name];
+          types = {
+            ...types,
+            [y.name]: array
+              ? !array.includes(y.value)
+                ? [...array, y.value]
+                : array
+              : [y.value],
+          };
+          return null;
         })
       );
 
       const sku = productData.skus[productData.skus.length - 1];
+      const { WEIGHT, ...typesObj } = types;
 
-      setProductData({ ...productData, sizes, colors, sku });
+      setProductData({ ...productData, typesObj, sku });
     }
   }, [productData.skus]);
 
-  return searchProductLoading || getProductLoading || getShopByIdLoading ? (
+  const update = () => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  return searchProductLoading ||
+    getProductLoading ||
+    getAggregatedShopLoading ? (
     <Spinner />
   ) : (
     <React.Fragment>
+      <SharedBreadcrumb breadcrumbs={breadcrumbs} />
       <Container>
-        <ProductCard
-          id={productData.id}
-          imageUrls={productData.imageUrls}
-          currentPrice={productData.sku.currentPrice}
-          description={productData.description}
-          isMain
-        />
-        <div>
-          <h2>
-            Amazfit GTS 2e Smartwatch with 24H Heart Rate Monitor, Sleep, Stress
-            and SpO2 Monitor, Activity Tracker Sports Watch with 90 Sports
-            Modes, 14 Day Battery Life, Black
-          </h2>
-          <p className="cost">13.150.000 đ</p>
-          <div className="product-info">
-            <div className="product">Product category:</div>
-            <div className="item">Sport, Watch, fashion</div>
-          </div>
-          <div className="color">
-            <p className="color-info">Colours:</p>
-          </div>
-          <div className="options">
-            <div className="box-1">
-              <p className="steel-blue">Steel Blue</p>
+        <HeadRow>
+          <ProductCard
+            id={productData.id}
+            imageUrls={productData.imageUrls}
+            currentPrice={productData.sku.currentPrice}
+            description={productData.description}
+            isMain
+          />
+          <InfoBox>
+            <Title className="truncate">{productData.name}</Title>
+            <div className="sub-container">
+              <h1 className="price">
+                {currencyFormatter(productData.sku.currentPrice)}
+              </h1>
+              <img
+                src={shareImg}
+                alt=""
+                onClick={() => {
+                  navigator?.clipboard?.writeText(window.location.href);
+                  window.alert('Product url is copied');
+                }}
+              />
             </div>
-            <div className="box-1">
-              <p className="urban-grey">Urban Grey</p>
-            </div>
-          </div>
-          <div className="style">
-            <p className="style-info">Style</p>
-          </div>
-          <div className="options">
-            <div className="box-1">
-              <p className="steel-blue">GTS</p>
-            </div>
-            <div className="box-1">
-              <p className="urban-grey">GTS 2</p>
-            </div>
-            <div className="box-1">
-              <p className="obsidian-black">GTS 2e</p>
-            </div>
-          </div>
-          <div className="share">
-            <p className="share-info">Share</p>
-            <ShareTo>
-              <FbIcon />
-              <ZaloIcon />
-              <LinkIcon />
-              <MailIcon />
-              <InstaIcon />
-            </ShareTo>
-          </div>
-        </div>
-        <div className="contact">
-          <div className="head">
-            <BlueBirdIcon />
-            <div className="sign">
-              <p className="shop">Blue Bird Shop</p>
-              <div className="contact-wrapper">
-                <TalkIcon />
-                <p className="contact-info">CONTACT</p>
-              </div>
-            </div>
-          </div>
-          <div className="location-info">
-            <LocationIcon />
-            <p className="address">
-              CirCo Coworking Space, H3 Building, 384 Hoàng Diệu, Phường 6, Quận
-              4, tp Hồ Chí Minh, Việt Nam
-            </p>
-          </div>
-          <div className="location-info">
-            <InboxIcon />
-            <p className="address">address@email.com</p>
-          </div>
-          <div className="location-info">
-            <CallIcon />
-            <p className="address">+84 90 123 456 78</p>
-          </div>
-        </div>
-      </Container>
+            <MobileSection show>
+              <ProductBox>
+                <h5>Product category:</h5>
+                <p>{productData.category.name}</p>
+              </ProductBox>
+            </MobileSection>
+            {productData.typesObj &&
+              Object.keys(productData.typesObj).map((key) => {
+                return (
+                  <MobileSection show key={key}>
+                    <h5>{key}</h5>
+                    <TagBox>
+                      {productData.typesObj[key].map((value) => (
+                        <Tag key={value}>{value}</Tag>
+                      ))}
+                    </TagBox>
+                  </MobileSection>
+                );
+              })}
+          </InfoBox>
+          {productData.shopInfo && windowWidth > 768 && (
+            <ShopCard
+              color={getColor(productData.shopInfo.shopRank.rank.name)}
+              shopInfo={productData.shopInfo}
+              togglePhone={togglePhone}
+              phoneString={phoneString}
+              setTogglePhone={setTogglePhone}
+              show
+            />
+          )}
+        </HeadRow>
+        <MobileSection hide>
+          <h5>Product category</h5>
+          <p className="mg-b-16">{productData.category.name}</p>
+          {productData.typesObj &&
+            Object.keys(productData.typesObj).map((key) => {
+              return (
+                <React.Fragment key={key}>
+                  <h5>{key}</h5>
+                  <TagBox>
+                    {productData.typesObj[key].map((value) => (
+                      <Tag key={value}>{value}</Tag>
+                    ))}
+                  </TagBox>
+                </React.Fragment>
+              );
+            })}
+        </MobileSection>
 
-      <Description>
-        <h5>About this product</h5>
-        <p className="main-info body-color">
-          3D CURVED DESIGN & HD AMOLED SCREEN: The Amazfit GTS 2 is a curved
-          1.65" hd amoled screen, covered in 3d glass, boasts a crystal-clear
-          341ppi pixel density, the bezel-less design naturally transitions to
-          the aluminum alloy watch body for an enhanced visual aesthetic." LONG
-          7-DAY BATTERY LIFE & GPS BUILT-IN: The GTS 2 is equipped with a
-          powerful 246mah battery that can last 7 days with typical use, and is
-          always ready to escort you on your journeys and track your progress.
-          Basic usage battery life-20 days. Heavy usage battery life-3.5 days
-        </p>
-        <p className="primary-color">Read more</p>
-      </Description>
+        <Row>
+          <h5>About this product</h5>
+          <Description>{productData.description}</Description>
+        </Row>
+        {productData.shopInfo && windowWidth <= 768 && (
+          <ShopCard
+            color={getColor(productData.shopInfo.shopRank.rank.name)}
+            shopInfo={productData.shopInfo}
+            togglePhone={togglePhone}
+            phoneString={phoneString}
+            setTogglePhone={setTogglePhone}
+            hide
+          />
+        )}
+
+        <Row>
+          <div className="row-header">
+            <h3>New Product</h3>
+            <h5 className="primary-color">See all</h5>
+          </div>
+          <NewProductList records={productData.records} />
+        </Row>
+      </Container>
       <SobyModal open={open} setOpen={setOpen}>
         {formError ? (
           <ErrorPopup content={formError} setOpen={setOpen} />

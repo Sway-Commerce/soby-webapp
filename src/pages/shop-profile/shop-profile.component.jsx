@@ -16,23 +16,16 @@ import locationImg from 'shared/assets/location.svg';
 import mailImg from 'shared/assets/mail-black.svg';
 import wallpaperImg from 'shared/assets/wallpaper.svg';
 import shareImg from 'shared/assets/share.svg';
-import phoneImg from 'shared/assets/phone-circle.svg';
 import heedImg from 'shared/assets/heed.svg';
 import { ReactComponent as MarkIcon } from 'shared/assets/greenmark.svg';
 
 import buildAddressString from 'shared/utils/buildAddressString';
-import {
-  bodyColor,
-  borderColor,
-  greenColor,
-  mainColor,
-  orangeColor,
-  redColor,
-  yellowColor,
-} from 'shared/css-variable/variable';
+import { bodyColor, borderColor, redColor } from 'shared/css-variable/variable';
 import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
 import ShopVerifies from 'components/shop-verifies/shop-verifies.component';
 import NewProductList from 'components/product-listcard/new-product-list.component';
+import PhoneButton from './phone-button.component';
+import { getColor } from 'shared/constants/shop.constant';
 
 const Container = styled.div`
   margin: auto;
@@ -89,7 +82,7 @@ const Container = styled.div`
     }
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 768px) {
     padding-bottom: 40px;
   }
 `;
@@ -128,7 +121,7 @@ const HeadPromotion = styled.div`
     object-fit: cover;
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 768px) {
     img.avatar {
       width: 56px;
       height: 56px;
@@ -153,7 +146,7 @@ const NewHeadPromotion = styled.div`
   }
   display: flex;
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 768px) {
     h3 {
       padding: 10px 0 0 76.8px;
     }
@@ -215,13 +208,21 @@ const Option = styled.div`
   align-items: center;
   color: ${bodyColor};
   font-size: 0.8rem;
+  @media screen and (max-width: 768px) {
+    flex: 1;
+    min-width: max-content;
+  }
 `;
 
 const TagOption = styled.div`
   margin-top: 0.4rem;
   display: flex;
-  flex-wrap: wrap;
   gap: 16px;
+  flex-wrap: wrap;
+  @media screen and (max-width: 768px) {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
 `;
 
 const ContactGroup = styled.div`
@@ -246,37 +247,6 @@ const ContactGroup = styled.div`
   }
 `;
 
-const TooltipData = styled.div`
-  background-color: white;
-`;
-
-const PhoneBtn = styled.div`
-  height: 2rem;
-  background: ${mainColor};
-  padding: 0.2rem 0.6rem;
-  display: ${(props) => (props.show ? 'flex' : 'none')};
-  align-items: center;
-  color: white;
-  border-radius: 3px;
-  cursor: pointer;
-  img.phone-icon {
-    width: 0.8rem;
-    height: 0.8rem;
-    margin-right: 0.5rem;
-  }
-  .btn-click {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    flex: 1;
-    text-align: right;
-    margin-left: 1.2rem;
-  }
-  margin-top: 1rem;
-  @media screen and (max-width: 600px) {
-    display: ${(props) => (props.hide ? 'flex' : 'none')};
-  }
-`;
-
 const MobileSection = styled.div`
   display: ${(props) => (props.show ? 'block' : 'none')};
   background-color: white;
@@ -293,6 +263,10 @@ const RankPoint = styled.h2`
   @media screen and (max-width: 1024px) {
     display: ${(props) => (props.hide ? 'block' : 'none')};
   }
+`;
+
+const TooltipData = styled.div`
+  background-color: white;
 `;
 
 const ShopProfile = () => {
@@ -354,10 +328,23 @@ const ShopProfile = () => {
 
   useEffect(() => {
     if (shopId) {
+      for (const tooltip of document.querySelectorAll(
+        '.__react_component_tooltip'
+      )) {
+        tooltip.addEventListener('click', (e) => e.stopPropagation());
+      }
       getAggregatedShop({
         variables: { id: shopId },
       });
     }
+
+    return () => {
+      for (const tooltip of document.querySelectorAll(
+        '.__react_component_tooltip'
+      )) {
+        tooltip.removeEventListener('click', (e) => e.stopPropagation());
+      }
+    };
   }, [shopId]);
 
   useEffect(() => {
@@ -439,23 +426,6 @@ const ShopProfile = () => {
     }
   }, [productData?.searchProduct?.data]);
 
-  const getColor = (name) => {
-    switch (name) {
-      case 'Red':
-        return redColor;
-      case 'Orange':
-        return orangeColor;
-      case 'Yellow':
-        return yellowColor;
-      case 'Green':
-        return greenColor;
-      case 'Blue':
-        return mainColor;
-      default:
-        return redColor;
-    }
-  };
-
   return getAggregatedShopLoading || productLoading ? (
     <Spinner />
   ) : (
@@ -471,7 +441,7 @@ const ShopProfile = () => {
               src={shareImg}
               alt=""
               onClick={() => {
-                navigator.clipboard.writeText(window.location.href);
+                navigator?.clipboard?.writeText(window.location.href);
                 window.alert('Shop url is copied');
               }}
             />
@@ -479,22 +449,18 @@ const ShopProfile = () => {
           </HeadPromotion>
           <NewHeadPromotion>
             <h3>{shopInfo.name}</h3>
-            <PhoneBtn show>
-              <img className="phone-icon" src={phoneImg} alt="" />
-              <p>
-                {togglePhone
-                  ? formatPhoneNumberIntl(
-                      `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
-                    )
-                  : phoneString}
-              </p>
-              <p
-                className="btn-click"
-                onClick={() => setTogglePhone(!togglePhone)}
-              >
-                {togglePhone ? 'Click to hide' : 'Click to show'}
-              </p>
-            </PhoneBtn>
+            <PhoneButton
+              togglePhone={togglePhone}
+              phoneNumber={formatPhoneNumberIntl(
+                `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
+              )}
+              phoneNumberCovered={phoneString}
+              setTogglePhone={setTogglePhone}
+              showText="Click to show"
+              hideText="Click to hide"
+              wide
+              show
+            />
           </NewHeadPromotion>
         </HeadRow>
         <InfoContainer>
@@ -510,6 +476,25 @@ const ShopProfile = () => {
                   data-for="rank-info"
                   data-event="click focus"
                 />
+                <ReactTooltip
+                  id="rank-info"
+                  aria-haspopup="true"
+                  role="example"
+                  place="right"
+                  type="light"
+                  effect="solid"
+                  globalEventOff="click"
+                >
+                  <TooltipData>
+                    <h5>Soby Rank – Chỉ số uy tín</h5>
+                    <p className="mg-b-8">
+                      Giá trị của Soby Rank đối với một cửa hàng sẽ tương đương
+                      với tầm quan trọng của điểm IMDB đối với một bộ phim, hay
+                      của số sao Michelin đối với một nhà hàng.
+                    </p>
+                    <h5 className="primary-color clickable">Read more</h5>
+                  </TooltipData>
+                </ReactTooltip>
               </div>
               <div className="btn-point">
                 <RankPoint
@@ -550,6 +535,7 @@ const ShopProfile = () => {
               status={shopInfo.kyb?.status}
               kycStatus={shopInfo.kycStatus}
               shopUrls={shopInfo.shopUrls}
+              className="mg-t-30"
             />
 
             <MobileSection show>
@@ -572,22 +558,17 @@ const ShopProfile = () => {
               </Categories>
             </MobileSection>
           </div>
-          <PhoneBtn hide>
-            <img className="phone-icon" src={phoneImg} alt="" />
-            <p>
-              {togglePhone
-                ? formatPhoneNumberIntl(
-                    `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
-                  )
-                : phoneString}
-            </p>
-            <p
-              className="btn-click"
-              onClick={() => setTogglePhone(!togglePhone)}
-            >
-              {togglePhone ? 'Hide' : 'Show'}
-            </p>
-          </PhoneBtn>
+          <PhoneButton
+            togglePhone={togglePhone}
+            phoneNumber={formatPhoneNumberIntl(
+              `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
+            )}
+            phoneNumberCovered={phoneString}
+            setTogglePhone={setTogglePhone}
+            showText="Show"
+            hideText="Hide"
+            hide
+          />
           <div>
             <MobileSection show>
               <h5>Shop description</h5>
@@ -645,26 +626,6 @@ const ShopProfile = () => {
           <ErrorPopup content={formError} setOpen={setOpen} />
         ) : null}
       </SobyModal>
-
-      <ReactTooltip
-        id="rank-info"
-        aria-haspopup="true"
-        role="example"
-        place="right"
-        type="light"
-        effect="solid"
-        globalEventOff="dbclick"
-      >
-        <TooltipData>
-          <h5>Soby Rank – Chỉ số uy tín</h5>
-          <p className="mg-b-8">
-            Giá trị của Soby Rank đối với một cửa hàng sẽ tương đương với tầm
-            quan trọng của điểm IMDB đối với một bộ phim, hay của số sao
-            Michelin đối với một nhà hàng.
-          </p>
-          <h5 className="primary-color clickable">Read more</h5>
-        </TooltipData>
-      </ReactTooltip>
     </React.Fragment>
   );
 };

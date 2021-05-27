@@ -6,23 +6,30 @@ import { currencyFormatter } from 'shared/utils/formatCurrency';
 import { Link } from 'react-router-dom';
 
 const Container = styled.div`
-  width: 170px;
+  width: 367px;
   .card {
     img {
-      width: 170px;
+      width: 367px;
       height: 229px;
       object-fit: cover;
 
       &.main-image {
-        width: 170px;
+        width: 367px;
         height: 325px;
       }
     }
   }
+
+  @media screen and (max-width: 768px) {
+    width: 260px;
+  }
+  @media screen and (max-width: 600px) {
+    width: 367px;
+  }
 `;
 
 const ImageItem = styled.img`
-  width: 170px;
+  width: 367px;
   height: ${(props) => (props.isMain ? '229px' : '325px')};
   object-fit: cover;
 `;
