@@ -19,6 +19,7 @@ import { currencyFormatter } from 'shared/utils/formatCurrency';
 import ShopCard from 'pages/shop-profile/shop-card.component';
 import { bodyColor } from 'shared/css-variable/variable';
 import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
+import shareImg from 'shared/assets/product-share.svg';
 
 const Container = styled.div`
   margin: auto;
@@ -37,12 +38,6 @@ const Container = styled.div`
     margin-right: 24px;
   }
 
-  .price {
-    font-size: 1.6rem;
-    line-height: 36px;
-    margin-top: 16px;
-  }
-
   .contact-wrapper {
     margin-top: 4px;
     display: flex;
@@ -57,7 +52,7 @@ const Container = styled.div`
     }
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 768px) {
     color: ${bodyColor};
     padding-bottom: 40px;
   }
@@ -82,8 +77,7 @@ const Tag = styled.div`
   border-radius: 3px;
   padding: 6px 16px;
   font-size: 0.7rem;
-  @media screen and (max-width: 600px) {
-    flex: 1;
+  @media screen and (max-width: 768px) {
     min-width: max-content;
   }
 `;
@@ -92,7 +86,7 @@ const TagBox = styled.div`
   display: flex;
   margin-top: 8px;
   flex-wrap: wrap;
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 760px) {
     margin-bottom: 16px;
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -126,13 +120,29 @@ const HeadRow = styled.div`
 
 const InfoBox = styled.div`
   flex: 1;
+  .sub-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    img {
+      width: 2.2rem;
+      height: 2.2rem;
+      cursor: pointer;
+    }
+
+    .price {
+      font-size: 1.6rem;
+      line-height: 36px;
+    }
+  }
 `;
 
 const MobileSection = styled.div`
   display: ${(props) => (props.show ? 'block' : 'none')};
   background-color: white;
   margin-bottom: ${(props) => (props.show ? '16px' : '0')};
-  @media screen and (max-width: 1024px) {
+  @media screen and (max-width: 760px) {
     margin: 1rem 0;
     padding: 0.8rem 1.2rem;
     display: ${(props) => (props.hide ? 'block' : 'none')};
@@ -159,6 +169,7 @@ const ProductDetail = () => {
     status: null,
     sku: { currentPrice: 0 },
     records: [],
+    typesObj: null,
   });
   const [phoneString, setPhoneString] = useState('');
   const [togglePhone, setTogglePhone] = useState(false);
@@ -168,6 +179,7 @@ const ProductDetail = () => {
       src: '/',
     },
   ]);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const {
     loading: getProductLoading,
@@ -179,6 +191,7 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (getProductData?.getProduct?.data) {
+      window.addEventListener('resize', update);
       const { skus, id, imageUrls, description, name, category, shopId } =
         getProductData?.getProduct?.data;
 
@@ -218,6 +231,9 @@ const ProductDetail = () => {
 
       getAggregatedShop({ variables: { id: shopId } });
     }
+    return () => {
+      window.removeEventListener('resize', update);
+    };
   }, [getProductData?.getProduct?.data]);
 
   const [
@@ -271,25 +287,31 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (productData.skus.length) {
-      let sizes = [];
-      let colors = [];
-      let types = [];
+      let typesObj = {};
       productData.skus.map((x) =>
         x.properties.map((y) => {
-          if(!types.includes(y.name)) {
-            types = [...types, y.name]
-          }
+          const array = typesObj[y.name];
+          typesObj = {
+            ...typesObj,
+            [y.name]: array
+              ? !array.includes(y.value)
+                ? [...array, y.value]
+                : array
+              : [y.value],
+          };
           return null;
         })
       );
-      let typesObj = {};
-      types.map(x => typesObj)
 
       const sku = productData.skus[productData.skus.length - 1];
 
-      setProductData({ ...productData, sizes, colors, sku });
+      setProductData({ ...productData, typesObj, sku });
     }
   }, [productData.skus]);
+
+  const update = () => {
+    setWindowWidth(window.innerWidth);
+  };
 
   return searchProductLoading ||
     getProductLoading ||
@@ -309,32 +331,40 @@ const ProductDetail = () => {
           />
           <InfoBox>
             <Title className="truncate">{productData.name}</Title>
-            <h1 className="price">
-              {currencyFormatter(productData.sku.currentPrice)}
-            </h1>
+            <div className="sub-container">
+              <h1 className="price">
+                {currencyFormatter(productData.sku.currentPrice)}
+              </h1>
+              <img
+                src={shareImg}
+                alt=""
+                onClick={() => {
+                  navigator?.clipboard?.writeText(window.location.href);
+                  window.alert('Product url is copied');
+                }}
+              />
+            </div>
             <MobileSection show>
               <ProductBox>
                 <h5>Product category:</h5>
                 <p>{productData.category.name}</p>
               </ProductBox>
             </MobileSection>
-            <MobileSection show>
-              <h5>Colours:</h5>
-              <TagBox>
-                <Tag>Steel Blue</Tag>
-                <Tag>Urban Grey</Tag>
-              </TagBox>
-            </MobileSection>
-            <MobileSection show>
-              <h5>Style</h5>
-              <TagBox>
-                <Tag>GTS</Tag>
-                <Tag>GTS 2</Tag>
-                <Tag>GTS 2e</Tag>
-              </TagBox>
-            </MobileSection>
+            {productData.typesObj &&
+              Object.keys(productData.typesObj).map((key) => {
+                return (
+                  <MobileSection show key={key}>
+                    <h5>{key}</h5>
+                    <TagBox>
+                      {productData.typesObj[key].map((value) => (
+                        <Tag key={value}>{value}</Tag>
+                      ))}
+                    </TagBox>
+                  </MobileSection>
+                );
+              })}
           </InfoBox>
-          {productData.shopInfo && window.innerWidth > 600 && (
+          {productData.shopInfo && windowWidth > 768 && (
             <ShopCard
               color={getColor(productData.shopInfo.shopRank.rank.name)}
               shopInfo={productData.shopInfo}
@@ -348,37 +378,26 @@ const ProductDetail = () => {
         <MobileSection hide>
           <h5>Product category</h5>
           <p className="mg-b-16">{productData.category.name}</p>
-          <h5>Colours:</h5>
-          <TagBox>
-            <Tag>Steel Blue</Tag>
-            <Tag>Urban Grey</Tag>
-            <Tag>Urban Grey</Tag>
-            <Tag>Urban Grey</Tag>
-            <Tag>Urban Grey</Tag>
-            <Tag>Urban Grey</Tag>
-            <Tag>Urban Grey</Tag>
-            <Tag>Urban Grey</Tag>
-            <Tag>Urban Grey</Tag>
-            <Tag>Urban Grey</Tag>
-          </TagBox>
-          <h5>Style</h5>
-          <TagBox>
-            <Tag>GTS</Tag>
-            <Tag>GTS 2</Tag>
-            <Tag>GTS 2e</Tag>
-            <Tag>GTS 2e</Tag>
-            <Tag>GTS 2e</Tag>
-            <Tag>GTS 2e</Tag>
-            <Tag>GTS 2e</Tag>
-            <Tag>GTS 2e</Tag>
-          </TagBox>
+          {productData.typesObj &&
+            Object.keys(productData.typesObj).map((key) => {
+              return (
+                <React.Fragment key={key}>
+                  <h5>{key}</h5>
+                  <TagBox>
+                    {productData.typesObj[key].map((value) => (
+                      <Tag key={value}>{value}</Tag>
+                    ))}
+                  </TagBox>
+                </React.Fragment>
+              );
+            })}
         </MobileSection>
 
         <Row>
           <h5>About this product</h5>
           <Description>{productData.description}</Description>
         </Row>
-        {productData.shopInfo && window.innerWidth <= 600 && (
+        {productData.shopInfo && windowWidth <= 768 && (
           <ShopCard
             color={getColor(productData.shopInfo.shopRank.rank.name)}
             shopInfo={productData.shopInfo}

@@ -44,7 +44,7 @@ const WebsiteUrl = ({ url }) => {
         <p
           className="url text-truncation"
           onClick={() => {
-            navigator.clipboard.writeText(`${url}`);
+            navigator?.clipboard?.writeText(`${url}`);
             window.alert('Url is copied');
           }}
         >

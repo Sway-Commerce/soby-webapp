@@ -9,7 +9,7 @@ const ProductContainer = styled.div`
   gap: 1.2rem;
   margin-top: 0.8rem;
   flex-wrap: wrap;
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 768px) {
     overflow-x: auto;
     flex-wrap: nowrap;
   }

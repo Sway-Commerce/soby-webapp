@@ -82,7 +82,7 @@ const Container = styled.div`
     }
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 768px) {
     padding-bottom: 40px;
   }
 `;
@@ -121,7 +121,7 @@ const HeadPromotion = styled.div`
     object-fit: cover;
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 768px) {
     img.avatar {
       width: 56px;
       height: 56px;
@@ -146,7 +146,7 @@ const NewHeadPromotion = styled.div`
   }
   display: flex;
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 768px) {
     h3 {
       padding: 10px 0 0 76.8px;
     }
@@ -208,7 +208,7 @@ const Option = styled.div`
   align-items: center;
   color: ${bodyColor};
   font-size: 0.8rem;
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 768px) {
     flex: 1;
     min-width: max-content;
   }
@@ -219,7 +219,7 @@ const TagOption = styled.div`
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 768px) {
     overflow-x: auto;
     flex-wrap: nowrap;
   }
@@ -428,7 +428,7 @@ const ShopProfile = () => {
               src={shareImg}
               alt=""
               onClick={() => {
-                navigator.clipboard.writeText(window.location.href);
+                navigator?.clipboard?.writeText(window.location.href);
                 window.alert('Shop url is copied');
               }}
             />

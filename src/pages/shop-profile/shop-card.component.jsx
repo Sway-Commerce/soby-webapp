@@ -77,7 +77,7 @@ const HeadContact = styled.div`
     }
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 768px) {
     display: ${(props) => (props.hide ? 'flex' : 'none')};
     width: 100%;
     background-color: white;

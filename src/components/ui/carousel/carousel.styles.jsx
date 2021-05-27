@@ -53,6 +53,46 @@ export const Container = styled.div`
     }
   }
 
+  @media screen and (max-width: 768px) {
+    .large {
+      width: 260px;
+      ul.slider li.slide {
+        width: 260px;
+        height: 260px;
+        img {
+          height: inherit;
+        }
+      }
+
+      div.thumbs-wrapper.axis-vertical {
+        ul.thumbs li.thumb {
+          height: 90px;
+          width: 90px !important;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .large {
+      width: 367px;
+      ul.slider li.slide {
+        width: 367px;
+        height: 367px;
+        img {
+          height: inherit;
+        }
+      }
+
+      div.thumbs-wrapper.axis-vertical {
+        ul.thumbs li.thumb {
+          height: 90px;
+          width: 90px !important;
+        }
+      }
+    }
+  }
+
   @media screen and (max-width: 380px) {
     .large {
       width: calc(100vw - 48px);
