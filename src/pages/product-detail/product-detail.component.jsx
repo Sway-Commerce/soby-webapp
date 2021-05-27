@@ -111,7 +111,7 @@ const Title = styled.h2`
 
 const HeadRow = styled.div`
   display: flex;
-  gap: 24px;
+  column-gap: 24px;
   flex-wrap: wrap;
   background: #ffffff;
   margin-bottom: 24px;
@@ -194,6 +194,11 @@ const ProductDetail = () => {
       window.addEventListener('resize', update);
       const { skus, id, imageUrls, description, name, category, shopId } =
         getProductData?.getProduct?.data;
+      for (const tooltip of document.querySelectorAll(
+        '.__react_component_tooltip'
+      )) {
+        tooltip.addEventListener('click', (e) => e.stopPropagation());
+      }
 
       setProductData({
         ...productData,
@@ -233,6 +238,11 @@ const ProductDetail = () => {
     }
     return () => {
       window.removeEventListener('resize', update);
+      for (const tooltip of document.querySelectorAll(
+        '.__react_component_tooltip'
+      )) {
+        tooltip.removeEventListener('click', (e) => e.stopPropagation());
+      }
     };
   }, [getProductData?.getProduct?.data]);
 
@@ -287,12 +297,12 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (productData.skus.length) {
-      let typesObj = {};
+      let types = {};
       productData.skus.map((x) =>
         x.properties.map((y) => {
-          const array = typesObj[y.name];
-          typesObj = {
-            ...typesObj,
+          const array = types[y.name];
+          types = {
+            ...types,
             [y.name]: array
               ? !array.includes(y.value)
                 ? [...array, y.value]
@@ -304,6 +314,7 @@ const ProductDetail = () => {
       );
 
       const sku = productData.skus[productData.skus.length - 1];
+      const { WEIGHT, ...typesObj } = types;
 
       setProductData({ ...productData, typesObj, sku });
     }

@@ -143,7 +143,7 @@ const ShopCard = ({
                 place="left"
                 type="light"
                 effect="solid"
-                globalEventOff="dbclick"
+                globalEventOff="click"
               >
                 <TooltipData>
                   <h5>Soby Rank – Chỉ số uy tín</h5>

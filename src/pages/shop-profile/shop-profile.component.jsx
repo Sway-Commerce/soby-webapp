@@ -328,10 +328,23 @@ const ShopProfile = () => {
 
   useEffect(() => {
     if (shopId) {
+      for (const tooltip of document.querySelectorAll(
+        '.__react_component_tooltip'
+      )) {
+        tooltip.addEventListener('click', (e) => e.stopPropagation());
+      }
       getAggregatedShop({
         variables: { id: shopId },
       });
     }
+
+    return () => {
+      for (const tooltip of document.querySelectorAll(
+        '.__react_component_tooltip'
+      )) {
+        tooltip.removeEventListener('click', (e) => e.stopPropagation());
+      }
+    };
   }, [shopId]);
 
   useEffect(() => {
@@ -470,7 +483,7 @@ const ShopProfile = () => {
                   place="right"
                   type="light"
                   effect="solid"
-                  globalEventOff="dbclick"
+                  globalEventOff="click"
                 >
                   <TooltipData>
                     <h5>Soby Rank – Chỉ số uy tín</h5>
