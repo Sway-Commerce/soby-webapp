@@ -18,9 +18,7 @@ const theme = {
   green: '#27AE60',
 };
 
-const SignUp = lazy(() =>
-  import('pages/register-phone/register-phone.component')
-);
+const SignUpPhone = lazy(() => import('pages/register-phone/register-phone.component'));
 const SignUpInfo = lazy(() => import('pages/register/register.component'));
 const PhoneVerification = lazy(() =>
   import('pages/phone-verification/phone-verification.component')
@@ -84,8 +82,8 @@ const App = () => {
                 path="/phone-verification"
                 component={PhoneVerification}
               />
-              <Route exact path="/signup" component={SignUp} />
-              <Route exact path="/signup-info" component={SignUpInfo} />
+              <Route exact path="/signup" component={SignUpInfo} />
+              <Route exact path="/signup-info" component={SignUpPhone} />
               <Route exact path="/signout" component={SignOut} />
 
               <Route path="/shop-profile/:shopId" component={ShopProfile} />

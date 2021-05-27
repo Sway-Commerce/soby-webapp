@@ -8,8 +8,8 @@ export const PolicyNavigate = ({ isSignIn }) => (
     {isSignIn ? (
       <>
         <InfoText>
-          Already have Account?
-          <Link to="/">
+          Already have an account?
+          <Link to="/phone-signin">
             <span>&#32;Log in</span>
           </Link>
         </InfoText>

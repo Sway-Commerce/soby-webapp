@@ -1,25 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import { useMutation } from '@apollo/client';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import FormInput from 'components/form-input/form-input.component';
 import CustomButton from 'components/ui/custom-button/custom-button.component';
 import passwordValidation from 'shared/utils/passwordValidation';
 import emailValidation from 'shared/utils/emailValidation';
 import {
-  CREATE_INDIVIDUAL,
-  SEND_PHONE_VERIFICATION,
   generateEncryptionKey,
   generateSignInKey,
-  getSignature,
-  LOGIN_WITH_SIGNATURE,
 } from 'graphQL/repository/individual.repository';
-import {
-  signUpStart,
-  signUpSuccess,
-  signUpFailure,
-  setAccessToken,
-} from 'redux/user/user.actions';
+import { setRegisterInfo } from 'redux/user/user.actions';
 
 import {
   SignUpContainer,
@@ -27,32 +18,18 @@ import {
   RegisterContainer,
   FormContainer,
   InputContainer,
+  NameContainer,
 } from './register.styles';
 import PolicyNavigate from 'components/policy-navigate/policy-navigate.component';
-import Spinner from 'components/ui/spinner/spinner.component';
-import SobyModal from 'components/ui/modal/modal.component';
-import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
 const Register = ({ history }) => {
-  const { phoneNumber, phoneCountryCode, signingSecret, signingPublicKey } =
-    useSelector((state) => {
-      return {
-        phoneNumber: state.user.phoneNumber,
-        phoneCountryCode: state.user.phoneCountryCode,
-        signingSecret: state.user.signingSecret,
-        signingPublicKey: state.user.signingPublicKey,
-      };
-    });
-
-  const [signature, setSignature] = useState('');
-  const [open, setOpen] = useState(false);
-  const [formError, setFormError] = useState('');
-  const [operationLoading, setOperationLoading] = useState(false);
+  const [isMobileWidth, setIsMobileWidth] = useState(window.innerWidth < 760);
 
   const [userCredentials, setUserCredentials] = useState({
     password: '',
     firstName: '',
     lastName: '',
+    middleName: '',
     email: '',
     encryptionSecret: '',
     encryptionPublicKey: '',
@@ -67,87 +44,41 @@ const Register = ({ history }) => {
   });
 
   const dispatch = useDispatch();
-  const dispatchSignUpStart = (userCredentials) =>
-    dispatch(signUpStart(userCredentials));
-  const dispatchSignUpFailure = (error) => dispatch(signUpFailure(error));
-  const dispatchSignUpSuccess = (keyPair) => dispatch(signUpSuccess(keyPair));
-  const dispatchSetAccessToken = (accessToken) =>
-    dispatch(setAccessToken(accessToken));
 
-  const { firstName, lastName, email, password } = userCredentials;
+  const dispatchSetRegisterInfo = (userCredentials) =>
+    dispatch(setRegisterInfo(userCredentials));
+
+  const { firstName, lastName, middleName, email, password } = userCredentials;
 
   const { isPasswordValid, isEmailValid, isFirstNameValid, isLastNameValid } =
     inputValidation;
 
-  const [
-    register,
-    { data: registerData, error: registerError, loading: registerLoading },
-  ] = useMutation(CREATE_INDIVIDUAL, {
-    errorPolicy: 'all',
-  });
-
-  const [
-    signinWithSignature,
-    { data: signatureData, loading: signinWithSignatureLoading },
-  ] = useMutation(LOGIN_WITH_SIGNATURE, {
-    errorPolicy: 'all',
-  });
-
-  const [sendPhoneVerificationMutation] = useMutation(SEND_PHONE_VERIFICATION, {
-    errorPolicy: 'all',
-  });
+  useEffect(() => {
+    window.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('resize', update);
+    };
+  }, []);
 
   useEffect(() => {
-    if (signature) {
-      setOperationLoading(true);
-      setTimeout(() => {
-        signinWithSignature({
-          variables: {
-            cmd: { signature },
-          },
-        });
-      }, 4000);
+    if (
+      userCredentials.encryptionSecret &&
+      userCredentials.encryptionPublicKey &&
+      userCredentials.signingPublicKey &&
+      userCredentials.signingSecret
+    ) {
+      dispatchSetRegisterInfo(userCredentials);
+      history.push('/signup-info');
     }
-  }, [signature]);
-
-  useEffect(() => {
-    if (signatureData?.loginWithSignature?.data?.accessToken) {
-      setOperationLoading(false);
-
-      dispatchSetAccessToken(
-        signatureData?.loginWithSignature?.data?.accessToken
-      );
-
-      sendPhoneVerificationMutation({
-        variables: {
-          cmd: { phoneCountryCode, phoneNumber },
-        },
-      });
-
-      history.push('/phone-verification');
-    }
-  }, [signatureData?.loginWithSignature?.data]);
-
-  useEffect(() => {
-    if (registerData?.register?.data?.id) {
-      const signature = getSignature(signingPublicKey, signingSecret, password);
-      setSignature(signature);
-    }
-  }, [registerData?.register?.data]);
-
-  useEffect(() => {
-    if (registerError?.message) {
-      setFormError(registerError?.message);
-      setOpen(true);
-    }
-  }, [registerError]);
+  }, [
+    userCredentials.encryptionSecret,
+    userCredentials.encryptionPublicKey,
+    userCredentials.signingPublicKey,
+    userCredentials.signingSecret,
+  ]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { encryptionSecret, encryptionPublicKey } =
-      await generateEncryptionKey(password);
-
-    const { signingSecretKey, signingPublicKey } = generateSignInKey(password);
 
     const isPasswordValid = passwordValidation(password);
     const isEmailValid = emailValidation(email);
@@ -160,33 +91,19 @@ const Register = ({ history }) => {
       isLastNameValid: !!lastName,
     });
 
-    if (isPasswordValid && isEmailValid) {
+    if (isPasswordValid && isEmailValid && firstName && lastName) {
+      const { encryptionSecret, encryptionPublicKey } =
+        await generateEncryptionKey(password);
+
+      const { signingSecretKey, signingPublicKey } =
+        generateSignInKey(password);
+
       setUserCredentials({
         ...userCredentials,
         encryptionSecret,
         signingSecret: signingSecretKey,
-      });
-
-      const cmd = {
-        ...userCredentials,
-        encryptionSecret,
         encryptionPublicKey,
-        signingSecret: signingSecretKey,
         signingPublicKey,
-        phoneNumber,
-        phoneCountryCode,
-      };
-      dispatchSignUpStart();
-      register({
-        variables: {
-          cmd,
-        },
-      });
-      dispatchSignUpSuccess({
-        signingSecret: signingSecretKey,
-        encryptionSecret,
-        signingPublicKey,
-        encryptionPublicKey,
       });
     }
   };
@@ -200,9 +117,11 @@ const Register = ({ history }) => {
     setUserCredentials({ ...userCredentials, [name]: value });
   };
 
-  return signinWithSignatureLoading || registerLoading || operationLoading ? (
-    <Spinner />
-  ) : (
+  const update = () => {
+    setIsMobileWidth(window.innerWidth < 760);
+  };
+
+  return (
     <RegisterContainer>
       <CardWrapper>
         <SignUpContainer>
@@ -210,42 +129,58 @@ const Register = ({ history }) => {
           <FormContainer>
             <form onSubmit={handleSubmit}>
               <FormInput
-                type="text"
-                name="firstName"
-                value={firstName}
+                type="email"
+                name="email"
+                value={email}
                 onChange={handleChange}
-                label="First name"
-                placeholder="Brian"
+                label="Email address"
+                placeholder="sample@mail.com"
               />
+              {!isEmailValid ? (
+                <p className="error-title">*Your email is not correct</p>
+              ) : null}
+              <InputContainer>
+                {!isMobileWidth && <h5>Your Name</h5>}
+
+                <NameContainer>
+                  <FormInput
+                    type="text"
+                    name="firstName"
+                    value={firstName}
+                    onChange={handleChange}
+                    placeholder="First name"
+                    label="First name"
+                    withoutTitle={!isMobileWidth}
+                  />
+
+                  <FormInput
+                    type="text"
+                    name="middleName"
+                    value={middleName}
+                    onChange={handleChange}
+                    placeholder="Middle Name"
+                    label="Middle Name"
+                    withoutTitle={!isMobileWidth}
+                  />
+
+                  <FormInput
+                    type="text"
+                    name="lastName"
+                    value={lastName}
+                    onChange={handleChange}
+                    placeholder="Last name"
+                    label="Last name"
+                    withoutTitle={!isMobileWidth}
+                  />
+                </NameContainer>
+              </InputContainer>
               {!isFirstNameValid ? (
                 <p className="error-title">*The field is required</p>
               ) : null}
-              <InputContainer>
-                <FormInput
-                  type="text"
-                  name="lastName"
-                  value={lastName}
-                  onChange={handleChange}
-                  label="Last name"
-                  placeholder="John"
-                />
-                {!isLastNameValid ? (
-                  <p className="error-title">*The field is required</p>
-                ) : null}
-              </InputContainer>
-              <InputContainer>
-                <FormInput
-                  type="email"
-                  name="email"
-                  value={email}
-                  onChange={handleChange}
-                  label="Your email"
-                  placeholder="Email"
-                />
-                {!isEmailValid ? (
-                  <p className="error-title">*Your email is not correct</p>
-                ) : null}
-              </InputContainer>
+              {!isLastNameValid ? (
+                <p className="error-title">*The field is required</p>
+              ) : null}
+
               <InputContainer>
                 <FormInput
                   type="password"
@@ -253,7 +188,7 @@ const Register = ({ history }) => {
                   value={password}
                   onChange={handleChange}
                   label="Password"
-                  placeholder="Abcabc123#"
+                  placeholder="*********"
                   required
                 />
                 {!isPasswordValid ? (
@@ -278,11 +213,6 @@ const Register = ({ history }) => {
         </SignUpContainer>
         <PolicyNavigate isSignIn />
       </CardWrapper>
-      <SobyModal open={open} setOpen={setOpen}>
-        {formError ? (
-          <ErrorPopup content={formError} setOpen={setOpen} />
-        ) : null}
-      </SobyModal>
     </RegisterContainer>
   );
 };

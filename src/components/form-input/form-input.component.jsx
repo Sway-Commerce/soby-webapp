@@ -7,18 +7,31 @@ import {
   FormTitle,
 } from './form-input.styles';
 
-const FormInput = ({ handleChange, placeholder, label, withoutTitle, withoutBorder, ...props }) => (
-  <>
-    {withoutTitle ? null : <FormTitle>{label}</FormTitle>}
+const FormInput = ({
+  handleChange,
+  placeholder,
+  label,
+  withoutTitle,
+  withoutBorder,
+  ...props
+}) => (
+  <div>
+    {!withoutTitle && <FormTitle>{label}</FormTitle>}
     <GroupContainer>
-      <FormInputContainer withoutBorder={withoutBorder} onChange={handleChange} {...props} />
+      <FormInputContainer
+        withoutBorder={withoutBorder}
+        onChange={handleChange}
+        {...props}
+      />
       {placeholder ? (
-        <FormInputLabel className={props.value?.length ? 'shrink' : ''}>
+        <FormInputLabel
+          className={`${props.value?.length ? 'shrink' : ''} truncate`}
+        >
           {placeholder}
         </FormInputLabel>
       ) : null}
     </GroupContainer>
-  </>
+  </div>
 );
 
 export default FormInput;

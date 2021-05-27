@@ -201,5 +201,30 @@ export const updateStoredUser = ({
     emailStatus,
     phoneStatus,
     pendingIdentities,
-  }
-})
+  },
+});
+
+export const setRegisterInfo = ({
+  email,
+  lastName,
+  firstName,
+  middleName,
+  signingSecret,
+  encryptionSecret,
+  signingPublicKey,
+  encryptionPublicKey,
+  password
+}) => ({
+  type: UserActionTypes.SET_REGISTER_INFO,
+  payload: {
+    email,
+    lastName,
+    firstName,
+    middleName,
+    signingSecret,
+    encryptionSecret,
+    signingPublicKey,
+    encryptionPublicKey,
+    password
+  },
+});

@@ -120,7 +120,6 @@ export const GlobalStyle = createGlobalStyle`
 
 	.PhoneInput {
 		border-bottom: 1px ${borderColor} solid;
-    padding: 0 10px;
 		margin-top: 4px;
 		input.PhoneInputInput {
 			border: none;
@@ -157,14 +156,14 @@ export const GlobalStyle = createGlobalStyle`
 		font-size: 0.8rem;
 		line-height: 1.2rem;
 		text-transform: capitalize;
-		margin-bottom: 24px;
+		margin-bottom: 1.2rem;
 	}
 
 	p, a {
 		font-style: normal;
 		font-weight: normal;
 		font-size: 0.8rem;
-		line-height: 26px;
+		line-height: 1.3rem;
 	}
 
 	.Soby__dropdown {
@@ -207,7 +206,7 @@ export const GlobalStyle = createGlobalStyle`
 	}
 
 	.main-btn {
-		margin: 48px 0 32px;
+		margin: 2.4rem 0 1.6rem;
 	}
 
 	::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */

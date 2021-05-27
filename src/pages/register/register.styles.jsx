@@ -18,6 +18,10 @@ export const CardWrapper = styled.div`
   transition: 0.3s;
   padding: 56px 40px 40px;
   background-color: #ffffff;
+  width: 440px;
+  @media screen and (max-width: 500px) {
+    width: calc(100vw - 49px);
+  }
 `;
 
 export const RegisterContainer = styled.div`
@@ -36,5 +40,14 @@ export const FormContainer = styled.div`
 `;
 
 export const InputContainer = styled.div`
-  margin-top: 24px;
+  margin-top: 1.2rem;
+`;
+
+export const NameContainer = styled.div`
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: repeat(3, 1fr);
+  @media screen and (max-width: 760px) {
+    grid-template-columns: 1fr;
+  }
 `;

@@ -27,6 +27,7 @@ const INITIAL_STATE = {
   phoneStatus: null,
   pendingIdentities: null,
   error: null,
+  password: null,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -85,6 +86,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         emailStatus,
         phoneStatus,
         pendingIdentities,
+        password: null,
       };
     }
     case UserActionTypes.SIGN_UP_SUCCESS: {
@@ -144,7 +146,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         email,
-        emailStatus: "NOT_CONFIRMED"
+        emailStatus: 'NOT_CONFIRMED',
       };
     }
     case UserActionTypes.SET_PHONE_NUMBER: {
@@ -153,21 +155,46 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         phoneNumber,
         phoneCountryCode,
-        phoneStatus: "NOT_CONFIRMED"
+        phoneStatus: 'NOT_CONFIRMED',
       };
     }
     case UserActionTypes.VERIFY_PHONE: {
       const phoneStatus = action.payload;
       return {
         ...state,
-        phoneStatus
+        phoneStatus,
       };
     }
     case UserActionTypes.VERIFY_EMAIL: {
       const emailStatus = action.payload;
       return {
         ...state,
-        emailStatus
+        emailStatus,
+      };
+    }
+    case UserActionTypes.SET_REGISTER_INFO: {
+      const {
+        email,
+        lastName,
+        firstName,
+        middleName,
+        signingSecret,
+        encryptionSecret,
+        signingPublicKey,
+        encryptionPublicKey,
+        password,
+      } = action.payload;
+      return {
+        ...state,
+        email,
+        lastName,
+        firstName,
+        middleName,
+        signingSecret,
+        encryptionSecret,
+        signingPublicKey,
+        encryptionPublicKey,
+        password,
       };
     }
     default:
