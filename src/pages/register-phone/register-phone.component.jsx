@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CustomButton from 'components/ui/custom-button/custom-button.component';
 import usePhoneNumber from 'shared/hooks/usePhoneNumber';
 
-import { setAccessToken, setUserPhoneNumber } from 'redux/user/user.actions';
+import { setAccessToken, setUserPhoneNumber, updateStoredUser } from 'redux/user/user.actions';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
@@ -87,6 +87,8 @@ const RegisterPhone = ({history}) => {
   const dispatch = useDispatch();
   const dispatchSetUserPhoneNumber = (phone) =>
     dispatch(setUserPhoneNumber(phone));
+  const dispatchUpdateStoredUser = (payload) =>
+    dispatch(updateStoredUser(payload));
 
   useEffect(() => {
     if (signature) {
@@ -123,6 +125,7 @@ const RegisterPhone = ({history}) => {
   useEffect(() => {
     if (registerData?.register?.data?.id) {
       const signature = getSignature(signingPublicKey, signingSecret, password);
+      dispatchUpdateStoredUser(registerData?.register?.data);
       setSignature(signature);
     }
   }, [registerData?.register?.data]);

@@ -28,11 +28,13 @@ const INITIAL_STATE = {
   pendingIdentities: null,
   error: null,
   password: null,
+  passphare: null,
+  storeEncryptionSecret: null,
+  storeSigningSecret: null,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case UserActionTypes.SIGN_IN_SUCCESS:
     case UserActionTypes.UPDATE_STORED_USER: {
       const {
         signingSecret,
@@ -59,6 +61,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
         emailStatus,
         phoneStatus,
         pendingIdentities,
+        passphare,
+        storeEncryptionSecret,
+        storeSigningSecret,
       } = action.payload;
       return {
         ...state,
@@ -87,6 +92,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
         phoneStatus,
         pendingIdentities,
         password: null,
+        passphare,
+        storeEncryptionSecret,
+        storeSigningSecret,
       };
     }
     case UserActionTypes.SIGN_UP_SUCCESS: {

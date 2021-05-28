@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import FormInput from 'components/form-input/form-input.component';
 import CustomButton from 'components/ui/custom-button/custom-button.component';
@@ -17,8 +16,7 @@ import {
 import {
   phoneSignInStart,
   setAccessToken,
-  signInFailure,
-  signInSuccess,
+  updateStoredUser,
 } from 'redux/user/user.actions';
 
 import {
@@ -68,7 +66,6 @@ const PhoneSignin = () => {
   const dispatch = useDispatch();
   const dispatchPhoneSignInStart = (phoneAndPassword) =>
     dispatch(phoneSignInStart(phoneAndPassword));
-  const dispatchSignInFailure = (error) => dispatch(signInFailure(error));
   const dispatchSetAccessToken = (accessToken) =>
     dispatch(setAccessToken(accessToken));
 
@@ -84,7 +81,7 @@ const PhoneSignin = () => {
       getSecretData?.getSecret?.data
     ) {
       const dispatchSignInSuccess = (payload) =>
-        dispatch(signInSuccess(payload));
+        dispatch(updateStoredUser(payload));
 
       async function decryptData() {
         const {
@@ -92,6 +89,7 @@ const PhoneSignin = () => {
           encryptionSecret,
           signingPublicKey,
           encryptionPublicKey,
+          passphrase,
         } = getSecretData?.getSecret?.data;
 
         const {
@@ -115,10 +113,14 @@ const PhoneSignin = () => {
           emailStatus,
           phoneStatus,
           pendingIdentities,
+          storeEncryptionSecret,
+          storeSigningSecret,
         } = await decryptIndividualModel(
           encryptionSecret,
           password,
-          loadIndividualBasicInfoData?.getIndividual?.data
+          loadIndividualBasicInfoData?.getIndividual?.data,
+          passphrase,
+          signingSecret
         );
 
         dispatchSignInSuccess({
@@ -146,6 +148,8 @@ const PhoneSignin = () => {
           emailStatus,
           phoneStatus,
           pendingIdentities,
+          storeEncryptionSecret,
+          storeSigningSecret,
         });
 
         const redirectUrl = localStorage.getItem('redirectUrl');
@@ -242,9 +246,7 @@ const PhoneSignin = () => {
                 onChange={(value) => setPhoneNumberIntl(value)}
               />
               {!isPhoneValid ? (
-                <p className="error-title">
-                  *Your phone number is not correct
-                </p>
+                <p className="error-title">*Your phone number is not correct</p>
               ) : null}
 
               <InputContainer>

@@ -368,4 +368,8 @@ export const GlobalStyle = createGlobalStyle`
 	.mg-t-30 {
 		margin-top: 1.5rem;
 	}
+
+	.fw-normal {
+		font-weight: normal;
+	}
 `;

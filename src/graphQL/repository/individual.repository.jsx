@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
-import { Encryption, generateJwt, Signing, sha256 } from 'credify-crypto';
+import { Encryption, generateJwt, sha256, Signing } from '@credify/crypto';
+
 import { INDIVIDUAL_PROFILE_FRAGMENT } from '../common.fragment';
 
 export const CREATE_INDIVIDUAL = gql`
@@ -144,6 +145,9 @@ export const GETSECRET = gql`
       data {
         signingSecret
         encryptionSecret
+        signingPublicKey
+        encryptionPublicKey
+        passphrase
       }
     }
   }
@@ -152,7 +156,7 @@ export const GETSECRET = gql`
 export const generateEncryptionKey = async (password) => {
   const encryption = new Encryption();
   await encryption.generateKeyPair();
-  const encryptionSecret = await encryption.exportPrivateKey(password);
+  const encryptionSecret = await encryption.exportPrivateKey();
   const encryptionPublicKey = await encryption.exportPublicKey();
   return { encryptionSecret, encryptionPublicKey };
 };
@@ -163,7 +167,7 @@ export const generateSignInKey = (password) => {
   }
   const signing = new Signing();
   signing.generateKeyPair();
-  const signingSecretKey = signing.exportPrivateKey(password);
+  const signingSecretKey = signing.exportPrivateKey();
   const signingPublicKey = signing.exportPublicKey();
   return { signingSecretKey, signingPublicKey };
 };
@@ -198,11 +202,17 @@ export const getHashPassword = (password) => {
 export const decryptIndividualModel = async (
   encryptionSecret,
   password,
-  individualInfo
+  individualInfo,
+  passphrase,
+  signingSecret
 ) => {
   const encryption = new Encryption();
+  const signing = new Signing();
+  signing.importPrivateKey(signingSecret, password);
+  const storeSigningSecret = signing.exportPrivateKey(passphrase);
 
   await encryption.importPrivateKey(encryptionSecret, password);
+  const storeEncryptionSecret = await encryption.exportPrivateKey(passphrase);
 
   const firstName = individualInfo?.firstName
     ? await encryption.decryptBase64UrlStringToString(individualInfo?.firstName)
@@ -277,6 +287,8 @@ export const decryptIndividualModel = async (
     city,
     province,
     country,
+    storeEncryptionSecret,
+    storeSigningSecret,
   };
 };
 
