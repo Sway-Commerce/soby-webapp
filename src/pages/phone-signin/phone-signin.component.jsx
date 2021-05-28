@@ -152,8 +152,8 @@ const PhoneSignin = () => {
           storeSigningSecret,
         });
 
-        const redirectUrl = localStorage.getItem('redirectUrl');
-        localStorage.removeItem('redirectUrl');
+        const redirectUrl = sessionStorage.getItem('redirectUrl');
+        sessionStorage.removeItem('redirectUrl');
         window.location = redirectUrl || '/individual-profile';
       }
 
