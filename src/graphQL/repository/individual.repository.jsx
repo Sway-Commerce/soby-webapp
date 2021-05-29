@@ -156,7 +156,7 @@ export const GETSECRET = gql`
 export const generateEncryptionKey = async (password) => {
   const encryption = new Encryption();
   await encryption.generateKeyPair();
-  const encryptionSecret = await encryption.exportPrivateKey();
+  const encryptionSecret = await encryption.exportPrivateKey(password);
   const encryptionPublicKey = await encryption.exportPublicKey();
   return { encryptionSecret, encryptionPublicKey };
 };
@@ -167,7 +167,7 @@ export const generateSignInKey = (password) => {
   }
   const signing = new Signing();
   signing.generateKeyPair();
-  const signingSecretKey = signing.exportPrivateKey();
+  const signingSecretKey = signing.exportPrivateKey(password);
   const signingPublicKey = signing.exportPublicKey();
   return { signingSecretKey, signingPublicKey };
 };
