@@ -89,11 +89,12 @@ const PhoneVerification = () => {
   };
 
   const collectVerifyCode = (code) => {
+    debugger
     setVerificationCode(+code);
     if (`${code}`.length == 6) {
       verifyPhoneMutation({
         variables: {
-          cmd: { phoneCountryCode, phoneNumber, verificationCode: +code },
+          cmd: { phoneCountryCode, phoneNumber, verificationCode: code },
         },
       });
     }
