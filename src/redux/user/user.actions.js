@@ -119,7 +119,7 @@ export const updateStoredUser = ({
   emailStatus,
   phoneStatus,
   pendingIdentities,
-  passphare,
+  passphrase,
   storeEncryptionSecret,
   storeSigningSecret,
 }) => ({
@@ -149,7 +149,7 @@ export const updateStoredUser = ({
     emailStatus,
     phoneStatus,
     pendingIdentities,
-    passphare,
+    passphrase,
     storeEncryptionSecret,
     storeSigningSecret,
   },

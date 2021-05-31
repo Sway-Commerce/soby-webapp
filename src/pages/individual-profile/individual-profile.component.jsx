@@ -8,24 +8,25 @@ import EmailPopup from './edit-mail-popup.component';
 import PhonePopup from './edit-phone-popup.component';
 import EmailCodePopup from './verify-email-popup.component';
 import PhoneCodePopup from './verify-phone-popup.component';
-import {
-  bodyColor,
-  stokeColor,
-} from '../../shared/css-variable/variable';
+import { bodyColor, stokeColor } from '../../shared/css-variable/variable';
 
 import { ReactComponent as VerifiedIcon } from 'shared/assets/verified.svg';
 import { ReactComponent as PhoneBlackIcon } from 'shared/assets/phone-black.svg';
 import { ReactComponent as IdCardIcon } from 'shared/assets/id-card.svg';
 import { ReactComponent as EmailBlackIcon } from 'shared/assets/email-black.svg';
 import { ReactComponent as ArrowRightIcon } from 'shared/assets/arrow-right.svg';
+import { ReactComponent as EditInfoIcon } from 'shared/assets/edit-individual.svg';
 import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
 import { Link } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import {
-  GETSECRET,
+  decryptIndividualModel,
   GET_INDIVIDUAL_BASIC_INFO,
 } from 'graphQL/repository/individual.repository';
 import { signOutStart, updateStoredUser } from 'redux/user/user.actions';
+import Spinner from 'components/ui/spinner/spinner.component';
+import CustomButton from 'components/ui/custom-button/custom-button.component';
+import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
 export const Page = styled.div`
   background-color: #ffffff;
@@ -40,10 +41,28 @@ export const Page = styled.div`
 export const AvatarBox = styled.div`
   display: flex;
   align-items: center;
+  button {
+    width: 108px;
+    display: block;
+  }
+  svg {
+    width: 32px;
+    height: 32px;
+    display: none;
+  }
+  @media screen and (max-width: 600px) {
+    button {
+      display: none;
+    }
+    svg {
+      display: flex;
+    }
+  }
 `;
 
 const Name = styled.h2`
   margin-left: 0.8rem;
+  flex: 1;
 `;
 
 export const Avatar = styled.img`
@@ -103,36 +122,31 @@ const VerifyBtn = styled.button`
 `;
 
 const IndividualProfile = () => {
+  const user = useSelector((state) => {
+    return state.user;
+  });
+
   const {
-    signingSecret,
-    encryptionSecret,
-    signingPublicKey,
-    encryptionPublicKey,
     phoneNumber,
     phoneCountryCode,
     email,
-    invitationCode,
-    postalCode,
     lastName,
     middleName,
-    dob,
-    nationality,
-    addressLine,
-    city,
-    province,
-    country,
     firstName,
     id,
     imageUrl,
     kycStatus,
     emailStatus,
     phoneStatus,
-    pendingIdentities,
-    accessToken,
-  } = useSelector((state) => {
-    return state.user;
-  });
+    storeEncryptionSecret,
+    storeSigningSecret,
+  } = user;
 
+  const [open, setOpen] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [newEmail, setNewEmail] = useState('');
+  const [newPhone, setNewPhone] = useState('');
+  const [newPhoneCountryCode, setPhoneCountryCode] = useState('');
   const [openEditMailPopup, setOpenEditMailPopup] = useState(false);
   const [openEditPhonePopup, setOpenEditPhonePopup] = useState(false);
   const [openVerifyPhonePopup, setOpenVerifyPhonePopup] = useState(false);
@@ -151,110 +165,109 @@ const IndividualProfile = () => {
       loading: loadIndividualBasicInfoLoading,
       error: loadIndividualBasicInfoError,
     },
-  ] = useLazyQuery(GET_INDIVIDUAL_BASIC_INFO);
-  const [
-    getSecret,
-    { data: getSecretData, loading: getSecretLoading, error: getSecretError },
-  ] = useLazyQuery(GETSECRET);
+  ] = useLazyQuery(GET_INDIVIDUAL_BASIC_INFO, {
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
+  });
 
   useEffect(() => {
-    if (loadIndividualBasicInfoData?.getIndividual?.data) {
-      getSecret();
+    if ((!openVerifyPhonePopup || !openVerifyEmailPopup) && id) {
+      getBasicInfo(id);
     }
-  }, [loadIndividualBasicInfoData?.getIndividual?.data]);
+  }, [openVerifyPhonePopup, openVerifyEmailPopup, id]);
+
+  useEffect(() => {
+    if (loadIndividualBasicInfoError?.message) {
+      setFormError(loadIndividualBasicInfoError?.message);
+      setOpen(true);
+    }
+  }, [loadIndividualBasicInfoError?.message]);
 
   const dispatch = useDispatch();
   const dispatchUpdateStoredUser = (payload) =>
     dispatch(updateStoredUser(payload));
   const dispatchSignOutStart = () => dispatch(signOutStart());
 
-  // useEffect(() => {
-  //   if (
-  //     loadIndividualBasicInfoData?.getIndividual?.data &&
-  //     getSecretData?.getSecret?.data
-  //   ) {
+  useEffect(() => {
+    if (
+      loadIndividualBasicInfoData?.getIndividual?.data &&
+      storeEncryptionSecret &&
+      storeSigningSecret
+    ) {
+      async function decryptData() {
+        const {
+          firstName,
+          phoneNumber,
+          phoneCountryCode,
+          email,
+          invitationCode,
+          postalCode,
+          lastName,
+          middleName,
+          dob,
+          nationality,
+          addressLine,
+          city,
+          province,
+          country,
+          imageUrl,
+          kycStatus,
+          emailStatus,
+          phoneStatus,
+          pendingIdentities,
+        } = await decryptIndividualModel(
+          storeEncryptionSecret,
+          loadIndividualBasicInfoData?.getIndividual?.data?.passphrase,
+          loadIndividualBasicInfoData?.getIndividual?.data,
+          loadIndividualBasicInfoData?.getIndividual?.data?.passphrase,
+          storeSigningSecret
+        );
 
-  //     async function decryptData() {
-  //       const {
-  //         signingSecret,
-  //         encryptionSecret,
-  //         signingPublicKey,
-  //         encryptionPublicKey,
-  //       } = getSecretData?.getSecret?.data;
+        dispatchUpdateStoredUser({
+          ...user,
+          phoneNumber,
+          phoneCountryCode,
+          email,
+          invitationCode,
+          postalCode,
+          lastName,
+          middleName,
+          dob,
+          nationality,
+          addressLine,
+          city,
+          province,
+          country,
+          firstName,
+          imageUrl,
+          kycStatus,
+          emailStatus,
+          phoneStatus,
+          pendingIdentities,
+        });
+      }
 
-  //       const {
-  //         firstName,
-  //         phoneNumber,
-  //         phoneCountryCode,
-  //         email,
-  //         invitationCode,
-  //         postalCode,
-  //         lastName,
-  //         middleName,
-  //         dob,
-  //         nationality,
-  //         addressLine,
-  //         city,
-  //         province,
-  //         country,
-  //         id,
-  //         imageUrl,
-  //         kycStatus,
-  //         emailStatus,
-  //         phoneStatus,
-  //         pendingIdentities,
-  //       } = await decryptIndividualModel(
-  //         encryptionSecret,
-  //         password,
-  //         loadIndividualBasicInfoData?.getIndividual?.data
-  //       );
+      decryptData();
+    }
+  }, [
+    loadIndividualBasicInfoData?.getIndividual?.data,
+    storeEncryptionSecret,
+    storeSigningSecret,
+  ]);
 
-  //       dispatchUpdateStoredUser({
-  //         signingSecret,
-  //         encryptionSecret,
-  //         signingPublicKey,
-  //         encryptionPublicKey,
-  //         phoneNumber,
-  //         phoneCountryCode,
-  //         email,
-  //         invitationCode,
-  //         postalCode,
-  //         lastName,
-  //         middleName,
-  //         dob,
-  //         nationality,
-  //         addressLine,
-  //         city,
-  //         province,
-  //         country,
-  //         firstName,
-  //         id,
-  //         imageUrl,
-  //         kycStatus,
-  //         emailStatus,
-  //         phoneStatus,
-  //         pendingIdentities,
-  //       });
-
-  //       const redirectUrl = sessionStorage.getItem('redirectUrl');
-  //       sessionStorage.removeItem('redirectUrl');
-  //       window.location = redirectUrl || '/individual-profile';
-  //     }
-
-  //     decryptData();
-  //   }
-  // }, [
-  //   loadIndividualBasicInfoData?.getIndividual?.data,
-  //   getSecretData?.getSecret?.data,
-  // ]);
-
-  return (
+  return loadIndividualBasicInfoLoading ? (
+    <Spinner />
+  ) : (
     <React.Fragment>
       <SharedBreadcrumb breadcrumbs={breadcrumbs} />
       <Page>
         <AvatarBox>
           <Avatar src={imageUrl} />
           <Name>{`${lastName} ${middleName} ${firstName}`}</Name>
+          <Link to="/edit-profile">
+            <CustomButton>Edit info</CustomButton>
+            <EditInfoIcon />
+          </Link>
         </AvatarBox>
         <InfoBox>
           <div className="info-row">
@@ -296,10 +309,6 @@ const IndividualProfile = () => {
             )}
           </div>
         </InfoBox>
-        <Row to="/edit-profile" pointer="true">
-          <p>Edit information</p>
-          <ArrowRightIcon />
-        </Row>
         <Row to="/change-password" pointer="true">
           <p>Password</p>
           <ArrowRightIcon />
@@ -336,6 +345,8 @@ const IndividualProfile = () => {
         {openEditMailPopup ? (
           <EmailPopup
             setOpenEditMailPopup={setOpenEditMailPopup}
+            setOpenVerifyEmailPopup={setOpenVerifyEmailPopup}
+            setNewEmail={setNewEmail}
             email={email}
           />
         ) : null}
@@ -363,8 +374,14 @@ const IndividualProfile = () => {
         {openVerifyEmailPopup ? (
           <EmailCodePopup
             setOpenVerifyEmailPopup={setOpenVerifyEmailPopup}
-            email={email}
+            email={newEmail || email}
           />
+        ) : null}
+      </SobyModal>
+
+      <SobyModal open={open} setOpen={setOpen}>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpen} />
         ) : null}
       </SobyModal>
     </React.Fragment>

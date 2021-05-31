@@ -41,9 +41,6 @@ const PhoneCodePopup = ({
   const [isCodeValid, setIsCodeValid] = useState(true);
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
-  const dispatch = useDispatch();
-  const dispatchVerifyPhone = (phoneStatus) =>
-    dispatch(verifyPhone(phoneStatus));
 
   // VERIFY_PHONE
   const [
@@ -52,7 +49,6 @@ const PhoneCodePopup = ({
   ] = useMutation(VERIFY_PHONE);
   useEffect(() => {
     if (verifyPhoneData?.verifyPhone?.success) {
-      dispatchVerifyPhone('CONFIRMED');
       setOpenVerifyPhonePopup(false);
     }
   }, [verifyPhoneData?.verifyPhone?.success, verifyPhoneMutation]);

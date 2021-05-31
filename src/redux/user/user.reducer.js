@@ -28,7 +28,7 @@ const INITIAL_STATE = {
   pendingIdentities: null,
   error: null,
   password: null,
-  passphare: null,
+  passphrase: null,
   storeEncryptionSecret: null,
   storeSigningSecret: null,
 };
@@ -61,7 +61,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         emailStatus,
         phoneStatus,
         pendingIdentities,
-        passphare,
+        passphrase,
         storeEncryptionSecret,
         storeSigningSecret,
       } = action.payload;
@@ -92,7 +92,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         phoneStatus,
         pendingIdentities,
         password: null,
-        passphare,
+        passphrase,
         storeEncryptionSecret,
         storeSigningSecret,
       };

@@ -37,10 +37,6 @@ const EmailCodePopup = ({ email, setOpenVerifyEmailPopup }) => {
   const [isCodeValid, setIsCodeValid] = useState(true);
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
-  const dispatch = useDispatch();
-  const dispatchVerifyEmail = (emailStatus) =>
-    dispatch(verifyEmail(emailStatus));
-
   // VERIFY_EMAIL
   const [
     verifyEmailMutation,
@@ -48,7 +44,6 @@ const EmailCodePopup = ({ email, setOpenVerifyEmailPopup }) => {
   ] = useMutation(VERIFY_EMAIL);
   useEffect(() => {
     if (verifyEmailMutationData?.verifyEmail?.success) {
-      dispatchVerifyEmail('CONFIRMED');
       setOpenVerifyEmailPopup(false);
     }
   }, [verifyEmailMutationData?.verifyEmail?.success, verifyEmailMutation]);

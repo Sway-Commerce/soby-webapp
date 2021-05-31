@@ -32,7 +32,7 @@ import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import { InputContainer } from 'pages/register/register.styles';
 
-const PhoneSignin = () => {
+const PhoneSignin = ({ history }) => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
@@ -152,9 +152,11 @@ const PhoneSignin = () => {
           storeSigningSecret,
         });
 
-        const redirectUrl = sessionStorage.getItem('redirectUrl');
+        const redirectUrl =
+          sessionStorage.getItem('redirectUrl') ?? '/individual-profile';
         sessionStorage.removeItem('redirectUrl');
-        window.location = redirectUrl || '/individual-profile';
+        // window.location = redirectUrl;
+        history.push(redirectUrl);
       }
 
       decryptData();
@@ -175,7 +177,11 @@ const PhoneSignin = () => {
   }, [!!data?.loginWithPhoneAndPassword?.data]);
 
   useEffect(() => {
-    if (error) {
+    if (
+      error?.message ||
+      loadIndividualBasicInfoError?.message ||
+      getSecretError?.message
+    ) {
       setFormError(
         error?.message ??
           loadIndividualBasicInfoError?.message ??
@@ -183,7 +189,11 @@ const PhoneSignin = () => {
       );
       setOpen(true);
     }
-  }, [error]);
+  }, [
+    error?.message,
+    loadIndividualBasicInfoError?.message,
+    getSecretError?.message,
+  ]);
   useEffect(() => {
     if (loading || loadIndividualBasicInfoLoading || getSecretLoading) {
       return <Spinner />;

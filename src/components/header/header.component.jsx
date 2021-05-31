@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -8,7 +8,6 @@ import { ReactComponent as ArrowIcon } from 'shared/assets/arrow-down.svg';
 import { ReactComponent as Logo } from 'shared/assets/logo.svg';
 import { ReactComponent as TempImage } from 'shared/assets/temp.svg';
 import { ReactComponent as MenuIcon } from 'shared/assets/menu-icon.svg';
-import { signOutStart } from 'redux/user/user.actions';
 import { mainColor } from 'shared/css-variable/variable';
 
 const HeaderContainer = styled.div`
@@ -103,8 +102,10 @@ export const Header = () => {
       return state.user;
     });
   const [isSignIn, setIsSignin] = useState(!!accessToken);
-  const dispatch = useDispatch();
-  const dispatchSignOutStart = (payload) => dispatch(signOutStart());
+
+  useEffect(() => {
+    setIsSignin(!!accessToken);
+  }, [accessToken]);
 
   return (
     <HeaderContainer>

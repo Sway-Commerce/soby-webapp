@@ -89,7 +89,6 @@ const PhoneVerification = () => {
   };
 
   const collectVerifyCode = (code) => {
-    debugger
     setVerificationCode(+code);
     if (`${code}`.length == 6) {
       verifyPhoneMutation({

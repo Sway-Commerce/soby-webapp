@@ -48,7 +48,6 @@ const PhonePopup = ({
   ] = useMutation(UPDATE_PHONE);
   useEffect(() => {
     if (updatePhoneMutationData?.updatePhone?.success) {
-      dispatchSetPhoneNumber({ phoneCountryCode, phoneNumber });
       setOpenEditPhonePopup(false);
     }
   }, [updatePhoneMutationData?.updatePhone?.success, updatePhoneMutation]);
