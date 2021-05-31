@@ -7,8 +7,6 @@ import {
   VERIFY_PHONE,
 } from 'graphQL/repository/individual.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
-import { useDispatch } from 'react-redux';
-import { verifyPhone } from 'redux/user/user.actions';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import CustomButton from 'components/ui/custom-button/custom-button.component';
@@ -45,8 +43,14 @@ const PhoneCodePopup = ({
   // VERIFY_PHONE
   const [
     verifyPhoneMutation,
-    { data: verifyPhoneData, loading: verifyPhoneLoading },
-  ] = useMutation(VERIFY_PHONE);
+    {
+      data: verifyPhoneData,
+      loading: verifyPhoneLoading,
+      error: verifyPhoneError,
+    },
+  ] = useMutation(VERIFY_PHONE, {
+    errorPolicy: 'all',
+  });
   useEffect(() => {
     if (verifyPhoneData?.verifyPhone?.success) {
       setOpenVerifyPhonePopup(false);
@@ -70,11 +74,16 @@ const PhoneCodePopup = ({
   }, []);
 
   useEffect(() => {
-    if (sendPhoneVerificationMutationError?.message) {
-      setFormError(sendPhoneVerificationMutationError?.message);
-      setOpen();
+    if (
+      sendPhoneVerificationMutationError?.message ||
+      verifyPhoneError?.message
+    ) {
+      setFormError(
+        sendPhoneVerificationMutationError?.message || verifyPhoneError?.message
+      );
+      setOpen(true);
     }
-  }, [sendPhoneVerificationMutationError?.message]);
+  }, [sendPhoneVerificationMutationError?.message, verifyPhoneError?.message]);
 
   const collectVerifyCode = (code) => {
     setVerificationCode(+code);

@@ -146,7 +146,7 @@ const IndividualProfile = () => {
   const [formError, setFormError] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newPhone, setNewPhone] = useState('');
-  const [newPhoneCountryCode, setPhoneCountryCode] = useState('');
+  const [newPhoneCountryCode, setNewPhoneCountryCode] = useState('');
   const [openEditMailPopup, setOpenEditMailPopup] = useState(false);
   const [openEditPhonePopup, setOpenEditPhonePopup] = useState(false);
   const [openVerifyPhonePopup, setOpenVerifyPhonePopup] = useState(false);
@@ -357,6 +357,9 @@ const IndividualProfile = () => {
             setOpenEditPhonePopup={setOpenEditPhonePopup}
             currentPhoneCountryCode={phoneCountryCode}
             currentPhoneNumber={phoneNumber}
+            setNewPhone={setNewPhone}
+            setNewPhoneCountryCode={setNewPhoneCountryCode}
+            setOpenVerifyPhonePopup={setOpenVerifyPhonePopup}
           />
         ) : null}
       </SobyModal>
@@ -364,8 +367,8 @@ const IndividualProfile = () => {
         {openVerifyPhonePopup ? (
           <PhoneCodePopup
             setOpenVerifyPhonePopup={setOpenVerifyPhonePopup}
-            phoneCountryCode={phoneCountryCode}
-            phoneNumber={phoneNumber}
+            phoneCountryCode={newPhoneCountryCode || phoneCountryCode}
+            phoneNumber={newPhone ||phoneNumber}
           />
         ) : null}
       </SobyModal>

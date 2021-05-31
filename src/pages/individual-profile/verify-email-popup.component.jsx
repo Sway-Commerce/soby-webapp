@@ -7,8 +7,6 @@ import {
   SEND_EMAIL_VERIFICATION,
 } from 'graphQL/repository/individual.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
-import { useDispatch } from 'react-redux';
-import { verifyEmail } from 'redux/user/user.actions';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import CustomButton from 'components/ui/custom-button/custom-button.component';
@@ -40,9 +38,16 @@ const EmailCodePopup = ({ email, setOpenVerifyEmailPopup }) => {
   // VERIFY_EMAIL
   const [
     verifyEmailMutation,
-    { data: verifyEmailMutationData, loading: verifyEmailMutationLoading },
-  ] = useMutation(VERIFY_EMAIL);
+    {
+      data: verifyEmailMutationData,
+      loading: verifyEmailMutationLoading,
+      error: verifyEmailError,
+    },
+  ] = useMutation(VERIFY_EMAIL, {
+    errorPolicy: 'all',
+  });
   useEffect(() => {
+    ;
     if (verifyEmailMutationData?.verifyEmail?.success) {
       setOpenVerifyEmailPopup(false);
     }
@@ -66,18 +71,20 @@ const EmailCodePopup = ({ email, setOpenVerifyEmailPopup }) => {
   }, []);
 
   useEffect(() => {
-    if (sendEmailVerificationError?.message) {
-      setFormError(sendEmailVerificationError?.message);
-      setOpen();
+    if (sendEmailVerificationError?.message || verifyEmailError?.message) {
+      setFormError(
+        sendEmailVerificationError?.message || verifyEmailError?.message
+      );
+      setOpen(true);
     }
-  }, [sendEmailVerificationError?.message]);
+  }, [sendEmailVerificationError?.message, verifyEmailError?.message]);
 
   const collectVerifyCode = (code) => {
     setVerificationCode(+code);
     if (`${code}`.length === 6) {
       verifyEmailMutation({
         variables: {
-          cmd: { email, verificationCode: +code },
+          cmd: { email, verificationCode: code },
         },
       });
     }
