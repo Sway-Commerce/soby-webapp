@@ -8,7 +8,6 @@ import RankTooltip from 'pages/shop-profile/rank-tooltip.component';
 const Item = styled.div`
   display: flex;
   margin-top: 24px;
-  z-index: 3;
 
   img.avt {
     width: 4rem;
@@ -29,7 +28,6 @@ const ItemInfo = styled.div`
   .item-info {
     margin-top: 3px;
     display: flex;
-    z-index: 10;
 
     .status {
       color: #4f4f4f;
