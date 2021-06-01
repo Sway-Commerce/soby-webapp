@@ -125,7 +125,7 @@ const RegisterPhone = ({history}) => {
   useEffect(() => {
     if (registerData?.register?.data?.id) {
       const signature = getSignature(signingPublicKey, signingSecret, password);
-      dispatchUpdateStoredUser(registerData?.register?.data);
+      // dispatchUpdateStoredUser(registerData?.register?.data);
       setSignature(signature);
     }
   }, [registerData?.register?.data]);

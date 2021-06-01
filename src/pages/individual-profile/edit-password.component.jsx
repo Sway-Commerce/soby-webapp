@@ -6,19 +6,24 @@ import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import {
-  createKeyForNewPassword,
   getHashPassword,
   UPDATE_PASSWORD,
 } from 'graphQL/repository/individual.repository';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import passwordValidation from 'shared/utils/passwordValidation';
 import styled from 'styled-components';
 import { PageFooter } from './edit-profile.component';
-import { Box, PopupButton } from './shared-style.component';
 
 export const Page = styled.div`
   background-color: #ffffff;
   padding: 1.2rem;
+  width: 600px;
+  margin: 0 auto;
+  @media (max-width: 600px) {
+    width: 100%;
+    margin: 0;
+  }
 `;
 
 const Row = styled.div`
@@ -33,17 +38,17 @@ const Row = styled.div`
   }
 `;
 
-const EditPassword = ({
-  setOpenPasswordPopup,
-  signingSecret,
-  encryptionPublicKey,
-  encryptionSecret,
-}) => {
+const EditPassword = ({ history }) => {
+  const { signingSecret, encryptionPublicKey, encryptionSecret } = useSelector(
+    (state) => {
+      return state.user;
+    }
+  );
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
   const [state, setState] = useState({
-    password: null,
-    newPassword: null,
+    password: '',
+    newPassword: '',
     confirmPassword: null,
     signingSecret,
     encryptionPublicKey,
@@ -79,7 +84,7 @@ const EditPassword = ({
   });
   useEffect(() => {
     if (updatePasswordData?.updatePassword?.success) {
-      setOpenPasswordPopup(false);
+      history.push('/individual-profile');
     }
   }, [updatePasswordData?.updatePassword?.success, updatePasswordMutation]);
 
@@ -106,37 +111,39 @@ const EditPassword = ({
     const isNewPasswordNotValid = !passwordValidation(state.newPassword);
 
     const isPasswordDuplicateCurrent = state.password === state.newPassword;
-    const isNewPasswordAndConfirmNotCorrect =
-      state.newPassword !== state.confirmPassword;
 
     setInputValidation({
       isPasswordNotValid,
       isPasswordDuplicateCurrent,
-      isNewPasswordAndConfirmNotCorrect,
       isNewPasswordNotValid,
     });
 
     if (
       !isPasswordNotValid &&
       !isPasswordDuplicateCurrent &&
-      !isNewPasswordAndConfirmNotCorrect &&
       !isNewPasswordNotValid
     ) {
-      const { encryptionSecretNew, signingSecretNew } =
-        await createKeyForNewPassword(
-          signingSecret,
-          encryptionSecret,
-          state.password,
-          state.newPassword
-        );
+      // const { encryptionSecretNew, signingSecretNew, error } =
+      //   await createKeyForNewPassword(
+      //     state.signingSecret,
+      //     state.encryptionSecret,
+      //     state.password,
+      //     state.newPassword
+      //   );
+      // if (error) {
+      //   setFormError(error);
+      //   setOpen(true);
+      //   return;
+      // }
+
       updatePasswordMutation({
         variables: {
           cmd: {
             password: getHashPassword(state.password),
             newPassword: state.newPassword,
-            signingSecret: signingSecretNew,
+            signingSecret,
             encryptionPublicKey,
-            encryptionSecret: encryptionSecretNew,
+            encryptionSecret,
           },
         },
       });
@@ -163,13 +170,11 @@ const EditPassword = ({
           />
           {inputValidation.isPasswordNotValid ? (
             <Row>
-              (
               <p className="error-title">
                 *Your password must be between 8 to 20 characters which contain
                 at least one numeric digit, one uppercase and one lowercase
                 letter
               </p>
-              )
             </Row>
           ) : (
             <Row>
@@ -201,15 +206,17 @@ const EditPassword = ({
             ) : null}
           </Row>
           <Row error>
-            {inputValidation.isPasswordDuplicateCurrent ?
+            {inputValidation.isPasswordDuplicateCurrent ? (
               <p className="error-title">
                 *Your new password is duplicate with the current
               </p>
-             : null}
+            ) : null}
           </Row>
 
           <PageFooter>
-            <CustomButton className="global-btn">Save</CustomButton>
+            <CustomButton className="global-btn" type="submit">
+              Save
+            </CustomButton>
           </PageFooter>
         </form>
       </Page>

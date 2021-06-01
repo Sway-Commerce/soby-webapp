@@ -16,6 +16,7 @@ import { ReactComponent as IdCardIcon } from 'shared/assets/id-card.svg';
 import { ReactComponent as EmailBlackIcon } from 'shared/assets/email-black.svg';
 import { ReactComponent as ArrowRightIcon } from 'shared/assets/arrow-right.svg';
 import { ReactComponent as EditInfoIcon } from 'shared/assets/edit-individual.svg';
+import TempImage from 'shared/assets/default-individual-ava.png';
 import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
 import { Link } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
@@ -262,7 +263,7 @@ const IndividualProfile = () => {
       <SharedBreadcrumb breadcrumbs={breadcrumbs} />
       <Page>
         <AvatarBox>
-          <Avatar src={imageUrl} />
+          <Avatar src={imageUrl || TempImage} />
           <Name>{`${lastName} ${middleName} ${firstName}`}</Name>
           <Link to="/edit-profile">
             <CustomButton>Edit info</CustomButton>
@@ -276,7 +277,7 @@ const IndividualProfile = () => {
             {kycStatus === 'CONFIRMED' ? (
               <VerifiedIcon />
             ) : (
-              <VerifyBtn>Verify</VerifyBtn>
+              null
             )}
           </div>
           <div className="info-row">
@@ -319,11 +320,11 @@ const IndividualProfile = () => {
         </Row>
         <Row
           pointer="true"
-          to="#"
-          onClick={() =>
-            (window.location =
-              'https://soby.vn/en/soby-privacy-terms%e2%80%8b/soby-terms-of-service/')
-          }
+          to={{
+            pathname:
+              'https://soby.vn/en/soby-privacy-terms%e2%80%8b/soby-terms-of-service/',
+          }}
+          target="_blank"
         >
           <p>Terms and Polices</p>
           <ArrowRightIcon />
@@ -368,7 +369,7 @@ const IndividualProfile = () => {
           <PhoneCodePopup
             setOpenVerifyPhonePopup={setOpenVerifyPhonePopup}
             phoneCountryCode={newPhoneCountryCode || phoneCountryCode}
-            phoneNumber={newPhone ||phoneNumber}
+            phoneNumber={newPhone || phoneNumber}
           />
         ) : null}
       </SobyModal>

@@ -173,6 +173,10 @@ export const GlobalStyle = createGlobalStyle`
 			border-radius: 6px;
 			border: 1px solid #828282;
 		}
+
+		.Dropdown-placeholder {
+			min-width: max-content;
+		}
 	}
 
 	.text-truncation {

@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { ReactComponent as SearchIcon } from 'shared/assets/search-icon.svg';
 import { ReactComponent as ArrowIcon } from 'shared/assets/arrow-down.svg';
 import { ReactComponent as Logo } from 'shared/assets/logo.svg';
-import { ReactComponent as TempImage } from 'shared/assets/temp.svg';
+import TempImage from 'shared/assets/default-individual-ava.png';
 import { ReactComponent as MenuIcon } from 'shared/assets/menu-icon.svg';
 import { mainColor } from 'shared/css-variable/variable';
 
@@ -117,7 +117,7 @@ export const Header = () => {
       </HamburgerMenu>
 
       <OptionsContainer>
-        <Link to="/">
+        <Link to={{ pathname: 'http://signup.soby.vn/' }} target="_blank">
           <SwitchBtn>Start selling</SwitchBtn>
         </Link>
         <IconBtn to="/">
@@ -126,7 +126,10 @@ export const Header = () => {
             <b>Search</b>
           </span>
         </IconBtn>
-        <IconBtn to="/your-transaction">
+        <IconBtn
+          to="/your-transaction"
+          className={isSignIn ? '' : 'non-clickable'}
+        >
           <span>
             <b>My order</b>
           </span>
@@ -141,7 +144,7 @@ export const Header = () => {
                 {firstName}
               </b>
             </span>
-            <img src={imageUrl || TempImage} alt="" />
+            <img src={imageUrl ?? TempImage} alt="" />
           </UserContainer>
         ) : (
           <IconBtn to="/phone-signin">

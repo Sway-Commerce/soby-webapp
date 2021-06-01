@@ -178,6 +178,7 @@ const StatusContainer = styled.div`
     justify-content: flex-end;
     border-radius: 100px;
     background-color: ${(props) => props?.color || redColor};
+    position: relative;
     svg {
       width: 25px;
       height: 25px;
@@ -185,12 +186,19 @@ const StatusContainer = styled.div`
       g rect {
         fill: ${(props) => props?.color || redColor};
       }
+      position: ${(props) => (props?.percent <= 10 ? 'absolute' : 'relative')};
+      left: ${(props) => (props?.percent <= 10 ? '-6px' : 'unset')};
     }
 
     h2 {
-      position: relative;
+      position: absolute;
       top: -24px;
-      right: -26px;
+      right: ${(props) =>
+        props?.percent <= 10
+          ? '-11px'
+          : props?.percent % 10 !== 0
+          ? '-3px'
+          : '4px'};
     }
   }
 `;
@@ -493,7 +501,7 @@ const ShopProfile = () => {
                 <h5 className="mean">{shopInfo.shopRank.rank.description}</h5>
               </div>
             </div>
-            <p className="btn-number">01</p>
+            <p className="btn-number">0</p>
             <StatusContainer
               percent={+shopInfo.shopRank.totalPoints}
               color={getColor(shopInfo.shopRank.rank.name)}
@@ -503,6 +511,7 @@ const ShopProfile = () => {
                   style={{
                     color: getColor(shopInfo.shopRank.rank.name),
                   }}
+                  percent={+shopInfo.shopRank.totalPoints}
                   hide
                 >
                   {shopInfo.shopRank.totalPoints
@@ -558,16 +567,20 @@ const ShopProfile = () => {
             </MobileSection>
 
             <ContactGroup>
-              <div className="contact-item">
-                <img src={locationImg} alt="" />
-                <p className="body-color">
-                  {buildAddressString(shopInfo.shippingLocation)}
-                </p>
-              </div>
-              <div className="contact-item">
-                <img src={mailImg} alt="" />
-                <p className="body-color">address@email.com</p>
-              </div>
+              {shopInfo.shippingLocation && (
+                <div className="contact-item">
+                  <img src={locationImg} alt="" />
+                  <p className="body-color">
+                    {buildAddressString(shopInfo.shippingLocation)}
+                  </p>
+                </div>
+              )}
+              {shopInfo.email && (
+                <div className="contact-item">
+                  <img src={mailImg} alt="" />
+                  <p className="body-color">{shopInfo.email}</p>
+                </div>
+              )}
             </ContactGroup>
           </div>
         </InfoContainer>

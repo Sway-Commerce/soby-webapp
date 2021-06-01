@@ -8,9 +8,9 @@ import React, { useEffect, useState } from 'react';
 import { borderColor, mainColor } from 'shared/css-variable/variable';
 import styled from 'styled-components';
 import CreateShipping from './create-shipping.component';
-import { Page } from './edit-profile.component';
 import { ReactComponent as EditPencilIcon } from 'shared/assets/edit-pencil.svg';
 import buildAddressString from 'shared/utils/buildAddressString';
+import { Page } from './edit-password.component';
 
 const Row = styled.div`
   display: flex;
@@ -47,15 +47,12 @@ const AddButton = styled.button`
   background-color: #ffffff;
   display: ${(props) => (props.show ? 'flex' : 'none')};
 
-  /* @media (max-width: 768px) {
-    display: ${(props) => (props.hide ? 'flex' : 'none')};
-  } */
 `;
-
 
 const ShippingItem = styled.div`
   border: 1px solid ${borderColor};
   padding: 8px 12px;
+  margin-bottom: 16px;
   position: relative;
   p + p {
     margin-top: 5px;
@@ -90,6 +87,7 @@ const IndividualShipping = ({ setOpenEditMailPopup, email }) => {
       src: '/individual-shipping',
     },
   ]);
+  const [shippingInfo, setShippingInfo] = useState(null);
 
   const [
     loadShippingList,
@@ -127,8 +125,15 @@ const IndividualShipping = ({ setOpenEditMailPopup, email }) => {
   useEffect(() => {
     if (!openCreate) {
       loadShippingList();
+      setShippingInfo(null);
     }
   }, [openCreate]);
+
+  useEffect(() => {
+    if (shippingInfo) {
+      setOpenCreate(true);
+    }
+  }, [shippingInfo]);
 
   return getIndividualShippingLocationListLoading ? (
     <Spinner />
@@ -148,23 +153,23 @@ const IndividualShipping = ({ setOpenEditMailPopup, email }) => {
               <p>
                 <b className="txt-capitalize">{x.locationName}</b>
               </p>
-              <p>
-                {buildAddressString(x)}
-              </p>
+              <p>{buildAddressString(x)}</p>
               <p>{`${x.phoneCountryCode} ${x.phoneNumber}`}</p>
               <p>
                 <span>{x.province}</span>
                 <span>{x.district}</span>
                 <span>{x.ward}</span>
               </p>
-              <EditPencilIcon />
+              <EditPencilIcon onClick={() => setShippingInfo(x)} />
             </ShippingItem>
           </React.Fragment>
         ))}
       </Page>
 
       <SobyModal open={openCreate} setOpen={setOpenCreate}>
-        {openCreate ? <CreateShipping setOpenCreate={setOpenCreate} /> : null}
+        {openCreate ? (
+          <CreateShipping setOpenCreate={setOpenCreate} info={shippingInfo} />
+        ) : null}
       </SobyModal>
 
       <SobyModal open={open} setOpen={setOpen}>

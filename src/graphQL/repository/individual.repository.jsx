@@ -208,6 +208,7 @@ export const decryptIndividualModel = async (
 ) => {
   const encryption = new Encryption();
   const signing = new Signing();
+
   signing.importPrivateKey(signingSecret, password);
   const storeSigningSecret = signing.exportPrivateKey(passphrase);
 
@@ -301,9 +302,17 @@ export const createKeyForNewPassword = async (
   const encryption = new Encryption();
   const signing = new Signing();
 
-  signing.importPrivateKey(signingSecretCurrent, password);
+  try {
+    signing.importPrivateKey(signingSecretCurrent, password);
 
-  await encryption.importPrivateKey(encryptionSecretCurrent, password);
+    await encryption.importPrivateKey(encryptionSecretCurrent, password);
+  } catch (error) {
+    return {
+      encryptionSecretNew: null,
+      signingSecretNew: null,
+      error: 'Wrong password',
+    };
+  }
 
   const encryptionSecretNew = await encryption.exportPrivateKey(newPassword);
   const signingSecretNew = signing.exportPrivateKey(newPassword);
