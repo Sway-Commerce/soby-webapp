@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import backgroundImg from 'shared/assets/home-background.svg';
-import avatarImg from 'shared/assets/temp.svg';
-import creditImg from 'shared/assets/home-credit.svg';
-import heedImg from 'shared/assets/heed.svg';
 import { CustomButton } from '../../components/ui/custom-button/custom-button.component';
 import FormInput from 'components/form-input/form-input.component';
 import { ReactComponent as SearchIcon } from 'shared/assets/search-btn.svg';
+import { useLazyQuery } from '@apollo/client';
+import { SEARCH_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
+import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import SobyModal from 'components/ui/modal/modal.component';
+import Spinner from 'components/ui/spinner/spinner.component';
+import ShopItem from './shop-item.component';
 
 const Container = styled.div`
   margin: auto;
@@ -145,9 +148,6 @@ const ItemBox = styled.div`
     grid-template-columns: 1fr;
   }
 
-  .item-info {
-    display: flex;
-  }
   padding-bottom: 24px;
   border-bottom: 1px solid #e4e4e4;
 
@@ -157,65 +157,55 @@ const ItemBox = styled.div`
   }
 `;
 
-const NewItemBox = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 24px;
-
-  @media only screen and (max-width: 600px) {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-  .item-info {
-    display: flex;
-  }
-  padding-bottom: 24px;
-`;
-
-const Item = styled.div`
-  display: flex;
-  margin-top: 24px;
-  img.avt {
-    width: 4rem;
-    height: 4rem;
-    margin-right: 1.15rem;
-  }
-  @media only screen and (max-width: 600px) {
-    margin-top: 0;
-  }
-`;
-
-const ItemInfo = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  flex: 1;
-  .item-info {
-    margin-top: 3px;
-    display: flex;
-
-    .status {
-      color: #4f4f4f;
-      font-weight: bold;
-      font-size: 14px;
-      margin: 0 5.17px 0 8px;
-    }
-
-    img.creditImg {
-      width: 55px;
-      height: 24px;
-    }
-
-    img.heed {
-      justify-content: flex-start;
-      width: 11.67px;
-      height: 11.67px;
-    }
-  }
-`;
-
 const HomePage = () => {
   const [inputSearch, setInputSearch] = useState('');
+  const [records, setRecords] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [formError, setFormError] = useState('');
+
+  const [
+    searchAggregatedShop,
+    {
+      data: searchAggregatedShopData,
+      loading: searchAggregatedShopLoading,
+      error: searchAggregatedShopError,
+    },
+  ] = useLazyQuery(SEARCH_AGGREGATED_SHOP, {
+    fetchPolicy: 'network-only',
+    errorPolicy: 'all',
+  });
+
+  useEffect(() => {
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
+    const lastSevenDay = date.getTime();
+    const now = Date.now();
+    searchAggregatedShop({
+      variables: {
+        query: {
+          page: 0,
+          pageSize: 6,
+          filters: [`createdAt:${lastSevenDay};${now}`],
+          queries: [],
+          sorts: [],
+        },
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    if (searchAggregatedShopError?.message) {
+      setFormError(searchAggregatedShopError?.message);
+      setOpen(true);
+    }
+  }, [searchAggregatedShopError?.message]);
+
+  useEffect(() => {
+    if (searchAggregatedShopData?.searchAggregatedShop?.data) {
+      setRecords(searchAggregatedShopData?.searchAggregatedShop?.data.records);
+    }
+  }, [searchAggregatedShopData?.searchAggregatedShop?.data]);
+
   const handleChange = (event) => {
     if (!event) {
       return;
@@ -224,108 +214,54 @@ const HomePage = () => {
     setInputSearch(value);
   };
   return (
-    <Container>
-      <Row headRow>
-        <HeadHome>
-          <p class="soby-welcome">Welcome to Soby</p>
-          <h3 className="fw-normal">
-            Find your trust Sellers and have safe transactions with Soby
-          </h3>
-          <h3 className="fw-normal mobile-hide">Lorem ipsum dolor sit amet</h3>
-          <Search>
-            <FormInput
-              type="text"
-              name="inputSearch"
-              value={inputSearch}
-              onChange={handleChange}
-              placeholder="Search for Shop, product and invoice"
-              required
-              withoutTitle
-              id="home-input"
-            />
-            <SearchIcon className="mobile-btn" />
-            <CustomButton type="submit" className="main-btn">
-              Search
-            </CustomButton>
-          </Search>
-        </HeadHome>
-      </Row>
-      <Latest>
-        <h3>Latest Shops</h3>
-        <ItemBox>
-          <Item>
-            <img src={avatarImg} className="avt" alt="" />
-            <ItemInfo>
-              <h5 className="body-color">Camera toolkit shop</h5>
-              <div class="item-info">
-                <img src={creditImg} alt="" />
-                <p class="status">Not bad</p>
-                <img class="heed" src={heedImg} alt="" />
-              </div>
-            </ItemInfo>
-          </Item>
-          <Item>
-            <img src={avatarImg} className="avt" alt="" />
-            <ItemInfo>
-              <h5 className="body-color">Camera toolkit shop</h5>
-              <div class="item-info">
-                <img src={creditImg} alt="" />
-                <p class="status">Not bad</p>
-                <img class="heed" src={heedImg} alt="" />
-              </div>
-            </ItemInfo>
-          </Item>
-        </ItemBox>
-        <ItemBox>
-          <Item>
-            <img src={avatarImg} className="avt" alt="" />
-            <ItemInfo>
-              <h5 className="body-color">Camera toolkit shop</h5>
-              <div class="item-info">
-                <img src={creditImg} alt="" />
-                <p class="status">Not bad</p>
-                <img class="heed" src={heedImg} alt="" />
-              </div>
-            </ItemInfo>
-          </Item>
-          <Item>
-            <img src={avatarImg} className="avt" alt="" />
-            <ItemInfo>
-              <h5 className="body-color">Camera toolkit shop</h5>
-              <div class="item-info">
-                <img src={creditImg} alt="" />
-                <p class="status">Not bad</p>
-                <img class="heed" src={heedImg} alt="" />
-              </div>
-            </ItemInfo>
-          </Item>
-        </ItemBox>
-        <NewItemBox>
-          <Item>
-            <img src={avatarImg} className="avt" alt="" />
-            <ItemInfo>
-              <h5 className="body-color">Camera toolkit shop</h5>
-              <div class="item-info">
-                <img src={creditImg} alt="" />
-                <p class="status">Not bad</p>
-                <img class="heed" src={heedImg} alt="" />
-              </div>
-            </ItemInfo>
-          </Item>
-          <Item>
-            <img src={avatarImg} className="avt" alt="" />
-            <ItemInfo>
-              <h5 className="body-color">Camera toolkit shop</h5>
-              <div class="item-info">
-                <img src={creditImg} alt="" />
-                <p class="status">Not bad</p>
-                <img class="heed" src={heedImg} alt="" />
-              </div>
-            </ItemInfo>
-          </Item>
-        </NewItemBox>
-      </Latest>
-    </Container>
+    <React.Fragment>
+      <Container>
+        <Row headRow>
+          <HeadHome>
+            <p className="soby-welcome">Welcome to Soby</p>
+            <h3 className="fw-normal">
+              Find your trust Sellers and have safe transactions with Soby
+            </h3>
+            <h3 className="fw-normal mobile-hide">
+              Lorem ipsum dolor sit amet
+            </h3>
+            <Search>
+              <FormInput
+                type="text"
+                name="inputSearch"
+                value={inputSearch}
+                onChange={handleChange}
+                placeholder="Search for Shop, product and invoice"
+                required
+                withoutTitle
+                id="home-input"
+              />
+              <SearchIcon className="mobile-btn" />
+              <CustomButton type="submit" className="main-btn">
+                Search
+              </CustomButton>
+            </Search>
+          </HeadHome>
+        </Row>
+        <Latest>
+          <h3>Latest Shops</h3>
+          {searchAggregatedShopLoading ? (
+            <Spinner />
+          ) : (
+            <ItemBox>
+              {records.map((shop) => (
+                <ShopItem shop={shop} key={shop.id} />
+              ))}
+            </ItemBox>
+          )}
+        </Latest>
+      </Container>
+      <SobyModal open={open} setOpen={setOpen}>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpen} />
+        ) : null}
+      </SobyModal>
+    </React.Fragment>
   );
 };
 

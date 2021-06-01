@@ -43,7 +43,7 @@ const NewProductList = ({ records = [] }) => {
             skus: [sku],
             id,
           } = x;
-          const { originPrice } = sku;
+          const originPrice  = sku?.originPrice || 0;
           return (
             <NewProductBox key={id} to={`/product/${id}`}>
               <img src={imageUrl} alt="" />

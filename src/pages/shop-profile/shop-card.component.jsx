@@ -4,13 +4,13 @@ import ReactTooltip from 'react-tooltip';
 import locationImg from 'shared/assets/location.svg';
 import mailImg from 'shared/assets/mail-black.svg';
 import heedImg from 'shared/assets/heed.svg';
-import { ReactComponent as ShopBadgeIcon } from 'shared/assets/badge-vector.svg';
 import styled from 'styled-components';
-import { redColor } from 'shared/css-variable/variable';
 import ShopVerifies from 'components/shop-verifies/shop-verifies.component';
 import PhoneButton from './phone-button.component';
 import buildAddressString from 'shared/utils/buildAddressString';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
+import ShopBadge from './shop-badge.component';
+import RankTooltip from './rank-tooltip.component';
 
 const HeadContact = styled.div`
   padding: 24px;
@@ -43,27 +43,6 @@ const HeadContact = styled.div`
     object-fit: cover;
   }
 
-  .badge {
-    width: 55px;
-    height: 24px;
-    border-radius: 100px;
-    display: flex;
-    align-items: center;
-    padding: 0 8px;
-    background-color: ${(props) => props?.color || redColor};
-    p {
-      font-size: 0.7rem;
-      color: white;
-      line-height: 24px;
-    }
-    svg {
-      margin-right: 4px;
-      path:last-child {
-        fill: ${(props) => props?.color || redColor};
-      }
-    }
-  }
-
   .contact-item {
     margin-top: 16px;
     display: flex;
@@ -91,15 +70,12 @@ const HeadContact = styled.div`
   }
 `;
 
-const TooltipData = styled.div`
-  background-color: white;
-`;
-
 const ShopCard = ({
   shopInfo,
   togglePhone,
   phoneString,
   setTogglePhone,
+  color,
   ...rest
 }) => {
   return (
@@ -121,10 +97,10 @@ const ShopCard = ({
             <ReactTooltip id="shop-name" />
 
             <div className="contact-wrapper">
-              <div className="badge">
-                <ShopBadgeIcon />
-                <p>{+shopInfo.shopRank.totalPoints / 10}</p>
-              </div>
+              <ShopBadge
+                point={shopInfo.shopRank.totalPoints}
+                rankColor={color}
+              />
               <p className="status">
                 <b>{shopInfo.shopRank.rank.description}</b>
               </p>
@@ -136,25 +112,7 @@ const ShopCard = ({
                 data-for="shop-rank-info"
                 data-event="click focus"
               />
-              <ReactTooltip
-                id="shop-rank-info"
-                aria-haspopup="true"
-                role="example"
-                place="left"
-                type="light"
-                effect="solid"
-                globalEventOff="click"
-              >
-                <TooltipData>
-                  <h5>Soby Rank – Chỉ số uy tín</h5>
-                  <p className="mg-b-8">
-                    Giá trị của Soby Rank đối với một cửa hàng sẽ tương đương
-                    với tầm quan trọng của điểm IMDB đối với một bộ phim, hay
-                    của số sao Michelin đối với một nhà hàng.
-                  </p>
-                  <h5 className="primary-color clickable">Read more</h5>
-                </TooltipData>
-              </ReactTooltip>
+              <RankTooltip id="shop-rank-info" />
             </div>
           </div>
         </div>
