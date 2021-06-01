@@ -226,7 +226,7 @@ const HomePage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setQuery({ ...query, queries: [`name:${inputSearch}`] });
+    setQuery({ ...query, queries: inputSearch ? [`name:${inputSearch}`] : [] });
   };
   return (
     <React.Fragment>
@@ -247,7 +247,6 @@ const HomePage = () => {
                 value={inputSearch}
                 onChange={handleChange}
                 placeholder="Search for Shop, product and invoice"
-                required
                 withoutTitle
                 id="home-input"
               />
