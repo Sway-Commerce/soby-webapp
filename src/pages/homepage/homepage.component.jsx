@@ -77,7 +77,7 @@ const HeadHome = styled.div`
   }
 `;
 
-const Search = styled.div`
+const Search = styled.form`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -162,6 +162,13 @@ const HomePage = () => {
   const [records, setRecords] = useState([]);
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
+  const [query, setQuery] = useState({
+    page: 0,
+    pageSize: 6,
+    filters: [],
+    queries: [],
+    sorts: [],
+  });
 
   const [
     searchAggregatedShop,
@@ -180,18 +187,21 @@ const HomePage = () => {
     date.setDate(date.getDate() - 7);
     const lastSevenDay = date.getTime();
     const now = Date.now();
-    searchAggregatedShop({
-      variables: {
-        query: {
-          page: 0,
-          pageSize: 6,
-          filters: [`createdAt:${lastSevenDay};${now}`],
-          queries: [],
-          sorts: [],
-        },
-      },
-    });
+    setQuery({ ...query, filters: [`createdAt:${lastSevenDay};${now}`] });
   }, []);
+
+  useEffect(() => {
+    if (query.filters.length) {
+      searchAggregatedShop({
+        variables: {
+          query: {
+            ...query,
+            filters: [],
+          },
+        },
+      });
+    }
+  }, [query]);
 
   useEffect(() => {
     if (searchAggregatedShopError?.message) {
@@ -213,6 +223,11 @@ const HomePage = () => {
     const { value } = event?.target;
     setInputSearch(value);
   };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setQuery({ ...query, queries: [`name:${inputSearch}`] });
+  };
   return (
     <React.Fragment>
       <Container>
@@ -225,7 +240,7 @@ const HomePage = () => {
             <h3 className="fw-normal mobile-hide">
               Lorem ipsum dolor sit amet
             </h3>
-            <Search>
+            <Search onSubmit={handleSubmit}>
               <FormInput
                 type="text"
                 name="inputSearch"
@@ -236,7 +251,10 @@ const HomePage = () => {
                 withoutTitle
                 id="home-input"
               />
-              <SearchIcon className="mobile-btn" />
+              <SearchIcon
+                onClick={handleSubmit}
+                className="mobile-btn clickable"
+              />
               <CustomButton type="submit" className="main-btn">
                 Search
               </CustomButton>
