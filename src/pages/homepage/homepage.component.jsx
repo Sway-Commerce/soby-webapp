@@ -11,7 +11,6 @@ import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import ShopItem from './shop-item.component';
 import useDebounce from 'shared/hooks/useDebounce';
-import { Link } from 'react-router-dom';
 
 const Container = styled.div`
   margin: auto;
@@ -288,9 +287,7 @@ const HomePage = () => {
                 {!!recordsSuggest.length && (
                   <ResultSearchBox>
                     {recordsSuggest.map((shop) => (
-                      <Link key={shop.id} to={`shop-profile/${shop.id}`}>
-                        <ShopItem shop={shop} className="mg-b-16" />
-                      </Link>
+                      <ShopItem key={shop.id} shop={shop} className="mg-b-16" />
                     ))}
                   </ResultSearchBox>
                 )}
