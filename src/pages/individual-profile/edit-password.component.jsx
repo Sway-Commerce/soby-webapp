@@ -113,7 +113,9 @@ const EditPassword = ({ history }) => {
         encryptionSecret: encryptionSecretNew,
         signingSecret: signingSecretNew,
       });
-      history.push('/individual-profile');
+      setTimeout(() => {
+        history.push('/individual-profile');
+      }, 2000);
     }
   }, [
     updatePasswordData?.updatePassword?.success,
