@@ -297,15 +297,31 @@ export const createKeyForNewPassword = async (
   signingSecretCurrent,
   encryptionSecretCurrent,
   password,
-  newPassword
+  newPassword,
+  passphrase
 ) => {
   const encryption = new Encryption();
   const signing = new Signing();
+  const storeEncryption = new Encryption();
+  const storeSigning = new Signing();
+  let encryptionSecretNew = '';
+  let signingSecretNew = '';
+  let storeEncryptionSecret = '';
+  let storeSigningSecret = '';
 
   try {
+    debugger;
     signing.importPrivateKey(signingSecretCurrent, password);
-
     await encryption.importPrivateKey(encryptionSecretCurrent, password);
+
+    encryptionSecretNew = await encryption.exportPrivateKey(newPassword);
+    signingSecretNew = signing.exportPrivateKey(newPassword);
+
+    storeSigning.importPrivateKey(signingSecretNew, newPassword);
+    await storeEncryption.importPrivateKey(encryptionSecretNew, newPassword);
+
+    storeSigningSecret = storeSigning.exportPrivateKey(passphrase);
+    storeEncryptionSecret = await storeEncryption.exportPrivateKey(passphrase);
   } catch (error) {
     return {
       encryptionSecretNew: null,
@@ -314,8 +330,10 @@ export const createKeyForNewPassword = async (
     };
   }
 
-  const encryptionSecretNew = await encryption.exportPrivateKey(newPassword);
-  const signingSecretNew = signing.exportPrivateKey(newPassword);
-
-  return { encryptionSecretNew, signingSecretNew };
+  return {
+    encryptionSecretNew,
+    signingSecretNew,
+    storeSigningSecret,
+    storeEncryptionSecret,
+  };
 };

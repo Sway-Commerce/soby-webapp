@@ -6,11 +6,13 @@ import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import {
+  createKeyForNewPassword,
   getHashPassword,
   UPDATE_PASSWORD,
 } from 'graphQL/repository/individual.repository';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateStoredUser } from 'redux/user/user.actions';
 import passwordValidation from 'shared/utils/passwordValidation';
 import styled from 'styled-components';
 import { PageFooter } from './edit-profile.component';
@@ -39,11 +41,11 @@ const Row = styled.div`
 `;
 
 const EditPassword = ({ history }) => {
-  const { signingSecret, encryptionPublicKey, encryptionSecret } = useSelector(
-    (state) => {
-      return state.user;
-    }
-  );
+  const user = useSelector((state) => {
+    return state.user;
+  });
+  const { signingSecret, encryptionPublicKey, encryptionSecret, passphrase } =
+    user;
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
   const [state, setState] = useState({
@@ -53,6 +55,10 @@ const EditPassword = ({ history }) => {
     signingSecret,
     encryptionPublicKey,
     encryptionSecret,
+    storeEncryptionSecret: '',
+    storeSigningSecret: '',
+    encryptionSecretNew: '',
+    signingSecretNew: '',
   });
   const [inputValidation, setInputValidation] = useState({
     isPasswordNotValid: false,
@@ -71,6 +77,10 @@ const EditPassword = ({ history }) => {
     },
   ]);
 
+  const dispatch = useDispatch();
+  const dispatchUpdateStoredUser = (payload) =>
+    dispatch(updateStoredUser(payload));
+
   // UPDATE_PASSWORD
   const [
     updatePasswordMutation,
@@ -83,10 +93,35 @@ const EditPassword = ({ history }) => {
     errorPolicy: 'all',
   });
   useEffect(() => {
-    if (updatePasswordData?.updatePassword?.success) {
+    if (
+      updatePasswordData?.updatePassword?.success &&
+      state.storeEncryptionSecret &&
+      state.storeSigningSecret &&
+      state.encryptionSecretNew &&
+      state.signingSecretNew
+    ) {
+      const {
+        storeEncryptionSecret,
+        storeSigningSecret,
+        encryptionSecretNew,
+        signingSecretNew,
+      } = state;
+      dispatchUpdateStoredUser({
+        ...user,
+        storeEncryptionSecret,
+        storeSigningSecret,
+        encryptionSecret: encryptionSecretNew,
+        signingSecret: signingSecretNew,
+      });
       history.push('/individual-profile');
     }
-  }, [updatePasswordData?.updatePassword?.success, updatePasswordMutation]);
+  }, [
+    updatePasswordData?.updatePassword?.success,
+    state.storeEncryptionSecret,
+    state.storeSigningSecret,
+    state.encryptionSecretNew,
+    state.signingSecretNew,
+  ]);
 
   useEffect(() => {
     if (updatePasswordError?.message) {
@@ -123,27 +158,41 @@ const EditPassword = ({ history }) => {
       !isPasswordDuplicateCurrent &&
       !isNewPasswordNotValid
     ) {
-      // const { encryptionSecretNew, signingSecretNew, error } =
-      //   await createKeyForNewPassword(
-      //     state.signingSecret,
-      //     state.encryptionSecret,
-      //     state.password,
-      //     state.newPassword
-      //   );
-      // if (error) {
-      //   setFormError(error);
-      //   setOpen(true);
-      //   return;
-      // }
+      const {
+        encryptionSecretNew,
+        signingSecretNew,
+        error,
+        storeSigningSecret,
+        storeEncryptionSecret,
+      } = await createKeyForNewPassword(
+        state.signingSecret,
+        state.encryptionSecret,
+        state.password,
+        state.newPassword,
+        passphrase
+      );
+      if (error) {
+        setFormError(error);
+        setOpen(true);
+        return;
+      }
+
+      setState({
+        ...state,
+        encryptionSecretNew,
+        signingSecretNew,
+        storeSigningSecret,
+        storeEncryptionSecret,
+      });
 
       updatePasswordMutation({
         variables: {
           cmd: {
             password: getHashPassword(state.password),
             newPassword: state.newPassword,
-            signingSecret,
+            signingSecret: signingSecretNew,
             encryptionPublicKey,
-            encryptionSecret,
+            encryptionSecret: encryptionSecretNew,
           },
         },
       });
