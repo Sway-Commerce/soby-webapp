@@ -101,8 +101,11 @@ const Row = styled.div`
 
 const HeadPromotion = styled.div`
   height: 10rem;
-  background-image: url(${wallpaperImg});
   display: flex;
+  background-image: ${(props) => `url(${props.coverUrl})`};
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   align-items: flex-start;
   justify-content: flex-end;
   position: relative;
@@ -441,9 +444,7 @@ const ShopProfile = () => {
       <SharedBreadcrumb breadcrumbs={breadcrumbs} />
       <Container>
         <HeadRow>
-          <HeadPromotion
-            style={{ backgroundImage: shopInfo.coverUrl || wallpaperImg }}
-          >
+          <HeadPromotion coverUrl={shopInfo.coverUrl || wallpaperImg}>
             <img
               className="share-icon"
               src={shareImg}
