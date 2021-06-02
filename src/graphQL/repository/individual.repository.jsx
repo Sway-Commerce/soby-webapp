@@ -310,7 +310,6 @@ export const createKeyForNewPassword = async (
   let storeSigningSecret = '';
 
   try {
-    debugger;
     signing.importPrivateKey(signingSecretCurrent, password);
     await encryption.importPrivateKey(encryptionSecretCurrent, password);
 

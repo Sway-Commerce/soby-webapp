@@ -10,6 +10,8 @@ import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import ShopItem from './shop-item.component';
+import useDebounce from 'shared/hooks/useDebounce';
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
   margin: auto;
@@ -59,7 +61,7 @@ const HeadHome = styled.div`
     line-height: 73px;
   }
 
-  * + * {
+  h3 + h3 {
     margin-top: 8px;
   }
 
@@ -80,7 +82,7 @@ const HeadHome = styled.div`
 const Search = styled.form`
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: top;
   margin-top: 24px;
   position: relative;
 
@@ -96,7 +98,6 @@ const Search = styled.form`
     margin-top: 1px;
     & ~ label {
       left: 24px;
-      top: 5px;
     }
   }
   svg.mobile-btn {
@@ -109,7 +110,6 @@ const Search = styled.form`
       padding: 0 16px;
       & ~ label {
         left: 16px;
-        top: 0;
       }
     }
     .main-btn {
@@ -118,8 +118,8 @@ const Search = styled.form`
     svg.mobile-btn {
       display: block;
       position: absolute;
-      right: 16px;
-      bottom: 10px;
+      right: 0.8rem;
+      top: 10px;
     }
   }
 `;
@@ -128,13 +128,7 @@ const Latest = styled.div`
   background-color: white;
   padding: 24px;
   h3 {
-    margin-bottom: 24px;
-  }
-
-  @media only screen and (min-width: 600px) {
-    h3 {
-      margin-bottom: 0;
-    }
+    margin-bottom: 1.2rem;
   }
 `;
 
@@ -157,7 +151,28 @@ const ItemBox = styled.div`
   }
 `;
 
+const ResultSearchBox = styled.div`
+  margin-top: 8px;
+  width: 600px;
+  background-color: white;
+  box-shadow: 4px 4px 16px 0px rgba(0, 0, 0, 0.16);
+  padding: 16px;
+  max-height: 16rem;
+  overflow-y: auto;
+  border-radius: 3px;
+
+  @media screen and (max-width: 768px) {
+    width: calc(100vw - 48px);
+  }
+`;
+
+const SearchInputContainer = styled.div`
+  position: relative;
+`;
+
 const HomePage = () => {
+  /* display: ${(props) =>
+    !!props.searchResults.length ? 'flex' : 'none'}; ; */
   const [inputSearch, setInputSearch] = useState('');
   const [records, setRecords] = useState([]);
   const [open, setOpen] = useState(false);
@@ -169,6 +184,8 @@ const HomePage = () => {
     queries: [],
     sorts: [],
   });
+  const debouncedSearchTerm = useDebounce(inputSearch, 500);
+  const [recordsSuggest, setRecordsSuggest] = useState([]);
 
   const [
     searchAggregatedShop,
@@ -192,16 +209,23 @@ const HomePage = () => {
 
   useEffect(() => {
     if (query.filters.length) {
-      searchAggregatedShop({
-        variables: {
-          query: {
-            ...query,
-            filters: [],
+      if (debouncedSearchTerm || !records.length) {
+        searchAggregatedShop({
+          variables: {
+            query: {
+              ...query,
+              filters: records.length ? [] : query.filters,
+              queries: debouncedSearchTerm
+                ? [`name:${debouncedSearchTerm}`]
+                : [],
+            },
           },
-        },
-      });
+        });
+      }
+
+      !debouncedSearchTerm && setRecordsSuggest([]);
     }
-  }, [query]);
+  }, [debouncedSearchTerm, query.filters]);
 
   useEffect(() => {
     if (searchAggregatedShopError?.message) {
@@ -212,7 +236,13 @@ const HomePage = () => {
 
   useEffect(() => {
     if (searchAggregatedShopData?.searchAggregatedShop?.data) {
-      setRecords(searchAggregatedShopData?.searchAggregatedShop?.data.records);
+      !records.length
+        ? setRecords(
+            searchAggregatedShopData?.searchAggregatedShop?.data.records
+          )
+        : setRecordsSuggest(
+            searchAggregatedShopData?.searchAggregatedShop?.data.records
+          );
     }
   }, [searchAggregatedShopData?.searchAggregatedShop?.data]);
 
@@ -241,19 +271,31 @@ const HomePage = () => {
               Lorem ipsum dolor sit amet
             </h3>
             <Search onSubmit={handleSubmit}>
-              <FormInput
-                type="text"
-                name="inputSearch"
-                value={inputSearch}
-                onChange={handleChange}
-                placeholder="Search for Shop, product and invoice"
-                withoutTitle
-                id="home-input"
-              />
-              <SearchIcon
-                onClick={handleSubmit}
-                className="mobile-btn clickable"
-              />
+              <SearchInputContainer>
+                <FormInput
+                  type="text"
+                  name="inputSearch"
+                  value={inputSearch}
+                  onChange={handleChange}
+                  placeholder="Search for Shop, product and invoice"
+                  withoutTitle
+                  id="home-input"
+                />
+                <SearchIcon
+                  onClick={handleSubmit}
+                  className="mobile-btn clickable"
+                />
+                {!!recordsSuggest.length && (
+                  <ResultSearchBox>
+                    {recordsSuggest.map((shop) => (
+                      <Link key={shop.id} to={`shop-profile/${shop.id}`}>
+                        <ShopItem shop={shop} className="mg-b-16" />
+                      </Link>
+                    ))}
+                  </ResultSearchBox>
+                )}
+              </SearchInputContainer>
+
               <CustomButton type="submit" className="main-btn">
                 Search
               </CustomButton>
@@ -262,7 +304,7 @@ const HomePage = () => {
         </Row>
         <Latest>
           <h3>Latest Shops</h3>
-          {searchAggregatedShopLoading ? (
+          {searchAggregatedShopLoading && !records.length ? (
             <Spinner />
           ) : (
             <ItemBox>
