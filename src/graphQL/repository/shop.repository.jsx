@@ -167,7 +167,7 @@ export const GET_SHOP_PUBLIC = gql`
   }
 `;
 export const SEARCH = gql`
-  query search($query: SearchInput!) {
+  query SearchShop($query: SearchInput!) {
     searchShop(searchInput: $query) {
       message
       data {
@@ -180,7 +180,11 @@ export const SEARCH = gql`
           phoneCountryCode
           phoneNumber
           description
-          categories
+          categories {
+            id
+            name
+            description
+          }
           shopUrls {
             url
             verified
@@ -189,6 +193,10 @@ export const SEARCH = gql`
           shippingType
           createdAt
           updatedAt
+          kyb {
+            status
+            reason
+          }
         }
       }
     }
@@ -203,6 +211,66 @@ export const GET_ALL_SHOP_CATEGORIES = gql`
         id
         name
         description
+      }
+    }
+  }
+`;
+
+export const SEARCH_AGGREGATED_SHOP = gql`
+  query SearchAggregatedShop($query: SearchInput!) {
+    searchAggregatedShop(searchInput: $query) {
+      message
+      data {
+        total
+        records {
+          email
+          coverUrl
+          allowedCod
+          shopRank {
+            shopId
+            items {
+              id
+              shopId
+              rankItem {
+                id
+                name
+                category
+                description
+                points
+              }
+              createdAt
+            }
+            totalPoints
+            rank {
+              name
+              description
+            }
+          }
+          id
+          individualId
+          logoUrl
+          name
+          phoneCountryCode
+          phoneNumber
+          description
+          categories {
+            id
+            name
+            description
+          }
+          shopUrls {
+            url
+            verified
+            type
+          }
+          shippingType
+          createdAt
+          updatedAt
+          kyb {
+            status
+            reason
+          }
+        }
       }
     }
   }

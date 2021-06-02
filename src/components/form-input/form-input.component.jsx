@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { ReactComponent as PasswordEye } from 'shared/assets/password-eye.svg';
 
 import {
   GroupContainer,
@@ -13,25 +14,42 @@ const FormInput = ({
   label,
   withoutTitle,
   withoutBorder,
+  type,
   ...props
-}) => (
-  <div>
-    {!withoutTitle && <FormTitle>{label}</FormTitle>}
-    <GroupContainer>
-      <FormInputContainer
-        withoutBorder={withoutBorder}
-        onChange={handleChange}
-        {...props}
-      />
-      {placeholder ? (
-        <FormInputLabel
-          className={`${props.value?.length ? 'shrink' : ''} truncate`}
-        >
-          {placeholder}
-        </FormInputLabel>
-      ) : null}
-    </GroupContainer>
-  </div>
-);
+}) => {
+  const [isHide, setIsHide] = useState(true);
+  return (
+    <div>
+      {!withoutTitle && <FormTitle>{label}</FormTitle>}
+      <GroupContainer>
+        {type === 'password' ? (
+          <FormInputContainer
+            withoutBorder={withoutBorder}
+            onChange={handleChange}
+            {...props}
+            type={isHide ? 'password' : 'text'}
+          />
+        ) : (
+          <FormInputContainer
+            withoutBorder={withoutBorder}
+            onChange={handleChange}
+            {...props}
+          />
+        )}
+
+        {placeholder ? (
+          <FormInputLabel
+            className={`${props.value?.length ? 'shrink' : ''} truncate`}
+          >
+            {placeholder}
+          </FormInputLabel>
+        ) : null}
+        {type === 'password' ? (
+          <PasswordEye onClick={() => setIsHide(!isHide)} />
+        ) : null}
+      </GroupContainer>
+    </div>
+  );
+};
 
 export default FormInput;

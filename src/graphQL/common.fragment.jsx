@@ -41,6 +41,7 @@ export const INDIVIDUAL_PROFILE_FRAGMENT = gql`
       source
       hash
     }
+    passphrase
   }
 `;
 
@@ -408,6 +409,7 @@ export const SHOP_PROFILE_FRAGMENT = gql`
     kyb {
       ...KYBFragment
     }
+    passphrase
   }
 `;
 

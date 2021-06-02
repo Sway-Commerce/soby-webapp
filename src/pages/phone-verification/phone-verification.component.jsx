@@ -68,8 +68,8 @@ const PhoneVerification = () => {
   useEffect(() => {
     if (data?.verifyPhone?.success) {
       dispatchVerify('CONFIRMED');
-      const redirectUrl = localStorage.getItem('redirectUrl');
-      localStorage.removeItem('redirectUrl');
+      const redirectUrl = sessionStorage.getItem('redirectUrl');
+      sessionStorage.removeItem('redirectUrl');
       window.location = redirectUrl || '/your-transaction';
     }
   }, [data?.verifyPhone?.success]);
@@ -93,7 +93,7 @@ const PhoneVerification = () => {
     if (`${code}`.length == 6) {
       verifyPhoneMutation({
         variables: {
-          cmd: { phoneCountryCode, phoneNumber, verificationCode: +code },
+          cmd: { phoneCountryCode, phoneNumber, verificationCode: code },
         },
       });
     }

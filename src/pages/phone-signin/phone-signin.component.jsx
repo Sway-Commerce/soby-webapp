@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import FormInput from 'components/form-input/form-input.component';
 import CustomButton from 'components/ui/custom-button/custom-button.component';
@@ -17,8 +16,7 @@ import {
 import {
   phoneSignInStart,
   setAccessToken,
-  signInFailure,
-  signInSuccess,
+  updateStoredUser,
 } from 'redux/user/user.actions';
 
 import {
@@ -34,7 +32,7 @@ import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import { InputContainer } from 'pages/register/register.styles';
 
-const PhoneSignin = () => {
+const PhoneSignin = ({ history }) => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
@@ -68,7 +66,6 @@ const PhoneSignin = () => {
   const dispatch = useDispatch();
   const dispatchPhoneSignInStart = (phoneAndPassword) =>
     dispatch(phoneSignInStart(phoneAndPassword));
-  const dispatchSignInFailure = (error) => dispatch(signInFailure(error));
   const dispatchSetAccessToken = (accessToken) =>
     dispatch(setAccessToken(accessToken));
 
@@ -84,7 +81,7 @@ const PhoneSignin = () => {
       getSecretData?.getSecret?.data
     ) {
       const dispatchSignInSuccess = (payload) =>
-        dispatch(signInSuccess(payload));
+        dispatch(updateStoredUser(payload));
 
       async function decryptData() {
         const {
@@ -92,6 +89,7 @@ const PhoneSignin = () => {
           encryptionSecret,
           signingPublicKey,
           encryptionPublicKey,
+          passphrase,
         } = getSecretData?.getSecret?.data;
 
         const {
@@ -115,10 +113,14 @@ const PhoneSignin = () => {
           emailStatus,
           phoneStatus,
           pendingIdentities,
+          storeEncryptionSecret,
+          storeSigningSecret,
         } = await decryptIndividualModel(
           encryptionSecret,
           password,
-          loadIndividualBasicInfoData?.getIndividual?.data
+          loadIndividualBasicInfoData?.getIndividual?.data,
+          passphrase,
+          signingSecret
         );
 
         dispatchSignInSuccess({
@@ -146,11 +148,15 @@ const PhoneSignin = () => {
           emailStatus,
           phoneStatus,
           pendingIdentities,
+          storeEncryptionSecret,
+          storeSigningSecret,
         });
 
-        const redirectUrl = localStorage.getItem('redirectUrl');
-        localStorage.removeItem('redirectUrl');
-        window.location = redirectUrl || '/individual-profile';
+        const redirectUrl =
+          sessionStorage.getItem('redirectUrl') ?? '/individual-profile';
+        sessionStorage.removeItem('redirectUrl');
+        // window.location = redirectUrl;
+        history.push(redirectUrl);
       }
 
       decryptData();
@@ -171,7 +177,11 @@ const PhoneSignin = () => {
   }, [!!data?.loginWithPhoneAndPassword?.data]);
 
   useEffect(() => {
-    if (error) {
+    if (
+      error?.message ||
+      loadIndividualBasicInfoError?.message ||
+      getSecretError?.message
+    ) {
       setFormError(
         error?.message ??
           loadIndividualBasicInfoError?.message ??
@@ -179,7 +189,11 @@ const PhoneSignin = () => {
       );
       setOpen(true);
     }
-  }, [error]);
+  }, [
+    error?.message,
+    loadIndividualBasicInfoError?.message,
+    getSecretError?.message,
+  ]);
   useEffect(() => {
     if (loading || loadIndividualBasicInfoLoading || getSecretLoading) {
       return <Spinner />;
@@ -242,9 +256,7 @@ const PhoneSignin = () => {
                 onChange={(value) => setPhoneNumberIntl(value)}
               />
               {!isPhoneValid ? (
-                <p className="error-title">
-                  *Your phone number is not correct
-                </p>
+                <p className="error-title">*Your phone number is not correct</p>
               ) : null}
 
               <InputContainer>

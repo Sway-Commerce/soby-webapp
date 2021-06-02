@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Box,  PopupButton } from './shared-style.component';
 import SobyModal from '../../components/ui/modal/modal.component';
 import ErrorPopup from '../../components/ui/error-popup/error-popup.component';
 import usePhoneNumber from '../../shared/hooks/usePhoneNumber';
 import { useMutation } from '@apollo/client';
 import { UPDATE_PHONE } from 'graphQL/repository/individual.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
-import { useDispatch } from 'react-redux';
-import { setPhoneNumber } from 'redux/user/user.actions';
 import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
+import { ReactComponent as EditIcon } from 'shared/assets/edit-pencil.svg';
+import CustomButton from 'components/ui/custom-button/custom-button.component';
 
 const InputContainer = styled.div`
   width: 100%;
@@ -20,22 +19,47 @@ const InputBox = styled.div`
   margin-top: 16px;
 `;
 
+const EditContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Box = styled.form`
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  width: 440px;
+
+  h2 {
+    margin: 0.8rem 0 2rem;
+  }
+
+  button.main-btn {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 440px) {
+    width: 100%;
+  }
+`;
+
 const PhonePopup = ({
   currentPhoneCountryCode,
   currentPhoneNumber,
   setOpenEditPhonePopup,
+  setNewPhoneCountryCode,
+  setNewPhone,
+  setOpenVerifyPhonePopup,
 }) => {
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
   const [phoneNumberIntlCurrent] = useState(
-    `${currentPhoneCountryCode}${currentPhoneNumber}`
+    `${currentPhoneCountryCode} ${currentPhoneNumber}`
   );
   const [isPhoneValid, setIsPhoneValid] = useState(true);
   const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
-  const dispatch = useDispatch();
-  const dispatchSetPhoneNumber = ({ phoneCountryCode, phoneNumber }) =>
-    dispatch(setPhoneNumber({ phoneCountryCode, phoneNumber }));
+  const [active, setActive] = useState(false);
 
   // UPDATE_PHONE
   const [
@@ -48,8 +72,10 @@ const PhonePopup = ({
   ] = useMutation(UPDATE_PHONE);
   useEffect(() => {
     if (updatePhoneMutationData?.updatePhone?.success) {
-      dispatchSetPhoneNumber({ phoneCountryCode, phoneNumber });
       setOpenEditPhonePopup(false);
+      setNewPhoneCountryCode(phoneCountryCode);
+      setNewPhone(phoneNumber);
+      setOpenVerifyPhonePopup(true);
     }
   }, [updatePhoneMutationData?.updatePhone?.success, updatePhoneMutation]);
 
@@ -82,41 +108,37 @@ const PhonePopup = ({
         <h2>Edit phone numbers</h2>
 
         <InputContainer>
-          <span>Your current phone numbers</span>
-          <InputBox>
-            <PhoneInput
-              country="VN"
-              international
-              initialValueFormat="national"
-              countryCallingCodeEditable={false}
-              defaultCountry="VN"
-              name="phoneNumber"
-              value={phoneNumberIntlCurrent}
-              disabled={true}
-              onChange={(value) => setPhoneNumberIntl(value)}
-            />
-          </InputBox>
+          <h5>Phone numbers</h5>
+          {active ? (
+            <InputBox>
+              <PhoneInput
+                country="VN"
+                international
+                initialValueFormat="national"
+                countryCallingCodeEditable={false}
+                defaultCountry="VN"
+                name="phoneNumber"
+                value={phoneNumberIntl}
+                onChange={(value) => setPhoneNumberIntl(value)}
+              />
+              {!isPhoneValid ? (
+                <p className="error-title">*Your phone number is not correct</p>
+              ) : null}
+            </InputBox>
+          ) : (
+            <React.Fragment>
+              <EditContainer>
+                <p className="body-color">{phoneNumberIntlCurrent}</p>
+                <EditIcon
+                  className="clickable"
+                  onClick={() => setActive(!active)}
+                />
+              </EditContainer>
+            </React.Fragment>
+          )}
         </InputContainer>
 
-        <InputContainer>
-          <span>New phone numbers</span>
-          <InputBox>
-            <PhoneInput
-              country="VN"
-              international
-              initialValueFormat="national"
-              countryCallingCodeEditable={false}
-              defaultCountry="VN"
-              name="phoneNumber"
-              value={phoneNumberIntl}
-              onChange={(value) => setPhoneNumberIntl(value)}
-            />
-            {!isPhoneValid ? (
-              <p className="error-title">*Your phone number is not correct</p>
-            ) : null}
-          </InputBox>
-        </InputContainer>
-        <PopupButton />
+        {active && <CustomButton className="main-btn">Get code</CustomButton>}
       </Box>
 
       <SobyModal open={open} setOpen={setOpen}>

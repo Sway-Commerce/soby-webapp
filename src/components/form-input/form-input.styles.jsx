@@ -7,6 +7,13 @@ export const GroupContainer = styled.div`
   input[type='password'] {
     letter-spacing: 0.3rem;
   }
+
+  svg {
+    position: absolute;
+    right: 0;
+    top: 10px;
+    cursor: pointer;
+  }
 `;
 
 export const FormInputContainer = styled.input`
@@ -38,6 +45,7 @@ export const FormInputContainer = styled.input`
   &:active ~ label {
     display: none;
   }
+
 `;
 
 FormInputContainer.displayName = 'FormInputContainer';

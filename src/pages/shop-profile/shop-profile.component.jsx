@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ReactTooltip from 'react-tooltip';
 import { useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
@@ -26,6 +25,7 @@ import ShopVerifies from 'components/shop-verifies/shop-verifies.component';
 import NewProductList from 'components/product-listcard/new-product-list.component';
 import PhoneButton from './phone-button.component';
 import { getColor } from 'shared/constants/shop.constant';
+import RankTooltip from './rank-tooltip.component';
 
 const Container = styled.div`
   margin: auto;
@@ -178,6 +178,7 @@ const StatusContainer = styled.div`
     justify-content: flex-end;
     border-radius: 100px;
     background-color: ${(props) => props?.color || redColor};
+    position: relative;
     svg {
       width: 25px;
       height: 25px;
@@ -185,12 +186,19 @@ const StatusContainer = styled.div`
       g rect {
         fill: ${(props) => props?.color || redColor};
       }
+      position: ${(props) => (props?.percent <= 10 ? 'absolute' : 'relative')};
+      left: ${(props) => (props?.percent <= 10 ? '-6px' : 'unset')};
     }
 
     h2 {
-      position: relative;
+      position: absolute;
       top: -24px;
-      right: -26px;
+      right: ${(props) =>
+        props?.percent <= 10
+          ? '-11px'
+          : props?.percent % 10 !== 0
+          ? '-3px'
+          : '4px'};
     }
   }
 `;
@@ -476,25 +484,7 @@ const ShopProfile = () => {
                   data-for="rank-info"
                   data-event="click focus"
                 />
-                <ReactTooltip
-                  id="rank-info"
-                  aria-haspopup="true"
-                  role="example"
-                  place="right"
-                  type="light"
-                  effect="solid"
-                  globalEventOff="click"
-                >
-                  <TooltipData>
-                    <h5>Soby Rank – Chỉ số uy tín</h5>
-                    <p className="mg-b-8">
-                      Giá trị của Soby Rank đối với một cửa hàng sẽ tương đương
-                      với tầm quan trọng của điểm IMDB đối với một bộ phim, hay
-                      của số sao Michelin đối với một nhà hàng.
-                    </p>
-                    <h5 className="primary-color clickable">Read more</h5>
-                  </TooltipData>
-                </ReactTooltip>
+                <RankTooltip id="rank-info" />
               </div>
               <div className="btn-point">
                 <RankPoint
@@ -511,7 +501,7 @@ const ShopProfile = () => {
                 <h5 className="mean">{shopInfo.shopRank.rank.description}</h5>
               </div>
             </div>
-            <p className="btn-number">01</p>
+            <p className="btn-number">0</p>
             <StatusContainer
               percent={+shopInfo.shopRank.totalPoints}
               color={getColor(shopInfo.shopRank.rank.name)}
@@ -521,6 +511,7 @@ const ShopProfile = () => {
                   style={{
                     color: getColor(shopInfo.shopRank.rank.name),
                   }}
+                  percent={+shopInfo.shopRank.totalPoints}
                   hide
                 >
                   {shopInfo.shopRank.totalPoints
@@ -576,16 +567,20 @@ const ShopProfile = () => {
             </MobileSection>
 
             <ContactGroup>
-              <div className="contact-item">
-                <img src={locationImg} alt="" />
-                <p className="body-color">
-                  {buildAddressString(shopInfo.shippingLocation)}
-                </p>
-              </div>
-              <div className="contact-item">
-                <img src={mailImg} alt="" />
-                <p className="body-color">address@email.com</p>
-              </div>
+              {shopInfo.shippingLocation && (
+                <div className="contact-item">
+                  <img src={locationImg} alt="" />
+                  <p className="body-color">
+                    {buildAddressString(shopInfo.shippingLocation)}
+                  </p>
+                </div>
+              )}
+              {shopInfo.email && (
+                <div className="contact-item">
+                  <img src={mailImg} alt="" />
+                  <p className="body-color">{shopInfo.email}</p>
+                </div>
+              )}
             </ContactGroup>
           </div>
         </InfoContainer>

@@ -11,14 +11,21 @@ import {
   UPDATE_PASSWORD,
 } from 'graphQL/repository/individual.repository';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateStoredUser } from 'redux/user/user.actions';
 import passwordValidation from 'shared/utils/passwordValidation';
 import styled from 'styled-components';
 import { PageFooter } from './edit-profile.component';
-import { Box, PopupButton } from './shared-style.component';
 
 export const Page = styled.div`
   background-color: #ffffff;
   padding: 1.2rem;
+  width: 600px;
+  margin: 0 auto;
+  @media (max-width: 600px) {
+    width: 100%;
+    margin: 0;
+  }
 `;
 
 const Row = styled.div`
@@ -33,21 +40,25 @@ const Row = styled.div`
   }
 `;
 
-const EditPassword = ({
-  setOpenPasswordPopup,
-  signingSecret,
-  encryptionPublicKey,
-  encryptionSecret,
-}) => {
+const EditPassword = ({ history }) => {
+  const user = useSelector((state) => {
+    return state.user;
+  });
+  const { signingSecret, encryptionPublicKey, encryptionSecret, passphrase } =
+    user;
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
   const [state, setState] = useState({
-    password: null,
-    newPassword: null,
+    password: '',
+    newPassword: '',
     confirmPassword: null,
     signingSecret,
     encryptionPublicKey,
     encryptionSecret,
+    storeEncryptionSecret: '',
+    storeSigningSecret: '',
+    encryptionSecretNew: '',
+    signingSecretNew: '',
   });
   const [inputValidation, setInputValidation] = useState({
     isPasswordNotValid: false,
@@ -66,6 +77,10 @@ const EditPassword = ({
     },
   ]);
 
+  const dispatch = useDispatch();
+  const dispatchUpdateStoredUser = (payload) =>
+    dispatch(updateStoredUser(payload));
+
   // UPDATE_PASSWORD
   const [
     updatePasswordMutation,
@@ -78,10 +93,37 @@ const EditPassword = ({
     errorPolicy: 'all',
   });
   useEffect(() => {
-    if (updatePasswordData?.updatePassword?.success) {
-      setOpenPasswordPopup(false);
+    if (
+      updatePasswordData?.updatePassword?.success &&
+      state.storeEncryptionSecret &&
+      state.storeSigningSecret &&
+      state.encryptionSecretNew &&
+      state.signingSecretNew
+    ) {
+      const {
+        storeEncryptionSecret,
+        storeSigningSecret,
+        encryptionSecretNew,
+        signingSecretNew,
+      } = state;
+      dispatchUpdateStoredUser({
+        ...user,
+        storeEncryptionSecret,
+        storeSigningSecret,
+        encryptionSecret: encryptionSecretNew,
+        signingSecret: signingSecretNew,
+      });
+      setTimeout(() => {
+        history.push('/individual-profile');
+      }, 2000);
     }
-  }, [updatePasswordData?.updatePassword?.success, updatePasswordMutation]);
+  }, [
+    updatePasswordData?.updatePassword?.success,
+    state.storeEncryptionSecret,
+    state.storeSigningSecret,
+    state.encryptionSecretNew,
+    state.signingSecretNew,
+  ]);
 
   useEffect(() => {
     if (updatePasswordError?.message) {
@@ -106,29 +148,45 @@ const EditPassword = ({
     const isNewPasswordNotValid = !passwordValidation(state.newPassword);
 
     const isPasswordDuplicateCurrent = state.password === state.newPassword;
-    const isNewPasswordAndConfirmNotCorrect =
-      state.newPassword !== state.confirmPassword;
 
     setInputValidation({
       isPasswordNotValid,
       isPasswordDuplicateCurrent,
-      isNewPasswordAndConfirmNotCorrect,
       isNewPasswordNotValid,
     });
 
     if (
       !isPasswordNotValid &&
       !isPasswordDuplicateCurrent &&
-      !isNewPasswordAndConfirmNotCorrect &&
       !isNewPasswordNotValid
     ) {
-      const { encryptionSecretNew, signingSecretNew } =
-        await createKeyForNewPassword(
-          signingSecret,
-          encryptionSecret,
-          state.password,
-          state.newPassword
-        );
+      const {
+        encryptionSecretNew,
+        signingSecretNew,
+        error,
+        storeSigningSecret,
+        storeEncryptionSecret,
+      } = await createKeyForNewPassword(
+        state.signingSecret,
+        state.encryptionSecret,
+        state.password,
+        state.newPassword,
+        passphrase
+      );
+      if (error) {
+        setFormError(error);
+        setOpen(true);
+        return;
+      }
+
+      setState({
+        ...state,
+        encryptionSecretNew,
+        signingSecretNew,
+        storeSigningSecret,
+        storeEncryptionSecret,
+      });
+
       updatePasswordMutation({
         variables: {
           cmd: {
@@ -163,13 +221,11 @@ const EditPassword = ({
           />
           {inputValidation.isPasswordNotValid ? (
             <Row>
-              (
               <p className="error-title">
                 *Your password must be between 8 to 20 characters which contain
                 at least one numeric digit, one uppercase and one lowercase
                 letter
               </p>
-              )
             </Row>
           ) : (
             <Row>
@@ -201,15 +257,17 @@ const EditPassword = ({
             ) : null}
           </Row>
           <Row error>
-            {inputValidation.isPasswordDuplicateCurrent ?
+            {inputValidation.isPasswordDuplicateCurrent ? (
               <p className="error-title">
                 *Your new password is duplicate with the current
               </p>
-             : null}
+            ) : null}
           </Row>
 
           <PageFooter>
-            <CustomButton className="global-btn">Save</CustomButton>
+            <CustomButton className="global-btn" type="submit">
+              Save
+            </CustomButton>
           </PageFooter>
         </form>
       </Page>

@@ -1,60 +1,5 @@
 import UserActionTypes from './user.types';
 
-export const signInSuccess = ({
-  signingSecret,
-  encryptionSecret,
-  signingPublicKey,
-  encryptionPublicKey,
-  phoneNumber,
-  phoneCountryCode,
-  email,
-  invitationCode,
-  postalCode,
-  lastName,
-  middleName,
-  dob,
-  nationality,
-  addressLine,
-  city,
-  province,
-  country,
-  firstName,
-  id,
-  imageUrl,
-  kycStatus,
-  emailStatus,
-  phoneStatus,
-  pendingIdentities,
-}) => ({
-  type: UserActionTypes.SIGN_IN_SUCCESS,
-  payload: {
-    signingSecret,
-    encryptionSecret,
-    signingPublicKey,
-    encryptionPublicKey,
-    phoneNumber,
-    phoneCountryCode,
-    email,
-    invitationCode,
-    postalCode,
-    lastName,
-    middleName,
-    dob,
-    nationality,
-    addressLine,
-    city,
-    province,
-    country,
-    firstName,
-    id,
-    imageUrl,
-    kycStatus,
-    emailStatus,
-    phoneStatus,
-    pendingIdentities,
-  },
-});
-
 export const signInFailure = (error) => ({
   type: UserActionTypes.SIGN_IN_FAILURE,
   payload: error,
@@ -174,6 +119,9 @@ export const updateStoredUser = ({
   emailStatus,
   phoneStatus,
   pendingIdentities,
+  passphrase,
+  storeEncryptionSecret,
+  storeSigningSecret,
 }) => ({
   type: UserActionTypes.UPDATE_STORED_USER,
   payload: {
@@ -201,6 +149,9 @@ export const updateStoredUser = ({
     emailStatus,
     phoneStatus,
     pendingIdentities,
+    passphrase,
+    storeEncryptionSecret,
+    storeSigningSecret,
   },
 });
 
@@ -213,7 +164,7 @@ export const setRegisterInfo = ({
   encryptionSecret,
   signingPublicKey,
   encryptionPublicKey,
-  password
+  password,
 }) => ({
   type: UserActionTypes.SET_REGISTER_INFO,
   payload: {
@@ -225,6 +176,6 @@ export const setRegisterInfo = ({
     encryptionSecret,
     signingPublicKey,
     encryptionPublicKey,
-    password
+    password,
   },
 });
