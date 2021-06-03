@@ -1,56 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import backgroundImg from 'shared/assets/home-background.svg';
-import { CustomButton } from '../../components/ui/custom-button/custom-button.component';
-import FormInput from 'components/form-input/form-input.component';
-import { ReactComponent as SearchIcon } from 'shared/assets/search-btn.svg';
 import { useLazyQuery } from '@apollo/client';
 import { SEARCH_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
-import useDebounce from 'shared/hooks/useDebounce';
 import ShopItem from 'components/shop-item/shop-item.component';
+import { useSelector } from 'react-redux';
+import { SEARCH_PRODUCT } from 'graphQL/repository/product.repository';
+import NewProductList from 'components/product-listcard/new-product-list.component';
 
 const Container = styled.div`
   margin: auto;
-
-  .container {
-    display: flex;
-    height: 540px;
-    background: #ffffff;
-    margin-bottom: 24px;
-    padding: 32px 24px 24px;
-  }
-`;
-
-const Row = styled.div`
-  width: 100%;
-  background-color: white;
-  margin-bottom: 1.2rem;
-  margin-left: ${(props) =>
-    props.headRow ? 'calc(((100vw - 1200px) / 2) * -1)' : 0};
-
-  @media screen and (max-width: 1200px) {
-    margin-left: 0;
-  }
-
-  .row-header {
-    display: flex;
-    justify-content: space-between;
-    p {
-      color: #2b74e4;
-    }
-  }
-`;
-
-
-const Latest = styled.div`
   background-color: white;
   padding: 24px;
-  h3 {
-    margin-bottom: 1.2rem;
-  }
+  min-height: 100vh;
+`;
+
+const SubTitle = styled.h5`
+  margin: 1.2rem 0 0.8rem;
 `;
 
 const ItemBox = styled.div`
@@ -63,7 +31,7 @@ const ItemBox = styled.div`
     grid-template-columns: 1fr;
   }
 
-  padding-bottom: 24px;
+  padding-bottom: 71px;
   border-bottom: 1px solid #e4e4e4;
 
   @media only screen and (max-width: 600px) {
@@ -72,37 +40,21 @@ const ItemBox = styled.div`
   }
 `;
 
-const ResultSearchBox = styled.div`
-  margin-top: 8px;
-  width: 600px;
-  background-color: white;
-  box-shadow: 4px 4px 16px 0px rgba(0, 0, 0, 0.16);
-  padding: 16px;
-  max-height: 16rem;
-  overflow-y: auto;
-  border-radius: 3px;
-
-  @media screen and (max-width: 768px) {
-    width: calc(100vw - 48px);
-  }
-`;
-
 const SearchResult = () => {
-  /* display: ${(props) =>
-    !!props.searchResults.length ? 'flex' : 'none'}; ; */
-  const [inputSearch, setInputSearch] = useState('');
+  const searchInput = useSelector((state) => {
+    return state.user.searchInput;
+  });
   const [records, setRecords] = useState([]);
+  const [productRecords, setProductRecords] = useState([]);
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
-  const [query, setQuery] = useState({
+  const [query] = useState({
     page: 0,
     pageSize: 6,
     filters: [],
     queries: [],
     sorts: [],
   });
-  const debouncedSearchTerm = useDebounce(inputSearch, 500);
-  const [recordsSuggest, setRecordsSuggest] = useState([]);
 
   const [
     searchAggregatedShop,
@@ -117,81 +69,87 @@ const SearchResult = () => {
   });
 
   useEffect(() => {
-    const date = new Date();
-    date.setDate(date.getDate() - 7);
-    const lastSevenDay = date.getTime();
-    const now = Date.now();
-    setQuery({ ...query, filters: [`createdAt:${lastSevenDay};${now}`] });
-  }, []);
+    searchAggregatedShop({
+      variables: {
+        query: {
+          ...query,
+          queries: searchInput ? [`name:${searchInput}`] : [],
+        },
+      },
+    });
+
+    searchProduct({
+      variables: {
+        searchInput: {
+          ...query,
+          pageSize: 4,
+          queries: searchInput ? [`name:${searchInput}`] : [],
+        },
+      },
+    });
+  }, [searchInput]);
+
+  const [
+    searchProduct,
+    { loading: productLoading, error: productError, data: productData },
+  ] = useLazyQuery(SEARCH_PRODUCT);
 
   useEffect(() => {
-    if (query.filters.length) {
-      if (debouncedSearchTerm || !records.length) {
-        searchAggregatedShop({
-          variables: {
-            query: {
-              ...query,
-              filters: records.length ? [] : query.filters,
-              queries: debouncedSearchTerm
-                ? [`name:${debouncedSearchTerm}`]
-                : [],
-            },
-          },
-        });
-      }
-
-      !debouncedSearchTerm && setRecordsSuggest([]);
+    if (productData?.searchProduct?.data) {
+      setProductRecords(productData?.searchProduct?.data?.records);
     }
-  }, [debouncedSearchTerm, query.filters]);
+  }, [productData?.searchProduct?.data]);
 
   useEffect(() => {
-    if (searchAggregatedShopError?.message) {
-      setFormError(searchAggregatedShopError?.message);
+    if (searchAggregatedShopError?.message || productError?.message) {
+      setFormError(searchAggregatedShopError?.message || productError?.message);
       setOpen(true);
     }
-  }, [searchAggregatedShopError?.message]);
+  }, [searchAggregatedShopError?.message, productError?.message]);
 
   useEffect(() => {
     if (searchAggregatedShopData?.searchAggregatedShop?.data) {
-      !records.length
-        ? setRecords(
-            searchAggregatedShopData?.searchAggregatedShop?.data.records
-          )
-        : setRecordsSuggest(
-            searchAggregatedShopData?.searchAggregatedShop?.data.records
-          );
+      setRecords(searchAggregatedShopData?.searchAggregatedShop?.data.records);
     }
   }, [searchAggregatedShopData?.searchAggregatedShop?.data]);
 
-  const handleChange = (event) => {
-    if (!event) {
-      return;
-    }
-    const { value } = event?.target;
-    setInputSearch(value);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setQuery({ ...query, queries: inputSearch ? [`name:${inputSearch}`] : [] });
-  };
   return (
     <React.Fragment>
-
       <Container>
-        <Latest>
-          <h3>Latest Shops</h3>
+        <React.Fragment>
+          {searchInput ? (
+            <h2>Here are your results for "{searchInput}"</h2>
+          ) : (
+            <h2>Here are all the results</h2>
+          )}
+
+          <SubTitle>Shops</SubTitle>
           {searchAggregatedShopLoading && !records.length ? (
             <Spinner />
           ) : (
             <ItemBox>
-              {records.map((shop) => (
-                <ShopItem shop={shop} key={shop.id} />
-              ))}
+              {!!records.length ? (
+                records.map((shop) => <ShopItem shop={shop} key={shop.id} />)
+              ) : (
+                <p>No results found</p>
+              )}
             </ItemBox>
           )}
-        </Latest>
+          <SubTitle>Products</SubTitle>
+          {productLoading ? (
+            <Spinner />
+          ) : (
+            <React.Fragment>
+              {productRecords ? (
+                <NewProductList records={productRecords} />
+              ) : (
+                <p>No results found</p>
+              )}
+            </React.Fragment>
+          )}
+        </React.Fragment>
       </Container>
+
       <SobyModal open={open} setOpen={setOpen}>
         {formError ? (
           <ErrorPopup content={formError} setOpen={setOpen} />

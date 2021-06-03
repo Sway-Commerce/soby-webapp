@@ -6,27 +6,35 @@ import styled from 'styled-components';
 import { ReactComponent as SearchIcon } from 'shared/assets/search-icon.svg';
 import { ReactComponent as ArrowIcon } from 'shared/assets/arrow-down.svg';
 import { ReactComponent as Logo } from 'shared/assets/logo.svg';
+import { ReactComponent as MobileLogo } from 'shared/assets/mobile-logo.svg';
 import TempImage from 'shared/assets/default-individual-ava.png';
 import { ReactComponent as MenuIcon } from 'shared/assets/menu-icon.svg';
 import { mainColor } from 'shared/css-variable/variable';
-import FormInput from 'components/form-input/form-input.component';
 import { setSearchInput } from 'redux/user/user.actions';
 import useDebounce from 'shared/hooks/useDebounce';
+import SearchInput from './search-input.component';
+
+const Container = styled.div`
+  padding: 10px calc((100vw - 1200px) / 2);
+  background-color: ${mainColor};
+
+  @media screen and (max-width: 1200px) {
+    padding: 10px 1.2rem;
+  }
+`;
 
 const HeaderContainer = styled.div`
-  height: 80px;
   display: flex;
   justify-content: space-between;
-  padding: 0 calc((100vw - 1200px) / 2);
-  background-color: ${mainColor};
-  @media screen and (max-width: 1200px) {
-    padding: 0 1.2rem;
+  align-items: center;
+  height: 54px;
+  @media screen and (max-width: 600px) {
+    height: 34px;
   }
 `;
 
 const LogoContainer = styled(Link)`
   height: 100%;
-  width: 70px;
   padding: 16.5px 0;
 `;
 
@@ -35,6 +43,7 @@ const OptionsContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  min-width: 200px;
 
   @media screen and (max-width: 600px) {
     display: none;
@@ -94,18 +103,22 @@ const HamburgerMenu = styled.div`
   @media screen and (max-width: 600px) {
     height: 100%;
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    margin-top: 7px;
   }
 `;
 
-const SearchInputContainer = styled.div`
-  position: relative;
-  width: 100%;
-  max-width: 500px;
+const LogoItem = styled.div`
+  svg {
+    display: ${(props) => (props.show ? 'unset' : 'none')};
+  }
+  @media screen and (max-width: 600px) {
+    svg {
+      display: ${(props) => (props.hide ? 'unset  ' : 'none')};
+    }
+  }
 `;
 
-export const Header = () => {
+export const Header = ({ history }) => {
   const { accessToken, lastName, middleName, firstName, imageUrl } =
     useSelector((state) => {
       return state.user;
@@ -121,14 +134,9 @@ export const Header = () => {
     setIsSignin(!!accessToken);
   }, [accessToken]);
 
-  useEffect(
-    (_, deps) => {
-      if (deps) {
-        dispatchSetSearchInput(debouncedSearchTerm);
-      }
-    },
-    [debouncedSearchTerm]
-  );
+  useEffect(() => {
+    dispatchSetSearchInput(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
 
   const handleChange = (event) => {
     if (!event) {
@@ -139,63 +147,80 @@ export const Header = () => {
   };
 
   return (
-    <HeaderContainer>
-      <LogoContainer to="/">
-        <Logo />
-      </LogoContainer>
-      <SearchInputContainer>
-        <FormInput
-          type="text"
-          name="inputSearch"
-          value={inputSearch}
-          onChange={handleChange}
-          placeholder="Search for Shop, product and invoice"
-          withoutTitle
-          id="home-input"
-        />
-        <SearchIcon className="mobile-btn clickable" />
-      </SearchInputContainer>
-      <HamburgerMenu>
-        <MenuIcon />
-      </HamburgerMenu>
+    <Container>
+      <HeaderContainer>
+        <LogoContainer to="/">
+          <LogoItem hide>
+            <MobileLogo />
+          </LogoItem>
+          <LogoItem show>
+            <Logo />
+          </LogoItem>
+        </LogoContainer>
 
-      <OptionsContainer>
-        <Link to={{ pathname: 'http://signup.soby.vn/' }} target="_blank">
-          <SwitchBtn>Start selling</SwitchBtn>
-        </Link>
-        <IconBtn to="/search-result">
-          <SearchIcon />
-          <span>
-            <b>Search</b>
-          </span>
-        </IconBtn>
-        <IconBtn
-          to="/your-transaction"
-          className={isSignIn ? '' : 'non-clickable'}
-        >
-          <span>
-            <b>My order</b>
-          </span>
-          <ArrowIcon />
-        </IconBtn>
-        {isSignIn ? (
-          <UserContainer to="/individual-profile">
-            <span>
-              <b>
-                {lastName}&nbsp;
-                {middleName}&nbsp;
-                {firstName}
-              </b>
-            </span>
-            <img src={imageUrl ?? TempImage} alt="" />
-          </UserContainer>
-        ) : (
-          <IconBtn to="/phone-signin">
-            <b>Log in</b>
-          </IconBtn>
+        {history.location.pathname.includes('search-result') && (
+          <SearchInput
+            show
+            inputSearch={inputSearch}
+            handleChange={handleChange}
+          />
         )}
-      </OptionsContainer>
-    </HeaderContainer>
+        <HamburgerMenu>
+          <MenuIcon />
+        </HamburgerMenu>
+
+        <OptionsContainer
+          isSearchView={history.location.pathname.includes('search-result')}
+        >
+          {!history.location.pathname.includes('search-result') && (
+            <React.Fragment>
+              <Link to={{ pathname: 'http://signup.soby.vn/' }} target="_blank">
+                <SwitchBtn>Start selling</SwitchBtn>
+              </Link>
+              <IconBtn to="/search-result">
+                <SearchIcon />
+                <span>
+                  <b>Search</b>
+                </span>
+              </IconBtn>
+            </React.Fragment>
+          )}
+
+          <IconBtn
+            to="/your-transaction"
+            className={isSignIn ? '' : 'non-clickable'}
+          >
+            <span>
+              <b>My order</b>
+            </span>
+            <ArrowIcon />
+          </IconBtn>
+          {isSignIn ? (
+            <UserContainer to="/individual-profile">
+              <span>
+                <b>
+                  {lastName}&nbsp;
+                  {middleName}&nbsp;
+                  {firstName}
+                </b>
+              </span>
+              <img src={imageUrl ?? TempImage} alt="" />
+            </UserContainer>
+          ) : (
+            <IconBtn to="/phone-signin">
+              <b>Log in</b>
+            </IconBtn>
+          )}
+        </OptionsContainer>
+      </HeaderContainer>
+      {history.location.pathname.includes('search-result') && (
+        <SearchInput
+          hide
+          inputSearch={inputSearch}
+          handleChange={handleChange}
+        />
+      )}
+    </Container>
   );
 };
 
