@@ -7,7 +7,6 @@ import RankTooltip from 'pages/shop-profile/rank-tooltip.component';
 
 const Item = styled.div`
   display: flex;
-  margin-top: 24px;
 
   img.avt {
     width: 4rem;
@@ -46,7 +45,7 @@ const ItemInfo = styled.div`
     max-width: fit-content;
   }
 `;
-const ShopItem = ({ shop }) => {
+const ShopItem = ({ shop, ...rest }) => {
   const {
     id,
     logoUrl,
@@ -57,14 +56,14 @@ const ShopItem = ({ shop }) => {
     },
   } = shop;
   return (
-    <Item>
+    <Item {...rest}>
       <Link to={`shop-profile/${id}`}>
         <img src={logoUrl} className="avt" alt="" />
       </Link>
 
       <ItemInfo>
         <Link to={`shop-profile/${id}`}>
-          <h5 className="body-color">{name}</h5>
+          <h5 className="body-color truncate">{name}</h5>
         </Link>
 
         <div className="item-info">
