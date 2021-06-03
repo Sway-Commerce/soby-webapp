@@ -18,7 +18,9 @@ const theme = {
   green: '#27AE60',
 };
 
-const SignUpPhone = lazy(() => import('pages/register-phone/register-phone.component'));
+const SignUpPhone = lazy(() =>
+  import('pages/register-phone/register-phone.component')
+);
 const SignUpInfo = lazy(() => import('pages/register/register.component'));
 const PhoneVerification = lazy(() =>
   import('pages/phone-verification/phone-verification.component')
@@ -29,7 +31,6 @@ const PhoneSignin = lazy(() =>
 const PaymentResult = lazy(() =>
   import('pages/payment-result/payment-result.component')
 );
-const SignOut = lazy(() => import('pages/signout/signout.component'));
 const ShopProfile = lazy(() =>
   import('pages/shop-profile/shop-profile.component')
 );
@@ -65,6 +66,9 @@ const ChangePassword = lazy(() =>
   import('pages/individual-profile/edit-password.component')
 );
 const HomePage = lazy(() => import('pages/homepage/homepage.component'));
+const SearchResult = lazy(() =>
+  import('pages/search-result/search-result.component')
+);
 
 const App = () => {
   return (
@@ -84,7 +88,6 @@ const App = () => {
               />
               <Route exact path="/signup" component={SignUpInfo} />
               <Route exact path="/signup-info" component={SignUpPhone} />
-              <Route exact path="/signout" component={SignOut} />
 
               <Route path="/shop-profile/:shopId" component={ShopProfile} />
               <Route path="/product/:productId" component={ProductDetail} />
@@ -122,6 +125,7 @@ const App = () => {
               <Route path="/invoice/:invoiceId" component={Invoice} />
               <JwtRoute path="/edit-profile" component={EditProfile} />
               <JwtRoute path="/change-password" component={ChangePassword} />
+              <Route path="/search-result" component={SearchResult} />
             </Suspense>
           </ErrorBoundary>
         </Switch>

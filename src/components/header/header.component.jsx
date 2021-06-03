@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -9,6 +9,9 @@ import { ReactComponent as Logo } from 'shared/assets/logo.svg';
 import TempImage from 'shared/assets/default-individual-ava.png';
 import { ReactComponent as MenuIcon } from 'shared/assets/menu-icon.svg';
 import { mainColor } from 'shared/css-variable/variable';
+import FormInput from 'components/form-input/form-input.component';
+import { setSearchInput } from 'redux/user/user.actions';
+import useDebounce from 'shared/hooks/useDebounce';
 
 const HeaderContainer = styled.div`
   height: 80px;
@@ -96,22 +99,62 @@ const HamburgerMenu = styled.div`
   }
 `;
 
+const SearchInputContainer = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+`;
+
 export const Header = () => {
   const { accessToken, lastName, middleName, firstName, imageUrl } =
     useSelector((state) => {
       return state.user;
     });
   const [isSignIn, setIsSignin] = useState(!!accessToken);
+  const [inputSearch, setInputSearch] = useState('');
+  const debouncedSearchTerm = useDebounce(inputSearch, 500);
+
+  const dispatch = useDispatch();
+  const dispatchSetSearchInput = (payload) => dispatch(setSearchInput(payload));
 
   useEffect(() => {
     setIsSignin(!!accessToken);
   }, [accessToken]);
+
+  useEffect(
+    (_, deps) => {
+      if (deps) {
+        dispatchSetSearchInput(debouncedSearchTerm);
+      }
+    },
+    [debouncedSearchTerm]
+  );
+
+  const handleChange = (event) => {
+    if (!event) {
+      return;
+    }
+    const { value } = event?.target;
+    setInputSearch(value);
+  };
 
   return (
     <HeaderContainer>
       <LogoContainer to="/">
         <Logo />
       </LogoContainer>
+      <SearchInputContainer>
+        <FormInput
+          type="text"
+          name="inputSearch"
+          value={inputSearch}
+          onChange={handleChange}
+          placeholder="Search for Shop, product and invoice"
+          withoutTitle
+          id="home-input"
+        />
+        <SearchIcon className="mobile-btn clickable" />
+      </SearchInputContainer>
       <HamburgerMenu>
         <MenuIcon />
       </HamburgerMenu>
@@ -120,7 +163,7 @@ export const Header = () => {
         <Link to={{ pathname: 'http://signup.soby.vn/' }} target="_blank">
           <SwitchBtn>Start selling</SwitchBtn>
         </Link>
-        <IconBtn to="/">
+        <IconBtn to="/search-result">
           <SearchIcon />
           <span>
             <b>Search</b>

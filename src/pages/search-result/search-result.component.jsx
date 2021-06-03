@@ -9,8 +9,8 @@ import { SEARCH_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
-import ShopItem from '../../components/shop-item/shop-item.component';
 import useDebounce from 'shared/hooks/useDebounce';
+import ShopItem from 'components/shop-item/shop-item.component';
 
 const Container = styled.div`
   margin: auto;
@@ -44,85 +44,6 @@ const Row = styled.div`
   }
 `;
 
-const HeadHome = styled.div`
-  height: 386.84px;
-  background-image: url(${backgroundImg});
-  padding: 121.42px 24px 24px;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #ffffff;
-
-  .soby-welcome {
-    font-size: 2.6rem;
-    font-weight: bold;
-    line-height: 73px;
-  }
-
-  h3 + h3 {
-    margin-top: 8px;
-  }
-
-  @media screen and (max-width: 600px) {
-    height: 320px;
-    padding-top: 112px;
-    align-items: flex-start;
-    .soby-welcome {
-      font-size: 32px;
-      line-height: 45px;
-    }
-    h3.mobile-hide {
-      display: none;
-    }
-  }
-`;
-
-const Search = styled.form`
-  display: flex;
-  justify-content: center;
-  align-items: top;
-  margin-top: 24px;
-  position: relative;
-
-  .main-btn {
-    width: 120px;
-    margin: 0 0 0 14px;
-  }
-  input#home-input {
-    height: 2.4rem;
-    width: 600px;
-    border-radius: 3px;
-    padding: 0 24px;
-    margin-top: 1px;
-    & ~ label {
-      left: 24px;
-      top: 12px;
-    }
-  }
-  svg.mobile-btn {
-    display: none;
-  }
-
-  @media screen and (max-width: 768px) {
-    input#home-input {
-      width: calc(100vw - 48px);
-      padding: 0 16px;
-      & ~ label {
-        left: 16px;
-      }
-    }
-    .main-btn {
-      display: none;
-    }
-    svg.mobile-btn {
-      display: block;
-      position: absolute;
-      right: 0.8rem;
-      top: 10px;
-    }
-  }
-`;
 
 const Latest = styled.div`
   background-color: white;
@@ -166,11 +87,7 @@ const ResultSearchBox = styled.div`
   }
 `;
 
-const SearchInputContainer = styled.div`
-  position: relative;
-`;
-
-const HomePage = () => {
+const SearchResult = () => {
   /* display: ${(props) =>
     !!props.searchResults.length ? 'flex' : 'none'}; ; */
   const [inputSearch, setInputSearch] = useState('');
@@ -260,46 +177,8 @@ const HomePage = () => {
   };
   return (
     <React.Fragment>
-      <Container>
-        <Row headRow>
-          <HeadHome>
-            <p className="soby-welcome">Welcome to Soby</p>
-            <h3 className="fw-normal">
-              Find your trust Sellers and have safe transactions with Soby
-            </h3>
-            <h3 className="fw-normal mobile-hide">
-              Lorem ipsum dolor sit amet
-            </h3>
-            <Search onSubmit={handleSubmit}>
-              <SearchInputContainer>
-                <FormInput
-                  type="text"
-                  name="inputSearch"
-                  value={inputSearch}
-                  onChange={handleChange}
-                  placeholder="Search for Shop, product and invoice"
-                  withoutTitle
-                  id="home-input"
-                />
-                <SearchIcon
-                  onClick={handleSubmit}
-                  className="mobile-btn clickable"
-                />
-                {!!recordsSuggest.length && (
-                  <ResultSearchBox>
-                    {recordsSuggest.map((shop) => (
-                      <ShopItem key={shop.id} shop={shop} className="mg-b-16" />
-                    ))}
-                  </ResultSearchBox>
-                )}
-              </SearchInputContainer>
 
-              <CustomButton type="submit" className="main-btn">
-                Search
-              </CustomButton>
-            </Search>
-          </HeadHome>
-        </Row>
+      <Container>
         <Latest>
           <h3>Latest Shops</h3>
           {searchAggregatedShopLoading && !records.length ? (
@@ -322,4 +201,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default SearchResult;
