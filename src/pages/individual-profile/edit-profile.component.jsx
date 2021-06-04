@@ -251,7 +251,7 @@ const EditProfile = () => {
           <AvatarBox>
             <Avatar src={picture.picturePreview} />
             <EditIcon>
-              <label for="upload-photo">
+              <label htmlFor="upload-photo">
                 <AddImgIcon />
               </label>
               <input

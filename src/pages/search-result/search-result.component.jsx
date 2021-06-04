@@ -15,7 +15,9 @@ const Container = styled.div`
   margin: auto;
   background-color: white;
   padding: 24px 24px 0;
-  color: ${bodyColor};
+  @media only screen and (max-width: 600px) {
+    color: ${bodyColor};
+  }
 `;
 
 const ItemBox = styled.div`
@@ -157,13 +159,13 @@ const SearchResult = () => {
       <ProductSection hide>
         <HeaderRow>
           <h5>Products</h5>
-          <h5 className="primary-color">See all</h5>
+          <h5 className="primary-color clickable">See all</h5>
         </HeaderRow>
         {productLoading ? (
           <Spinner />
         ) : (
           <React.Fragment>
-            {productRecords ? (
+            {!!productRecords.length ? (
               <ProductListCard records={productRecords} />
             ) : (
               <p>No results found</p>

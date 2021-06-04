@@ -1,5 +1,11 @@
 import { gql } from '@apollo/client';
-import { Encryption, generateJwt, sha256, Signing } from '@credify/crypto';
+import {
+  Encryption,
+  generateIdentityToken,
+  generateJwt,
+  sha256,
+  Signing,
+} from '@credify/crypto';
 
 import { INDIVIDUAL_PROFILE_FRAGMENT } from '../common.fragment';
 
@@ -334,5 +340,27 @@ export const createKeyForNewPassword = async (
     signingSecretNew,
     storeSigningSecret,
     storeEncryptionSecret,
+  };
+};
+
+export const generateNewIdentityToken = (
+  signingSecret,
+  password,
+  id,
+  source,
+  hash
+) => {
+  const signing = new Signing();
+  let signature = '';
+
+  try {
+    signing.importPrivateKey(signingSecret, password);
+    debugger
+    signature = generateIdentityToken(signing, id, source, hash);
+  } catch (error) {
+    return { signature: null, error: 'Wrong password' };
+  }
+  return {
+    signature
   };
 };
