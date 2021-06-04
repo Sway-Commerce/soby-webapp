@@ -8,17 +8,14 @@ import Spinner from 'components/ui/spinner/spinner.component';
 import ShopItem from 'components/shop-item/shop-item.component';
 import { useSelector } from 'react-redux';
 import { SEARCH_PRODUCT } from 'graphQL/repository/product.repository';
-import NewProductList from 'components/product-listcard/new-product-list.component';
+import ProductListCard from 'components/product-listcard/product-listcard.component';
+import { bodyColor } from 'shared/css-variable/variable';
 
 const Container = styled.div`
   margin: auto;
   background-color: white;
-  padding: 24px;
-  min-height: 100vh;
-`;
-
-const SubTitle = styled.h5`
-  margin: 1.2rem 0 0.8rem;
+  padding: 24px 24px 0;
+  color: ${bodyColor};
 `;
 
 const ItemBox = styled.div`
@@ -37,6 +34,23 @@ const ItemBox = styled.div`
   @media only screen and (max-width: 600px) {
     padding-bottom: 24px;
     border-bottom: none;
+  }
+`;
+
+const HeaderRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+`;
+
+const ProductSection = styled.section`
+  background-color: white;
+  padding: 16px 24px 24px;
+
+  @media screen and (max-width: 760px) {
+    margin: 1rem 0;
+    padding: 0.8rem 1.2rem;
+    color: ${bodyColor};
   }
 `;
 
@@ -118,12 +132,14 @@ const SearchResult = () => {
       <Container>
         <React.Fragment>
           {searchInput ? (
-            <h2>Here are your results for "{searchInput}"</h2>
+            <h2 className="mg-b-16">
+              Here are your results for "{searchInput}"
+            </h2>
           ) : (
-            <h2>Here are all the results</h2>
+            <h2 className="mg-b-16">Here are all the results</h2>
           )}
 
-          <SubTitle>Shops</SubTitle>
+          <h5 className="mg-b-16">Shops</h5>
           {searchAggregatedShopLoading && !records.length ? (
             <Spinner />
           ) : (
@@ -135,20 +151,26 @@ const SearchResult = () => {
               )}
             </ItemBox>
           )}
-          <SubTitle>Products</SubTitle>
-          {productLoading ? (
-            <Spinner />
-          ) : (
-            <React.Fragment>
-              {productRecords ? (
-                <NewProductList records={productRecords} />
-              ) : (
-                <p>No results found</p>
-              )}
-            </React.Fragment>
-          )}
         </React.Fragment>
       </Container>
+
+      <ProductSection hide>
+        <HeaderRow>
+          <h5>Products</h5>
+          <h5 className="primary-color">See all</h5>
+        </HeaderRow>
+        {productLoading ? (
+          <Spinner />
+        ) : (
+          <React.Fragment>
+            {productRecords ? (
+              <ProductListCard records={productRecords} />
+            ) : (
+              <p>No results found</p>
+            )}
+          </React.Fragment>
+        )}
+      </ProductSection>
 
       <SobyModal open={open} setOpen={setOpen}>
         {formError ? (
