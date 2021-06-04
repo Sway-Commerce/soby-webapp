@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import FormInput from 'components/form-input/form-input.component';
 import CustomButton from 'components/ui/custom-button/custom-button.component';
@@ -36,6 +36,10 @@ const PhoneSignin = ({ history }) => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
+  const [redirectUrl, setRedirectUrl] = useState('');
+  const { accessToken, id } = useSelector((state) => {
+    return state.user;
+  });
 
   const [password, setPassword] = useState('');
   const [inputValidation, setInputValidation] = useState({
@@ -68,6 +72,13 @@ const PhoneSignin = ({ history }) => {
     dispatch(phoneSignInStart(phoneAndPassword));
   const dispatchSetAccessToken = (accessToken) =>
     dispatch(setAccessToken(accessToken));
+
+  useEffect(() => {
+    const redirectUrl =
+      sessionStorage.getItem('redirectUrl') ?? '/individual-profile';
+    sessionStorage.removeItem('redirectUrl');
+    setRedirectUrl(redirectUrl);
+  }, []);
 
   useEffect(() => {
     if (loadIndividualBasicInfoData?.getIndividual?.data) {
@@ -152,10 +163,6 @@ const PhoneSignin = ({ history }) => {
           storeSigningSecret,
         });
 
-        const redirectUrl =
-          sessionStorage.getItem('redirectUrl') ?? '/individual-profile';
-        sessionStorage.removeItem('redirectUrl');
-        // window.location = redirectUrl;
         history.push(redirectUrl);
       }
 
@@ -165,6 +172,12 @@ const PhoneSignin = ({ history }) => {
     loadIndividualBasicInfoData?.getIndividual?.data,
     getSecretData?.getSecret?.data,
   ]);
+
+  useEffect(() => {
+    if (!!accessToken && id) {
+      history.push('/individual-profile');
+    }
+  }, [accessToken]);
 
   useEffect(() => {
     if (!!data?.loginWithPhoneAndPassword?.data) {
@@ -194,11 +207,6 @@ const PhoneSignin = ({ history }) => {
     loadIndividualBasicInfoError?.message,
     getSecretError?.message,
   ]);
-  useEffect(() => {
-    if (loading || loadIndividualBasicInfoLoading || getSecretLoading) {
-      return <Spinner />;
-    }
-  }, [loading || loadIndividualBasicInfoLoading || getSecretLoading]);
 
   const { isPasswordValid, isPhoneValid } = inputValidation;
 
@@ -282,9 +290,16 @@ const PhoneSignin = ({ history }) => {
                   </p>
                 )}
               </InputContainer>
-              <CustomButton className="main-btn" type="submit">
-                Login
-              </CustomButton>
+
+              {loading || loadIndividualBasicInfoLoading || getSecretLoading ? (
+                <div className="txt-center">
+                  <Spinner inner />
+                </div>
+              ) : (
+                <CustomButton className="main-btn" type="submit">
+                  Login
+                </CustomButton>
+              )}
             </form>
           </FormContainer>
         </SigninContainer>

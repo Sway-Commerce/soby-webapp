@@ -1,6 +1,6 @@
 import UserActionTypes from './user.types';
 
-const INITIAL_STATE = {
+export const INITIAL_STATE = {
   accessToken: null,
   signingSecret: null,
   encryptionSecret: null,

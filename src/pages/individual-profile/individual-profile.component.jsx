@@ -225,7 +225,7 @@ const IndividualProfile = () => {
         );
 
         dispatchUpdateStoredUser({
-          ...user,
+          ...loadIndividualBasicInfoData?.getIndividual?.data,
           phoneNumber,
           phoneCountryCode,
           email,

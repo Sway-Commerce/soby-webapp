@@ -200,7 +200,9 @@ export const Header = ({ history }) => {
               <span>
                 <b>
                   {lastName}&nbsp;
-                  {middleName}&nbsp;
+                  {middleName && (
+                    <React.Fragment>{middleName}&nbsp;</React.Fragment>
+                  )}
                   {firstName}
                 </b>
               </span>
