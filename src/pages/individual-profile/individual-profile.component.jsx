@@ -240,7 +240,6 @@ const IndividualProfile = () => {
           passphrase,
           storeSigningSecret
         );
-        debugger;
 
         if (pendingIdentities.length) {
           pendingIdentities.map((x) => {

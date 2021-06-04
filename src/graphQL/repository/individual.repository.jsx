@@ -355,7 +355,6 @@ export const generateNewIdentityToken = (
 
   try {
     signing.importPrivateKey(signingSecret, password);
-    debugger
     signature = generateIdentityToken(signing, id, source, hash);
   } catch (error) {
     return { signature: null, error: 'Wrong password' };
