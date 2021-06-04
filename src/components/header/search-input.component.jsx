@@ -28,6 +28,10 @@ const SearchInputContainer = styled.div`
     }
   }
 
+  @media screen and (max-width: 768px) {
+    margin-right: 50px;
+  }
+
   @media screen and (max-width: 750px) {
     max-width: unset !important;
     display: ${(props) => (props.hide ? 'flex' : 'none')};
