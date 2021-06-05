@@ -6,7 +6,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import CustomButton from 'components/ui/custom-button/custom-button.component';
 import usePhoneNumber from 'shared/hooks/usePhoneNumber';
 
-import { setAccessToken, setUserPhoneNumber, updateStoredUser } from 'redux/user/user.actions';
+import {
+  setAccessToken,
+  setUserPhoneNumber,
+} from 'redux/user/user.actions';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 
@@ -18,8 +21,6 @@ import {
 } from 'graphQL/repository/individual.repository';
 import {
   signUpStart,
-  signUpSuccess,
-  signUpFailure,
 } from 'redux/user/user.actions';
 
 import {
@@ -33,7 +34,7 @@ import PolicyNavigate from 'components/policy-navigate/policy-navigate.component
 import { useMutation } from '@apollo/client';
 import Spinner from 'components/ui/spinner/spinner.component';
 
-const RegisterPhone = ({history}) => {
+const RegisterPhone = ({ history }) => {
   const {
     email,
     lastName,
@@ -44,6 +45,8 @@ const RegisterPhone = ({history}) => {
     signingPublicKey,
     encryptionPublicKey,
     password,
+    accessToken,
+    id,
   } = useSelector((state) => {
     return state.user;
   });
@@ -55,8 +58,6 @@ const RegisterPhone = ({history}) => {
   const [open, setOpen] = useState(false);
   const dispatchSignUpStart = (userCredentials) =>
     dispatch(signUpStart(userCredentials));
-  const dispatchSignUpFailure = (error) => dispatch(signUpFailure(error));
-  const dispatchSignUpSuccess = (keyPair) => dispatch(signUpSuccess(keyPair));
   const dispatchSetAccessToken = (accessToken) =>
     dispatch(setAccessToken(accessToken));
 
@@ -87,8 +88,6 @@ const RegisterPhone = ({history}) => {
   const dispatch = useDispatch();
   const dispatchSetUserPhoneNumber = (phone) =>
     dispatch(setUserPhoneNumber(phone));
-  const dispatchUpdateStoredUser = (payload) =>
-    dispatch(updateStoredUser(payload));
 
   useEffect(() => {
     if (signature) {
@@ -118,14 +117,18 @@ const RegisterPhone = ({history}) => {
       });
 
       history.push('/phone-verification');
-
     }
   }, [signatureData?.loginWithSignature?.data]);
 
   useEffect(() => {
+    if (!!accessToken && id) {
+      history.push('/individual-profile');
+    }
+  }, [accessToken]);
+
+  useEffect(() => {
     if (registerData?.register?.data?.id) {
       const signature = getSignature(signingPublicKey, signingSecret, password);
-      // dispatchUpdateStoredUser(registerData?.register?.data);
       setSignature(signature);
     }
   }, [registerData?.register?.data]);
@@ -156,7 +159,7 @@ const RegisterPhone = ({history}) => {
         lastName,
         firstName,
         middleName,
-        password
+        password,
       };
       dispatchSignUpStart();
       dispatchSetUserPhoneNumber({ phoneCountryCode, phoneNumber });
@@ -168,9 +171,7 @@ const RegisterPhone = ({history}) => {
     }
   };
 
-  return signinWithSignatureLoading || registerLoading ||operationLoading ? (
-    <Spinner />
-  ) : (
+  return (
     <RegisterContainer>
       <CardWrapper>
         <SignUpContainer>
@@ -194,7 +195,16 @@ const RegisterPhone = ({history}) => {
                   Enter your number and get a code to verify your account
                 </p>
               )}
-              <CustomButton className="main-btn">Register</CustomButton>
+              {signinWithSignatureLoading ||
+              registerLoading ||
+              operationLoading ? (
+                <div className="txt-center">
+                  <Spinner inner />
+                </div>
+              ) : (
+                <CustomButton className="main-btn">Register</CustomButton>
+              )}
+
               <PolicyNavigate isSignIn />
             </form>
           </FormContainer>

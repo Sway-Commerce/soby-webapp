@@ -1,6 +1,6 @@
 import UserActionTypes from './user.types';
 
-const INITIAL_STATE = {
+export const INITIAL_STATE = {
   accessToken: null,
   signingSecret: null,
   encryptionSecret: null,
@@ -31,6 +31,7 @@ const INITIAL_STATE = {
   passphrase: null,
   storeEncryptionSecret: null,
   storeSigningSecret: null,
+  searchInput: null,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -203,6 +204,12 @@ const userReducer = (state = INITIAL_STATE, action) => {
         signingPublicKey,
         encryptionPublicKey,
         password,
+      };
+    }
+    case UserActionTypes.SET_SEARCH_INPUT: {
+      return {
+        ...state,
+        searchInput: action.payload,
       };
     }
     default:

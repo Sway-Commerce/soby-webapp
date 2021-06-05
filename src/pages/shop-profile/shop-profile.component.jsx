@@ -276,16 +276,7 @@ const RankPoint = styled.h2`
   }
 `;
 
-const TooltipData = styled.div`
-  background-color: white;
-`;
-
 const ShopProfile = () => {
-  //   enum ConfirmationStatus {
-  //     NOT_CONFIRMED
-  //     CONFIRMED
-  //     COMPLETED
-  // }
   const { shopId } = useParams();
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');

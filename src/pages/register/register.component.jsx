@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import FormInput from 'components/form-input/form-input.component';
 import CustomButton from 'components/ui/custom-button/custom-button.component';
@@ -43,6 +43,10 @@ const Register = ({ history }) => {
     isLastNameValid: true,
   });
 
+  const { accessToken, id } = useSelector((state) => {
+    return state.user;
+  });
+
   const dispatch = useDispatch();
 
   const dispatchSetRegisterInfo = (userCredentials) =>
@@ -52,6 +56,12 @@ const Register = ({ history }) => {
 
   const { isPasswordValid, isEmailValid, isFirstNameValid, isLastNameValid } =
     inputValidation;
+
+  useEffect(() => {
+    if (!!accessToken && id) {
+      history.push('/individual-profile');
+    }
+  }, [accessToken]);
 
   useEffect(() => {
     window.addEventListener('resize', update);

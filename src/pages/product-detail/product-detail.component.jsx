@@ -116,6 +116,11 @@ const HeadRow = styled.div`
   background: #ffffff;
   margin-bottom: 24px;
   padding: 32px 24px 24px;
+  @media screen and (max-width: 768px) {
+    :first-child {
+      flex: 1;
+    }
+  }
 `;
 
 const InfoBox = styled.div`
@@ -142,7 +147,7 @@ const MobileSection = styled.div`
   display: ${(props) => (props.show ? 'block' : 'none')};
   background-color: white;
   margin-bottom: ${(props) => (props.show ? '16px' : '0')};
-  @media screen and (max-width: 760px) {
+  @media screen and (max-width: 768px) {
     margin: 1rem 0;
     padding: 0.8rem 1.2rem;
     display: ${(props) => (props.hide ? 'block' : 'none')};

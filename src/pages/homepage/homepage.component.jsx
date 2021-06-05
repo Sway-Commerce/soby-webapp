@@ -9,7 +9,7 @@ import { SEARCH_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
-import ShopItem from './shop-item.component';
+import ShopItem from '../../components/shop-item/shop-item.component';
 import useDebounce from 'shared/hooks/useDebounce';
 
 const Container = styled.div`
@@ -97,6 +97,7 @@ const Search = styled.form`
     margin-top: 1px;
     & ~ label {
       left: 24px;
+      top: 12px;
     }
   }
   svg.mobile-btn {

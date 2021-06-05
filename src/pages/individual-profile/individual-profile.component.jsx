@@ -19,10 +19,12 @@ import { ReactComponent as EditInfoIcon } from 'shared/assets/edit-individual.sv
 import TempImage from 'shared/assets/default-individual-ava.png';
 import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
 import { Link } from 'react-router-dom';
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   decryptIndividualModel,
+  generateNewIdentityToken,
   GET_INDIVIDUAL_BASIC_INFO,
+  SIGN_FOR_PII,
 } from 'graphQL/repository/individual.repository';
 import { signOutStart, updateStoredUser } from 'redux/user/user.actions';
 import Spinner from 'components/ui/spinner/spinner.component';
@@ -141,6 +143,7 @@ const IndividualProfile = () => {
     phoneStatus,
     storeEncryptionSecret,
     storeSigningSecret,
+    signingPublicKey,
   } = user;
 
   const [open, setOpen] = useState(false);
@@ -171,6 +174,17 @@ const IndividualProfile = () => {
     notifyOnNetworkStatusChange: true,
   });
 
+  const [
+    signForPii,
+    {
+      data: signForPiiData,
+      loading: signForPiiLoading,
+      error: signForPiiError,
+    },
+  ] = useMutation(SIGN_FOR_PII, {
+    errorPolicy: 'all',
+  });
+
   useEffect(() => {
     if ((!openVerifyPhonePopup || !openVerifyEmailPopup) && id) {
       getBasicInfo(id);
@@ -178,11 +192,13 @@ const IndividualProfile = () => {
   }, [openVerifyPhonePopup, openVerifyEmailPopup, id]);
 
   useEffect(() => {
-    if (loadIndividualBasicInfoError?.message) {
-      setFormError(loadIndividualBasicInfoError?.message);
+    if (loadIndividualBasicInfoError?.message || signForPiiError?.message) {
+      setFormError(
+        loadIndividualBasicInfoError?.message || signForPiiError?.message
+      );
       setOpen(true);
     }
-  }, [loadIndividualBasicInfoError?.message]);
+  }, [loadIndividualBasicInfoError?.message, signForPiiError?.message]);
 
   const dispatch = useDispatch();
   const dispatchUpdateStoredUser = (payload) =>
@@ -196,6 +212,7 @@ const IndividualProfile = () => {
       storeSigningSecret
     ) {
       async function decryptData() {
+        const { passphrase } = loadIndividualBasicInfoData?.getIndividual?.data;
         const {
           firstName,
           phoneNumber,
@@ -218,14 +235,39 @@ const IndividualProfile = () => {
           pendingIdentities,
         } = await decryptIndividualModel(
           storeEncryptionSecret,
-          loadIndividualBasicInfoData?.getIndividual?.data?.passphrase,
+          passphrase,
           loadIndividualBasicInfoData?.getIndividual?.data,
-          loadIndividualBasicInfoData?.getIndividual?.data?.passphrase,
+          passphrase,
           storeSigningSecret
         );
 
+        if (pendingIdentities.length) {
+          pendingIdentities.map((x) => {
+            const { signature, error } = generateNewIdentityToken(
+              storeSigningSecret,
+              passphrase,
+              x.id,
+              x.source,
+              x.hash
+            );
+
+            if (error) {
+              setFormError(error);
+              setOpen(true);
+            }
+            signForPii({
+              variables: {
+                cmd: {
+                  signature,
+                  identityId: x.id,
+                },
+              },
+            });
+          });
+        }
+
         dispatchUpdateStoredUser({
-          ...user,
+          ...loadIndividualBasicInfoData?.getIndividual?.data,
           phoneNumber,
           phoneCountryCode,
           email,
@@ -256,7 +298,7 @@ const IndividualProfile = () => {
     storeSigningSecret,
   ]);
 
-  return loadIndividualBasicInfoLoading ? (
+  return loadIndividualBasicInfoLoading || signForPiiLoading ? (
     <Spinner />
   ) : (
     <React.Fragment>
@@ -274,11 +316,7 @@ const IndividualProfile = () => {
           <div className="info-row">
             <IdCardIcon />
             <p>Personal ID</p>{' '}
-            {kycStatus === 'CONFIRMED' ? (
-              <VerifiedIcon />
-            ) : (
-              null
-            )}
+            {kycStatus === 'CONFIRMED' ? <VerifiedIcon /> : null}
           </div>
           <div className="info-row">
             <PhoneBlackIcon />

@@ -195,7 +195,7 @@ const RequestRefund = ({ invoiceIndividualId }) => {
       <AvatarBox>
         <Avatar src={picture.picturePreview} />
         <EditIcon>
-          <label for="upload-photo">
+          <label htmlFor="upload-photo">
             <EditWhiteIcon />
           </label>
           <input

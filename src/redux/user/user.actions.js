@@ -179,3 +179,8 @@ export const setRegisterInfo = ({
     password,
   },
 });
+
+export const setSearchInput = (payload) => ({
+  type: UserActionTypes.SET_SEARCH_INPUT,
+  payload
+});

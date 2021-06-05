@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import CustomButton from 'components/ui/custom-button/custom-button.component';
 
-import { sendPhoneVerification, verifyPhone } from 'redux/user/user.actions';
+import {
+  sendPhoneVerification,
+  updateStoredUser,
+  verifyPhone,
+} from 'redux/user/user.actions';
 
 import {
   SignUpContainer,
@@ -24,8 +28,9 @@ import { useMutation } from '@apollo/client';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import Spinner from 'components/ui/spinner/spinner.component';
+import { INITIAL_STATE } from 'redux/user/user.reducer';
 
-const PhoneVerification = () => {
+const PhoneVerification = ({ history }) => {
   const { phoneNumber, phoneCountryCode } = useSelector((state) => {
     return {
       phoneNumber: state.user.phoneNumber,
@@ -55,6 +60,8 @@ const PhoneVerification = () => {
   const dispatch = useDispatch();
   const dispatchVerify = () => dispatch(verifyPhone());
   const dispatchSendVerification = () => dispatch(sendPhoneVerification());
+  const dispatchUpdateStoredUser = (payload) =>
+    dispatch(updateStoredUser(payload));
 
   useEffect(() => {
     if (verifyPhoneError?.message || sendPhoneVerificationError?.message) {
@@ -68,9 +75,8 @@ const PhoneVerification = () => {
   useEffect(() => {
     if (data?.verifyPhone?.success) {
       dispatchVerify('CONFIRMED');
-      const redirectUrl = sessionStorage.getItem('redirectUrl');
-      sessionStorage.removeItem('redirectUrl');
-      window.location = redirectUrl || '/your-transaction';
+      dispatchUpdateStoredUser({ ...INITIAL_STATE });
+      history.push('/phone-signin');
     }
   }, [data?.verifyPhone?.success]);
 

@@ -56,7 +56,7 @@ export const FormInputLabel = styled.label`
   font-weight: normal;
   position: absolute;
   pointer-events: none;
-  top: 8px;
+  top: 0.4rem;
   transition: 300ms ease all;
 
   &.shrink {

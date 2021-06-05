@@ -3,28 +3,16 @@ import { Route, withRouter, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 function JwtRoute({ history, component: Component, ...rest }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const accessToken = useSelector((state) => {
-    return state.user.accessToken;
+  const { accessToken, id } = useSelector((state) => {
+    return state.user;
   });
+  const [isAuthenticated, setIsAuthenticated] = useState(!!accessToken && !!id);
 
   useEffect(() => {
-    setIsAuthenticated(!!accessToken);
-  }, [accessToken]);
-
-  useEffect(() => {
-    // get the token
-    const jwt = accessToken;
-    if (!jwt) {
-      setIsAuthenticated(false);
-    } else {
-      setIsAuthenticated(true);
+    if (!!accessToken && !!id) {
+      setIsAuthenticated(!!accessToken && !!id);
     }
-  }, []);
-
-  if (isAuthenticated === null) {
-    return <></>;
-  }
+  }, [accessToken, id]);
 
   return (
     <Route

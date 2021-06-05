@@ -6,7 +6,6 @@ import { Container } from './your-transactions.styles';
 import HorizontalList from 'components/horizontal-list/horizontal-list.component';
 import {
   GET_INDIVIDUAL_AGGREGATED_INVOICE_ORDER_LIST,
-  GET_INVOICE_ORDER_LIST_FOR_INDIVIDUAL,
 } from '../../graphQL/repository/invoice.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import InvoiceItem from 'components/invoice-item/invoice-item.component';
