@@ -326,20 +326,21 @@ const IndividualProfile = () => {
             >
               {phoneCountryCode}&nbsp;{phoneNumber}
             </p>
-            {phoneStatus === 'CONFIRMED' ? (
-              <VerifiedIcon />
-            ) : (
-              <VerifyBtn onClick={() => setOpenVerifyPhonePopup(true)}>
-                Verify
-              </VerifyBtn>
-            )}
+            {/*{phoneStatus === 'COMPLETED' || phoneStatus === 'CONFIRMED' ? (*/}
+            {/*  <VerifiedIcon />*/}
+            {/*) : (*/}
+            {/*  <VerifyBtn onClick={() => setOpenVerifyPhonePopup(true)}>*/}
+            {/*    Verify*/}
+            {/*  </VerifyBtn>*/}
+            {/*)}*/}
+            <VerifiedIcon />
           </div>
           <div className="info-row">
             <EmailBlackIcon />
             <p onClick={() => setOpenEditMailPopup(true)} className="clickable">
               {email}
             </p>
-            {emailStatus === 'CONFIRMED' ? (
+            {emailStatus === 'COMPLETED' || emailStatus === 'CONFIRMED' ? (
               <VerifiedIcon />
             ) : (
               <VerifyBtn onClick={() => setOpenVerifyEmailPopup(true)}>

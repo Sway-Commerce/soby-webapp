@@ -49,6 +49,12 @@ const IndividualShipping = lazy(() =>
 const MobilePaymentResult = lazy(() =>
   import('pages/mobile-payment-result/mobile-payment-result.component')
 );
+const PaymeSuccess = lazy(() =>
+  import('pages/payme-success/payme-success.component')
+);
+const PaymeFail = lazy(() =>
+  import('pages/payme-fail/payme-fail.component')
+);
 const ReturnRequestPage = lazy(() =>
   import('pages/return-request/return-request.component')
 );
@@ -107,6 +113,14 @@ const App = () => {
               <Route
                 path="/transaction/vnpay-mobile"
                 component={MobilePaymentResult}
+              />
+              <Route
+                path="/transaction/payme-success"
+                component={PaymeSuccess}
+              />
+              <Route
+                path="/transaction/payme-fail"
+                component={PaymeFail}
               />
               <JwtRoute
                 path="/return-request/:invoiceId"
