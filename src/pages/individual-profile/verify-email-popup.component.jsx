@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Box,  PopupButton } from './shared-style.component';
 import ValidationInput from '../../components/validation-input/validation-input.component';
 import { useMutation } from '@apollo/client';
 import {
@@ -8,15 +7,27 @@ import {
   SEND_EMAIL_VERIFICATION,
 } from 'graphQL/repository/individual.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
-import { useDispatch } from 'react-redux';
-import { verifyEmail } from 'redux/user/user.actions';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import CustomButton from 'components/ui/custom-button/custom-button.component';
 
 const Row = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 1.2rem;
+`;
+const Box = styled.form`
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+
+  h2 {
+    margin: 0.8rem 0 2rem;
+  }
+
+  @media (max-width: 800px) {
+    width: auto;
+  }
 `;
 
 const EmailCodePopup = ({ email, setOpenVerifyEmailPopup }) => {
@@ -24,25 +35,30 @@ const EmailCodePopup = ({ email, setOpenVerifyEmailPopup }) => {
   const [isCodeValid, setIsCodeValid] = useState(true);
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
-  const dispatch = useDispatch();
-  const dispatchVerifyEmail = (emailStatus) =>
-    dispatch(verifyEmail(emailStatus));
-
   // VERIFY_EMAIL
   const [
     verifyEmailMutation,
-    { data: verifyEmailMutationData, loading: verifyEmailMutationLoading },
-  ] = useMutation(VERIFY_EMAIL);
+    {
+      data: verifyEmailMutationData,
+      loading: verifyEmailMutationLoading,
+      error: verifyEmailError,
+    },
+  ] = useMutation(VERIFY_EMAIL, {
+    errorPolicy: 'all',
+  });
   useEffect(() => {
+    ;
     if (verifyEmailMutationData?.verifyEmail?.success) {
-      dispatchVerifyEmail('CONFIRMED');
       setOpenVerifyEmailPopup(false);
     }
   }, [verifyEmailMutationData?.verifyEmail?.success, verifyEmailMutation]);
 
   const [
     sendEmailVerification,
-    { loading: sendEmailVerificationLoading, error: sendEmailVerificationError },
+    {
+      loading: sendEmailVerificationLoading,
+      error: sendEmailVerificationError,
+    },
   ] = useMutation(SEND_EMAIL_VERIFICATION, {
     variables: {
       cmd: {
@@ -55,18 +71,20 @@ const EmailCodePopup = ({ email, setOpenVerifyEmailPopup }) => {
   }, []);
 
   useEffect(() => {
-    if(sendEmailVerificationError?.message) {
-      setFormError(sendEmailVerificationError?.message);
-      setOpen();
+    if (sendEmailVerificationError?.message || verifyEmailError?.message) {
+      setFormError(
+        sendEmailVerificationError?.message || verifyEmailError?.message
+      );
+      setOpen(true);
     }
-  }, [sendEmailVerificationError?.message]);
+  }, [sendEmailVerificationError?.message, verifyEmailError?.message]);
 
   const collectVerifyCode = (code) => {
     setVerificationCode(+code);
     if (`${code}`.length === 6) {
       verifyEmailMutation({
         variables: {
-          cmd: { email, verificationCode: +code },
+          cmd: { email, verificationCode: code },
         },
       });
     }
@@ -91,7 +109,9 @@ const EmailCodePopup = ({ email, setOpenVerifyEmailPopup }) => {
   ) : (
     <React.Fragment>
       <Box onSubmit={handleSubmit}>
-        <h2>Verify code</h2>
+        <h2 className="soby-title">Verify</h2>
+        <p className="txt-center">Enter the 6 digit code</p>
+        <p className="mg-b-24 txt-center">we sent you via email</p>
         <Row>
           <ValidationInput
             collectVerifyCode={collectVerifyCode}
@@ -99,17 +119,18 @@ const EmailCodePopup = ({ email, setOpenVerifyEmailPopup }) => {
           />
         </Row>
         {!isCodeValid ? (
-          <h5 className="error-title">You have to provide the verification code</h5>
+          <p className="error-title">
+            *You have to provide the verification code
+          </p>
         ) : null}
 
         <Row>
-          <p>We already send you a Code to your Email address</p>
+          <p>Didn't get the code?&nbsp;</p>
+          <p>
+            <b className="primary-color">Send again</b>
+          </p>
         </Row>
-        <Row>
-          <h4>Send again</h4>
-        </Row>
-
-        <PopupButton />
+        <CustomButton className="global-btn">Verify</CustomButton>
       </Box>
 
       <SobyModal open={open} setOpen={setOpen}>

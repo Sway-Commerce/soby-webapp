@@ -26,12 +26,6 @@ export const INDIVIDUAL_PROFILE_FRAGMENT = gql`
     phoneCountryCode
     phoneNumber
     dob
-    nationality
-    country
-    postalCode
-    province
-    city
-    addressLine
     invitationCode
     kycStatus
     emailStatus
@@ -41,6 +35,7 @@ export const INDIVIDUAL_PROFILE_FRAGMENT = gql`
       source
       hash
     }
+    passphrase
   }
 `;
 
@@ -129,10 +124,6 @@ export const PRODUCT_FRAGMENT = gql`
     id
     imageUrls
     category {
-      id
-      name
-    }
-    level2Category {
       id
       name
     }
@@ -401,12 +392,14 @@ export const SHOP_PROFILE_FRAGMENT = gql`
     shopUrls {
       url
       verified
+      type
     }
     status
     shippingType
     kyb {
       ...KYBFragment
     }
+    passphrase
   }
 `;
 
@@ -482,6 +475,7 @@ export const SHOP_PUBLIC_INFO_FRAGMENT = gql`
     shopUrls {
       url
       verified
+      type
     }
     shippingType
     createdAt

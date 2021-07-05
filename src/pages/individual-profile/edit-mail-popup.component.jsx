@@ -1,40 +1,51 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useMutation } from '@apollo/client';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { UPDATE_EMAIL } from 'graphQL/repository/individual.repository';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setEmail } from 'redux/user/user.actions';
 import emailValidation from 'shared/utils/emailValidation';
 import styled from 'styled-components';
-import { Box, PopupButton } from './shared-style.component';
+import { ReactComponent as EditIcon } from 'shared/assets/edit-pencil.svg';
+import FormInput from 'components/form-input/form-input.component';
+import CustomButton from 'components/ui/custom-button/custom-button.component';
 
-
-const InputContainer = styled.div`
-  width: 100%;
-  margin-bottom: 30px;
+const EditContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
-const Input = styled.input.attrs((props) => ({
-  type: 'email',
-}))`
-  width: 100%;
-  padding: 8px 0;
-  outline: 0;
-  border: 0;
-  border-radius: 0;
-  border-bottom: 0.5px solid #c2c2c2;
-  font-size: 0.9rem;
+const Box = styled.form`
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  width: 440px;
+
+  h2 {
+    margin: 0.8rem 0 2rem;
+  }
+
+  button.main-btn {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 440px) {
+    width: 100%;
+  }
 `;
 
-const EmailPopup = ({ setOpenEditMailPopup, email }) => {
-  const [newEmail, setNewEmail] = useState('');
+const EmailPopup = ({
+  setOpenEditMailPopup,
+  email,
+  setOpenVerifyEmailPopup,
+  setNewEmail: setNewEmailInfo,
+}) => {
+  const [newEmail, setNewEmail] = useState(email);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
-  const dispatch = useDispatch();
-  const dispatchSetEmail = (email) => dispatch(setEmail(email));
+  const [active, setActive] = useState(false);
 
   // UPDATE_EMAIL
   const [
@@ -47,8 +58,9 @@ const EmailPopup = ({ setOpenEditMailPopup, email }) => {
   ] = useMutation(UPDATE_EMAIL);
   useEffect(() => {
     if (updateEmailData?.updateEmail?.success) {
-      dispatchSetEmail(newEmail);
       setOpenEditMailPopup(false);
+      setNewEmailInfo(newEmail);
+      setOpenVerifyEmailPopup(true);
     }
   }, [updateEmailData?.updateEmail?.success, updateEmailMutation]);
 
@@ -88,22 +100,42 @@ const EmailPopup = ({ setOpenEditMailPopup, email }) => {
   ) : (
     <React.Fragment>
       <Box onSubmit={handleSubmit}>
-        <h2>Edit Email</h2>
-        <InputContainer>
-          <span>Your current email</span>
-          <Input value={email} disabled />
-        </InputContainer>
-
-        <InputContainer>
-          <span>New email</span>
-          <Input onChange={handleChange} />
-        </InputContainer>
+        <h2 className="soby-title">Edit Email</h2>
+        {active ? (
+          <FormInput
+            type="email"
+            name="newEmail"
+            value={newEmail}
+            onChange={handleChange}
+            label="Email address"
+          />
+        ) : (
+          <React.Fragment>
+            <h5>Email address</h5>
+            <EditContainer>
+              <p className="body-color">{email}</p>
+              <EditIcon
+                className="clickable"
+                onClick={() => setActive(!active)}
+              />
+            </EditContainer>
+          </React.Fragment>
+        )}
+        {
+          // <InputContainer>
+          //   <span>Your current email</span>
+          //   <Input value={email} disabled />
+          // </InputContainer>
+          // <InputContainer>
+          //   <span>New email</span>
+          //   <Input onChange={handleChange} />
+          // </InputContainer>
+        }
 
         {!isEmailValid ? (
-          <h5 className="error-title">Your email is not correct</h5>
+          <p className="error-title">*Your email is not correct</p>
         ) : null}
-
-        <PopupButton />
+        {active && <CustomButton className="main-btn">Get code</CustomButton>}
       </Box>
 
       <SobyModal open={open} setOpen={setOpen}>

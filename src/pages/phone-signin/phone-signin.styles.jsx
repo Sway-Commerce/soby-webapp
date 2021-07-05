@@ -12,7 +12,10 @@ export const CardWrapper = styled.div`
   height: auto;
   background: #ffffff;
   border-radius: 3px;
-  width: 430px;
+  width: 440px;
+  @media screen and (max-width: 500px) {
+    width: calc(100vw - 49px);
+  }
 `;
 
 export const RegisterContainer = styled.div`

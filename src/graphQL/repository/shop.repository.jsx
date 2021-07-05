@@ -22,6 +22,7 @@ export const GET_SHOP_BY_ID = gql`
         shopUrls {
           url
           verified
+          type
         }
         createdAt
         updatedAt
@@ -70,8 +71,8 @@ export const GET_SHOP = gql`
     }
   }
 `;
-export const GET_SHOP_DETAILED_INFO = gql`
-  query GetShopDetailedInfo($id: String!) {
+export const GET_AGGREGATED_SHOP = gql`
+  query GetAggregatedShop($id: String!) {
     getAggregatedShop(id: $id) {
       message
       data {
@@ -82,6 +83,8 @@ export const GET_SHOP_DETAILED_INFO = gql`
         phoneCountryCode
         phoneNumber
         logoUrl
+        coverUrl
+        email
         phoneCountryCode
         phoneNumber
         categories {
@@ -92,8 +95,11 @@ export const GET_SHOP_DETAILED_INFO = gql`
         shopUrls {
           url
           verified
+          type
         }
         shippingType
+        createdAt
+        updatedAt
         shippingLocations {
           addressLine
           country
@@ -104,6 +110,28 @@ export const GET_SHOP_DETAILED_INFO = gql`
         kyb {
           status
           reason
+        }
+        kycStatus
+        allowedCod
+        shopRank {
+          shopId
+          items {
+            id
+            shopId
+            rankItem {
+              id
+              name
+              category
+              description
+              points
+            }
+            createdAt
+          }
+          totalPoints
+          rank {
+            name
+            description
+          }
         }
       }
     }
@@ -127,6 +155,7 @@ export const GET_SHOP_PUBLIC = gql`
         shopUrls {
           url
           verified
+          type
         }
         shippingType
         kyb {
@@ -138,7 +167,7 @@ export const GET_SHOP_PUBLIC = gql`
   }
 `;
 export const SEARCH = gql`
-  query search($query: SearchInput!) {
+  query SearchShop($query: SearchInput!) {
     searchShop(searchInput: $query) {
       message
       data {
@@ -151,14 +180,23 @@ export const SEARCH = gql`
           phoneCountryCode
           phoneNumber
           description
-          categories
+          categories {
+            id
+            name
+            description
+          }
           shopUrls {
             url
             verified
+            type
           }
           shippingType
           createdAt
           updatedAt
+          kyb {
+            status
+            reason
+          }
         }
       }
     }
@@ -173,6 +211,66 @@ export const GET_ALL_SHOP_CATEGORIES = gql`
         id
         name
         description
+      }
+    }
+  }
+`;
+
+export const SEARCH_AGGREGATED_SHOP = gql`
+  query SearchAggregatedShop($query: SearchInput!) {
+    searchAggregatedShop(searchInput: $query) {
+      message
+      data {
+        total
+        records {
+          email
+          coverUrl
+          allowedCod
+          shopRank {
+            shopId
+            items {
+              id
+              shopId
+              rankItem {
+                id
+                name
+                category
+                description
+                points
+              }
+              createdAt
+            }
+            totalPoints
+            rank {
+              name
+              description
+            }
+          }
+          id
+          individualId
+          logoUrl
+          name
+          phoneCountryCode
+          phoneNumber
+          description
+          categories {
+            id
+            name
+            description
+          }
+          shopUrls {
+            url
+            verified
+            type
+          }
+          shippingType
+          createdAt
+          updatedAt
+          kyb {
+            status
+            reason
+          }
+        }
       }
     }
   }

@@ -1,82 +1,279 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
 import { useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { formatPhoneNumberIntl } from 'react-phone-number-input';
 
-import { ReactComponent as Phone } from 'shared/assets/phone-icon.svg';
-import { ReactComponent as Location } from 'shared/assets/location.svg';
-
-import {
-  GET_ALL_SHOP_CATEGORIES,
-  GET_SHOP_BY_ID,
-} from 'graphQL/repository/shop.repository';
+import { GET_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
 import { SEARCH_PRODUCT } from 'graphQL/repository/product.repository';
 
 import Spinner from 'components/ui/spinner/spinner.component';
-import ShopCategory from 'components/shop-category/shop-category.component';
-import WebsiteUrl from 'components/website-url/website-url.component';
-import ProductListCard from 'components/product-listcard/product-listcard.component';
-import ShopNameCard from 'components/shop-name-card/shop-name-card.component';
-import KybCard from 'components/kyb-card/kyb-card.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import locationImg from 'shared/assets/location.svg';
+import mailImg from 'shared/assets/mail-black.svg';
+import wallpaperImg from 'shared/assets/wallpaper.svg';
+import shareImg from 'shared/assets/share.svg';
+import heedImg from 'shared/assets/heed.svg';
+import { ReactComponent as MarkIcon } from 'shared/assets/greenmark.svg';
 
-const ShopContainer = styled.div`
-  min-height: 150vh;
-  font-family: 'Work Sans', sans-serif;
-  margin-top: 80px;
-  display: flex;
-  * + * {
-    margin-right: 24px;
+import buildAddressString from 'shared/utils/buildAddressString';
+import { bodyColor, borderColor, redColor } from 'shared/css-variable/variable';
+import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
+import ShopVerifies from 'components/shop-verifies/shop-verifies.component';
+import NewProductList from 'components/product-listcard/new-product-list.component';
+import PhoneButton from './phone-button.component';
+import { getColor } from 'shared/constants/shop.constant';
+import RankTooltip from './rank-tooltip.component';
+
+const Container = styled.div`
+  margin: auto;
+  color: ${bodyColor};
+  padding-bottom: 92px;
+  .container-1 {
+    background-color: white;
+    height: 5.2rem;
+    padding: 1.2rem;
+  }
+
+  .btn-rank {
+    display: flex;
+  }
+
+  .heed-icon {
+    margin-left: 0.2665rem;
+    width: 0.6665rem;
+    height: 0.6665rem;
+    cursor: pointer;
+  }
+
+  .btn-point {
+    display: flex;
+  }
+
+  .mean {
+    margin-left: 0.4rem;
+    color: ${bodyColor};
+    font-size: 1rem;
+  }
+
+  .rank-info {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .btn-number {
+    color: #bdbdbd;
+    font-size: 0.6rem;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .rank-info {
+      justify-content: flex-start;
+      .mean {
+        font-weight: normal;
+        font-size: 14px;
+        color: ${bodyColor};
+        &::before {
+          content: '- ';
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    padding-bottom: 40px;
   }
 `;
 
-const BoxLeft = styled.div``;
-const KycWrapper = styled.div`
-  margin-top: 32px;
+const Row = styled.div`
+  background-color: white;
+  padding: 1.2rem;
+  .row-header {
+    display: flex;
+    justify-content: space-between;
+    h3 {
+      color: #000000;
+    }
+  }
 `;
 
-const TitleInfo = styled.h3`
-  margin-bottom: 16px;
-`;
-
-const ShopDescription = styled.p`
-  margin-bottom: 56px;
-`;
-
-const CategoryList = styled.div`
+const HeadPromotion = styled.div`
+  height: 10rem;
   display: flex;
-  margin-bottom: 56px;
+  background-image: ${(props) => `url(${props.coverUrl})`};
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  align-items: flex-start;
+  justify-content: flex-end;
+  position: relative;
+  img.share-icon {
+    width: 2.2rem;
+    height: 2.2rem;
+    margin: 0.8rem 0.8rem 0 0;
+    cursor: pointer;
+  }
+  img.avatar {
+    width: 6rem;
+    height: 6rem;
+    position: absolute;
+    bottom: -3rem;
+    left: 1.35rem;
+    object-fit: cover;
+  }
+
+  @media screen and (max-width: 768px) {
+    img.avatar {
+      width: 56px;
+      height: 56px;
+      bottom: -33px;
+    }
+  }
 `;
 
-export const MainContent = styled.div`
-  .shop-info {
+const HeadRow = styled.div`
+  background-color: white;
+  margin-bottom: 1.2rem;
+`;
+
+const NewHeadPromotion = styled.div`
+  background-color: white;
+  height: 4.2rem;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1.2rem;
+  h3 {
+    padding: 1.85rem 0 0 7.35rem;
+  }
+  display: flex;
+
+  @media screen and (max-width: 768px) {
+    h3 {
+      padding: 10px 0 0 76.8px;
+    }
+    height: 49px;
+  }
+`;
+
+const InfoContainer = styled.div`
+  background: #ffffff;
+  padding: 1.2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1.2rem;
+  margin-bottom: 1.2rem;
+  justify-content: center;
+  @media screen and (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    grid-gap: 0;
+  }
+`;
+
+const StatusContainer = styled.div`
+  background-color: ${borderColor};
+  border-radius: 100px;
+  .status-bar {
+    display: flex;
+    width: ${(props) => (props?.percent ? `${props?.percent}%` : '0%')};
+    height: 0.5rem;
+    justify-content: flex-end;
+    border-radius: 100px;
+    background-color: ${(props) => props?.color || redColor};
+    position: relative;
+    svg {
+      width: 25px;
+      height: 25px;
+      margin: -6px -3px 0 0;
+      g rect {
+        fill: ${(props) => props?.color || redColor};
+      }
+      position: ${(props) => (props?.percent <= 10 ? 'absolute' : 'relative')};
+      left: ${(props) => (props?.percent <= 10 ? '-6px' : 'unset')};
+    }
+
+    h2 {
+      position: absolute;
+      top: -24px;
+      right: ${(props) =>
+        props?.percent <= 10
+          ? '-11px'
+          : props?.percent % 10 !== 0
+          ? '-3px'
+          : '4px'};
+    }
+  }
+`;
+
+const Categories = styled.div`
+  margin-top: 0.8rem;
+`;
+
+const Option = styled.div`
+  background: #f2f2f2;
+  border-radius: 0.15rem;
+  padding: 0.525rem 1.6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${bodyColor};
+  font-size: 0.8rem;
+  @media screen and (max-width: 768px) {
+    flex: 1;
+    min-width: max-content;
+  }
+`;
+
+const TagOption = styled.div`
+  margin-top: 0.4rem;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  @media screen and (max-width: 768px) {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+`;
+
+const ContactGroup = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 1.2rem;
+  grid-gap: 1.4rem;
+
+  .contact-item {
     display: flex;
 
-    p {
-      font-size: 0.9rem;
+    img {
+      width: 24px;
+      height: 24px;
+      margin-right: 0.6rem;
     }
+  }
 
-    .wrapper {
-      display: flex;
-      width: 364px;
-    }
-
-    svg {
-      margin-right: 16px;
-      color: black;
-    }
+  @media screen and (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    grid-gap: 0.4rem;
   }
 `;
 
-const WebsiteWrapper = styled.div`
-  margin: 56px 0;
-  display: grid;
-  grid-column-gap: 40px;
-  grid-row-gap: 24px;
-  grid-template-columns: repeat(2, 1fr);
+const MobileSection = styled.div`
+  display: ${(props) => (props.show ? 'block' : 'none')};
+  background-color: white;
+  @media screen and (max-width: 1024px) {
+    margin: 1rem 0;
+    padding: 0.8rem 1.2rem;
+    display: ${(props) => (props.hide ? 'block' : 'none')};
+    color: ${bodyColor};
+  }
+`;
+
+const RankPoint = styled.h2`
+  display: ${(props) => (props.show ? 'block' : 'none')};
+  @media screen and (max-width: 1024px) {
+    display: ${(props) => (props.hide ? 'block' : 'none')};
+  }
 `;
 
 const ShopProfile = () => {
@@ -93,25 +290,39 @@ const ShopProfile = () => {
     shopUrls: [],
     kyb: { status: null },
     records: [],
-    email: ''
+    email: '',
+    coverUrl: '',
+    shippingLocation: {
+      addressLine: '',
+      country: '',
+      district: '',
+      province: '',
+      ward: '',
+    },
+    shopRank: {
+      items: [],
+      rank: {},
+    },
+    kycStatus: '',
   });
+  const [phoneString, setPhoneString] = useState('');
+  const [togglePhone, setTogglePhone] = useState(false);
+
+  const [breadcrumbs, setBreadcrumb] = useState([
+    {
+      name: 'Home',
+      src: '/',
+    },
+  ]);
 
   const [
-    getShopById,
+    getAggregatedShop,
     {
-      loading: getShopByIdLoading,
-      error: getShopByIdError,
-      data: getShopByIdData,
+      loading: getAggregatedShopLoading,
+      error: getAggregatedShopError,
+      data: getAggregatedShopData,
     },
-  ] = useLazyQuery(GET_SHOP_BY_ID);
-  const [
-    getAllShopCategories,
-    {
-      loading: getAllShopCategoriesLoading,
-      error: getAllShopCategoriesError,
-      data: getAllShopCategoriesData,
-    },
-  ] = useLazyQuery(GET_ALL_SHOP_CATEGORIES);
+  ] = useLazyQuery(GET_AGGREGATED_SHOP);
   const [
     searchProduct,
     { loading: productLoading, error: productError, data: productData },
@@ -119,33 +330,34 @@ const ShopProfile = () => {
 
   useEffect(() => {
     if (shopId) {
-      getShopById({
+      for (const tooltip of document.querySelectorAll(
+        '.__react_component_tooltip'
+      )) {
+        tooltip.addEventListener('click', (e) => e.stopPropagation());
+      }
+      getAggregatedShop({
         variables: { id: shopId },
       });
-      getAllShopCategories();
     }
+
+    return () => {
+      for (const tooltip of document.querySelectorAll(
+        '.__react_component_tooltip'
+      )) {
+        tooltip.removeEventListener('click', (e) => e.stopPropagation());
+      }
+    };
   }, [shopId]);
 
   useEffect(() => {
-    if (
-      getShopByIdError?.message ||
-      productError?.message ||
-      getAllShopCategoriesError?.message
-    ) {
-      setFormError(
-        getShopByIdError?.message ??
-          productError?.message ??
-          getAllShopCategoriesError?.message
-      );
+    if (getAggregatedShopError?.message || productError?.message) {
+      setFormError(getAggregatedShopError?.message || productError?.message);
       setOpen(true);
     }
-  }, [getShopByIdError, productError, getAllShopCategoriesError]);
+  }, [getAggregatedShopError, productError]);
 
   useEffect(() => {
-    if (
-      getShopByIdData?.getShopById?.data &&
-      getAllShopCategoriesData?.getAllShopCategories?.data
-    ) {
+    if (getAggregatedShopData?.getAggregatedShop?.data) {
       const {
         name,
         phoneCountryCode,
@@ -155,11 +367,13 @@ const ShopProfile = () => {
         categories,
         shopUrls,
         kyb,
-        email
-      } = getShopByIdData?.getShopById?.data;
-      // const categories = getAllShopCategoriesData?.getAllShopCategories?.data
-      //   ?.filter((x) => categoryIds?.includes(x.id))
-      //   ?.map((x) => x.name);
+        email,
+        coverUrl,
+        shippingLocations,
+        shopRank,
+        kycStatus,
+      } = getAggregatedShopData?.getAggregatedShop?.data;
+      const [shippingLocation] = shippingLocations;
 
       setShopInfo({
         ...shopInfo,
@@ -171,8 +385,25 @@ const ShopProfile = () => {
         categories,
         shopUrls,
         kyb,
-        email
+        email,
+        coverUrl,
+        shippingLocation,
+        shopRank,
+        kycStatus,
       });
+
+      setPhoneString(`${phoneCountryCode} ${phoneNumber.slice(0, 4)} *** ****`);
+
+      setBreadcrumb([
+        {
+          name: 'Home',
+          src: '/',
+        },
+        {
+          name: name,
+          src: `/shop-profile/${shopId}`,
+        },
+      ]);
 
       searchProduct({
         variables: {
@@ -186,10 +417,7 @@ const ShopProfile = () => {
         },
       });
     }
-  }, [
-    getShopByIdData?.getShopById?.data,
-    getAllShopCategoriesData?.getAllShopCategories?.data,
-  ]);
+  }, [getAggregatedShopData?.getAggregatedShop?.data]);
 
   useEffect(() => {
     if (productData?.searchProduct?.data?.records?.length) {
@@ -200,63 +428,192 @@ const ShopProfile = () => {
     }
   }, [productData?.searchProduct?.data]);
 
-  return getShopByIdLoading || productLoading || getAllShopCategoriesLoading ? (
+  return getAggregatedShopLoading || productLoading ? (
     <Spinner />
   ) : (
-    <ShopContainer>
-      <BoxLeft>
-        <ShopNameCard
-          name={shopInfo.name}
-          logoUrl={shopInfo.logoUrl}
-          id={shopId}
-        />
-        <KycWrapper>
-          <KybCard status={shopInfo.kyb?.status} />
-        </KycWrapper>
-      </BoxLeft>
-
-      <MainContent>
-        <TitleInfo>Shop Description</TitleInfo>
-        <ShopDescription>{shopInfo.description}</ShopDescription>
-        <TitleInfo>Shop Categories</TitleInfo>
-        <CategoryList>
-          {shopInfo.categories.map((category) => (
-            <ShopCategory category={category} key={category} />
-          ))}
-        </CategoryList>
-
-        <div className="shop-info">
-          <div className="wrapper">
-            <Phone />
-            <p>
-              {formatPhoneNumberIntl(
+    <React.Fragment>
+      <SharedBreadcrumb breadcrumbs={breadcrumbs} />
+      <Container>
+        <HeadRow>
+          <HeadPromotion coverUrl={shopInfo.coverUrl || wallpaperImg}>
+            <img
+              className="share-icon"
+              src={shareImg}
+              alt=""
+              onClick={() => {
+                navigator?.clipboard?.writeText(window.location.href);
+                window.alert('Shop url is copied');
+              }}
+            />
+            <img className="avatar" src={shopInfo.logoUrl} alt="" />
+          </HeadPromotion>
+          <NewHeadPromotion>
+            <h3>{shopInfo.name}</h3>
+            <PhoneButton
+              togglePhone={togglePhone}
+              phoneNumber={formatPhoneNumberIntl(
                 `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
               )}
-            </p>
-          </div>
-          <div className="wrapper">
-            <Location />
-            <p>
-                {shopInfo.email}
-            </p>
-          </div>
-        </div>
+              phoneNumberCovered={phoneString}
+              setTogglePhone={setTogglePhone}
+              showText="Click to show"
+              hideText="Click to hide"
+              wide
+              show
+            />
+          </NewHeadPromotion>
+        </HeadRow>
+        <InfoContainer>
+          <div>
+            <div className="rank-info">
+              <div className="btn-rank">
+                <h5>Soby Rank</h5>
+                <img
+                  className="heed-icon"
+                  src={heedImg}
+                  alt=""
+                  data-tip
+                  data-for="rank-info"
+                  data-event="click focus"
+                />
+                <RankTooltip id="rank-info" />
+              </div>
+              <div className="btn-point">
+                <RankPoint
+                  style={{
+                    color: getColor(shopInfo.shopRank.rank.name),
+                  }}
+                  show
+                >
+                  {shopInfo.shopRank.totalPoints
+                    ? +shopInfo.shopRank.totalPoints / 10
+                    : ''}
+                </RankPoint>
 
-        <WebsiteWrapper>
-          {shopInfo.shopUrls.map((x) => (
-            <WebsiteUrl url={x} key={x} />
-          ))}
-        </WebsiteWrapper>
+                <h5 className="mean">{shopInfo.shopRank.rank.description}</h5>
+              </div>
+            </div>
+            <p className="btn-number">0</p>
+            <StatusContainer
+              percent={+shopInfo.shopRank.totalPoints}
+              color={getColor(shopInfo.shopRank.rank.name)}
+            >
+              <div className="status-bar">
+                <RankPoint
+                  style={{
+                    color: getColor(shopInfo.shopRank.rank.name),
+                  }}
+                  percent={+shopInfo.shopRank.totalPoints}
+                  hide
+                >
+                  {shopInfo.shopRank.totalPoints
+                    ? +shopInfo.shopRank.totalPoints / 10
+                    : ''}
+                </RankPoint>
+                <MarkIcon />
+              </div>
+            </StatusContainer>
 
-        <TitleInfo>Product</TitleInfo>
-        <ProductListCard records={shopInfo.records} />
-      </MainContent>
+            <ShopVerifies
+              status={shopInfo.kyb?.status}
+              kycStatus={shopInfo.kycStatus}
+              shopUrls={shopInfo.shopUrls}
+              className="mg-t-30"
+            />
+
+            <MobileSection show>
+              <Categories>
+                <h5>Shop categories</h5>
+                <TagOption>
+                  {shopInfo.categories.length ? (
+                    shopInfo.categories.map((x) => {
+                      const { id, name } = x;
+                      return (
+                        <Option key={id}>
+                          <p className="option-info">{name}</p>
+                        </Option>
+                      );
+                    })
+                  ) : (
+                    <p className="body-color">Không có phân loại</p>
+                  )}
+                </TagOption>
+              </Categories>
+            </MobileSection>
+          </div>
+          <PhoneButton
+            togglePhone={togglePhone}
+            phoneNumber={formatPhoneNumberIntl(
+              `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
+            )}
+            phoneNumberCovered={phoneString}
+            setTogglePhone={setTogglePhone}
+            showText="Show"
+            hideText="Hide"
+            hide
+          />
+          <div>
+            <MobileSection show>
+              <h5>Shop description</h5>
+              <p>{shopInfo.description}</p>
+            </MobileSection>
+
+            <ContactGroup>
+              {shopInfo.shippingLocation && (
+                <div className="contact-item">
+                  <img src={locationImg} alt="" />
+                  <p className="body-color">
+                    {buildAddressString(shopInfo.shippingLocation)}
+                  </p>
+                </div>
+              )}
+              {shopInfo.email && (
+                <div className="contact-item">
+                  <img src={mailImg} alt="" />
+                  <p className="body-color">{shopInfo.email}</p>
+                </div>
+              )}
+            </ContactGroup>
+          </div>
+        </InfoContainer>
+
+        <MobileSection hide>
+          <h3>Shop description</h3>
+          <p>{shopInfo.description}</p>
+        </MobileSection>
+
+        <MobileSection hide>
+          <h3>Shop categories</h3>
+          <TagOption>
+            {shopInfo.categories.length ? (
+              shopInfo.categories.map((x) => {
+                const { id, name } = x;
+                return (
+                  <Option key={id} className="truncate">
+                    {name}
+                  </Option>
+                );
+              })
+            ) : (
+              <p className="body-color">Không có phân loại</p>
+            )}
+          </TagOption>
+        </MobileSection>
+
+        <Row>
+          <div className="row-header">
+            <h3>New Product</h3>
+            <h5 className="primary-color">See all</h5>
+          </div>
+          <NewProductList records={shopInfo.records} />
+        </Row>
+      </Container>
       <SobyModal open={open} setOpen={setOpen}>
         {formError ? (
           <ErrorPopup content={formError} setOpen={setOpen} />
         ) : null}
       </SobyModal>
-    </ShopContainer>
+    </React.Fragment>
   );
 };
 

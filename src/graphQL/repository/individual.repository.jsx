@@ -1,5 +1,12 @@
 import { gql } from '@apollo/client';
-import { Encryption, generateJwt, Signing, sha256 } from 'credify-crypto';
+import {
+  Encryption,
+  generateIdentityToken,
+  generateJwt,
+  sha256,
+  Signing,
+} from '@credify/crypto';
+
 import { INDIVIDUAL_PROFILE_FRAGMENT } from '../common.fragment';
 
 export const CREATE_INDIVIDUAL = gql`
@@ -144,6 +151,9 @@ export const GETSECRET = gql`
       data {
         signingSecret
         encryptionSecret
+        signingPublicKey
+        encryptionPublicKey
+        passphrase
       }
     }
   }
@@ -198,11 +208,18 @@ export const getHashPassword = (password) => {
 export const decryptIndividualModel = async (
   encryptionSecret,
   password,
-  individualInfo
+  individualInfo,
+  passphrase,
+  signingSecret
 ) => {
   const encryption = new Encryption();
+  const signing = new Signing();
+
+  signing.importPrivateKey(signingSecret, password);
+  const storeSigningSecret = signing.exportPrivateKey(passphrase);
 
   await encryption.importPrivateKey(encryptionSecret, password);
+  const storeEncryptionSecret = await encryption.exportPrivateKey(passphrase);
 
   const firstName = individualInfo?.firstName
     ? await encryption.decryptBase64UrlStringToString(individualInfo?.firstName)
@@ -217,30 +234,6 @@ export const decryptIndividualModel = async (
     : '';
   const dob = individualInfo?.dob
     ? await encryption.decryptBase64UrlStringToString(individualInfo?.dob)
-    : '';
-  const nationality = individualInfo?.nationality
-    ? await encryption.decryptBase64UrlStringToString(
-        individualInfo?.nationality
-      )
-    : '';
-  const addressLine = individualInfo?.addressLine
-    ? await encryption.decryptBase64UrlStringToString(
-        individualInfo?.addressLine
-      )
-    : '';
-  const city = individualInfo?.city
-    ? await encryption.decryptBase64UrlStringToString(individualInfo?.city)
-    : '';
-  const province = individualInfo?.province
-    ? await encryption.decryptBase64UrlStringToString(individualInfo?.province)
-    : '';
-  const country = individualInfo?.country
-    ? await encryption.decryptBase64UrlStringToString(individualInfo?.country)
-    : '';
-  const postalCode = individualInfo?.postalCode
-    ? await encryption.decryptBase64UrlStringToString(
-        individualInfo?.postalCode
-      )
     : '';
   const invitationCode = individualInfo?.invitationCode
     ? await encryption.decryptBase64UrlStringToString(
@@ -268,15 +261,11 @@ export const decryptIndividualModel = async (
     phoneCountryCode,
     email,
     invitationCode,
-    postalCode,
     lastName,
     middleName,
     dob,
-    nationality,
-    addressLine,
-    city,
-    province,
-    country,
+    storeEncryptionSecret,
+    storeSigningSecret,
   };
 };
 
@@ -284,17 +273,63 @@ export const createKeyForNewPassword = async (
   signingSecretCurrent,
   encryptionSecretCurrent,
   password,
-  newPassword
+  newPassword,
+  passphrase
 ) => {
   const encryption = new Encryption();
   const signing = new Signing();
+  const storeEncryption = new Encryption();
+  const storeSigning = new Signing();
+  let encryptionSecretNew = '';
+  let signingSecretNew = '';
+  let storeEncryptionSecret = '';
+  let storeSigningSecret = '';
 
-  signing.importPrivateKey(signingSecretCurrent, password);
+  try {
+    signing.importPrivateKey(signingSecretCurrent, password);
+    await encryption.importPrivateKey(encryptionSecretCurrent, password);
 
-  await encryption.importPrivateKey(encryptionSecretCurrent, password);
+    encryptionSecretNew = await encryption.exportPrivateKey(newPassword);
+    signingSecretNew = signing.exportPrivateKey(newPassword);
 
-  const encryptionSecretNew = await encryption.exportPrivateKey(newPassword);
-  const signingSecretNew = signing.exportPrivateKey(newPassword);
+    storeSigning.importPrivateKey(signingSecretNew, newPassword);
+    await storeEncryption.importPrivateKey(encryptionSecretNew, newPassword);
 
-  return { encryptionSecretNew, signingSecretNew };
+    storeSigningSecret = storeSigning.exportPrivateKey(passphrase);
+    storeEncryptionSecret = await storeEncryption.exportPrivateKey(passphrase);
+  } catch (error) {
+    return {
+      encryptionSecretNew: null,
+      signingSecretNew: null,
+      error: 'Wrong password',
+    };
+  }
+
+  return {
+    encryptionSecretNew,
+    signingSecretNew,
+    storeSigningSecret,
+    storeEncryptionSecret,
+  };
+};
+
+export const generateNewIdentityToken = (
+  signingSecret,
+  password,
+  id,
+  source,
+  hash
+) => {
+  const signing = new Signing();
+  let signature = '';
+
+  try {
+    signing.importPrivateKey(signingSecret, password);
+    signature = generateIdentityToken(signing, id, source, hash);
+  } catch (error) {
+    return { signature: null, error: 'Wrong password' };
+  }
+  return {
+    signature
+  };
 };

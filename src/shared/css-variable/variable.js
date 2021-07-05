@@ -6,7 +6,7 @@ export const redColor = '#F53535';
 export const greenColor = '#27AE60';
 export const orangeColor = '#CD6000';
 export const cyanColor = '#00AAB9';
-export const grayColor = '#828282';
 export const bodyColor = '#4F4F4F';
 export const gray1Color = '#333333';
+export const yellowColor = '#F8D000';
 

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import PhoneInput, { isPossiblePhoneNumber } from 'react-phone-number-input';
-import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import FormInput from 'components/form-input/form-input.component';
 import CustomButton from 'components/ui/custom-button/custom-button.component';
@@ -17,8 +16,7 @@ import {
 import {
   phoneSignInStart,
   setAccessToken,
-  signInFailure,
-  signInSuccess,
+  updateStoredUser,
 } from 'redux/user/user.actions';
 
 import {
@@ -34,10 +32,14 @@ import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import { InputContainer } from 'pages/register/register.styles';
 
-const PhoneSignin = () => {
+const PhoneSignin = ({ history }) => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
+  const [redirectUrl, setRedirectUrl] = useState('');
+  const { accessToken, id } = useSelector((state) => {
+    return state.user;
+  });
 
   const [password, setPassword] = useState('');
   const [inputValidation, setInputValidation] = useState({
@@ -68,9 +70,15 @@ const PhoneSignin = () => {
   const dispatch = useDispatch();
   const dispatchPhoneSignInStart = (phoneAndPassword) =>
     dispatch(phoneSignInStart(phoneAndPassword));
-  const dispatchSignInFailure = (error) => dispatch(signInFailure(error));
   const dispatchSetAccessToken = (accessToken) =>
     dispatch(setAccessToken(accessToken));
+
+  useEffect(() => {
+    const redirectUrl =
+      sessionStorage.getItem('redirectUrl') ?? '/individual-profile';
+    sessionStorage.removeItem('redirectUrl');
+    setRedirectUrl(redirectUrl);
+  }, []);
 
   useEffect(() => {
     if (loadIndividualBasicInfoData?.getIndividual?.data) {
@@ -84,7 +92,7 @@ const PhoneSignin = () => {
       getSecretData?.getSecret?.data
     ) {
       const dispatchSignInSuccess = (payload) =>
-        dispatch(signInSuccess(payload));
+        dispatch(updateStoredUser(payload));
 
       async function decryptData() {
         const {
@@ -92,6 +100,7 @@ const PhoneSignin = () => {
           encryptionSecret,
           signingPublicKey,
           encryptionPublicKey,
+          passphrase,
         } = getSecretData?.getSecret?.data;
 
         const {
@@ -115,10 +124,14 @@ const PhoneSignin = () => {
           emailStatus,
           phoneStatus,
           pendingIdentities,
+          storeEncryptionSecret,
+          storeSigningSecret,
         } = await decryptIndividualModel(
           encryptionSecret,
           password,
-          loadIndividualBasicInfoData?.getIndividual?.data
+          loadIndividualBasicInfoData?.getIndividual?.data,
+          passphrase,
+          signingSecret
         );
 
         dispatchSignInSuccess({
@@ -146,11 +159,11 @@ const PhoneSignin = () => {
           emailStatus,
           phoneStatus,
           pendingIdentities,
+          storeEncryptionSecret,
+          storeSigningSecret,
         });
 
-        const redirectUrl = localStorage.getItem('redirectUrl');
-        localStorage.removeItem('redirectUrl');
-        window.location = redirectUrl || '/individual-profile';
+        history.push(redirectUrl);
       }
 
       decryptData();
@@ -159,6 +172,12 @@ const PhoneSignin = () => {
     loadIndividualBasicInfoData?.getIndividual?.data,
     getSecretData?.getSecret?.data,
   ]);
+
+  useEffect(() => {
+    if (!!accessToken && id) {
+      history.push('/individual-profile');
+    }
+  }, [accessToken]);
 
   useEffect(() => {
     if (!!data?.loginWithPhoneAndPassword?.data) {
@@ -171,7 +190,11 @@ const PhoneSignin = () => {
   }, [!!data?.loginWithPhoneAndPassword?.data]);
 
   useEffect(() => {
-    if (error) {
+    if (
+      error?.message ||
+      loadIndividualBasicInfoError?.message ||
+      getSecretError?.message
+    ) {
       setFormError(
         error?.message ??
           loadIndividualBasicInfoError?.message ??
@@ -179,12 +202,11 @@ const PhoneSignin = () => {
       );
       setOpen(true);
     }
-  }, [error]);
-  useEffect(() => {
-    if (loading || loadIndividualBasicInfoLoading || getSecretLoading) {
-      return <Spinner />;
-    }
-  }, [loading || loadIndividualBasicInfoLoading || getSecretLoading]);
+  }, [
+    error?.message,
+    loadIndividualBasicInfoError?.message,
+    getSecretError?.message,
+  ]);
 
   const { isPasswordValid, isPhoneValid } = inputValidation;
 
@@ -242,9 +264,7 @@ const PhoneSignin = () => {
                 onChange={(value) => setPhoneNumberIntl(value)}
               />
               {!isPhoneValid ? (
-                <h5 className="error-title">
-                  Your phone number is not correct
-                </h5>
+                <p className="error-title">*Your phone number is not correct</p>
               ) : null}
 
               <InputContainer>
@@ -257,16 +277,29 @@ const PhoneSignin = () => {
                   required
                 />
                 {!isPasswordValid ? (
-                  <h5 className="error-title">
+                  <p className="error-title">
+                    *Your password must be between 8 to 20 characters which
+                    contain at least one numeric digit, one uppercase and one
+                    lowercase letter
+                  </p>
+                ) : (
+                  <p className="fs-14">
                     Your password must be between 8 to 20 characters which
                     contain at least one numeric digit, one uppercase and one
                     lowercase letter
-                  </h5>
-                ) : null}
+                  </p>
+                )}
               </InputContainer>
-              <CustomButton className="main-btn" type="submit">
-                Login
-              </CustomButton>
+
+              {loading || loadIndividualBasicInfoLoading || getSecretLoading ? (
+                <div className="txt-center">
+                  <Spinner inner />
+                </div>
+              ) : (
+                <CustomButton className="main-btn" type="submit">
+                  Login
+                </CustomButton>
+              )}
             </form>
           </FormContainer>
         </SigninContainer>

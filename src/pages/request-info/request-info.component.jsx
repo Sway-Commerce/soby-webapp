@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ReactComponent as CloseIcon } from 'shared/assets/close-action.svg';
 import { ReactComponent as CheckShippingIcon } from 'shared/assets/check-shipping.svg';
 import {
   bodyColor,
   borderColor,
-  greenColor,
   mainColor,
 } from 'shared/css-variable/variable';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import {
   ACCEPT_INVOICE,
-  GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL,
-  GET_DETAILED_INVOICE_BY_ID,
   MARK_SATISFIED_WITH_INVOICE,
   UPDATE_RETURN_SHIPPING_INFO,
 } from 'graphQL/repository/invoice.repository';
@@ -21,14 +17,13 @@ import Spinner from 'components/ui/spinner/spinner.component';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
-import RequestItem from 'pages/return-request-list/request-item.component';
 import { RefundRequestStatus } from 'shared/constants/dispute.constant';
 import { GET_AGGREGATED_ASSESS_FOR_INDIVIDUAL } from 'graphQL/repository/dispute.repository';
 import { stokeColor } from 'shared/css-variable/variable';
 import InvoiceInfoBox from 'pages/invoice/invoice-info-box';
 import { GET_INDIVIDUAL_SHIPPING_LOCATION_LIST } from 'graphQL/repository/shipping.repository';
 import CustomButton from 'components/ui/custom-button/custom-button.component';
-import Checkbox from 'components/ui/checkbox/checkbox.component';
+import buildAddressString from 'shared/utils/buildAddressString';
 
 const Page = styled.div`
   display: flex;
@@ -185,7 +180,7 @@ const DetailBox = styled.div`
 const ShippingBox = styled.div`
   margin: 16px 0;
   height: 69px;
-  border: 1px solid #e4e4e4;
+  border: 1px solid ${borderColor};
   padding: 8px;
   width: 100%;
   cursor: pointer;
@@ -494,18 +489,10 @@ const RequestInfo = () => {
         ) : null}
 
         <Grid>
-          <p className="title-info">
-            <b>Return list</b>
-          </p>
-          <p className="title-info">
-            <b>Subtotal</b>
-          </p>
-          <p className="title-info">
-            <b>Qty</b>
-          </p>
-          <p className="title-info last-child">
-            <b>Total</b>
-          </p>
+          <h5 className="title-info">Return list</h5>
+          <h5 className="title-info">Subtotal</h5>
+          <h5 className="title-info">Qty</h5>
+          <h5 className="title-info">Total</h5>
         </Grid>
         <ProductContainer>
           {refundRequest?.items?.map((x) => {
@@ -543,26 +530,20 @@ const RequestInfo = () => {
           })}
         </ProductContainer>
         <DetailBox>
-          <p className="mg-b-16">
-            <b>Return reason</b>
-          </p>
+          <h5 className="mg-b-16">Return reason</h5>
           <p>{refundRequest?.requestReason}</p>
           {refundRequest?.description ? (
             <p className="gray1">{refundRequest?.description} </p>
           ) : null}
         </DetailBox>
         <DetailBox>
-          <p className="mg-b-8">
-            <b>Phone Number</b>
-          </p>
+          <h5 className="mg-b-8">Phone Number</h5>
           <p className="gray1">
             {`${refundRequest?.phoneCountryCode} | ${refundRequest?.phoneNumber}`}
           </p>
         </DetailBox>
         <DetailBox>
-          <p className="mg-b-16">
-            <b> Provide pictures of the problem</b>
-          </p>
+          <h5 className="mg-b-16">Provide pictures of the problem</h5>
           <RefundImageContainer>
             {refundRequest?.imageUrls?.map((x) => {
               return <RefundImage src={x} key={x} />;
@@ -573,20 +554,18 @@ const RequestInfo = () => {
         !refundRequest?.shippingLocation ? (
           <React.Fragment>
             <ShippingContainer>
-              <p className="mg-b-24">
-                <b>Pickup address</b>
-              </p>
+              <h5 className="mg-b-24">Pickup address</h5>
 
               {shippingLocationList.map((x) => (
                 <ShippingBox
                   key={x.id}
                   onClick={() => setSelectedLocation(x.id)}
                 >
-                  <div class="main-content">
+                  <div className="main-content">
                     {selectedLocation == x.id ? <CheckShippingIcon /> : null}
                     <p className="mg-b-16">{x.locationName}</p>
                   </div>
-                  <p>{`${x.addressLine}, ${x.ward}, ${x.district}, ${x.province}`}</p>
+                  <p>{buildAddressString(x)}</p>
                 </ShippingBox>
               ))}
 

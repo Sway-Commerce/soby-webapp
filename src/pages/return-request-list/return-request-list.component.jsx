@@ -10,6 +10,7 @@ import { GET_AGGREGATED_ASSESS_LIST_FOR_INDIVIDUAL } from '../../graphQL/reposit
 import { timestampToDate } from 'shared/utils/getDate';
 import { DisputeType } from 'shared/constants/dispute.constant';
 import RequestItem from './request-item.component';
+import { borderColor } from 'shared/css-variable/variable';
 
 const Container = styled.div`
   justify-content: center;
@@ -37,7 +38,7 @@ const ItemContainer = styled(Link)`
   display: grid;
   grid-template-columns: 463px repeat(4, 1fr);
   padding: 32px 0 16px;
-  border-top: 1px solid #e4e4e4;
+  border-top: 1px solid ${borderColor};
 
   @media screen and (max-width: 1200px) {
     grid-template-columns: repeat(5, 1fr);
@@ -52,12 +53,12 @@ const SubContainer = styled.div`
   margin: 16px 0;
   display: flex;
   height: 40px;
-  border: 1px solid #e4e4e4;
+  border: 1px solid ${borderColor};
   box-sizing: border-box;
   align-items: center;
   padding: 4px 16px;
   width: 100%;
-  border-top: 1px solid #e4e4e4;
+  border-top: 1px solid ${borderColor};
   justify-content: space-between;
 `;
 
@@ -122,21 +123,11 @@ const ReturnRequestList = () => {
     <React.Fragment>
       <Container>
         <HeaderContainer>
-          <p>
-            <b>Invoice name</b>
-          </p>
-          <p>
-            <b>Date</b>
-          </p>
-          <p>
-            <b>Price</b>
-          </p>
-          <p>
-            <b>Seller</b>
-          </p>
-          <p className="text-right">
-            <b>Status</b>
-          </p>
+          <h5>Invoice name</h5>
+          <h5>Date</h5>
+          <h5>Price</h5>
+          <h5>Seller</h5>
+          <h5 className="text-right">Status</h5>
         </HeaderContainer>
 
         {assessList.map((x) => {

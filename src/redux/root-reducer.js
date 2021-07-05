@@ -2,12 +2,11 @@ import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import userReducer from './user/user.reducer';
 import { routerReducer } from 'react-router-redux';
-
-import storage from 'redux-persist/lib/storage';
+import sessionStorage from 'redux-persist/lib/storage/session';
 
 const persistConfig = {
   key: 'root',
-  storage,
+  storage: sessionStorage,
   whitelist: ['user']
 };
 

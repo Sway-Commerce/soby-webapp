@@ -63,22 +63,22 @@ const ValidationInput = ({ collectVerifyCode, isIndividualProfile }) => {
   };
 
   return isIndividualProfile ? (
-    <React.Fragment>
-      <InputCode type="number" ref={firstRef} onKeyUp={onInputFirst} />
-      <InputCode type="number" ref={secondRef} onKeyUp={onInputSecond} />
-      <InputCode type="number" ref={thirdRef} onKeyUp={onInputThird} />
-      <InputCode type="number" ref={fourthRef} onKeyUp={onInputFourth} />
-      <InputCode type="number" ref={fifthRef} onKeyUp={onInputFifth} />
-      <InputCode type="number" ref={sixthRef} onKeyUp={onInputSixth} />
-    </React.Fragment>
+    <BoxContainer>
+      <InputCode type="number" ref={firstRef} onKeyUp={onInputFirst} key={Math.random()} />
+      <InputCode type="number" ref={secondRef} onKeyUp={onInputSecond} key={Math.random()}/>
+      <InputCode type="number" ref={thirdRef} onKeyUp={onInputThird} key={Math.random()}/>
+      <InputCode type="number" ref={fourthRef} onKeyUp={onInputFourth} key={Math.random()}/>
+      <InputCode type="number" ref={fifthRef} onKeyUp={onInputFifth} key={Math.random()}/>
+      <InputCode type="number" ref={sixthRef} onKeyUp={onInputSixth} key={Math.random()}/>
+    </BoxContainer>
   ) : (
     <BoxContainer>
-      <NumberBox type="number" ref={firstRef} onKeyUp={onInputFirst} />
-      <NumberBox type="number" ref={secondRef} onKeyUp={onInputSecond} />
-      <NumberBox type="number" ref={thirdRef} onKeyUp={onInputThird} />
-      <NumberBox type="number" ref={fourthRef} onKeyUp={onInputFourth} />
-      <NumberBox type="number" ref={fifthRef} onKeyUp={onInputFifth} />
-      <NumberBox type="number" ref={sixthRef} onKeyUp={onInputSixth} />
+      <NumberBox type="number" ref={firstRef} onKeyUp={onInputFirst} key={Math.random()}/>
+      <NumberBox type="number" ref={secondRef} onKeyUp={onInputSecond} key={Math.random()}/>
+      <NumberBox type="number" ref={thirdRef} onKeyUp={onInputThird} key={Math.random()}/>
+      <NumberBox type="number" ref={fourthRef} onKeyUp={onInputFourth} key={Math.random()}/>
+      <NumberBox type="number" ref={fifthRef} onKeyUp={onInputFifth} key={Math.random()}/>
+      <NumberBox type="number" ref={sixthRef} onKeyUp={onInputSixth} key={Math.random()}/>
     </BoxContainer>
   );
 };

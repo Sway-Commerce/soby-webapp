@@ -5,12 +5,13 @@ export const PolicyText = styled.div`
   font-style: normal;
   font-size: 0.6rem;
   font-weight: 400;
-  line-height: 0.9rem;
+  line-height: 0.2rem;
   color: ${stokeColor};
   text-align: center;
-  margin-top: 8px;
+  margin-top: 0.4rem;
   span {
     color: ${mainColor};
+    font-size: 0.6rem;
   }
 `;
 

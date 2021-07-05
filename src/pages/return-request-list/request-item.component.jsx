@@ -1,18 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { RefundRequestStatus } from 'shared/constants/dispute.constant';
+import { borderColor } from 'shared/css-variable/variable';
 import styled from 'styled-components';
 
 const SubContainer = styled(Link)`
   margin: 16px 0;
   display: flex;
   height: 40px;
-  border: 1px solid #e4e4e4;
+  border: 1px solid ${borderColor};
   box-sizing: border-box;
   align-items: center;
   padding: 4px 16px;
   width: 100%;
-  border-top: 1px solid #e4e4e4;
+  border-top: 1px solid ${borderColor};
   justify-content: space-between;
 `;
 

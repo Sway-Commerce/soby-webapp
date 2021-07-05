@@ -28,4 +28,8 @@ export const SpinnerContainer = styled.div`
       -webkit-transform: rotate(360deg);
     }
   }
+  &.small {
+    width: 25px;
+    height: 25px;
+  }
 `;

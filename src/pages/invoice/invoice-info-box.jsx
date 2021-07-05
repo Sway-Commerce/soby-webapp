@@ -33,17 +33,14 @@ const InvoiceInfoBox = ({ shopName, shippingLocation, trackingUrl }) => {
     <InfoBox>
       {shopName ? (
         <div className="info-box">
-          <p>
-            <b>Invoice from</b>
-          </p>
+          <h5>Invoice from</h5>
           <p className="invoice-info">{shopName}</p>
         </div>
       ) : null}
       {shippingLocation ? (
         <div className="info-box">
-          <p>
-            <b>Shipping address</b>
-          </p>
+          <h5>Shipping address</h5>
+
           <p className="invoice-info">
             {`${shippingLocation?.addressLine}, ${shippingLocation?.ward}, ${shippingLocation?.district}, ${shippingLocation?.province}`}
           </p>
@@ -51,9 +48,7 @@ const InvoiceInfoBox = ({ shopName, shippingLocation, trackingUrl }) => {
       ) : null}
       {trackingUrl ? (
         <div className="info-box">
-          <p>
-            <b>Tracking code</b>
-          </p>
+          <h5>Tracking code</h5>
           <p className="invoice-info">{trackingUrl}</p>
         </div>
       ) : null}

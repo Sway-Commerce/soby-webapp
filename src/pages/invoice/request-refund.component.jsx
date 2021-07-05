@@ -11,6 +11,7 @@ import usePhoneNumber from 'shared/hooks/usePhoneNumber';
 
 import { ReactComponent as EditWhiteIcon } from 'shared/assets/edit-white.svg';
 import { PopupButton } from 'pages/individual-profile/shared-style.component';
+import { mainColor } from 'shared/css-variable/variable';
 
 
 export const Box = styled.form`
@@ -85,7 +86,7 @@ const EditIcon = styled.div`
     right: -15px;
     cursor: pointer;
     border-radius: 50%;
-    background-color: #2b74e4;
+    background-color: ${mainColor};
     border: 2.5px solid #fff;
     color: #fff;
     height: 30px;
@@ -194,7 +195,7 @@ const RequestRefund = ({ invoiceIndividualId }) => {
       <AvatarBox>
         <Avatar src={picture.picturePreview} />
         <EditIcon>
-          <label for="upload-photo">
+          <label htmlFor="upload-photo">
             <EditWhiteIcon />
           </label>
           <input

@@ -501,7 +501,7 @@ const ReturnRequest = () => {
             onChange={(value) => setPhoneNumberIntl(value)}
           />
           {!phoneValidation ? (
-            <h5 className="error-title">Your phone number is not correct</h5>
+            <p className="error-title">*Your phone number is not correct</p>
           ) : null}
           {rejectCount === 1 ? (
             <BoxReason>

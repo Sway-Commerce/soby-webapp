@@ -10,6 +10,7 @@ import {
 } from 'graphQL/repository/invoice.repository';
 import {
   CREATE_INDIVIDUAL_SHIPPING_LOCATION,
+  UPDATE_INDIVIDUAL_SHIPPING_LOCATION,
 } from 'graphQL/repository/shipping.repository';
 
 import usePhoneNumber from 'shared/hooks/usePhoneNumber';
@@ -19,12 +20,14 @@ import PhoneInput from 'react-phone-number-input';
 import Spinner from 'components/ui/spinner/spinner.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import CustomButton from 'components/ui/custom-button/custom-button.component';
 
 export const Container = styled.div`
-  padding: 40px 48px;
-  width: 751px;
+  padding: 2.8rem 2rem;
+  min-width: 22rem;
   h2 {
-    margin-bottom: 24px;
+    margin-bottom: 3.2rem;
+    text-align: center;
   }
 
   .col {
@@ -73,7 +76,6 @@ export const Container = styled.div`
     display: grid;
     grid-gap: 16px;
     grid-template-columns: repeat(2, 1fr);
-    margin: 0 0 20px;
   }
 
   .checkbox-wrapper {
@@ -88,16 +90,23 @@ export const Container = styled.div`
   .title {
     margin: 24px 0 16px;
   }
+
+  @media (max-width: 600px) {
+    min-width: unset;
+    .select-wrapper {
+      grid-template-columns: 1fr;
+    }
+  }
 `;
 
-const CreateShipping = ({ setOpenCreate }) => {
+const CreateShipping = ({ setOpenCreate, info }) => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
   const [provinceId, setProvince] = useState('79');
   const [districtId, setDistrict] = useState('');
   const [wardId, setWard] = useState('');
   const [shippingInfo, setShippingInfo] = useState({
-    addressLine: '',
-    locationName: '',
+    addressLine: info?.addressLine,
+    locationName: info?.locationName,
   });
   const [inputValidation, setInputValidation] = useState({
     isPhoneValid: true,
@@ -107,24 +116,18 @@ const CreateShipping = ({ setOpenCreate }) => {
   const [wardList, setWardList] = useState([]);
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
+  const [editMode] = useState(!!info);
 
-  const {
-    isPhoneValid,
-  } = inputValidation;
+  const { isPhoneValid } = inputValidation;
 
-  const [
-    loadProvince,
-    { data: provinceData, error: loadProvinceError },
-  ] = useLazyQuery(GET_PROVINCE_LIST);
+  const [loadProvince, { data: provinceData, error: loadProvinceError }] =
+    useLazyQuery(GET_PROVINCE_LIST);
 
   const { phoneCountryCode, phoneNumber } = usePhoneNumber(phoneNumberIntl);
 
   const [
     loadDistrictList,
-    {
-      data: districtData,
-      error: loadDistrictListError,
-    },
+    { data: districtData, error: loadDistrictListError },
   ] = useLazyQuery(GET_DISTRICT_LIST);
   const [loadWardList, { data: wardData }] = useLazyQuery(GET_WARD_LIST);
 
@@ -139,16 +142,29 @@ const CreateShipping = ({ setOpenCreate }) => {
     errorPolicy: 'all',
   });
 
+  const [
+    updateIndividualShippingLocation,
+    {
+      data: updateIndividualShippingLocationData,
+      loading: updateIndividualShippingLocationLoading,
+      error: updateIndividualShippingLocationError,
+    },
+  ] = useMutation(UPDATE_INDIVIDUAL_SHIPPING_LOCATION, {
+    errorPolicy: 'all',
+  });
+
   useEffect(() => {
     if (
       loadProvinceError?.message ||
       loadDistrictListError?.message ||
-      createShippingLocationError?.message
+      createShippingLocationError?.message ||
+      updateIndividualShippingLocationError?.message
     ) {
       setFormError(
         loadProvinceError?.message ??
           loadDistrictListError?.message ??
-          createShippingLocationError?.message
+          createShippingLocationError?.message ??
+          updateIndividualShippingLocationError?.message
       );
       setOpen(true);
     }
@@ -156,6 +172,7 @@ const CreateShipping = ({ setOpenCreate }) => {
     loadProvinceError?.message,
     loadDistrictListError?.message,
     createShippingLocationError?.message,
+    updateIndividualShippingLocationError?.message,
   ]);
 
   useEffect(() => {
@@ -166,10 +183,18 @@ const CreateShipping = ({ setOpenCreate }) => {
   }, []);
 
   useEffect(() => {
-    if (createShippingLocationData?.createIndividualShippingLocation?.data) {
+    if (
+      createShippingLocationData?.createIndividualShippingLocation?.data ||
+      updateIndividualShippingLocationData?.updateIndividualShippingLocation
+        ?.success
+    ) {
       setOpenCreate(false);
     }
-  }, [createShippingLocationData?.createIndividualShippingLocation?.data]);
+  }, [
+    createShippingLocationData?.createIndividualShippingLocation?.data,
+    updateIndividualShippingLocationData?.updateIndividualShippingLocation
+      ?.success,
+  ]);
 
   const mapData = (data) =>
     data?.map((x) => ({
@@ -178,9 +203,17 @@ const CreateShipping = ({ setOpenCreate }) => {
     })) ?? [];
 
   useEffect(() => {
-    setWardList(
-      wardData?.getWardList?.data ? mapData(wardData?.getWardList?.data) : []
-    );
+    if (wardData?.getWardList?.data) {
+      setWardList(
+        wardData?.getWardList?.data ? mapData(wardData?.getWardList?.data) : []
+      );
+      if (editMode) {
+        const wardId = wardData?.getWardList?.data.find(
+          (x) => x.fullName === info?.ward
+        )?.id;
+        wardId && setWard(wardId);
+      }
+    }
   }, [wardData?.getWardList?.data]);
 
   useEffect(() => {
@@ -192,11 +225,21 @@ const CreateShipping = ({ setOpenCreate }) => {
   }, [provinceData?.getProvinceList?.data]);
 
   useEffect(() => {
-    setDistrictList(
-      districtData?.getDistrictList?.data
-        ? mapData(districtData?.getDistrictList?.data)
-        : []
-    );
+    if (districtData?.getDistrictList?.data) {
+      setDistrictList(
+        districtData?.getDistrictList?.data
+          ? mapData(districtData?.getDistrictList?.data)
+          : []
+      );
+      if (editMode) {
+        const districtId = districtData?.getDistrictList?.data.find(
+          (x) => x.fullName === info?.district
+        )?.id;
+        districtId && onSelectDistrictChange(districtId);
+
+        setPhoneNumberIntl(`${info?.phoneCountryCode} ${info?.phoneNumber}`);
+      }
+    }
   }, [districtData?.getDistrictList?.data]);
 
   const onSelectDistrictChange = (value) => {
@@ -227,21 +270,28 @@ const CreateShipping = ({ setOpenCreate }) => {
     const district = districtList?.find((x) => x.value === districtId)?.label;
     const ward = wardList?.find((x) => x.value === wardId)?.label;
 
-    createShippingLocation({
-      variables: {
-        cmd: {
-          locationName: shippingInfo.locationName,
-          phoneCountryCode,
-          phoneNumber,
-          country: 'VN',
-          province,
-          district,
-          ward,
-          addressLine: shippingInfo.addressLine,
-          defaultLocation: true,
-        },
-      },
-    });
+    const cmd = {
+      locationName: shippingInfo.locationName,
+      phoneCountryCode,
+      phoneNumber,
+      country: 'VN',
+      province,
+      district,
+      ward,
+      addressLine: shippingInfo.addressLine,
+      defaultLocation: true,
+    };
+    editMode
+      ? updateIndividualShippingLocation({
+          variables: {
+            cmd: { ...cmd, id: info.id },
+          },
+        })
+      : createShippingLocation({
+          variables: {
+            cmd,
+          },
+        });
   };
 
   const handleChange = (event) => {
@@ -253,45 +303,24 @@ const CreateShipping = ({ setOpenCreate }) => {
     setShippingInfo({ ...shippingInfo, [name]: value });
   };
 
-  return createShippingLocationLoading ? (
+  return createShippingLocationLoading ||
+    updateIndividualShippingLocationLoading ? (
     <Spinner />
   ) : (
     <Container>
-      <h2>New Shipping address</h2>
+      <h2>Shipping info</h2>
       <form onSubmit={handleSubmit}>
         <React.Fragment>
-          <label htmlFor="">Tên người nhận</label>
           <FormInput
             type="text"
-            name="locationName"
             value={shippingInfo.locationName}
             onChange={handleChange}
+            label="Location name"
+            placeholder="Work, home..."
+            name="locationName"
+            required
           />
-          <label htmlFor="">Địa chỉ</label>
-          <FormInput
-            type="text"
-            name="addressLine"
-            value={shippingInfo.addressLine}
-            onChange={handleChange}
-          />
-
-          <div className="select-wrapper">
-            {provinceList?.length ? (
-              <Dropdown
-                options={provinceList}
-                onChange={onSelectProvinceChange}
-                value={provinceId}
-              />
-            ) : null}
-            <Dropdown
-              options={districtList}
-              onChange={onSelectDistrictChange}
-              value={districtId}
-            />
-            <Dropdown options={wardList} onChange={setWard} value={wardId} />
-          </div>
-
-          <label htmlFor="">Số điện thoại</label>
+          <label className="form-label">Phone number</label>
           <PhoneInput
             country="US"
             international
@@ -303,12 +332,37 @@ const CreateShipping = ({ setOpenCreate }) => {
             value={phoneNumberIntl}
             onChange={(value) => setPhoneNumberIntl(value)}
           />
+          <FormInput
+            type="text"
+            value={shippingInfo.addressLine}
+            onChange={handleChange}
+            name="addressLine"
+            label="Address"
+            placeholder="123 Ly Tu Trong Str,"
+            required
+          />
+          {provinceList?.length ? (
+            <Dropdown
+              options={provinceList}
+              onChange={onSelectProvinceChange}
+              value={provinceId}
+              className="mg-b-16"
+            />
+          ) : null}
+          <div className="select-wrapper mg-b-48">
+            <Dropdown
+              options={districtList}
+              onChange={onSelectDistrictChange}
+              value={districtId}
+            />
+            <Dropdown options={wardList} onChange={setWard} value={wardId} />
+          </div>
         </React.Fragment>
 
         {!isPhoneValid ? (
-          <h5 className="error-title">Your phone number is not correct</h5>
+          <p className="error-title">*Your phone number is not correct</p>
         ) : null}
-        <button className={'shipping-button'}>Add</button>
+        <CustomButton>{editMode ? 'Update' : 'Add'}</CustomButton>
       </form>
       <SobyModal open={open} setOpen={setOpen}>
         {formError ? (

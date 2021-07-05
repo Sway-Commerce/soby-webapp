@@ -1,6 +1,6 @@
 import UserActionTypes from './user.types';
 
-const INITIAL_STATE = {
+export const INITIAL_STATE = {
   accessToken: null,
   signingSecret: null,
   encryptionSecret: null,
@@ -27,11 +27,16 @@ const INITIAL_STATE = {
   phoneStatus: null,
   pendingIdentities: null,
   error: null,
+  password: null,
+  passphrase: null,
+  storeEncryptionSecret: null,
+  storeSigningSecret: null,
+  searchInput: null,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case UserActionTypes.SIGN_IN_SUCCESS: {
+    case UserActionTypes.UPDATE_STORED_USER: {
       const {
         signingSecret,
         encryptionSecret,
@@ -57,6 +62,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
         emailStatus,
         phoneStatus,
         pendingIdentities,
+        passphrase,
+        storeEncryptionSecret,
+        storeSigningSecret,
       } = action.payload;
       return {
         ...state,
@@ -84,6 +92,10 @@ const userReducer = (state = INITIAL_STATE, action) => {
         emailStatus,
         phoneStatus,
         pendingIdentities,
+        password: null,
+        passphrase,
+        storeEncryptionSecret,
+        storeSigningSecret,
       };
     }
     case UserActionTypes.SIGN_UP_SUCCESS: {
@@ -102,8 +114,10 @@ const userReducer = (state = INITIAL_STATE, action) => {
         accessToken: null,
       };
     }
-    case UserActionTypes.SIGN_OUT_START:
+    case UserActionTypes.SIGN_OUT_START: {
+      sessionStorage.clear();
       return INITIAL_STATE;
+    }
     case UserActionTypes.SIGN_IN_FAILURE:
     case UserActionTypes.SIGN_OUT_FAILURE:
     case UserActionTypes.SIGN_UP_FAILURE:
@@ -141,7 +155,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         email,
-        emailStatus: "NOT_CONFIRMED"
+        emailStatus: 'NOT_CONFIRMED',
       };
     }
     case UserActionTypes.SET_PHONE_NUMBER: {
@@ -150,21 +164,52 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         phoneNumber,
         phoneCountryCode,
-        phoneStatus: "NOT_CONFIRMED"
+        phoneStatus: 'NOT_CONFIRMED',
       };
     }
     case UserActionTypes.VERIFY_PHONE: {
       const phoneStatus = action.payload;
       return {
         ...state,
-        phoneStatus
+        phoneStatus,
       };
     }
     case UserActionTypes.VERIFY_EMAIL: {
       const emailStatus = action.payload;
       return {
         ...state,
-        emailStatus
+        emailStatus,
+      };
+    }
+    case UserActionTypes.SET_REGISTER_INFO: {
+      const {
+        email,
+        lastName,
+        firstName,
+        middleName,
+        signingSecret,
+        encryptionSecret,
+        signingPublicKey,
+        encryptionPublicKey,
+        password,
+      } = action.payload;
+      return {
+        ...state,
+        email,
+        lastName,
+        firstName,
+        middleName,
+        signingSecret,
+        encryptionSecret,
+        signingPublicKey,
+        encryptionPublicKey,
+        password,
+      };
+    }
+    case UserActionTypes.SET_SEARCH_INPUT: {
+      return {
+        ...state,
+        searchInput: action.payload,
       };
     }
     default:

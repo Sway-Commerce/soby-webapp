@@ -42,8 +42,10 @@ const link = ApolloLink.from([
         (x) => x.extensions.code === HttpStatusCode.Unauthorized
       )
     ) {
-      localStorage.setItem("redirectUrl", window.location.pathname);
-      window.location.href = '/';
+      if (!window.location.pathname.includes('phone-signin')) {
+        sessionStorage.setItem('redirectUrl', window.location.pathname);
+        window.location.href = '/phone-signin';
+      }
     }
     if (graphQLErrors.length) {
       console.log('[graphQLErrors]', graphQLErrors);

@@ -6,7 +6,6 @@ import { Container } from './your-transactions.styles';
 import HorizontalList from 'components/horizontal-list/horizontal-list.component';
 import {
   GET_INDIVIDUAL_AGGREGATED_INVOICE_ORDER_LIST,
-  GET_INVOICE_ORDER_LIST_FOR_INDIVIDUAL,
 } from '../../graphQL/repository/invoice.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import InvoiceItem from 'components/invoice-item/invoice-item.component';
@@ -135,21 +134,11 @@ const YourTransaction = ({ name }) => {
         </div>
         <div className="invoice-list">
           <div className="header-wrapper">
-            <p>
-              <b>Invoice name</b>
-            </p>
-            <p>
-              <b>Date</b>
-            </p>
-            <p>
-              <b>Price</b>
-            </p>
-            <p>
-              <b>Seller</b>
-            </p>
-            <p className="text-right">
-              <b>Status</b>
-            </p>
+            <h5>Invoice name</h5>
+            <h5>Date</h5>
+            <h5>Price</h5>
+            <h5>Seller</h5>
+            <h5 className="text-right">Status</h5>
           </div>
 
           {invoiceList.map((x) => (

@@ -3,6 +3,7 @@ import uploadIcon from 'shared/assets/uploadIcon.svg';
 import closeIcon from 'shared/assets/closeIcon.svg';
 
 import styled from 'styled-components';
+import { borderColor } from 'shared/css-variable/variable';
 
 const FileUploadContainer = styled.section`
   position: relative;
@@ -12,7 +13,7 @@ const FileUploadContainer = styled.section`
   flex-direction: column;
   align-items: center;
   background-color: white;
-  border: 1px solid #e4e4e4;
+  border: 1px solid ${borderColor};
   height: 80px;
   padding: 24px 0;
 `;
