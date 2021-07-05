@@ -26,12 +26,6 @@ export const INDIVIDUAL_PROFILE_FRAGMENT = gql`
     phoneCountryCode
     phoneNumber
     dob
-    nationality
-    country
-    postalCode
-    province
-    city
-    addressLine
     invitationCode
     kycStatus
     emailStatus
@@ -130,10 +124,6 @@ export const PRODUCT_FRAGMENT = gql`
     id
     imageUrls
     category {
-      id
-      name
-    }
-    level2Category {
       id
       name
     }

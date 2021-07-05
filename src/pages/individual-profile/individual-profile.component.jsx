@@ -77,18 +77,15 @@ export const Avatar = styled.img`
 
 const InfoBox = styled.div`
   margin: 1.6em 0 1.7em;
-
   div.info-row {
     height: 2.4em;
     display: flex;
     align-items: center;
     padding: 0 0.8rem;
     background-color: #f1f1f1;
-
     & + div.info-row {
       margin-top: 0.8rem;
     }
-
     p {
       color: ${bodyColor};
       margin-left: 0.8rem;
@@ -106,10 +103,8 @@ const Row = styled(Link)`
   width: ${(props) => props.size || 'auto'};
   cursor: ${(props) => (props.pointer ? 'pointer' : 'default')};
   margin-bottom: 1.2rem;
-
   @media (max-width: 768px) {
     align-items: flex-start;
-
     &.column {
       flex-direction: column;
     }
@@ -219,15 +214,9 @@ const IndividualProfile = () => {
           phoneCountryCode,
           email,
           invitationCode,
-          postalCode,
           lastName,
           middleName,
           dob,
-          nationality,
-          addressLine,
-          city,
-          province,
-          country,
           imageUrl,
           kycStatus,
           emailStatus,
@@ -272,15 +261,9 @@ const IndividualProfile = () => {
           phoneCountryCode,
           email,
           invitationCode,
-          postalCode,
           lastName,
           middleName,
           dob,
-          nationality,
-          addressLine,
-          city,
-          province,
-          country,
           firstName,
           imageUrl,
           kycStatus,

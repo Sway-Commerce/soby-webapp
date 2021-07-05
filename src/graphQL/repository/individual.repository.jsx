@@ -235,30 +235,6 @@ export const decryptIndividualModel = async (
   const dob = individualInfo?.dob
     ? await encryption.decryptBase64UrlStringToString(individualInfo?.dob)
     : '';
-  const nationality = individualInfo?.nationality
-    ? await encryption.decryptBase64UrlStringToString(
-        individualInfo?.nationality
-      )
-    : '';
-  const addressLine = individualInfo?.addressLine
-    ? await encryption.decryptBase64UrlStringToString(
-        individualInfo?.addressLine
-      )
-    : '';
-  const city = individualInfo?.city
-    ? await encryption.decryptBase64UrlStringToString(individualInfo?.city)
-    : '';
-  const province = individualInfo?.province
-    ? await encryption.decryptBase64UrlStringToString(individualInfo?.province)
-    : '';
-  const country = individualInfo?.country
-    ? await encryption.decryptBase64UrlStringToString(individualInfo?.country)
-    : '';
-  const postalCode = individualInfo?.postalCode
-    ? await encryption.decryptBase64UrlStringToString(
-        individualInfo?.postalCode
-      )
-    : '';
   const invitationCode = individualInfo?.invitationCode
     ? await encryption.decryptBase64UrlStringToString(
         individualInfo?.invitationCode
@@ -285,15 +261,9 @@ export const decryptIndividualModel = async (
     phoneCountryCode,
     email,
     invitationCode,
-    postalCode,
     lastName,
     middleName,
     dob,
-    nationality,
-    addressLine,
-    city,
-    province,
-    country,
     storeEncryptionSecret,
     storeSigningSecret,
   };
