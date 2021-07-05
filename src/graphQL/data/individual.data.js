@@ -10,12 +10,6 @@ export const typeDefs = gql`
     phoneNumber: String!
     email: String!
     dob: String
-    postalCode: String
-    country: String
-    province: String
-    city: String
-    addressLine: String
-    nationality: String
     signingPublicKey: String!
     signingSecret: String!
     encryptionPublicKey: String!
@@ -39,12 +33,6 @@ export const typeDefs = gql`
     phoneNumber: String
     email: String
     dob: String
-    postalCode: String
-    country: String
-    province: String
-    city: String
-    addressLine: String
-    nationality: String
     invitationCode: String
     phoneStatus: ConfirmationStatus
     emailStatus: ConfirmationStatus
