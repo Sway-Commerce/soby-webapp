@@ -232,6 +232,9 @@ export const decryptIndividualModel = async (
         individualInfo?.middleName
       )
     : '';
+  const name = individualInfo?.name
+    ? await encryption.decryptBase64UrlStringToString(individualInfo?.name)
+    : '';
   const dob = individualInfo?.dob
     ? await encryption.decryptBase64UrlStringToString(individualInfo?.dob)
     : '';
@@ -263,6 +266,7 @@ export const decryptIndividualModel = async (
     invitationCode,
     lastName,
     middleName,
+    name,
     dob,
     storeEncryptionSecret,
     storeSigningSecret,
@@ -330,6 +334,6 @@ export const generateNewIdentityToken = (
     return { signature: null, error: 'Wrong password' };
   }
   return {
-    signature
+    signature,
   };
 };

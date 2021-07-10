@@ -21,6 +21,7 @@ export const INDIVIDUAL_PROFILE_FRAGMENT = gql`
     firstName
     lastName
     middleName
+    name
     imageUrl
     email
     phoneCountryCode
