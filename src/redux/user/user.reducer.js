@@ -1,4 +1,4 @@
-import UserActionTypes from './user.types';
+import UserActionTypes from "./user.types";
 
 export const INITIAL_STATE = {
   accessToken: null,
@@ -155,7 +155,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         email,
-        emailStatus: 'NOT_CONFIRMED',
+        emailStatus: "NOT_CONFIRMED",
       };
     }
     case UserActionTypes.SET_PHONE_NUMBER: {
@@ -164,7 +164,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         phoneNumber,
         phoneCountryCode,
-        phoneStatus: 'NOT_CONFIRMED',
+        phoneStatus: "NOT_CONFIRMED",
       };
     }
     case UserActionTypes.VERIFY_PHONE: {
@@ -183,27 +183,25 @@ const userReducer = (state = INITIAL_STATE, action) => {
     }
     case UserActionTypes.SET_REGISTER_INFO: {
       const {
+        name,
         email,
-        lastName,
-        firstName,
-        middleName,
-        signingSecret,
-        encryptionSecret,
-        signingPublicKey,
-        encryptionPublicKey,
+        dob,
         password,
+        encryptionSecret,
+        encryptionPublicKey,
+        signingSecret,
+        signingPublicKey,
       } = action.payload;
       return {
         ...state,
+        name,
         email,
-        lastName,
-        firstName,
-        middleName,
-        signingSecret,
-        encryptionSecret,
-        signingPublicKey,
-        encryptionPublicKey,
+        dob,
         password,
+        encryptionSecret,
+        encryptionPublicKey,
+        signingSecret,
+        signingPublicKey,
       };
     }
     case UserActionTypes.SET_SEARCH_INPUT: {

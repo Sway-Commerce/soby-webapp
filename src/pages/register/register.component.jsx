@@ -26,11 +26,10 @@ const Register = ({ history }) => {
   const [isMobileWidth, setIsMobileWidth] = useState(window.innerWidth < 760);
 
   const [userCredentials, setUserCredentials] = useState({
-    password: '',
-    firstName: '',
-    lastName: '',
-    middleName: '',
+    name: '',
     email: '',
+    dob: '',
+    password: '',
     encryptionSecret: '',
     encryptionPublicKey: '',
     signingSecret: '',
@@ -39,8 +38,7 @@ const Register = ({ history }) => {
   const [inputValidation, setInputValidation] = useState({
     isPasswordValid: true,
     isEmailValid: true,
-    isFirstNameValid: true,
-    isLastNameValid: true,
+    isNameValid: true
   });
 
   const { accessToken, id } = useSelector((state) => {
@@ -52,9 +50,9 @@ const Register = ({ history }) => {
   const dispatchSetRegisterInfo = (userCredentials) =>
     dispatch(setRegisterInfo(userCredentials));
 
-  const { firstName, lastName, middleName, email, password } = userCredentials;
+  const { name, email, password } = userCredentials;
 
-  const { isPasswordValid, isEmailValid, isFirstNameValid, isLastNameValid } =
+  const { isPasswordValid, isEmailValid, isNameValid } =
     inputValidation;
 
   useEffect(() => {
@@ -97,11 +95,10 @@ const Register = ({ history }) => {
       ...inputValidation,
       isPasswordValid,
       isEmailValid,
-      isFirstNameValid: !!firstName,
-      isLastNameValid: !!lastName,
+      isNameValid: !!name
     });
 
-    if (isPasswordValid && isEmailValid && firstName && lastName) {
+    if (isPasswordValid && isEmailValid && isNameValid) {
       const { encryptionSecret, encryptionPublicKey } =
         await generateEncryptionKey(password);
 
@@ -150,44 +147,17 @@ const Register = ({ history }) => {
                 <p className="error-title">*Your email is not correct</p>
               ) : null}
               <InputContainer>
-                {!isMobileWidth && <h5>Your Name</h5>}
-
-                <NameContainer>
-                  <FormInput
+                {!isMobileWidth && <h5>Your full legal name</h5>}
+                <FormInput
                     type="text"
-                    name="firstName"
-                    value={firstName}
+                    name="name"
+                    value={name}
                     onChange={handleChange}
-                    placeholder="First name"
-                    label="First name"
+                    placeholder="Full name"
                     withoutTitle={!isMobileWidth}
                   />
-
-                  <FormInput
-                    type="text"
-                    name="middleName"
-                    value={middleName}
-                    onChange={handleChange}
-                    placeholder="Middle Name"
-                    label="Middle Name"
-                    withoutTitle={!isMobileWidth}
-                  />
-
-                  <FormInput
-                    type="text"
-                    name="lastName"
-                    value={lastName}
-                    onChange={handleChange}
-                    placeholder="Last name"
-                    label="Last name"
-                    withoutTitle={!isMobileWidth}
-                  />
-                </NameContainer>
               </InputContainer>
-              {!isFirstNameValid ? (
-                <p className="error-title">*The field is required</p>
-              ) : null}
-              {!isLastNameValid ? (
+              {!isNameValid ? (
                 <p className="error-title">*The field is required</p>
               ) : null}
 
