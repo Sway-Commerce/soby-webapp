@@ -24,11 +24,15 @@ import {
   SEND_PHONE_VERIFICATION,
   VERIFY_PHONE,
 } from 'graphQL/repository/individual.repository';
-import { useMutation } from '@apollo/client';
+import { useMutation, useLazyQuery } from '@apollo/client';
 import SobyModal from 'components/ui/modal/modal.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { INITIAL_STATE } from 'redux/user/user.reducer';
+import {
+  GET_INDIVIDUAL_BASIC_INFO,
+  decryptIndividualModel,
+} from 'graphQL/repository/individual.repository';
 
 const PhoneVerification = ({ history }) => {
   const { phoneNumber, phoneCountryCode } = useSelector((state) => {
@@ -57,6 +61,16 @@ const PhoneVerification = ({ history }) => {
   ] = useMutation(VERIFY_PHONE, {
     errorPolicy: 'all',
   });
+
+  const [
+    getBasicInfo,
+    {
+      data: loadIndividualBasicInfoData,
+      loading: loadIndividualBasicInfoLoading,
+      error: loadIndividualBasicInfoError,
+    },
+  ] = useLazyQuery(GET_INDIVIDUAL_BASIC_INFO);
+  
   const dispatch = useDispatch();
   const dispatchVerify = () => dispatch(verifyPhone());
   const dispatchSendVerification = () => dispatch(sendPhoneVerification());
@@ -72,11 +86,50 @@ const PhoneVerification = ({ history }) => {
     }
   }, [verifyPhoneError, sendPhoneVerificationError]);
 
-  useEffect(() => {
+//#region Reminder for task: fix bug when create account, get account to get ID
+/**
+ * Note: we need to research how to get all data like login flow. Example below:
+ * const {
+          firstName,
+          phoneNumber,
+          phoneCountryCode,
+          email,
+          invitationCode,
+          postalCode,
+          lastName,
+          middleName,
+          name,
+          dob,
+          nationality,
+          addressLine,
+          city,
+          province,
+          country,
+          id,
+          imageUrl,
+          kycStatus,
+          emailStatus,
+          phoneStatus,
+          pendingIdentities,
+          storeEncryptionSecret,
+          storeSigningSecret,
+        } = await decryptIndividualModel(
+          encryptionSecret,
+          password,
+          loadIndividualBasicInfoData?.getIndividual?.data,
+          passphrase,
+          signingSecret
+        );
+ */
+//#endregion
+
+  useEffect(async () => {
     if (data?.verifyPhone?.success) {
       dispatchVerify('CONFIRMED');
-      dispatchUpdateStoredUser({ ...INITIAL_STATE });
-      history.push('/phone-signin');
+      // dispatchUpdateStoredUser({ ...INITIAL_STATE });
+      getBasicInfo().then(function (result) {
+        history.push('/individual-profile');
+      });
     }
   }, [data?.verifyPhone?.success]);
 
