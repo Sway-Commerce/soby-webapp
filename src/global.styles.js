@@ -10,6 +10,7 @@ import {
   redColor,
   gray1Color,
   stokeColor,
+  whiteColor
 } from './shared/css-variable/variable';
 
 export const GlobalStyle = createGlobalStyle`
@@ -26,8 +27,10 @@ export const GlobalStyle = createGlobalStyle`
 		font-family: 'Roboto', sans-serif;
 		font-weight: regular;
 		line-height: 24px;
+		font-size: .8rem;
 		color: #000000;
-		background-color: #F2F2F2;
+		// background-color: #F2F2F2;
+		background-color: ${whiteColor};
 		.body-container {
 			width: 1200px;
 			min-height: 100vh;

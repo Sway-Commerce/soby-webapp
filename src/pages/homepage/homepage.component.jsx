@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import backgroundImg from 'shared/assets/home-background.svg';
 import { CustomButton } from '../../components/ui/custom-button/custom-button.component';
 import FormInput from 'components/form-input/form-input.component';
@@ -11,6 +12,8 @@ import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import ShopItem from '../../components/shop-item/shop-item.component';
 import useDebounce from 'shared/hooks/useDebounce';
+import SVG from 'react-inlinesvg';
+import { toAbsoluteUrl } from '../../shared/utils/assetsHelper';
 
 const Container = styled.div`
   margin: auto;
@@ -25,25 +28,20 @@ const Container = styled.div`
 `;
 
 const Row = styled.div`
-  width: 100%;
+  width: 100vw;
   background-color: white;
   margin-bottom: 1.2rem;
   margin-left: ${(props) =>
     props.headRow ? 'calc(((100vw - 1200px) / 2) * -1)' : 0};
 
+  .mb-0 {
+    margin-bottom: 0rem;
+  }
+
   @media screen and (max-width: 1200px) {
     margin-left: 0;
   }
-
-  .row-header {
-    display: flex;
-    justify-content: space-between;
-    p {
-      color: #2b74e4;
-    }
-  }
 `;
-
 const HeadHome = styled.div`
   padding: 40px 24px 24px;
   width: 100vw;
@@ -51,32 +49,11 @@ const HeadHome = styled.div`
   flex-direction: column;
   align-items: center;
   color: #0D1B1E;
-
+  text-align: center;
   .soby-welcome {
     font-size: 2.6rem;
     font-weight: bold;
     line-height: 73px;
-  }
-
-  .text-center {
-    text-align: center;
-  }
-
-  h3 + h3 {
-    margin-top: 8px;
-  }
-
-  @media screen and (max-width: 600px) {
-    height: 320px;
-    padding-top: 112px;
-    align-items: flex-start;
-    .soby-welcome {
-      font-size: 32px;
-      line-height: 45px;
-    }
-    h3.mobile-hide {
-      display: none;
-    }
   }
 `;
 
@@ -84,7 +61,6 @@ const Search = styled.form`
   display: flex;
   justify-content: center;
   align-items: top;
-  margin-top: 24px;
   position: relative;
 
   .main-btn {
@@ -171,6 +147,33 @@ const ResultSearchBox = styled.div`
 const SearchInputContainer = styled.div`
   position: relative;
 `;
+
+const Symbol48px = styled.div`
+  width: 48px;
+  height: 48px;
+`;
+
+const CategoryItem = function ({itemName, bgColor, iconSrc, url, isFirst}) {
+  return (
+    <>
+      <Link
+        to={url}
+        className={`d-flex flex-column align-items-center ${!isFirst && 'ms-4'}`}
+        style={{ width: '110px', lineHeight: '1rem' }}
+      >
+        <Symbol48px
+          className='d-flex justify-content-center align-items-center rounded-circle mb-2'
+          style={{ backgroundColor: `${bgColor}` }}
+        >
+          <SVG src={toAbsoluteUrl(`${iconSrc}`)}></SVG>
+        </Symbol48px>
+        <div className='text-center'>
+          <span>{itemName}</span>
+        </div>
+      </Link>
+    </>
+  );
+};
 
 const HomePage = () => {
   /* display: ${(props) =>
@@ -263,57 +266,76 @@ const HomePage = () => {
   return (
     <React.Fragment>
       <Container>
-        <Row headRow>
+        <Row className='mb-5' headRow>
           <HeadHome>
-            <p className="soby-welcome text-center">Read reviews, Check<br/>reputation, Find sellers</p>
+            <p className='soby-welcome text-center'>
+              Read reviews, Check
+              <br />
+              reputation, Find sellers
+            </p>
             {/* <h3 className="fw-normal">
               Find your trust Sellers and have safe transactions with Soby
             </h3> */}
             {/* <h3 className="fw-normal mobile-hide">
               Lorem ipsum dolor sit amet
             </h3> */}
-            <Search onSubmit={handleSubmit}>
+            <Search className='mt-4' onSubmit={handleSubmit}>
               <SearchInputContainer>
                 <FormInput
-                  type="text"
-                  name="inputSearch"
+                  type='text'
+                  name='inputSearch'
                   value={inputSearch}
                   onChange={handleChange}
-                  placeholder="Search product, shop, category, ..."
+                  placeholder='Search product, shop, category, ...'
                   withoutTitle
-                  id="home-input"
+                  id='home-input'
                 />
                 <SearchIcon
                   onClick={handleSubmit}
-                  className="mobile-btn clickable"
+                  className='mobile-btn clickable'
                 />
                 {!!recordsSuggest.length && (
                   <ResultSearchBox>
                     {recordsSuggest.map((shop) => (
-                      <ShopItem key={shop.id} shop={shop} className="mg-b-16" />
+                      <ShopItem key={shop.id} shop={shop} className='mg-b-16' />
                     ))}
                   </ResultSearchBox>
                 )}
               </SearchInputContainer>
 
-              <CustomButton type="submit" className="main-btn">
+              <CustomButton type='submit' className='main-btn'>
                 Search
               </CustomButton>
             </Search>
           </HeadHome>
         </Row>
-        <Latest>
-          <h3>Latest Shops</h3>
-          {searchAggregatedShopLoading && !records.length ? (
-            <Spinner />
-          ) : (
-            <ItemBox>
-              {records.map((shop) => (
-                <ShopItem shop={shop} key={shop.id} />
-              ))}
-            </ItemBox>
-          )}
-        </Latest>
+        <div className='row'>
+          <div className='d-flex justify-content-center align-items-center mb-4'>
+            <span className=''>Browse shops by more categories</span>
+          </div>
+          <div className='d-flex justify-content-center align-items-start'>
+            <CategoryItem itemName='Food & Beverages' bgColor='#FFA800' iconSrc='/assets/food.svg' url='/' isFirst ></CategoryItem>
+            <CategoryItem itemName='Digitals' bgColor='#5BCCFA' iconSrc='/assets/digital.svg' url='/' ></CategoryItem>
+            <CategoryItem itemName='Clothes & Accessories' bgColor='#725CFD' iconSrc='/assets/cloth.svg' url='/' ></CategoryItem>
+            <CategoryItem itemName='Home Depot' bgColor='#AFDC10' iconSrc='/assets/appliance.svg' url='/' ></CategoryItem>
+            <CategoryItem itemName='Cosmetics & Fragrances' bgColor='#FF70A6' iconSrc='/assets/lip-stick.svg' url='/' ></CategoryItem>
+           
+            <Link
+              className='d-flex flex-column align-items-center ms-4'
+              style={{ width: '110px', lineHeight: '1rem' }}
+            >
+              <Symbol48px
+                className='d-flex justify-content-center align-items-center rounded-circle mb-2 border'
+                style={{ backgroundColor: '#FFFFFF' }}
+              >
+                <SVG src={toAbsoluteUrl('/assets/right-arrow.svg')}></SVG>
+              </Symbol48px>
+              <div className='text-center'>
+                <span>More Categories</span>
+              </div>
+            </Link>
+          </div>
+        </div>
       </Container>
       <SobyModal open={open} setOpen={setOpen}>
         {formError ? (

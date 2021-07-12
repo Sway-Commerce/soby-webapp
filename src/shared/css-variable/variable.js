@@ -11,3 +11,4 @@ export const gray1Color = '#333333';
 export const yellowColor = '#F8D000';
 export const whiteColor = '#FFFFFF';
 export const defaultFontColor = '#3D494B';
+export const titleFontColor = '#0D1B1E';
