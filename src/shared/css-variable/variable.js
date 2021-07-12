@@ -1,4 +1,4 @@
-export const mainColor = '#2B74E4';
+export const mainColor = '#2B74E3'; // old main color '#2B74E4', new main color based on figma design 20210712
 export const subColor = '#94B8F1';
 export const borderColor = '#E4E4E4';
 export const stokeColor = '#828282';
@@ -9,4 +9,5 @@ export const cyanColor = '#00AAB9';
 export const bodyColor = '#4F4F4F';
 export const gray1Color = '#333333';
 export const yellowColor = '#F8D000';
-
+export const whiteColor = '#FFFFFF';
+export const defaultFontColor = '#3D494B';

@@ -5,18 +5,18 @@ import styled from 'styled-components';
 
 import { ReactComponent as SearchIcon } from 'shared/assets/search-icon.svg';
 import { ReactComponent as ArrowIcon } from 'shared/assets/arrow-down.svg';
-import { ReactComponent as Logo } from 'shared/assets/logo.svg';
+import { ReactComponent as Logo } from 'shared/assets/logo-temp.svg';
 import { ReactComponent as MobileLogo } from 'shared/assets/mobile-logo.svg';
 import TempImage from 'shared/assets/default-individual-ava.png';
 import { ReactComponent as MenuIcon } from 'shared/assets/menu-icon.svg';
-import { mainColor } from 'shared/css-variable/variable';
+import { mainColor, whiteColor, defaultFontColor } from 'shared/css-variable/variable';
 import { setSearchInput } from 'redux/user/user.actions';
 import useDebounce from 'shared/hooks/useDebounce';
 import SearchInput from './search-input.component';
 
 const Container = styled.div`
   padding: 10px calc((100vw - 1200px) / 2);
-  background-color: ${mainColor};
+  background-color: ${whiteColor};
 
   @media screen and (max-width: 1200px) {
     padding: 10px 1.2rem;
@@ -51,9 +51,9 @@ const OptionsContainer = styled.div`
 `;
 
 const OptionLink = styled(Link)`
-  padding: 10px 40px;
+  padding: 10px 24px;
   cursor: pointer;
-  color: white;
+  color: ${defaultFontColor};
 `;
 
 OptionLink.displayName = 'OptionLink';
@@ -65,6 +65,10 @@ export const SwitchBtn = styled.button`
   border: 1px white solid;
   background-color: ${mainColor};
   border-radius: 5rem;
+
+  .first {
+    margin-right: 8px;
+  }
 `;
 
 const IconBtn = styled(Link)`
@@ -158,21 +162,31 @@ export const Header = ({ history }) => {
           </LogoItem>
         </LogoContainer>
 
-        {history.location.pathname.includes('search-result') && (
+        {/* {history.location.pathname.includes('search-result') && (
           <SearchInput
             show
             inputSearch={inputSearch}
             handleChange={handleChange}
           />
-        )}
-        <HamburgerMenu>
+        )} */}
+        {/* <HamburgerMenu>
           <MenuIcon />
-        </HamburgerMenu>
+        </HamburgerMenu> */}
 
         <OptionsContainer
-          isSearchView={history.location.pathname.includes('search-result')}
+          // isSearchView={history.location.pathname.includes('search-result')}
         >
-          {!history.location.pathname.includes('search-result') && (
+          <OptionLink to={{pathname: '/'}}>Explore</OptionLink>
+          <OptionLink to={{pathname: '/'}}>Chatbot</OptionLink>
+          <OptionLink to={{pathname: '/'}}>What is Soby?</OptionLink>
+          <OptionLink to={{pathname: '/'}}>Log In</OptionLink>
+          <SwitchBtn style={{marginLeft: '34px', marginRight: '8px'}}>Join Now</SwitchBtn>
+          <SwitchBtn>For Seller</SwitchBtn>
+
+          {
+            //#region Old code
+          }
+          {/* {!history.location.pathname.includes('search-result') && (
             <React.Fragment>
               <Link to={{ pathname: 'http://signup.soby.vn/' }} target="_blank">
                 <SwitchBtn>Start selling</SwitchBtn>
@@ -212,7 +226,10 @@ export const Header = ({ history }) => {
             <IconBtn to="/phone-signin">
               <b>Log in</b>
             </IconBtn>
-          )}
+          )} */}
+          {
+          //#endregion
+          }
         </OptionsContainer>
       </HeaderContainer>
       {history.location.pathname.includes('search-result') && (

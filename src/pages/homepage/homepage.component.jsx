@@ -45,19 +45,21 @@ const Row = styled.div`
 `;
 
 const HeadHome = styled.div`
-  height: 386.84px;
-  background-image: url(${backgroundImg});
-  padding: 121.42px 24px 24px;
+  padding: 40px 24px 24px;
   width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #ffffff;
+  color: #0D1B1E;
 
   .soby-welcome {
     font-size: 2.6rem;
     font-weight: bold;
     line-height: 73px;
+  }
+
+  .text-center {
+    text-align: center;
   }
 
   h3 + h3 {
@@ -263,13 +265,13 @@ const HomePage = () => {
       <Container>
         <Row headRow>
           <HeadHome>
-            <p className="soby-welcome">Welcome to Soby</p>
-            <h3 className="fw-normal">
+            <p className="soby-welcome text-center">Read reviews, Check<br/>reputation, Find sellers</p>
+            {/* <h3 className="fw-normal">
               Find your trust Sellers and have safe transactions with Soby
-            </h3>
-            <h3 className="fw-normal mobile-hide">
+            </h3> */}
+            {/* <h3 className="fw-normal mobile-hide">
               Lorem ipsum dolor sit amet
-            </h3>
+            </h3> */}
             <Search onSubmit={handleSubmit}>
               <SearchInputContainer>
                 <FormInput
@@ -277,7 +279,7 @@ const HomePage = () => {
                   name="inputSearch"
                   value={inputSearch}
                   onChange={handleChange}
-                  placeholder="Search for Shop, product and invoice"
+                  placeholder="Search product, shop, category, ..."
                   withoutTitle
                   id="home-input"
                 />
