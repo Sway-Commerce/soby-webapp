@@ -176,11 +176,11 @@ export const Header = ({ history }) => {
         <OptionsContainer
           // isSearchView={history.location.pathname.includes('search-result')}
         >
-          <OptionLink to={{pathname: '/'}}>Explore</OptionLink>
+          <OptionLink to={{pathname: '/explore'}}>Explore</OptionLink>
           <OptionLink to={{pathname: '/'}}>Chatbot</OptionLink>
           <OptionLink to={{pathname: '/'}}>What is Soby?</OptionLink>
-          <OptionLink to={{pathname: '/'}}>Log In</OptionLink>
-          <SwitchBtn style={{marginLeft: '34px', marginRight: '8px'}}>Join Now</SwitchBtn>
+          <OptionLink to={{pathname: '/phone-signin'}}>Log In</OptionLink>
+          <SwitchBtn className='fw-bold' style={{marginLeft: '34px', marginRight: '8px', backgroundColor: 'white', border: '2px solid #E7E8E9', color: 'black'}}>Join Now</SwitchBtn>
           <SwitchBtn>For Seller</SwitchBtn>
 
           {
