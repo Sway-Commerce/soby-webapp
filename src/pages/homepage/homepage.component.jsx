@@ -314,11 +314,11 @@ const HomePage = () => {
             <span className=''>Browse shops by more categories</span>
           </div>
           <div className='d-flex justify-content-center align-items-start'>
-            <CategoryItem itemName='Food & Beverages' bgColor='#FFA800' iconSrc='/assets/food.svg' url='/' isFirst ></CategoryItem>
-            <CategoryItem itemName='Digitals' bgColor='#5BCCFA' iconSrc='/assets/digital.svg' url='/' ></CategoryItem>
-            <CategoryItem itemName='Clothes & Accessories' bgColor='#725CFD' iconSrc='/assets/cloth.svg' url='/' ></CategoryItem>
-            <CategoryItem itemName='Home Depot' bgColor='#AFDC10' iconSrc='/assets/appliance.svg' url='/' ></CategoryItem>
-            <CategoryItem itemName='Cosmetics & Fragrances' bgColor='#FF70A6' iconSrc='/assets/lip-stick.svg' url='/' ></CategoryItem>
+            <CategoryItem itemName='Food & Beverages' bgColor='#FFA800' iconSrc='/assets/food.svg' url='/explore' isFirst ></CategoryItem>
+            <CategoryItem itemName='Digitals' bgColor='#5BCCFA' iconSrc='/assets/digital.svg' url='/explore' ></CategoryItem>
+            <CategoryItem itemName='Clothes & Accessories' bgColor='#725CFD' iconSrc='/assets/cloth.svg' url='/explore' ></CategoryItem>
+            <CategoryItem itemName='Home Depot' bgColor='#AFDC10' iconSrc='/assets/appliance.svg' url='/explore' ></CategoryItem>
+            <CategoryItem itemName='Cosmetics & Fragrances' bgColor='#FF70A6' iconSrc='/assets/lip-stick.svg' url='/explore' ></CategoryItem>
            
             <Link
               to='/'
