@@ -107,8 +107,8 @@ const ExplorePage = () => {
             <p className='pt-0'>Explore the trending businesses that are growing online</p>
           </div>
         </div>
-        <div aria-label='popular-shop' className='d-flex flex-row-fluid flex-wrap pt-3 pb-5 justify-content-start'>
-          <div aria-label='shop-item-wrapper' className='d-flex flex-column col-3 justify-content-center align-items-center'>
+        <div aria-label='popular-shop' className='d-flex flex-row-fluid flex-wrap pb-5 justify-content-start'>
+          <div aria-label='shop-item-wrapper' className='d-flex flex-column col-3 justify-content-center align-items-center pt-3'>
             <div aria-label='shop-item'>
               <div aria-label='shop-item-logo' className=''>
                 <img aria-label='logo' width={216} height={216} />
@@ -126,7 +126,7 @@ const ExplorePage = () => {
               </div>
             </div>
           </div>
-          <div aria-label='shop-item-wrapper' className='d-flex flex-column col-3 justify-content-center align-items-center'>
+          <div aria-label='shop-item-wrapper' className='d-flex flex-column col-3 justify-content-center align-items-center pt-3'>
             <div aria-label='shop-item'>
               <div aria-label='shop-item-logo' className=''>
                 <img aria-label='logo' width={216} height={216} />
@@ -144,7 +144,7 @@ const ExplorePage = () => {
               </div>
             </div>
           </div>
-          <div aria-label='shop-item-wrapper' className='d-flex flex-column col-3 justify-content-center align-items-center'>
+          <div aria-label='shop-item-wrapper' className='d-flex flex-column col-3 justify-content-center align-items-center pt-3'>
             <div aria-label='shop-item'>
               <div aria-label='shop-item-logo' className=''>
                 <img aria-label='logo' width={216} height={216} />
@@ -162,7 +162,7 @@ const ExplorePage = () => {
               </div>
             </div>
           </div>
-          <div aria-label='shop-item-wrapper' className='d-flex flex-column col-3 justify-content-center align-items-center'>
+          <div aria-label='shop-item-wrapper' className='d-flex flex-column col-3 justify-content-center align-items-center pt-3'>
             <div aria-label='shop-item'>
               <div aria-label='shop-item-logo' className=''>
                 <img aria-label='logo' width={216} height={216} />
@@ -180,7 +180,7 @@ const ExplorePage = () => {
               </div>
             </div>
           </div>
-          <div aria-label='shop-item-wrapper' className='d-flex flex-column col-3 justify-content-center align-items-center'>
+          <div aria-label='shop-item-wrapper' className='d-flex flex-column col-3 justify-content-center align-items-center pt-3'>
             <div aria-label='shop-item'>
               <div aria-label='shop-item-logo' className=''>
                 <img aria-label='logo' width={216} height={216} />
@@ -198,7 +198,7 @@ const ExplorePage = () => {
               </div>
             </div>
           </div>
-          <div aria-label='shop-item-wrapper' className='d-flex flex-column col-3 justify-content-center align-items-center'>
+          <div aria-label='shop-item-wrapper' className='d-flex flex-column col-3 justify-content-center align-items-center pt-3'>
             <div aria-label='shop-item'>
               <div aria-label='shop-item-logo' className=''>
                 <img aria-label='logo' width={216} height={216} />
@@ -216,7 +216,7 @@ const ExplorePage = () => {
               </div>
             </div>
           </div>
-          <div aria-label='shop-item-wrapper' className='d-flex flex-column col-3 justify-content-center align-items-center'>
+          <div aria-label='shop-item-wrapper' className='d-flex flex-column col-3 justify-content-center align-items-center pt-3'>
             <div aria-label='shop-item'>
               <div aria-label='shop-item-logo' className=''>
                 <img aria-label='logo' width={216} height={216} />
@@ -234,24 +234,7 @@ const ExplorePage = () => {
               </div>
             </div>
           </div>
-          <div aria-label='shop-item-wrapper' className='d-flex flex-column col-3'>
-            <div aria-label='shop-item'>
-              <div aria-label='shop-item-logo' className=''>
-                <img aria-label='logo' width={216} height={216} />
-              </div>
-              <div aria-label='shop-item-title' className='mt-2'>
-                <div aria-label='shop-name' className=''>
-                  <h5 className='fw-bold'>Houseeker</h5>
-                </div>
-                <div aria-label='rating' className='d-inline rounded-pill bg-primary px-2 py-2'>
-                  <span className='text-white fw-bold'>
-                    <SVG src={toAbsoluteUrl('/assets/star.svg')}></SVG>
-                  </span>
-                  <span className='text-white fw-bold'>5</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          
         </div>
       </div>
     </>
