@@ -123,10 +123,9 @@ const LogoItem = styled.div`
 `;
 
 export const Header = ({ history }) => {
-  const { accessToken, lastName, middleName, firstName, imageUrl } =
-    useSelector((state) => {
-      return state.user;
-    });
+  const { accessToken, lastName, middleName, firstName, imageUrl } = useSelector((state) => {
+    return state.user;
+  });
   const [isSignIn, setIsSignin] = useState(!!accessToken);
   const [inputSearch, setInputSearch] = useState('');
   const debouncedSearchTerm = useDebounce(inputSearch, 500);
@@ -153,7 +152,7 @@ export const Header = ({ history }) => {
   return (
     <Container>
       <HeaderContainer>
-        <LogoContainer to="/">
+        <LogoContainer to='/'>
           <LogoItem hide>
             <MobileLogo />
           </LogoItem>
@@ -174,13 +173,20 @@ export const Header = ({ history }) => {
         </HamburgerMenu> */}
 
         <OptionsContainer
-          // isSearchView={history.location.pathname.includes('search-result')}
+        // isSearchView={history.location.pathname.includes('search-result')}
         >
-          <OptionLink to={{pathname: '/explore'}}>Explore</OptionLink>
-          <OptionLink to={{pathname: '/'}}>Chatbot</OptionLink>
-          <OptionLink to={{pathname: '/'}}>What is Soby?</OptionLink>
-          <OptionLink to={{pathname: '/phone-signin'}}>Log In</OptionLink>
-          <SwitchBtn className='fw-bold' style={{marginLeft: '34px', marginRight: '8px', backgroundColor: 'white', border: '2px solid #E7E8E9', color: 'black'}}>Join Now</SwitchBtn>
+          <OptionLink to={{ pathname: '/explore' }}>Explore</OptionLink>
+          <OptionLink to={{ pathname: '/' }}>Chatbot</OptionLink>
+          <a href='https://soby.vn/#what-is-soby' style={{ padding: '10px 24px', cursor: 'pointer', color: `${defaultFontColor}` }}>
+            What is Soby?
+          </a>
+          <OptionLink to={{ pathname: '/phone-signin' }}>Log In</OptionLink>
+          <SwitchBtn
+            className='fw-bold'
+            style={{ marginLeft: '34px', marginRight: '8px', backgroundColor: 'white', border: '2px solid #E7E8E9', color: 'black' }}
+          >
+            Join Now
+          </SwitchBtn>
           <SwitchBtn>For Seller</SwitchBtn>
 
           {
@@ -228,17 +234,11 @@ export const Header = ({ history }) => {
             </IconBtn>
           )} */}
           {
-          //#endregion
+            //#endregion
           }
         </OptionsContainer>
       </HeaderContainer>
-      {history.location.pathname.includes('search-result') && (
-        <SearchInput
-          hide
-          inputSearch={inputSearch}
-          handleChange={handleChange}
-        />
-      )}
+      {history.location.pathname.includes('search-result') && <SearchInput hide inputSearch={inputSearch} handleChange={handleChange} />}
     </Container>
   );
 };
