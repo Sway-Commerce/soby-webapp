@@ -15,7 +15,9 @@ import { onError } from '@apollo/client/link/error';
 import { createBrowserHistory } from 'history';
 
 import { store, persistor } from './redux/store';
-
+import $ from 'jquery';
+import '@popperjs/core';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
 import { LOGIN_WITH_SIGNATURE } from 'graphQL/repository/individual.repository';
 import { setAccessToken } from 'redux/user/user.actions';
