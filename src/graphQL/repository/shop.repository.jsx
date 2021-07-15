@@ -210,6 +210,7 @@ export const GET_ALL_SHOP_CATEGORIES = gql`
       data {
         id
         name
+        englishName
         description
       }
     }

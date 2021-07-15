@@ -52,9 +52,7 @@ const MobilePaymentResult = lazy(() =>
 const PaymeSuccess = lazy(() =>
   import('pages/payme-success/payme-success.component')
 );
-const PaymeFail = lazy(() =>
-  import('pages/payme-fail/payme-fail.component')
-);
+const PaymeFail = lazy(() => import('pages/payme-fail/payme-fail.component'));
 const ReturnRequestPage = lazy(() =>
   import('pages/return-request/return-request.component')
 );
@@ -75,71 +73,70 @@ const HomePage = lazy(() => import('pages/homepage/homepage.component'));
 const SearchResult = lazy(() =>
   import('pages/search-result/search-result.component')
 );
+const ExplorePage = lazy(() => import('pages/explore/explore.page'));
 
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <Header />
       <GlobalStyle />
-      <div className="body-container">
+      <div className='body-container'>
         <Switch>
           <ErrorBoundary>
             <Suspense fallback={<Spinner />}>
-              <Route exact path="/" component={HomePage} />
-              <Route path="/phone-signin" component={PhoneSignin} />
+              <Route exact path='/' component={HomePage} />
+              <Route exact path='/explore' component={ExplorePage} />
+              <Route path='/phone-signin' component={PhoneSignin} />
               <Route
                 exact
-                path="/phone-verification"
+                path='/phone-verification'
                 component={PhoneVerification}
               />
-              <Route exact path="/signup" component={SignUpInfo} />
-              <Route exact path="/signup-info" component={SignUpPhone} />
+              <Route exact path='/signup' component={SignUpInfo} />
+              <Route exact path='/signup-info' component={SignUpPhone} />
 
-              <Route path="/shop-profile/:shopId" component={ShopProfile} />
-              <Route path="/product/:productId" component={ProductDetail} />
-              <JwtRoute path="/your-transaction" component={YourTransaction} />
+              <Route path='/shop-profile/:shopId' component={ShopProfile} />
+              <Route path='/product/:productId' component={ProductDetail} />
+              <JwtRoute path='/your-transaction' component={YourTransaction} />
               <JwtRoute
-                path="/individual-profile"
+                path='/individual-profile'
                 component={IndividualProfile}
               />
               <JwtRoute
-                path="/individual-shipping"
+                path='/individual-shipping'
                 component={IndividualShipping}
               />
               <Route
-                path="/transaction/vnpay-return"
+                path='/transaction/vnpay-return'
                 component={PaymentResult}
               />
               <Route
-                path="/transaction/vnpay-mobile"
+                path='/transaction/vnpay-mobile'
                 component={MobilePaymentResult}
               />
               <Route
-                path="/transaction/payme-success"
+                path='/transaction/payme-success'
                 component={PaymeSuccess}
               />
-              <Route
-                path="/transaction/payme-fail"
-                component={PaymeFail}
-              />
+              <Route path='/transaction/payme-fail' component={PaymeFail} />
               <JwtRoute
-                path="/return-request/:invoiceId"
+                path='/return-request/:invoiceId'
                 component={ReturnRequestPage}
               />
               <JwtRoute
-                path="/return-request"
+                path='/return-request'
                 exact
                 component={ReturnRequestList}
               />
               <JwtRoute
-                path="/return-info/:assessId/:requestId"
+                path='/return-info/:assessId/:requestId'
                 exact
                 component={ReturnRequestInfo}
               />
-              <Route path="/invoice/:invoiceId" component={Invoice} />
-              <JwtRoute path="/edit-profile" component={EditProfile} />
-              <JwtRoute path="/change-password" component={ChangePassword} />
-              <Route path="/search-result" component={SearchResult} />
+              <Route path='/invoice/:invoiceId' component={Invoice} />
+              <JwtRoute path='/edit-profile' component={EditProfile} />
+              <JwtRoute path='/change-password' component={ChangePassword} />
+              <Route path='/search-result' component={SearchResult} />
             </Suspense>
           </ErrorBoundary>
         </Switch>

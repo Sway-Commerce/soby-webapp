@@ -150,7 +150,7 @@ export const GlobalStyle = createGlobalStyle`
 		font-size: 1.2rem;
 		line-height: 1rem;
 		text-align: center;
-		font-weight: 700;
+		font-weight: 800;
 	}
 
 	.form-label {

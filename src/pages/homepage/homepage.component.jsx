@@ -321,6 +321,7 @@ const HomePage = () => {
             <CategoryItem itemName='Cosmetics & Fragrances' bgColor='#FF70A6' iconSrc='/assets/lip-stick.svg' url='/' ></CategoryItem>
            
             <Link
+              to='/'
               className='d-flex flex-column align-items-center ms-4'
               style={{ width: '110px', lineHeight: '1rem' }}
             >
