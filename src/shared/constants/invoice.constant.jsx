@@ -10,8 +10,7 @@ export const subInvoiceFilters = [
   'DEPOSIT',
   'DELIVERING',
   'DELIVERED',
-  'COMPLETED',
-  'RETURN REQUEST',
+  'COMPLETED'
 ];
 
 export const InvoiceStatusValue = [

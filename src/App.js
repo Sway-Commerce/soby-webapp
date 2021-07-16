@@ -59,6 +59,7 @@ const ReturnRequestPage = lazy(() =>
   import('pages/return-request/return-request.component')
 );
 const Invoice = lazy(() => import('pages/invoice/invoice.component'));
+const YourInvoice = lazy(() => import('pages/invoice/your-invoice.component'));
 const ReturnRequestList = lazy(() =>
   import('pages/return-request-list/return-request-list.component')
 );
@@ -137,6 +138,7 @@ const App = () => {
                 component={ReturnRequestInfo}
               />
               <Route path="/invoice/:invoiceId" component={Invoice} />
+              <Route path="/your-invoice/:invoiceOrderId" component={YourInvoice} />
               <JwtRoute path="/edit-profile" component={EditProfile} />
               <JwtRoute path="/change-password" component={ChangePassword} />
               <Route path="/search-result" component={SearchResult} />

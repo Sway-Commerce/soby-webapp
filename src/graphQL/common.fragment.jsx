@@ -103,15 +103,19 @@ export const PROPERTY_FRAGMENT = gql`
 export const SKU_FRAGMENT = gql`
   ${PROPERTY_FRAGMENT}
   fragment SkuFragment on Sku {
-    currentPrice
     id
-    originPrice
     productId
-    properties {
-      ...PropertyFragment
-    }
-    remainingQuantity
+    originPrice
+    currentPrice
     totalQuantity
+    remainingQuantity
+    description
+    masterTag
+    subTags
+    imageUrls
+    properties {
+        ...PropertyFragment
+    }
     deleted
   }
 `;
@@ -119,19 +123,21 @@ export const SKU_FRAGMENT = gql`
 export const PRODUCT_FRAGMENT = gql`
   ${SKU_FRAGMENT}
   fragment ProductFragment on Product {
-    createdAt
-    description
     id
-    imageUrls
-    category {
-      id
-      name
-    }
-    name
     shopId
-    skus {
-      ...SkuFragment
+    name
+    category {
+        id
+        name
     }
+    imageUrls
+    description
+    masterTag
+    subTags
+    skus {
+        ...SkuFragment
+    }
+    createdAt
     updatedAt
     deleted
   }
@@ -157,8 +163,6 @@ export const AGGREGATED_INVOICE_ITEM = gql`
 export const INVOICE_HISTORY_FRAGMENT = gql`
   fragment InvoiceHistoryFragment on InvoiceHistory {
     id
-    invoiceId
-    invoiceVersion
     name
     description
     shopId
@@ -166,15 +170,15 @@ export const INVOICE_HISTORY_FRAGMENT = gql`
     escrowFee
     createdAt
     items {
-      id
-      productId
-      skuId
-      quantity
-      price
-      weight
+        id
+        productId
+        skuId
+        quantity
+        price
     }
     price
-    totalWeight
+    shippingFeeInCity
+    shippingFeeOutCity
   }
 `;
 export const INVOICE_ORDER_FRAGMENT = gql`
@@ -182,22 +186,20 @@ export const INVOICE_ORDER_FRAGMENT = gql`
   fragment InvoiceOrderFragment on InvoiceOrder {
     id
     invoice {
-      ...InvoiceHistoryFragment
+        ...InvoiceHistoryFragment
     }
     individualId
     shippingLocationId
     shippingFee
+    orderFee
+    status
     individualTrackingUrl
     shopTrackingUrl
-    orderFee
-    voucherCodes
-    voucherDiscount
-    paymentMethod
-    status
     reason
     totalPrice
     createdAt
     updatedAt
+    shippingPartner
   }
 `;
 
@@ -209,34 +211,34 @@ export const AGGREGATED_INVOICE_FRAGMENT = gql`
     name
     description
     shop {
-      id
-      name
-      logoUrl
+        id
+        name
+        logoUrl
+        phoneCountryCode
+        phoneNumber
     }
     shippingType
     escrowFee
     oneTime
-    startTime
-    endTime
     acceptedCount
     createdAt
     updatedAt
+    startTime
+    endTime
     items {
-      id
-      product {
-        ...ProductFragment
-      }
-      sku {
-        ...SkuFragment
-      }
-      quantity
-      price
-      weight
+        id
+        product {
+            ...ProductFragment
+        }
+        sku {
+            ...SkuFragment
+        }
+        quantity
+        price
     }
     price
-    totalWeight
-    createdBy
-    updatedBy
+    shippingFeeInCity
+    shippingFeeOutCity
   }
 `;
 export const REFUND_REQUEST_FRAGMENT = gql`

@@ -54,13 +54,13 @@ const YourTransaction = ({ name }) => {
     setActiveInvoice(null);
     setInvoiceList([]);
     setInvoiceListQuery({ ...invoiceListQuery, total: 0 });
-    if (
-      InvoiceStatusValue[InvoiceStatusValue.length - 1] ===
-      subFilter.toUpperCase()
-    ) {
-      window.location = '/return-request';
-      return;
-    }
+    // if (
+    //   InvoiceStatusValue[InvoiceStatusValue.length - 1] ===
+    //   subFilter.toUpperCase()
+    // ) {
+    //   window.location = '/return-request';
+    //   return;
+    // }
     if (mainFilter === 'Invoices') {
       getIndividualAggregatedInvoiceOrderList({
         variables: {
@@ -166,22 +166,3 @@ const YourTransaction = ({ name }) => {
 };
 
 export default YourTransaction;
-// {activeInvoice ? <Invoice invoiceIndividualId={activeInvoice} /> : null}
-// ${activeInvoice ? 'width-limit' : ''}`
-// <HorizontalList
-//           key={JSON.stringify(mainInvoiceFilters)}
-//           items={mainInvoiceFilters}
-//           renderItem={(item, index) => (
-//             <div
-//               className={`tab-wrapper ${mainFilter === item ? '' : 'opacity'}`}
-//               key={item}
-//               onClick={() =>
-//                 setInvoiceListQuery({ ...invoiceListQuery, mainFilter: item })
-//               }
-//             >
-//               {mainIcons[index]}
-//               <p className="order">{item}</p>
-//               {mainFilter === item ? <p className="amount">{total}</p> : null}
-//             </div>
-//           )}
-//         />
