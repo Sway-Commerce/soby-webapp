@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ReactComponent as CloseIcon } from 'shared/assets/close-action.svg';
-import { ReactComponent as AcceptIcon } from 'shared/assets/accept-action.svg';
 import {
   bodyColor,
   borderColor,
   greenColor,
 } from 'shared/css-variable/variable';
 import { Link, useParams } from 'react-router-dom';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import {
-  ACCEPT_INVOICE,
-  GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL,
-  GET_DETAILED_INVOICE_BY_ID,
-  MARK_SATISFIED_WITH_INVOICE,
-  UPDATE_RETURN_SHIPPING_INFO,
+  GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL
 } from 'graphQL/repository/invoice.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
@@ -23,7 +17,6 @@ import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import RequestItem from 'pages/return-request-list/request-item.component';
 import { DisputeType } from 'shared/constants/dispute.constant';
 import InvoiceInfoBox from 'pages/invoice/invoice-info-box';
-import { ReactComponent as CheckIcon } from 'shared/assets/check.svg';
 
 const Page = styled.div`
   display: flex;
@@ -186,12 +179,10 @@ const ReportButton = styled.div`
 
 const RequestReturnDetail = () => {
   const { invoiceId } = useParams();
-  const [open, setOpen] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [invoiceData, setInvoiceData] = useState({
     name: '',
     shippingType: '',
-    expiredAt: '',
     price: '',
     items: [],
     shop: { logoUrl: '', name: '' },
@@ -210,24 +201,10 @@ const RequestReturnDetail = () => {
     createdAt: '',
     description: '',
     id: '',
-    invoiceId: '',
-    invoiceVersion: '',
-    totalWeight: '',
-    assess: null,
+    invoiceId: ''
   });
-  const [productMargin, setProductMargin] = useState(0);
   const [formError, setFormError] = useState('');
   const { shop } = invoiceData;
-  const [rejectCount, setRejectCount] = useState(0);
-
-  const [loadDetailInvoice, { loading, error: loadDetailInvoiceError }] =
-    useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
-      variables: {
-        id: invoiceId,
-      },
-      fetchPolicy: 'network-only',
-      notifyOnNetworkStatusChange: true,
-    });
 
   const [
     getAggregatedInvoiceOrderForIndividual,
@@ -244,28 +221,6 @@ const RequestReturnDetail = () => {
     notifyOnNetworkStatusChange: true,
   });
 
-  const [
-    acceptInvoice,
-    {
-      data: acceptInvoiceData,
-      loading: acceptLoading,
-      error: acceptInvoiceError,
-    },
-  ] = useMutation(ACCEPT_INVOICE, {
-    errorPolicy: 'all',
-    variables: {
-      cmd: {
-        invoiceId,
-      },
-    },
-  });
-
-  // useEffect(() => {
-  //   if (invoiceId) {
-  //     loadDetailInvoice();
-  //   }
-  // }, [invoiceId]);
-
   useEffect(() => {
     if (invoiceId) {
       getAggregatedInvoiceOrderForIndividual();
@@ -273,12 +228,11 @@ const RequestReturnDetail = () => {
   }, [invoiceId]);
 
   useEffect(() => {
-    if (invoiceData?.getAggregatedInvoice?.data) {
-      const { name, shippingType, expiredAt, price, items, shop } =
-        invoiceData?.getAggregatedInvoice?.data;
-      setInvoiceData({ name, shippingType, expiredAt, price, items, shop });
-    }
-  }, [invoiceData?.getAggregatedInvoice?.data]);
+    if (invoiceData?.getAggregatedInvoiceOrderForIndividual?.data) {
+      const { invoice, shippingLocation  } = 
+        invoiceData?.getAggregatedInvoiceOrderForIndividual?.data;
+      setInvoiceData({invoice, shippingLocation});
+  }}, [invoiceData?.getAggregatedInvoiceOrderForIndividual?.data]);
 
   useEffect(() => {
     const invoiceData =
@@ -292,8 +246,7 @@ const RequestReturnDetail = () => {
         individualTrackingUrl,
         orderFee,
         status,
-        totalPrice,
-        assess,
+        totalPrice
       } = invoiceData;
       const { name, shop, shippingType, escrowFee, items, price } = invoice;
       setInvoiceData({
@@ -308,103 +261,15 @@ const RequestReturnDetail = () => {
         individualTrackingUrl,
         totalPrice,
         orderFee,
-        escrowFee,
-        assess,
+        escrowFee
       });
-
-      setRejectCount(
-        invoiceData?.assess?.refundRequests?.filter(
-          (x) => x.status === 'REJECTED'
-        )?.length ?? 0
-      );
     }
   }, [
     getAggregatedInvoiceOrderForIndividualData
       ?.getAggregatedInvoiceOrderForIndividual?.data,
   ]);
 
-  useEffect(() => {
-    if (acceptInvoiceData?.acceptInvoice?.data) {
-      setOpen(true);
-    }
-  }, [acceptInvoiceData?.acceptInvoice?.data]);
-
-  // MARK_SATISFIED_WITH_INVOICE
-  const [
-    markSatisfiedWithInvoice,
-    {
-      data: markSatisfiedWithInvoiceData,
-      error: markSatisfiedWithInvoiceError,
-    },
-  ] = useMutation(MARK_SATISFIED_WITH_INVOICE, {
-    errorPolicy: 'all',
-    variables: {
-      cmd: {
-        id: invoiceId,
-      },
-    },
-  });
-
-  useEffect(() => {
-    if (markSatisfiedWithInvoiceData?.markSatisfiedWithInvoice?.success) {
-      window.location = '/return-request';
-    }
-  }, [markSatisfiedWithInvoiceData?.markSatisfiedWithInvoice?.success]);
-
-  // UPDATE_RETURN_SHIPPING_INFO
-  const [
-    updateReturnShippingInfo,
-    {
-      loading: updateReturnShippingInfoLoading,
-      error: updateReturnShippingInfoError,
-    },
-  ] = useMutation(UPDATE_RETURN_SHIPPING_INFO, {
-    errorPolicy: 'all',
-    variables: {
-      cmd: {
-        assessId: '',
-        shippingType: '', //BY_USER BY_SOBY
-        shippingLocationId: '',
-        returnFeePaidBy: '', //INDIVIDUAL SHOP
-        bankCode: '', // ABBANK
-        accountType: '', // ATM_CARD BANK_ACCOUNT
-        accountNumber: '',
-        accountOwner: '',
-        accountIssuedOn: '',
-        bankBranch: '',
-      },
-    },
-  });
-
-  // Error handle
-  useEffect(() => {
-    if (
-      markSatisfiedWithInvoiceError?.message ||
-      loadDetailInvoiceError?.message ||
-      getAggregatedInvoiceOrderForIndividualError?.message ||
-      acceptInvoiceError?.message ||
-      updateReturnShippingInfoError?.message
-    ) {
-      setFormError(
-        markSatisfiedWithInvoiceError?.message ??
-          loadDetailInvoiceError?.message ??
-          getAggregatedInvoiceOrderForIndividualError?.message ??
-          acceptInvoiceError?.message ??
-          updateReturnShippingInfoError?.message
-      );
-    }
-  }, [
-    markSatisfiedWithInvoiceError?.message,
-    loadDetailInvoiceError?.message,
-    getAggregatedInvoiceOrderForIndividualError?.message,
-    acceptInvoiceError?.message,
-    updateReturnShippingInfoError?.message,
-  ]);
-
-  return loading ||
-    acceptLoading ||
-    getAggregatedInvoiceOrderForIndividualLoading ||
-    updateReturnShippingInfoLoading ? (
+  return getAggregatedInvoiceOrderForIndividualLoading ? (
     <Spinner />
   ) : (
     <React.Fragment>
@@ -416,37 +281,6 @@ const RequestReturnDetail = () => {
               {DisputeType[invoiceData.status]?.name}
             </h4>
           </div>
-          {invoiceData.assess?.assessType === 'PROCESSING' ? (
-            <ActionContainer>
-              <Link className="action" to={`/return-request/${invoiceId}`}>
-                <CloseIcon />
-                <p>Reject</p>
-              </Link>
-              <div className="action">
-                <AcceptIcon />
-                <p>Accept</p>
-              </div>
-            </ActionContainer>
-          ) : null}
-
-          {invoiceData?.status !== 'COMPLETED' &&
-          invoiceData.assess?.assessType !== 'PROCESSING' &&
-          rejectCount < 3 ? (
-            <ActionContainer>
-              <AcceptButton onClick={() => markSatisfiedWithInvoice()}>
-                <CheckIcon />
-                <span>Accept</span>
-              </AcceptButton>
-            </ActionContainer>
-          ) : null}
-
-          {rejectCount === 3 ? (
-            <ActionContainer>
-              <ReportButton>
-                <span>Report problem</span>
-              </ReportButton>
-            </ActionContainer>
-          ) : null}
         </Box>
 
         <InvoiceInfoBox
@@ -486,7 +320,7 @@ const RequestReturnDetail = () => {
                   <img src={imageUrl} alt="" />
                   <div>
                     <p>{productName}</p>
-                    <p>Blue bird shop</p>
+                    <p>{shop.name}</p>
                   </div>
                 </Product>
                 <p className="title-info">{currencyFormatter(currentPrice)}</p>

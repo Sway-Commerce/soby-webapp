@@ -275,7 +275,7 @@ export const GET_WARD_LIST = gql`
 
 export const UPDATE_INVOICE_ORDER_INFO = gql`
   ${INVOICE_ORDER_FRAGMENT}
-  mutation UpdateInvoiceOrderInfo($cmd: UpdateInvoiceIndividualInfoCmd!) {
+  mutation UpdateInvoiceOrderInfo($cmd: UpdateInvoiceOrderInfoCmd!) {
     updateInvoiceOrderInfo(cmd: $cmd) {
       success
       message

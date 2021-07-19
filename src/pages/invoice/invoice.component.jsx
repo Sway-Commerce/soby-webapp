@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ReactComponent as CloseIcon } from 'shared/assets/close-action.svg';
-import { ReactComponent as AcceptIcon } from 'shared/assets/accept-action.svg';
 import {
   bodyColor,
   borderColor,
@@ -11,16 +9,13 @@ import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import {
   ACCEPT_INVOICE,
-  GET_DETAILED_INVOICE_BY_ID,
-  MARK_SATISFIED_WITH_INVOICE,
-  UPDATE_RETURN_SHIPPING_INFO,
+  GET_DETAILED_INVOICE_BY_ID
 } from 'graphQL/repository/invoice.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
 import SobyModal from 'components/ui/modal/modal.component';
+import ShippingInfo from 'components/shipping-info/shipping-info.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
-import RequestItem from 'pages/return-request-list/request-item.component';
-import { DisputeType } from 'shared/constants/dispute.constant';
 import InvoiceInfoBox from 'pages/invoice/invoice-info-box';
 import { ReactComponent as CheckIcon } from 'shared/assets/check.svg';
 
@@ -197,7 +192,7 @@ const Invoice = () => {
     createdAt: '',
     id: ''
   });
-  const [productMargin, setProductMargin] = useState(0);
+
   const [formError, setFormError] = useState('');
   const { shop } = invoiceData;
 
@@ -237,9 +232,9 @@ const Invoice = () => {
 
   useEffect(() => {
     if (invoiceData?.getAggregatedInvoice?.data) {
-      const { name, shippingType, price, items, shop } =
+      const { name, price, items, shop } =
         invoiceData?.getAggregatedInvoice?.data;
-      setInvoiceData({ name, shippingType, price, items, shop });
+      setInvoiceData({ name, price, items, shop });
     }
   }, [invoiceData?.getAggregatedInvoice?.data]);
 
@@ -252,10 +247,10 @@ const Invoice = () => {
       } = invoiceData;
       setInvoiceData({
         name,
-        price,
-        items,
         shop,
-        escrowFee
+        items,
+        escrowFee,
+        price
       });
     }
   }, [
@@ -284,6 +279,11 @@ const Invoice = () => {
     acceptInvoiceError?.message,
   ]);
 
+  const handleCheckout = () => {
+    acceptInvoice()
+    setOpen(true)
+  };
+
   return acceptLoading ||
     loadDetailInvoiceLoading ? (
     <Spinner />
@@ -295,6 +295,15 @@ const Invoice = () => {
             <h2>{invoiceData.name}</h2>
           </div>
         </Box>
+
+        {invoiceData.status === 'ACCEPTED' || !invoiceData.status ? (
+          <div className="check-out" onClick={handleCheckout}>
+            <div>Check out</div>
+            <div className="price">
+              <b>{currencyFormatter(invoiceData.price)}</b>
+            </div>
+          </div>
+        ) : null}
 
         <InvoiceInfoBox
           shopName={shop.name}
@@ -351,6 +360,16 @@ const Invoice = () => {
           </p>
         </FooterBox>
       </Page>
+
+      <SobyModal open={open} setOpen={setOpen}>
+        {acceptInvoiceData?.acceptInvoice?.data?.id || invoiceId ? (
+          <ShippingInfo
+            invoiceIndividualId={
+              acceptInvoiceData?.acceptInvoice?.data?.id ?? invoiceId
+            }
+          />
+        ) : null}
+      </SobyModal>
 
       <SobyModal open={openError} setOpen={setOpenError}>
         {formError ? (

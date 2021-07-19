@@ -16,7 +16,7 @@ const PaymeFail = () => {
       <div className="mobile-back">
         <span
           onClick={() =>
-            (window.location = 'http://soby.vn/transaction/payme-fail-redirect')
+            (window.location = 'http://soby.vn/your-transaction')
           }
         >
           Back

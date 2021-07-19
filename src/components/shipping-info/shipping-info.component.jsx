@@ -114,7 +114,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   const [codChecked, setCod] = useState(true);
   const [bankChecked, setBank] = useState(false);
   const [creditChecked, setCredit] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('COD');
+  const [paymentMethod, setPaymentMethod] = useState('BANK');
   const [provinceList, setProvinceList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
@@ -222,9 +222,9 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
       updateInvoiceOrderInfo({
         variables: {
           cmd: {
-            shippingLocationId,
-            invoiceIndividualId,
-            paymentMethod,
+            id: invoiceIndividualId,
+            shippingLocationId: shippingLocationId,
+            paymentMethod: paymentMethod
           },
         },
       });
@@ -288,6 +288,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
       if (error) {
         setFormError(error);
         setOpen(true);
+        console.log('signing secret is: ', signingSecret)
       } else {
         createInvoicePayment({
           variables: {
@@ -295,6 +296,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
               id: invoiceIndividualId,
               requestedAt,
               signature,
+              platform: 'WEB'
             },
           },
         });
@@ -427,9 +429,9 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     updateInvoiceOrderInfo({
       variables: {
         cmd: {
-          shippingLocationId,
-          invoiceIndividualId,
-          paymentMethod,
+          id: invoiceIndividualId,
+          shippingLocationId: shippingLocationId,
+          paymentMethod: paymentMethod
         },
       },
     });
@@ -449,9 +451,9 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     updateInvoiceOrderInfo({
       variables: {
         cmd: {
-          shippingLocationId,
-          invoiceIndividualId,
-          paymentMethod,
+          id: invoiceIndividualId,
+          shippingLocationId: shippingLocationId,
+          paymentMethod: paymentMethod
         },
       },
     });

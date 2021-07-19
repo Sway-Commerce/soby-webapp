@@ -138,7 +138,7 @@ const App = () => {
                 component={ReturnRequestInfo}
               />
               <Route path="/invoice/:invoiceId" component={Invoice} />
-              <Route path="/your-invoice/:invoiceOrderId" component={YourInvoice} />
+              <Route path="/your-invoice/:invoiceId" component={YourInvoice} />
               <JwtRoute path="/edit-profile" component={EditProfile} />
               <JwtRoute path="/change-password" component={ChangePassword} />
               <Route path="/search-result" component={SearchResult} />
