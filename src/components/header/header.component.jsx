@@ -35,7 +35,6 @@ const HeaderContainer = styled.div`
 
 const LogoContainer = styled(Link)`
   height: 100%;
-  padding: 16.5px 0;
 `;
 
 const OptionsContainer = styled.div`
@@ -187,7 +186,9 @@ export const Header = ({ history }) => {
           >
             Join Now
           </SwitchBtn>
-          <SwitchBtn>For Seller</SwitchBtn>
+          <Link to='/create-seller'>
+            <SwitchBtn type='button'>For Seller</SwitchBtn>
+          </Link>
 
           {
             //#region Old code
