@@ -19,7 +19,7 @@ import { BusinessVerification } from './business-verfication.component';
 import { ShopChannel } from './shop-channel.component';
 
 export const FormInput = function ({ ...props }) {
-  const { label, initialValue, onChange } = props;
+  const { label, initialValue, onChange, inputType } = props;
   return (
     <div className='mb-2'>
       {label ? (
@@ -27,7 +27,7 @@ export const FormInput = function ({ ...props }) {
           {label}
         </label>
       ) : null}
-      <input type='text' className='form-control' value={initialValue} onChange={onChange} style={{ fontSize: '14px' }}></input>
+      <input type={inputType} className='form-control' value={initialValue} onChange={onChange} style={{ fontSize: '14px' }}></input>
     </div>
   );
 };
@@ -55,17 +55,18 @@ export const createSellerTabs = {
 
 const initialShopChannel = {
   website: { isSelected: false, label: 'Website', value: '', prefix: '', logoSrc: '/assets/shopChannels/website.svg' },
-  facebook: { isSelected: false, label: 'Facebook', value: '', prefix: '', logoSrc: '/assets/shopChannels/facebook.svg' },
-  instagram: { isSelected: false, label: 'Instagram', value: '', prefix: '', logoSrc: '/assets/shopChannels/instagram.svg' },
-  tiktok: { isSelected: false, label: 'Tiktok', value: '', prefix: '', logoSrc: '/assets/shopChannels/tiktok.svg' },
-  zalo: { isSelected: false, label: 'Zalo', value: '', prefix: '', logoSrc: '/assets/shopChannels/zalo.svg' },
-  shopee: { isSelected: false, label: 'Shopee', value: '', prefix: '', logoSrc: '/assets/shopChannels/shopee.svg' },
-  chotot: { isSelected: false, label: 'ChoTot', value: '', prefix: '', logoSrc: '/assets/shopChannels/chotot.svg' },
+  facebook: { isSelected: false, label: 'Facebook', value: '', prefix: 'https://www.facebook.com/', logoSrc: '/assets/shopChannels/facebook.svg' },
+  instagram: { isSelected: false, label: 'Instagram', value: '', prefix: 'https://www.instagram.com/', logoSrc: '/assets/shopChannels/instagram.svg' },
+  tiktok: { isSelected: false, label: 'Tiktok', value: '', prefix: 'https://www.tiktok.com/', logoSrc: '/assets/shopChannels/tiktok.svg' },
+  zalo: { isSelected: false, label: 'Zalo', value: '', prefix: 'zalo.me/', logoSrc: '/assets/shopChannels/zalo.svg' },
+  shopee: { isSelected: false, label: 'Shopee', value: '', prefix: 'https://shopee.com/', logoSrc: '/assets/shopChannels/shopee.svg' },
+  chotot: { isSelected: false, label: 'ChoTot', value: '', prefix: 'https://chotot.com/', logoSrc: '/assets/shopChannels/chotot.svg' },
 };
 
 const initialBasicInfo = {
   businessName: '',
   owner: '',
+  password: '',
   phoneNumber: '',
   email: '',
   intro: '',
