@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../shared/utils/assetsHelper';
-import { SEARCH_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
+// import { SEARCH_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
@@ -44,7 +44,6 @@ const ChannelInput = function ({ ...props }) {
 export function ShopChannel({ ...props }) {
   const { getShopChannel, initialShopChannel } = props;
   const [shopChannelData, setShopChannelData] = useState(initialShopChannel);
-  console.log(shopChannelData);
 
   return (
     <div aria-label='shop-channel' className=''>

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../shared/utils/assetsHelper';
-import { SEARCH_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
+// import { SEARCH_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
@@ -13,10 +13,10 @@ import useDebounce from 'shared/hooks/useDebounce';
 import { FormInput, FormTextArea, createSellerTabs } from './create-seller.page';
 
 export function BusinessVerification({ ...props }) {
-  const { getBusinessVerification } = props;
-  const [businessName, setBusinessName] = useState('');
-  const [licenseNumber, setLicenseNumber] = useState('');
-  const [address, setAddress] = useState('');
+  const { getBusinessVerification, businessVerification } = props;
+  const [businessName, setBusinessName] = useState(businessVerification.businessName);
+  const [licenseNumber, setLicenseNumber] = useState(businessVerification.licenseNumber);
+  const [address, setAddress] = useState(businessVerification.address);
 
   return (
     <div aria-label='business-verification' className=''>
@@ -48,7 +48,7 @@ export function BusinessVerification({ ...props }) {
           <FormInput
             label='Address'
             onChange={function (evt) {
-              setLicenseNumber(evt.target.value);
+              setAddress(evt.target.value);
             }}
           ></FormInput>
 
