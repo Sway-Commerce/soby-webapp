@@ -88,7 +88,7 @@ const Grid = styled.div`
   }
 `;
 
-const Product = styled.div`
+const Product = styled(Link)`
   display: flex;
   text-align: left;
 
@@ -306,6 +306,7 @@ const Invoice = () => {
         ) : null}
 
         <InvoiceInfoBox
+          shopId={shop.id}
           shopName={shop.name}
         />
 
@@ -322,6 +323,7 @@ const Invoice = () => {
               id: itemId,
               price: totalPrice,
               product: {
+                id: id,
                 name: productName,
                 imageUrls: [imageUrl],
               },
@@ -330,7 +332,7 @@ const Invoice = () => {
             } = x;
             return (
               <Grid key={itemId}>
-                <Product className="title-info">
+                <Product className="title-info" to={`/product/${id}`}>
                   <img src={imageUrl} alt="" />
                   <div>
                     <p>{productName}</p>

@@ -87,7 +87,7 @@ const Grid = styled.div`
   }
 `;
 
-const Product = styled.div`
+const Product = styled(Link)`
   display: flex;
   text-align: left;
 
@@ -284,6 +284,7 @@ const RequestReturnDetail = () => {
         </Box>
 
         <InvoiceInfoBox
+          shopId={shop.id}
           shopName={shop.name}
           shippingLocation={invoiceData?.shippingLocation}
           trackingUrl={invoiceData.individualTrackingUrl}
@@ -308,6 +309,7 @@ const RequestReturnDetail = () => {
               id: itemId,
               price: totalPrice,
               product: {
+                id: id,
                 name: productName,
                 imageUrls: [imageUrl],
               },
@@ -316,7 +318,7 @@ const RequestReturnDetail = () => {
             } = x;
             return (
               <Grid key={itemId}>
-                <Product className="title-info">
+                <Product className="title-info" to={`/product/${id}`}>
                   <img src={imageUrl} alt="" />
                   <div>
                     <p>{productName}</p>
@@ -355,7 +357,9 @@ const RequestReturnDetail = () => {
         <FooterBox>
           <div></div>
           <h5>Total</h5>
-          <h5>{currencyFormatter(invoiceData.totalPrice)}</h5>
+          <h5 className="text-right">
+          {currencyFormatter(invoiceData.totalPrice)}
+          </h5>
         </FooterBox>
       </Page>
 

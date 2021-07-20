@@ -54,18 +54,11 @@ const YourTransaction = ({ name }) => {
     setActiveInvoice(null);
     setInvoiceList([]);
     setInvoiceListQuery({ ...invoiceListQuery, total: 0 });
-    // if (
-    //   InvoiceStatusValue[InvoiceStatusValue.length - 1] ===
-    //   subFilter.toUpperCase()
-    // ) {
-    //   window.location = '/return-request';
-    //   return;
-    // }
     if (mainFilter === 'Invoices') {
       getIndividualAggregatedInvoiceOrderList({
         variables: {
           query: {
-            statuses: [subFilter.toUpperCase()],
+            statuses: subFilter,
             page,
             pageSize,
           },

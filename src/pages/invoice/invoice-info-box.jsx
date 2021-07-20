@@ -1,6 +1,7 @@
 import React from 'react';
 import { borderColor } from 'shared/css-variable/variable';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const InfoBox = styled.div`
   display: grid;
@@ -28,14 +29,19 @@ export const InfoBox = styled.div`
   }
 `;
 
-const InvoiceInfoBox = ({ shopName, shippingLocation, trackingUrl }) => {
+const ShopBox = styled(Link)`
+  border: 1px solid ${borderColor};
+  padding: 16px 24px;
+`
+
+const InvoiceInfoBox = ({ shopId, shopName, shippingLocation, trackingUrl }) => {
   return (
     <InfoBox>
       {shopName ? (
-        <div className="info-box">
+        <ShopBox to={`/shop-profile/${shopId}`}>
           <h5>Invoice from</h5>
           <p className="invoice-info">{shopName}</p>
-        </div>
+        </ShopBox>
       ) : null}
       {shippingLocation ? (
         <div className="info-box">
