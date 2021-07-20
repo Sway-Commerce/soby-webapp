@@ -16,20 +16,20 @@ import useDebounce from 'shared/hooks/useDebounce';
 import { FormInput, FormTextArea, createSellerTabs } from './create-seller.page';
 
 export function BasicInfo({ ...props }) {
-  const { getBasicInfo, initialBasicInfo } = props;
-  const [businessName, setBusinessName] = useState(initialBasicInfo.businessName);
-  const [owner, setOwner] = useState(initialBasicInfo.owner);
-  const [password, setPassword] = useState(initialBasicInfo.password);
-  const [phoneNumber, setPhoneNumber] = useState(initialBasicInfo.phoneNumber);
-  const [email, setEmail] = useState(initialBasicInfo.email);
-  const [intro, setIntro] = useState(initialBasicInfo.intro);
+  const { getBasicInfo, basicInfo } = props;
+  const [businessName, setBusinessName] = useState(basicInfo.businessName);
+  const [owner, setOwner] = useState(basicInfo.owner);
+  const [password, setPassword] = useState(basicInfo.password);
+  const [phoneNumber, setPhoneNumber] = useState(basicInfo.phoneNumber);
+  const [email, setEmail] = useState(basicInfo.email);
+  const [intro, setIntro] = useState(basicInfo.intro);
   const [inputValidation, setInputValidation] = useState({
     isBusinessNameValid: true,
     isPasswordValid: true,
     isPhoneValid: true,
     isEmailValid: true
   });
-  console.log(initialBasicInfo);
+  console.log(basicInfo);
 
   const { isBusinessNameValid, isPasswordValid, isPhoneValid, isEmailValid } = inputValidation
 
@@ -93,6 +93,7 @@ export function BasicInfo({ ...props }) {
               ) : null}
           <FormInput
             label='Owner'
+            initialValue={owner}
             onChange={function (evt) {
               setOwner(evt.target.value);
             }}/>
@@ -125,6 +126,7 @@ export function BasicInfo({ ...props }) {
           </h4>
           <FormInput
             label='Phone Number'
+            initialValue={phoneNumber}
             onChange={function (evt) {
               if (!evt) {
                 return;
@@ -136,6 +138,7 @@ export function BasicInfo({ ...props }) {
               ) : null}
           <FormInput
             label='Email'
+            initialValue={email}
             onChange={function (evt) {
               if (!evt) {
                 return;
@@ -148,6 +151,7 @@ export function BasicInfo({ ...props }) {
           <FormTextArea
             label='Introduction'
             rows={3}
+            initialValue={intro}
             onChange={function (evt) {
               if (!evt) {
                 return;

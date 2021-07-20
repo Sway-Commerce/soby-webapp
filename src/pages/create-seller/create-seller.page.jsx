@@ -63,17 +63,15 @@ const initialShopChannel = {
   chotot: { isSelected: false, label: 'ChoTot', value: '', prefix: 'https://chotot.com/', logoSrc: '/assets/shopChannels/chotot.svg' },
 };
 
-const initialBasicInfo = {
-  businessName: '',
-  owner: '',
-  password: '',
-  phoneNumber: '',
-  email: '',
-  intro: '',
-};
-
 const CreateSellerPage = function () {
-  const [basicInfo, setBasicInfo] = useState({});
+  const [basicInfo, setBasicInfo] = useState({
+    businessName: '',
+    owner: '',
+    password: '',
+    phoneNumber: '',
+    email: '',
+    intro: ''
+  });
   const [shopChannel, setShopChannel] = useState({});
   const [businessVerification, setBusinessVerification] = useState({});
   const [currPage, setCurrPage] = useState(createSellerTabs['basicInfo'].label);
@@ -93,7 +91,7 @@ const CreateSellerPage = function () {
 
   const basicInfoProps = {
     getBasicInfo,
-    initialBasicInfo,
+    basicInfo,
   };
   const businessVerificationProps = {
     getBusinessVerification,
