@@ -58,7 +58,7 @@ export function PreviewAll({ ...props }) {
       description: basicInfo.intro,
       logoUrl: '',
       incorporationDate: '',
-      categoryIds: ['1011'],
+      categoryIds: ['299'],
       shopUrls,
       signingPublicKey: basicInfo.signingPublicKey,
       signingSecret: basicInfo.signingSecretKey,
