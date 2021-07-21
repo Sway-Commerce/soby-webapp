@@ -60,10 +60,10 @@ export const Container = styled.div`
 
   button.shipping-button {
     width: 100%;
-    color: ${mainColor};
+    color: white;
     font-size: 0.9rem;
     font-weight: 500;
-    background-color: #f1f1f1;
+    background-color: ${mainColor};
     border: 0;
     outline: 0;
     padding: 14px 0;
@@ -71,7 +71,8 @@ export const Container = styled.div`
     border-radius: 3px;
     &.disable {
       pointer-events: none;
-      color: white;
+      color: black;
+      background-color: #f1f1f1;
     }
   }
 
@@ -96,7 +97,7 @@ export const Container = styled.div`
   }
 `;
 
-const ShippingInfo = ({ invoiceIndividualId }) => {
+const ShippingInfo = ({ invoiceIndividualId, signingSecret }) => {
   const [phoneNumberIntl, setPhoneNumberIntl] = useState('');
   const [provinceId, setProvince] = useState('71');
   const [districtId, setDistrict] = useState('');
@@ -111,16 +112,12 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     addressLineValid: true,
     isPasswordValid: true,
   });
-  const [codChecked, setCod] = useState(true);
-  const [bankChecked, setBank] = useState(false);
-  const [creditChecked, setCredit] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('BANK');
   const [provinceList, setProvinceList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);
   const [shippingLocationId, setShippingLocationId] = useState('');
   const [password, setPassword] = useState('');
-  const signingSecret = useSelector((state) => state.user.signingSecret);
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
 
@@ -191,10 +188,10 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     ) {
       setFormError(
         loadProvinceError?.message ??
-          loadDistrictListError?.message ??
-          updateInvoiceOrderInfoError?.message ??
-          createInvoicePaymentError?.message ??
-          createShippingLocationError?.message
+        loadDistrictListError?.message ??
+        updateInvoiceOrderInfoError?.message ??
+        createInvoicePaymentError?.message ??
+        createShippingLocationError?.message
       );
       setOpen(true);
     }
@@ -203,7 +200,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     loadDistrictListError,
     updateInvoiceOrderInfoError,
     createInvoicePaymentError,
-    createShippingLocationError,
+    createShippingLocationError
   ]);
 
   useEffect(() => {
@@ -274,35 +271,56 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   }, [createInvoicePaymentData?.createInvoicePayment?.data?.payUrl]);
 
   useEffect(() => {
-    if (updateInvoiceOrderInfoData?.updateInvoiceOrderInfo?.data) {
+    if (updateInvoiceOrderInfoData?.updateInvoiceOrderInfo?.data && 
+      invoiceIndividualId &&
+      password && signingSecret) {
       const requestedAt = Date.now();
       const jsonString = JSON.stringify({
-        invoiceIndividualId,
+        id: invoiceIndividualId,
         requestedAt: requestedAt?.toString(),
       });
+
+      console.log('signing secret is: ', signingSecret)
+
       const { signature, error } = signSignature(
         signingSecret,
         jsonString,
         password
       );
-      if (error) {
-        setFormError(error);
-        setOpen(true);
-        console.log('signing secret is: ', signingSecret)
-      } else {
-        createInvoicePayment({
-          variables: {
-            cmd: {
-              id: invoiceIndividualId,
-              requestedAt,
-              signature,
-              platform: 'WEB'
-            },
-          },
-        });
-      }
+
+      console.log('invoiceIndividualId is %s', invoiceIndividualId);
+      console.log('signature is %s', signature);
+      console.log('request at %s', requestedAt);
+
+
+      // if (error) {
+      //   setFormError(error);
+      //   setOpen(true);
+      // } else {
+      //   createInvoicePayment({
+      //     variables: {
+      //       cmd: {
+      //         id: invoiceIndividualId,
+      //         requestedAt,
+      //         signature,
+      //         platform: 'WEB'
+      //       },
+      //     },
+      //   });
+      // }
+      // createInvoicePayment({
+      //   variables: {
+      //     cmd: {
+      //       id: invoiceIndividualId,
+      //       requestedAt,
+      //       signature,
+      //       platform: 'WEB'
+      //     },
+      //   },
+      // });
     }
-  }, [updateInvoiceOrderInfoData?.updateInvoiceOrderInfo?.data]);
+  }, [updateInvoiceOrderInfoData?.updateInvoiceOrderInfo?.data, 
+    invoiceIndividualId, password, signingSecret, createInvoicePayment]);
 
   if (
     updateInvoiceOrderInfoLoading ||
@@ -384,41 +402,6 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
     setShippingInfo({ ...shippingInfo, [name]: value });
   };
 
-  const handleCheckbox = (event) => {
-    if (!event) {
-      return;
-    }
-
-    const { name, checked: value } = event?.target;
-
-    switch (name) {
-      case 'cod':
-        setCod(value);
-        if (value) {
-          setBank(false);
-          setCredit(false);
-          setPaymentMethod('COD');
-        }
-        break;
-      case 'bank':
-        setBank(value);
-        if (value) {
-          setCod(false);
-          setCredit(false);
-          setPaymentMethod('BANK');
-        }
-        break;
-      case 'credit':
-        setCredit(value);
-        if (value) {
-          setCod(false);
-          setBank(false);
-          setPaymentMethod('CREDIT');
-        }
-        break;
-      default:
-    }
-  };
 
   if (createShippingLocationData?.createIndividualShippingLocation?.data) {
     // invoiceIndividualId: String!
@@ -479,29 +462,6 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
             : handleSubmit
         }
       >
-        <h5 className="title">
-          Hình thức thanh toán
-        </h5>
-        <div className="checkbox-wrapper">
-          <Checkbox
-            handleChange={handleCheckbox}
-            name="cod"
-            checked={codChecked}
-            label="COD"
-          />
-          <Checkbox
-            handleChange={handleCheckbox}
-            name="bank"
-            checked={bankChecked}
-            label="Bank transfer"
-          />
-          <Checkbox
-            handleChange={handleCheckbox}
-            name="credit"
-            checked={creditChecked}
-            label="Credit card"
-          />
-        </div>
         <h5 className="title">
           Thông tin giao hàng
         </h5>

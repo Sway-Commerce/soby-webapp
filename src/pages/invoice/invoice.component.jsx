@@ -11,6 +11,9 @@ import {
   ACCEPT_INVOICE,
   GET_DETAILED_INVOICE_BY_ID
 } from 'graphQL/repository/invoice.repository';
+import {
+  GETSECRET
+} from 'graphQL/repository/individual.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
 import SobyModal from 'components/ui/modal/modal.component';
@@ -192,9 +195,15 @@ const Invoice = () => {
     createdAt: '',
     id: ''
   });
+  const [signingKey, setSigningKey] = useState('');
 
   const [formError, setFormError] = useState('');
   const { shop } = invoiceData;
+
+  const [
+    getSecret,
+    { data: getSecretData, loading: getSecretLoading, error: getSecretError },
+  ] = useLazyQuery(GETSECRET);
 
   const [loadDetailInvoice, { 
     loading: loadDetailInvoiceLoading, 
@@ -226,6 +235,12 @@ const Invoice = () => {
 
   useEffect(() => {
     if (invoiceId) {
+      getSecret();
+    }
+  }, [invoiceId]);
+
+  useEffect(() => {
+    if (invoiceId) {
       loadDetailInvoice();
     }
   }, [invoiceId]);
@@ -239,8 +254,15 @@ const Invoice = () => {
   }, [invoiceData?.getAggregatedInvoice?.data]);
 
   useEffect(() => {
-    const invoiceData =
-    loadDetailInvoiceData?.getAggregatedInvoice?.data;
+    if (getSecretData?.getSecret?.data) {
+      const {signingSecret} = 
+        getSecretData?.getSecret?.data;
+      setSigningKey(signingSecret)
+    }
+  }, [getSecretData?.getSecret?.data]);
+
+  useEffect(() => {
+    const invoiceData = loadDetailInvoiceData?.getAggregatedInvoice?.data;
     if (invoiceData) {
       const {
         name, shop, escrowFee, items, price
@@ -364,10 +386,13 @@ const Invoice = () => {
       </Page>
 
       <SobyModal open={open} setOpen={setOpen}>
-        {acceptInvoiceData?.acceptInvoice?.data?.id || invoiceId ? (
+        {acceptInvoiceData?.acceptInvoice?.data?.id || invoiceId && getSecretData?.getSecret?.data?.signingSecret ? (
           <ShippingInfo
             invoiceIndividualId={
               acceptInvoiceData?.acceptInvoice?.data?.id ?? invoiceId
+            }
+            signingSecret = {
+              getSecretData?.getSecret?.data?.signingSecret
             }
           />
         ) : null}
