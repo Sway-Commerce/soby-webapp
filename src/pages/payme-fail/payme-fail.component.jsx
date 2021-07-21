@@ -4,6 +4,8 @@ import {
   CardWrapper,
   TransactionContainer
 } from './payme-fail.styles';
+import PaymentFail from '../../shared/assets/Payment-fail.svg'
+import { Link } from 'react-router-dom';
 
 const PaymeFail = () => {
   return (
@@ -11,17 +13,12 @@ const PaymeFail = () => {
       <CardWrapper>
         <TransactionContainer>
           <div className="soby-title">Payment fail</div>
+          <img className="photo" src={PaymentFail} />
         </TransactionContainer>
       </CardWrapper>
-      <div className="mobile-back">
-        <span
-          onClick={() =>
-            (window.location = 'http://soby.vn/your-transaction')
-          }
-        >
-          Back
-        </span>
-      </div>
+      <Link to="/your-transaction">
+        <div className="back-btn">Back</div>
+      </Link>
     </Container>
   )
 };

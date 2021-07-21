@@ -293,21 +293,21 @@ const ShippingInfo = ({ invoiceIndividualId, signingSecret }) => {
       console.log('request at %s', requestedAt);
 
 
-      // if (error) {
-      //   setFormError(error);
-      //   setOpen(true);
-      // } else {
-      //   createInvoicePayment({
-      //     variables: {
-      //       cmd: {
-      //         id: invoiceIndividualId,
-      //         requestedAt,
-      //         signature,
-      //         platform: 'WEB'
-      //       },
-      //     },
-      //   });
-      // }
+      if (error) {
+        setFormError(error);
+        setOpen(true);
+      } else {
+        createInvoicePayment({
+          variables: {
+            cmd: {
+              id: invoiceIndividualId,
+              requestedAt,
+              signature,
+              platform: 'WEB'
+            },
+          },
+        });
+      }
       // createInvoicePayment({
       //   variables: {
       //     cmd: {

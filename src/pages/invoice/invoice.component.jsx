@@ -4,6 +4,7 @@ import {
   bodyColor,
   borderColor,
   greenColor,
+  mainColor
 } from 'shared/css-variable/variable';
 import { Link, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -11,6 +12,8 @@ import {
   ACCEPT_INVOICE,
   GET_DETAILED_INVOICE_BY_ID
 } from 'graphQL/repository/invoice.repository';
+
+import { ReactComponent as AcceptIcon } from 'shared/assets/accept-action.svg';
 import {
   GETSECRET
 } from 'graphQL/repository/individual.repository';
@@ -29,6 +32,19 @@ const Page = styled.div`
   background-color: #ffffff;
   margin-top: 38px;
 `;
+
+const CheckoutButton = styled.div`
+  border-radius: 3px;
+
+  .checkout {
+    color: black;
+  }
+  
+  .price {
+    color: black;
+  }
+  
+`
 
 const Box = styled.div`
   background-color: #fff;
@@ -65,6 +81,7 @@ const Box = styled.div`
     margin-bottom: 10px;
   }
 `;
+
 
 const Grid = styled.div`
   display: grid;
@@ -316,16 +333,16 @@ const Invoice = () => {
           <div>
             <h2>{invoiceData.name}</h2>
           </div>
-        </Box>
 
-        {invoiceData.status === 'ACCEPTED' || !invoiceData.status ? (
-          <div className="check-out" onClick={handleCheckout}>
-            <div>Check out</div>
+          {invoiceData.status === 'ACCEPTED' || !invoiceData.status ? (
+          <CheckoutButton className="check-out" onClick={handleCheckout}>
+            <div className="checkout">Check out</div>
             <div className="price">
               <b>{currencyFormatter(invoiceData.price)}</b>
             </div>
-          </div>
+          </CheckoutButton>
         ) : null}
+        </Box>
 
         <InvoiceInfoBox
           shopId={shop.id}
@@ -386,7 +403,7 @@ const Invoice = () => {
       </Page>
 
       <SobyModal open={open} setOpen={setOpen}>
-        {acceptInvoiceData?.acceptInvoice?.data?.id || invoiceId && getSecretData?.getSecret?.data?.signingSecret ? (
+        {acceptInvoiceData?.acceptInvoice?.data?.id || invoiceId && getSecretData?.getSecret?.data ? (
           <ShippingInfo
             invoiceIndividualId={
               acceptInvoiceData?.acceptInvoice?.data?.id ?? invoiceId
