@@ -41,6 +41,7 @@ const HomePage = lazy(() => import('pages/homepage/homepage.component'));
 const SearchResult = lazy(() => import('pages/search-result/search-result.component'));
 const ExplorePage = lazy(() => import('pages/explore/explore.page'));
 const CreateSellerPage = lazy(() => import('pages/create-seller/create-seller.page'));
+const CreateSellerSuccessPage = lazy(() => import('pages/create-seller/create-seller-success'));
 
 const App = () => {
   return (
@@ -68,6 +69,7 @@ const App = () => {
               <Route path='/transaction/vnpay-mobile' component={MobilePaymentResult} />
               <Route path='/transaction/payme-success' component={PaymeSuccess} />
               <Route path='/transaction/payme-fail' component={PaymeFail} />
+              <JwtRoute path='/create-seller-success' component={CreateSellerSuccessPage} />
               <JwtRoute path='/return-request/:invoiceId' component={ReturnRequestPage} />
               <JwtRoute path='/return-request' exact component={ReturnRequestList} />
               <JwtRoute path='/return-info/:assessId/:requestId' exact component={ReturnRequestInfo} />

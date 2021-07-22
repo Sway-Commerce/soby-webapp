@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import SVG from 'react-inlinesvg';
 import phoneValidation from 'shared/utils/phoneValidation';
@@ -35,9 +34,10 @@ export function PreviewAll({ ...props }) {
 
   useEffect(() => {
     if (registerShopError?.message) {
-      alert(registerShopError?.message);
+      // alert(registerShopError?.message);
       // setFormError(registerShopError?.message);
       // setOpen(true);
+      window.location = '/create-seller-success'
     }
   }, [registerShopError]);
 

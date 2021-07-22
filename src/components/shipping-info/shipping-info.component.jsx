@@ -289,10 +289,6 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
       if (error) {
         setFormError(error);
         setOpen(true);
-<<<<<<< Updated upstream
-=======
-        console.log('cache info is: ', userDataCache)
->>>>>>> Stashed changes
       } else {
         createInvoicePayment({
           variables: {
