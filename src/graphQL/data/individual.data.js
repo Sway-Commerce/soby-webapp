@@ -2,10 +2,7 @@ import { gql } from '@apollo/client';
 
 export const typeDefs = gql`
   extend input RegisterCmd {
-    firstName: String!
-    lastName: String!
-    middleName: String
-    imageUrl: String
+    name: String!
     phoneCountryCode: String!
     phoneNumber: String!
     email: String!

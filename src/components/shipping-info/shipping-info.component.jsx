@@ -121,6 +121,7 @@ const ShippingInfo = ({ invoiceIndividualId }) => {
   const [shippingLocationId, setShippingLocationId] = useState('');
   const [password, setPassword] = useState('');
   const signingSecret = useSelector((state) => state.user.signingSecret);
+  const userDataCache = useSelector((state) => state.user);
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
 

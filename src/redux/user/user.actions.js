@@ -1,4 +1,4 @@
-import UserActionTypes from './user.types';
+import UserActionTypes from "./user.types";
 
 export const signInFailure = (error) => ({
   type: UserActionTypes.SIGN_IN_FAILURE,
@@ -156,31 +156,33 @@ export const updateStoredUser = ({
 });
 
 export const setRegisterInfo = ({
+  name,
+  phoneCountryCode,
+  phoneNumber,
   email,
-  lastName,
-  firstName,
-  middleName,
-  signingSecret,
-  encryptionSecret,
-  signingPublicKey,
-  encryptionPublicKey,
+  dob,
   password,
+  encryptionSecret,
+  encryptionPublicKey,
+  signingSecret,
+  signingPublicKey,
 }) => ({
   type: UserActionTypes.SET_REGISTER_INFO,
   payload: {
+    name,
+    phoneCountryCode,
+    phoneNumber,
     email,
-    lastName,
-    firstName,
-    middleName,
-    signingSecret,
-    encryptionSecret,
-    signingPublicKey,
-    encryptionPublicKey,
+    dob,
     password,
+    encryptionSecret,
+    encryptionPublicKey,
+    signingSecret,
+    signingPublicKey,
   },
 });
 
 export const setSearchInput = (payload) => ({
   type: UserActionTypes.SET_SEARCH_INPUT,
-  payload
+  payload,
 });
