@@ -36,15 +36,14 @@ import Spinner from 'components/ui/spinner/spinner.component';
 
 const RegisterPhone = ({ history }) => {
   const {
+    name,
     email,
-    lastName,
-    firstName,
-    middleName,
-    signingSecret,
-    encryptionSecret,
-    signingPublicKey,
-    encryptionPublicKey,
+    dob,
     password,
+    encryptionSecret,
+    encryptionPublicKey,
+    signingSecret,
+    signingPublicKey,
     accessToken,
     id,
   } = useSelector((state) => {
@@ -156,9 +155,7 @@ const RegisterPhone = ({ history }) => {
         phoneNumber,
         phoneCountryCode,
         email,
-        lastName,
-        firstName,
-        middleName,
+        name,
         password,
       };
       dispatchSignUpStart();

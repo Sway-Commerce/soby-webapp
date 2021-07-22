@@ -210,6 +210,7 @@ export const GET_ALL_SHOP_CATEGORIES = gql`
       data {
         id
         name
+        englishName
         description
       }
     }
@@ -272,6 +273,18 @@ export const SEARCH_AGGREGATED_SHOP = gql`
           }
         }
       }
+    }
+  }
+`;
+
+export const REGISTER_SHOP = gql`
+  ${SHOP_PROFILE_FRAGMENT}
+  mutation RegisterShop($cmd: RegisterShopCmd!) {
+    registerShop(cmd: $cmd) {
+      data {
+        ...ShopProfileFragment
+      }
+      message
     }
   }
 `;

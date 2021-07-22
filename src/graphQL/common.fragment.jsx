@@ -21,6 +21,7 @@ export const INDIVIDUAL_PROFILE_FRAGMENT = gql`
     firstName
     lastName
     middleName
+    name
     imageUrl
     email
     phoneCountryCode
@@ -390,7 +391,12 @@ export const SHOP_PROFILE_FRAGMENT = gql`
     phoneNumber
     userCountsApi
     incorporationDate
-    categories
+    categories {
+      id
+      name
+      englishName
+      description
+    }
     shopUrls {
       url
       verified
