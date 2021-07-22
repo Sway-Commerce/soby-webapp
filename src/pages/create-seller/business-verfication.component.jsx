@@ -52,7 +52,7 @@ export function BusinessVerification({ ...props }) {
             }}
           ></FormInput>
 
-          <h4 className='fw-bold mt-4' style={{ fontSize: '20px' }}>
+          {/* <h4 className='fw-bold mt-4' style={{ fontSize: '20px' }}>
             Business License
           </h4>
           <p style={{ color: '#6E7678', fontSize: '14px' }}>Please provide the most updated license in PDF format</p>
@@ -75,7 +75,7 @@ export function BusinessVerification({ ...props }) {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </form>
         <div aria-label='button-row' className='row mt-3 '>
           <div className='d-flex justify-content-center align-items-center'>

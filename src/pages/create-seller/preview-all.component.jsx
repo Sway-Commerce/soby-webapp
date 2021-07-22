@@ -89,12 +89,12 @@ export function PreviewAll({ ...props }) {
         </h3>
         <p style={{ color: '#6E7678', fontSize: '14px' }}>Double-check the information</p>
       </div>
-      <div aria-label='profile-img' className='d-flex justify-content-center text-center'>
+      {/* <div aria-label='profile-img' className='d-flex justify-content-center text-center'>
         <div
           className='d-flex flex-wrap justify-content-center align-items-center bg-light rounded p-2'
           style={{ width: '128px', height: '128px', backgroundColor: '#F3F4F4' }}
         ></div>
-      </div>
+      </div> */}
       <div aria-label='preview-all-form' className='mt-3'>
         <div className=''>
           <h4 className='fw-bold mt-4' style={{ fontSize: '20px' }}>
@@ -130,7 +130,15 @@ export function PreviewAll({ ...props }) {
             Introduction
           </h4>
           <div className='row' style={{ fontSize: '14px', color: '#6E7678' }}>
-            {basicInfo.intro ? <p key='intro-preview' style={{ fontSize: '14px' }}>{basicInfo.intro}</p> : <span key='no-specified-intro' className='fst-italic'>Not provided yet</span>}
+            {basicInfo.intro ? (
+              <p key='intro-preview' style={{ fontSize: '14px' }}>
+                {basicInfo.intro}
+              </p>
+            ) : (
+              <span key='no-specified-intro' className='fst-italic'>
+                Not provided yet
+              </span>
+            )}
           </div>
           <h4 className='fw-bold mt-4' style={{ fontSize: '20px' }}>
             Business Verification
@@ -138,7 +146,7 @@ export function PreviewAll({ ...props }) {
           <FieldPreview key='businessName-1' label={'Business Name'} value={businessVerification.businessName}></FieldPreview>
           <FieldPreview key='licenseNo' label={'License Number'} value={businessVerification.licenseNumber}></FieldPreview>
           <FieldPreview key='address' label={'Address'} value={businessVerification.address}></FieldPreview>
-          <h5 className='fw-bold mt-4 mx-1' style={{ fontSize: '14px' }}>
+          {/* <h5 className='fw-bold mt-4 mx-1' style={{ fontSize: '14px' }}>
             Business License
           </h5>
           <div aria-label='preview-doc-img' className='d-flex justify-content-center text-center'>
@@ -146,7 +154,7 @@ export function PreviewAll({ ...props }) {
               className='d-flex flex-wrap justify-content-center align-items-center border rounded p-2'
               style={{ width: '100%', height: '320px', backgroundColor: '#F3F4F4' }}
             ></div>
-          </div>
+          </div> */}
         </div>
         <div aria-label='button-row' className='row mt-3 '>
           <div className='d-flex justify-content-center align-items-center'>

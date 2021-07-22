@@ -14,6 +14,30 @@ import Spinner from 'components/ui/spinner/spinner.component';
 import ShopItem from '../../components/shop-item/shop-item.component';
 import useDebounce from 'shared/hooks/useDebounce';
 import { FormInput, FormTextArea, createSellerTabs } from './create-seller.page';
+import { Upload, Modal } from 'antd';
+
+const UploadBtn = function ({ ...props }) {
+  return (
+    <div
+      className='d-flex flex-wrap justify-content-center align-items-center bg-light rounded p-2'
+      style={{ width: '128px', height: '128px', backgroundColor: '#F3F4F4' }}
+    >
+      <div className=''>
+        <div className='d-inline-block text-center mb-1'>
+          <div
+            className='d-flex rounded-circle align-middle justify-content-center align-items-center'
+            style={{ width: '48px', height: '48px', backgroundColor: '#3D494B' }}
+          >
+            <SVG src={toAbsoluteUrl('/assets/camera.svg')}></SVG>
+          </div>
+        </div>
+        <div style={{ lineHeight: '.8rem' }}>
+          <span style={{ fontSize: '12px', whiteSpace: 'pre-line' }}>Upload business logo</span>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export function BasicInfo({ ...props }) {
   const { getBasicInfo, basicInfo, generateEncryptionKey, generateSignInKey } = props;
@@ -29,7 +53,7 @@ export function BasicInfo({ ...props }) {
     isPhoneValid: true,
     isEmailValid: true,
   });
-  console.log(basicInfo);
+  const [fileList, setFileList] = useState([]);
 
   const { isBusinessNameValid, isPasswordValid, isPhoneValid, isEmailValid } = inputValidation;
 
@@ -76,26 +100,9 @@ export function BasicInfo({ ...props }) {
           Let's get you started with some basic info
         </h3>
       </div>
-      <div aria-label='upload-profile-img' className='d-flex justify-content-center text-center'>
-        <div
-          className='d-flex flex-wrap justify-content-center align-items-center bg-light rounded p-2'
-          style={{ width: '128px', height: '128px', backgroundColor: '#F3F4F4' }}
-        >
-          <div className=''>
-            <div className='d-inline-block text-center mb-1'>
-              <div
-                className='d-flex rounded-circle align-middle justify-content-center align-items-center'
-                style={{ width: '48px', height: '48px', backgroundColor: '#3D494B' }}
-              >
-                <SVG src={toAbsoluteUrl('/assets/camera.svg')}></SVG>
-              </div>
-            </div>
-            <div style={{ lineHeight: '.8rem' }}>
-              <span style={{ fontSize: '12px', whiteSpace: 'pre-line' }}>Upload business logo</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* <div aria-label='upload-profile-img' className='d-flex justify-content-center text-center'>
+        <Upload>{fileList.length === 0 && UploadBtn}</Upload>
+      </div> */}
       <div aria-label='basic-info-form' className='mt-3'>
         <form>
           <FormInput

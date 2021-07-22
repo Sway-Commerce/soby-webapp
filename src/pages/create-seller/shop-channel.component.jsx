@@ -34,7 +34,7 @@ const ChannelInput = function ({ ...props }) {
       </div>
       {isSelected && (
         <div className='row'>
-          <input type='text' className='form-control' value={initialValue} style={{ fontSize: '14px' }} onChange={onInputChange}></input>
+          <input type='text' className='form-control' defaultValue={initialValue} style={{ fontSize: '14px' }} onChange={onInputChange}></input>
         </div>
       )}
     </div>
@@ -60,7 +60,7 @@ export function ShopChannel({ ...props }) {
               label={shopChannelData[channelName].label}
               logoSrc={shopChannelData[channelName].logoSrc}
               isSelected={shopChannelData[channelName].isSelected}
-              initialValue={shopChannelData[channelName].value}
+              initialValue={shopChannelData[channelName].prefix.concat(shopChannelData[channelName].value)}
               onSelect={function (evt) {
                 let updateValue = { ...shopChannelData };
                 updateValue[channelName].isSelected = evt.target.checked;
@@ -68,6 +68,7 @@ export function ShopChannel({ ...props }) {
                 setShopChannelData({ ...updateValue });
               }}
               onInputChange={function (evt) {
+                evt.preventDefault();
                 let updateValue = { ...shopChannelData };
                 updateValue[channelName].value = evt.target.value;
                 setShopChannelData({ ...updateValue });
