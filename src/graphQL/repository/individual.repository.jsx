@@ -193,7 +193,8 @@ export const signSignature = (signingSecret, jsonString, password) => {
   try {
     signing.importPrivateKey(signingSecret, password);
   } catch (error) {
-    return { signature: null, error: 'Wrong password' };
+    console.log("signing is: ", signingSecret)
+    return { signature: null, error: error.message };
   }
   return {
     signature: signing.sign(jsonString, { input: 'utf8', output: 'base64Url' }),

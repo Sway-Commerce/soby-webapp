@@ -4,26 +4,19 @@ import {
   bodyColor,
   borderColor,
   greenColor,
-  mainColor
 } from 'shared/css-variable/variable';
 import { Link, useParams } from 'react-router-dom';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import {
-  ACCEPT_INVOICE,
-  GET_DETAILED_INVOICE_BY_ID
+  GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL
 } from 'graphQL/repository/invoice.repository';
-
-import { ReactComponent as AcceptIcon } from 'shared/assets/accept-action.svg';
-import {
-  GETSECRET
-} from 'graphQL/repository/individual.repository';
 import Spinner from 'components/ui/spinner/spinner.component';
 import { currencyFormatter } from 'shared/utils/formatCurrency';
 import SobyModal from 'components/ui/modal/modal.component';
-import ShippingInfo from 'components/shipping-info/shipping-info.component';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
+import RequestItem from 'pages/return-request-list/request-item.component';
+import { DisputeType } from 'shared/constants/dispute.constant';
 import InvoiceInfoBox from 'pages/invoice/invoice-info-box';
-import { ReactComponent as CheckIcon } from 'shared/assets/check.svg';
 
 const Page = styled.div`
   display: flex;
@@ -32,19 +25,6 @@ const Page = styled.div`
   background-color: #ffffff;
   margin-top: 38px;
 `;
-
-const CheckoutButton = styled.div`
-  border-radius: 3px;
-
-  .checkout {
-    color: black;
-  }
-  
-  .price {
-    color: black;
-  }
-  
-`
 
 const Box = styled.div`
   background-color: #fff;
@@ -81,7 +61,6 @@ const Box = styled.div`
     margin-bottom: 10px;
   }
 `;
-
 
 const Grid = styled.div`
   display: grid;
@@ -198,133 +177,99 @@ const ReportButton = styled.div`
   }
 `;
 
-const Invoice = () => {
+const RequestReturnDetail = () => {
   const { invoiceId } = useParams();
-  const [open, setOpen] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [invoiceData, setInvoiceData] = useState({
     name: '',
+    shippingType: '',
     price: '',
     items: [],
     shop: { logoUrl: '', name: '' },
+    status: '',
+    shippingFee: 0,
+    shippingLocation: {
+      addressLine: '',
+      district: '',
+      province: '',
+      ward: '',
+    },
+    individualTrackingUrl: '',
+    totalPrice: '',
     orderFee: '',
     escrowFee: '',
     createdAt: '',
-    id: ''
+    description: '',
+    id: '',
+    invoiceId: ''
   });
-  const [signingKey, setSigningKey] = useState('');
-
   const [formError, setFormError] = useState('');
   const { shop } = invoiceData;
 
   const [
-    getSecret,
-    { data: getSecretData, loading: getSecretLoading, error: getSecretError },
-  ] = useLazyQuery(GETSECRET);
-
-  const [loadDetailInvoice, { 
-    loading: loadDetailInvoiceLoading, 
-    error: loadDetailInvoiceError,
-    data: loadDetailInvoiceData }] =
-    useLazyQuery(GET_DETAILED_INVOICE_BY_ID, {
-      variables: {
-        id: invoiceId,
-      },
-      fetchPolicy: 'network-only',
-      notifyOnNetworkStatusChange: true,
-    });
-
-  const [
-    acceptInvoice,
+    getAggregatedInvoiceOrderForIndividual,
     {
-      data: acceptInvoiceData,
-      loading: acceptLoading,
-      error: acceptInvoiceError,
+      loading: getAggregatedInvoiceOrderForIndividualLoading,
+      error: getAggregatedInvoiceOrderForIndividualError,
+      data: getAggregatedInvoiceOrderForIndividualData,
     },
-  ] = useMutation(ACCEPT_INVOICE, {
-    errorPolicy: 'all',
+  ] = useLazyQuery(GET_AGGREGATED_INVOICE_ORDER_FOR_INDIVIDUAL, {
     variables: {
-      cmd: {
-        invoiceId,
-      },
+      id: invoiceId,
     },
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
   });
 
   useEffect(() => {
     if (invoiceId) {
-      getSecret();
+      getAggregatedInvoiceOrderForIndividual();
     }
   }, [invoiceId]);
 
   useEffect(() => {
-    if (invoiceId) {
-      loadDetailInvoice();
-    }
-  }, [invoiceId]);
+    if (invoiceData?.getAggregatedInvoiceOrderForIndividual?.data) {
+      const { invoice, shippingLocation  } = 
+        invoiceData?.getAggregatedInvoiceOrderForIndividual?.data;
+      setInvoiceData({invoice, shippingLocation});
+  }}, [invoiceData?.getAggregatedInvoiceOrderForIndividual?.data]);
 
   useEffect(() => {
-    if (invoiceData?.getAggregatedInvoice?.data) {
-      const { name, price, items, shop } =
-        invoiceData?.getAggregatedInvoice?.data;
-      setInvoiceData({ name, price, items, shop });
-    }
-  }, [invoiceData?.getAggregatedInvoice?.data]);
-
-  useEffect(() => {
-    if (getSecretData?.getSecret?.data) {
-      const {signingSecret} = 
-        getSecretData?.getSecret?.data;
-      setSigningKey(signingSecret)
-    }
-  }, [getSecretData?.getSecret?.data]);
-
-  useEffect(() => {
-    const invoiceData = loadDetailInvoiceData?.getAggregatedInvoice?.data;
+    const invoiceData =
+      getAggregatedInvoiceOrderForIndividualData
+        ?.getAggregatedInvoiceOrderForIndividual?.data;
     if (invoiceData) {
       const {
-        name, shop, escrowFee, items, price
+        invoice,
+        shippingLocation,
+        shippingFee,
+        individualTrackingUrl,
+        orderFee,
+        status,
+        totalPrice
       } = invoiceData;
+      const { name, shop, shippingType, escrowFee, items, price } = invoice;
       setInvoiceData({
         name,
-        shop,
+        shippingType,
+        price,
         items,
-        escrowFee,
-        price
+        shop,
+        status,
+        shippingFee,
+        shippingLocation,
+        individualTrackingUrl,
+        totalPrice,
+        orderFee,
+        escrowFee
       });
     }
   }, [
-    loadDetailInvoiceData?.getAggregatedInvoice?.data,
+    getAggregatedInvoiceOrderForIndividualData
+      ?.getAggregatedInvoiceOrderForIndividual?.data,
   ]);
 
-  useEffect(() => {
-    if (acceptInvoiceData?.acceptInvoice?.data) {
-      setOpen(true);
-    }
-  }, [acceptInvoiceData?.acceptInvoice?.data]);
-
-  // Error handle
-  useEffect(() => {
-    if (
-      loadDetailInvoiceError?.message ||
-      acceptInvoiceError?.message
-    ) {
-      setFormError(
-          loadDetailInvoiceError?.message ??
-          acceptInvoiceError?.message
-      );
-    }
-  }, [
-    loadDetailInvoiceError?.message,
-    acceptInvoiceError?.message,
-  ]);
-
-  const handleCheckout = () => {
-    acceptInvoice()
-    setOpen(true)
-  };
-
-  return acceptLoading ||
-    loadDetailInvoiceLoading ? (
+  return getAggregatedInvoiceOrderForIndividualLoading ? (
     <Spinner />
   ) : (
     <React.Fragment>
@@ -332,27 +277,29 @@ const Invoice = () => {
         <Box className="main-box">
           <div>
             <h2>{invoiceData.name}</h2>
+            <h4 className={DisputeType[invoiceData.status]?.colorClass}>
+              {DisputeType[invoiceData.status]?.name}
+            </h4>
           </div>
-
-          {invoiceData.status === 'ACCEPTED' || !invoiceData.status ? (
-          <CheckoutButton className="check-out" onClick={handleCheckout}>
-            <div className="checkout">Check out</div>
-            <div className="price">
-              <b>{currencyFormatter(invoiceData.price)}</b>
-            </div>
-          </CheckoutButton>
-        ) : null}
         </Box>
 
         <InvoiceInfoBox
           shopId={shop.id}
           shopName={shop.name}
+          shippingLocation={invoiceData?.shippingLocation}
+          trackingUrl={invoiceData.individualTrackingUrl}
+        />
+
+        <RequestItem
+          refundRequests={invoiceData.assess?.refundRequests}
+          assessId={invoiceData.assess?.id}
         />
 
         <Grid>
           <h5 className="title-info">Products list</h5>
           <h5 className="title-info">Subtotal</h5>
           <h5 className="title-info">Qty</h5>
+          <h5 className="title-info">Total</h5>
         </Grid>
         <BreakLine />
 
@@ -400,20 +347,21 @@ const Invoice = () => {
             {currencyFormatter(invoiceData.escrowFee)}
           </p>
         </FooterBox>
+        <FooterBox>
+          <div></div>
+          <p>Shipping fee</p>
+          <p className="text-right">
+            {currencyFormatter(invoiceData.shippingFee)}
+          </p>
+        </FooterBox>
+        <FooterBox>
+          <div></div>
+          <h5>Total</h5>
+          <h5 className="text-right">
+          {currencyFormatter(invoiceData.totalPrice)}
+          </h5>
+        </FooterBox>
       </Page>
-
-      <SobyModal open={open} setOpen={setOpen}>
-        {acceptInvoiceData?.acceptInvoice?.data?.id || invoiceId && getSecretData?.getSecret?.data ? (
-          <ShippingInfo
-            invoiceIndividualId={
-              acceptInvoiceData?.acceptInvoice?.data?.id ?? invoiceId
-            }
-            signingSecret = {
-              getSecretData?.getSecret?.data?.signingSecret
-            }
-          />
-        ) : null}
-      </SobyModal>
 
       <SobyModal open={openError} setOpen={setOpenError}>
         {formError ? (
@@ -424,4 +372,5 @@ const Invoice = () => {
   );
 };
 
-export default Invoice;
+export default RequestReturnDetail;
+

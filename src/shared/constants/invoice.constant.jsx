@@ -5,23 +5,21 @@ import { ReactComponent as TruckIcon } from 'shared/assets/truck-icon.svg';
 
 export const mainInvoiceFilters = ['Orders', 'Invoices'];
 export const subInvoiceFilters = [
-  'ALL',
-  'READY TO PAY',
-  'DEPOSIT',
-  'DELIVERING',
-  'DELIVERED',
-  'COMPLETED',
-  'RETURN REQUEST',
+  'All',
+  'Pending',
+  'Payment Confirmed',
+  'Delivering',
+  'Completed',
+  'Cancel'
 ];
 
 export const InvoiceStatusValue = [
-  'ACCEPTED',
-  'PAID',
-  'CONFIRMED',
-  'SHIPPING',
-  'DELIVERED',
-  'COMPLETED',
-  'CANCELLED',
+  ['ACCEPTED', 'CANCELLED', 'DELIVERED', 'PAID', 'SHIPPING', 'COMPLETED'],
+  ['ACCEPTED'],
+  ['PAID'],
+  ['SHIPPING'],
+  ['DELIVERED', 'COMPLETED'],
+  ['CANCELLED'],
 ];
 
 export const subInvoiceIcons = [

@@ -33,6 +33,7 @@ const PaymeSuccess = lazy(() => import('pages/payme-success/payme-success.compon
 const PaymeFail = lazy(() => import('pages/payme-fail/payme-fail.component'));
 const ReturnRequestPage = lazy(() => import('pages/return-request/return-request.component'));
 const Invoice = lazy(() => import('pages/invoice/invoice.component'));
+const YourInvoice = lazy(() => import('pages/invoice/your-invoice.component'));
 const ReturnRequestList = lazy(() => import('pages/return-request-list/return-request-list.component'));
 const ReturnRequestInfo = lazy(() => import('pages/request-info/request-info.component'));
 const EditProfile = lazy(() => import('pages/individual-profile/edit-profile.component'));
@@ -59,7 +60,11 @@ const App = () => {
               <Route exact path='/phone-verification' component={PhoneVerification} />
               <Route exact path='/signup' component={SignUpInfo} />
               <Route exact path='/signup-info' component={SignUpPhone} />
-
+              <Route path="/invoice/:invoiceId" component={Invoice} />
+              <Route path="/your-invoice/:invoiceId" component={YourInvoice} />
+              <JwtRoute path="/edit-profile" component={EditProfile} />
+              <JwtRoute path="/change-password" component={ChangePassword} />
+              <Route path="/search-result" component={SearchResult} />
               <Route path='/shop-profile/:shopId' component={ShopProfile} />
               <Route path='/product/:productId' component={ProductDetail} />
               <JwtRoute path='/your-transaction' component={YourTransaction} />
@@ -73,10 +78,6 @@ const App = () => {
               <JwtRoute path='/return-request/:invoiceId' component={ReturnRequestPage} />
               <JwtRoute path='/return-request' exact component={ReturnRequestList} />
               <JwtRoute path='/return-info/:assessId/:requestId' exact component={ReturnRequestInfo} />
-              <Route path='/invoice/:invoiceId' component={Invoice} />
-              <JwtRoute path='/edit-profile' component={EditProfile} />
-              <JwtRoute path='/change-password' component={ChangePassword} />
-              <Route path='/search-result' component={SearchResult} />
             </Suspense>
           </ErrorBoundary>
         </Switch>

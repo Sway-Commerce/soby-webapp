@@ -36,7 +36,7 @@ const InvoiceItem = ({
     <Container
       onClick={() => setActiveInvoice(id)}
       className={`${activeInvoice === id ? 'active' : ''}`}
-      to={`invoice/${id}`}
+      to={`your-invoice/${id}`}
     >
       <p>{name}</p>
       <p>{timestampToDate(updatedAt)}</p>
