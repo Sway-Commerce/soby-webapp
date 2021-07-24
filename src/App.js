@@ -42,6 +42,7 @@ const SearchResult = lazy(() => import('pages/search-result/search-result.compon
 const ExplorePage = lazy(() => import('pages/explore/explore.page'));
 const CreateSellerPage = lazy(() => import('pages/create-seller/create-seller.page'));
 const CreateSellerSuccessPage = lazy(() => import('pages/create-seller/create-seller-success'));
+const ShopProfileV2Page = lazy(() => import('pages/shop-profile-v2/shop-profile.page'));
 
 const App = () => {
   return (
@@ -54,6 +55,7 @@ const App = () => {
             <Suspense fallback={<Spinner />}>
               <Route exact path='/' component={HomePage} />
               <Route exact path='/explore' component={ExplorePage} />
+              <Route exact path='/shop-profile-v2' component={ShopProfileV2Page} />
               <JwtRoute exact path='/create-seller' component={CreateSellerPage} />
               <Route path='/phone-signin' component={PhoneSignin} />
               <Route exact path='/phone-verification' component={PhoneVerification} />
