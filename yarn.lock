@@ -10387,6 +10387,11 @@ react-from-dom@^0.6.0:
   resolved "https://registry.yarnpkg.com/react-from-dom/-/react-from-dom-0.6.1.tgz#6740f5a3d79e0c354703e5c096b8fdfe0db71b0f"
   integrity sha512-7aAZx7LhRnmR51W5XtmTBYHGFl2n1AdEk1uoXLuzHa1OoGXrxOW/iwLcudvgp6BGX/l4Yh1rtMrIzvhlvbVddg==
 
+react-horizontal-scrolling-menu@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-horizontal-scrolling-menu/-/react-horizontal-scrolling-menu-2.0.0.tgz#0a20c1520f577f64fd34dbddd424a3c4a697b521"
+  integrity sha512-jDLQM8/iX8k4p8EhLEDTrp87ocFbqrYIjDcuRSysOOdnr5F4YQslFW8oFU9i/TqVllu4nu7u9VSb7hocY4LgLw==
+
 react-inlinesvg@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/react-inlinesvg/-/react-inlinesvg-2.3.0.tgz#62283c0ce7e9d11d8190ec3e89589102288830fd"
