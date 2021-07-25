@@ -174,8 +174,8 @@ export const Header = ({ history }) => {
         <OptionsContainer
         // isSearchView={history.location.pathname.includes('search-result')}
         >
-          <OptionLink to={{ pathname: '/explore' }}>Khám phá</OptionLink>
-          <OptionLink to={{ pathname: '/' }}>Chatbot</OptionLink>
+          {/* <OptionLink to={{ pathname: '/explore' }}>Khám phá</OptionLink>
+          <OptionLink to={{ pathname: '/' }}>Chatbot</OptionLink> */}
           <a href='https://soby.vn/#what-is-soby' style={{ padding: '10px 24px', cursor: 'pointer', color: `${defaultFontColor}` }}>
             Soby là gì?
           </a>
