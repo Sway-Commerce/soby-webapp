@@ -7,18 +7,17 @@ import {
 } from 'shared/css-variable/variable';
 
 export const getColor = (score) => {
-  switch (parseFloat(score)) {
-    case (score <= 0.0):
-      return fadeColor;
-    case (score <= 5.0):
-      return fadeColor;
-    case (score <= 6.0):
-      return darkGreyColor;
-    case (score <= 8.0):
-      return greenColor;
-    case (score <= 9.5):
-      return excellentColor;
-    default:
-      return amazingColor;
+  if (score <= 0.0) {
+    return fadeColor;
+  } else if (score <= 5.0 && score > 0.0) {
+    return darkGreyColor
+  } else if (score <= 6.0 && score > 5.0) {
+    return darkGreyColor;
+  } else if (score <= 8.0 && score > 6.0) {
+    return greenColor
+  } else if (score <= 9.5 && score > 8.0) {
+    return excellentColor
+  } else {
+    return amazingColor
   }
 };
