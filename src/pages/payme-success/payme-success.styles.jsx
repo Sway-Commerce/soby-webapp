@@ -21,6 +21,10 @@ export const Container = styled.div`
       cursor: pointer;
     }
   }
+
+  div.back-btn {
+    font-size: 22px;
+  }
 `;
 
 export const CardWrapper = styled.div`
@@ -43,12 +47,21 @@ export const CardWrapper = styled.div`
 export const TransactionContainer = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   margin: 0 auto;
+  padding: 40px;
   .soby-title {
     color: black;
     text-align: center;
     font-size: 2rem;
     line-height: 49px;
+    margin-bottom: 50px;
+  }
+
+  .photo {
+    height: 200px;
+    width: 200px;
   }
 
   @media screen and (max-width: 800px) {
