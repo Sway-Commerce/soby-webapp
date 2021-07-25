@@ -22,10 +22,10 @@ export function BusinessVerification({ ...props }) {
     <div aria-label='business-verification' className=''>
       <div aria-label='title' className='text-center'>
         <h3 className='fw-bold' style={{ fontSize: '24px' }}>
-          Business Verification
+          Xác thực doanh nghiệp
         </h3>
         <p style={{ color: '#6E7678', fontSize: '14px' }}>
-          You're almost done! This is an important step to build trust with your customer and your rank.
+          Gần xong rồi! Đây là một bước quan trọng để tạo dựng niềm tin với khách hàng và xếp hạng của bạn.
         </p>
       </div>
       <div aria-label='business-verification-form' className='mt-3'>
@@ -100,7 +100,7 @@ export function BusinessVerification({ ...props }) {
                   getBusinessVerification({}, createSellerTabs.preview.label);
                 }}
               >
-                Skip
+                Bỏ qua
               </button>
               <button
                 type='button'
@@ -110,7 +110,7 @@ export function BusinessVerification({ ...props }) {
                   getBusinessVerification({ businessName, licenseNumber, address }, createSellerTabs.preview.label);
                 }}
               >
-                <span>Continue</span>
+                <span>Tiếp theo</span>
                 <SVG className='ms-2' src={toAbsoluteUrl('/assets/vector-right.svg')}></SVG>
               </button>
             </div>

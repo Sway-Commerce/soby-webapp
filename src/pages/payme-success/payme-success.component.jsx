@@ -4,6 +4,8 @@ import {
   CardWrapper,
   TransactionContainer
 } from './payme-success.styles'
+import PaymentSuccess from '../../shared/assets/Payment-Successful.svg'
+import { Link } from 'react-router-dom';
 
 const PaymeSuccess = () => {
   const handleSubmit = async (event) => {
@@ -15,17 +17,12 @@ const PaymeSuccess = () => {
       <CardWrapper>
         <TransactionContainer>
           <div className="soby-title">Confirm payment</div>
+          <img className="photo" src={PaymentSuccess} />
         </TransactionContainer>
       </CardWrapper>
-      <div className="mobile-back">
-        <span
-          onClick={() =>
-            (window.location = 'http://soby.vn/transaction/payme-success-redirect')
-          }
-        >
-          Back
-        </span>
-      </div>
+      <Link to="/your-transaction">
+        <div className="back-btn">Back</div>
+      </Link>
     </Container>
   )
 };

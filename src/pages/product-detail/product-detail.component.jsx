@@ -382,7 +382,7 @@ const ProductDetail = () => {
           </InfoBox>
           {productData.shopInfo && windowWidth > 768 && (
             <ShopCard
-              color={getColor(productData.shopInfo.shopRank.rank.name)}
+              color={getColor(productData.shopInfo.shopRank.totalPoints/10)}
               shopInfo={productData.shopInfo}
               togglePhone={togglePhone}
               phoneString={phoneString}
@@ -415,7 +415,7 @@ const ProductDetail = () => {
         </Row>
         {productData.shopInfo && windowWidth <= 768 && (
           <ShopCard
-            color={getColor(productData.shopInfo.shopRank.rank.name)}
+            color={getColor(productData.shopInfo.shopRank.totalPoints/10)}
             shopInfo={productData.shopInfo}
             togglePhone={togglePhone}
             phoneString={phoneString}

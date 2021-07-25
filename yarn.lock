@@ -1276,7 +1276,7 @@
     matcher "^2.0.0"
     node-forge "^0.8.1"
     rollup-plugin-delete "^2.0.0"
-
+"@credify/crypto@^1.0.2":
 "@credify/crypto@^1.0.0":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@credify/crypto/-/crypto-1.0.2.tgz#bab629fa72ea8f034bc3c00ead6b2f1c8f0084f5"

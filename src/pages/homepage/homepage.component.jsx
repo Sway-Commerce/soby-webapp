@@ -153,7 +153,7 @@ const Symbol48px = styled.div`
   height: 48px;
 `;
 
-const CategoryItem = function ({itemName, bgColor, iconSrc, url, isFirst}) {
+const CategoryItem = function ({ itemName, bgColor, iconSrc, url, isFirst }) {
   return (
     <>
       <Link
@@ -243,11 +243,11 @@ const HomePage = () => {
     if (searchAggregatedShopData?.searchAggregatedShop?.data) {
       !records.length
         ? setRecords(
-            searchAggregatedShopData?.searchAggregatedShop?.data.records
-          )
+          searchAggregatedShopData?.searchAggregatedShop?.data.records
+        )
         : setRecordsSuggest(
-            searchAggregatedShopData?.searchAggregatedShop?.data.records
-          );
+          searchAggregatedShopData?.searchAggregatedShop?.data.records
+        );
     }
   }, [searchAggregatedShopData?.searchAggregatedShop?.data]);
 
@@ -269,9 +269,9 @@ const HomePage = () => {
         <Row className='mb-5' headRow>
           <HeadHome>
             <p className='soby-welcome text-center'>
-              Read reviews, Check
+              Lựa chọn &amp; Mua sắm thông minh,
               <br />
-              reputation, Find sellers
+              Tiết kiệm thời gian
             </p>
             {/* <h3 className="fw-normal">
               Find your trust Sellers and have safe transactions with Soby
@@ -286,7 +286,7 @@ const HomePage = () => {
                   name='inputSearch'
                   value={inputSearch}
                   onChange={handleChange}
-                  placeholder='Search product, shop, category, ...'
+                  placeholder='Tìm kiếm sản phẩm, cửa hàng, danh mục ...'
                   withoutTitle
                   id='home-input'
                 />
@@ -311,15 +311,15 @@ const HomePage = () => {
         </Row>
         <div className='row'>
           <div className='d-flex justify-content-center align-items-center mb-4'>
-            <span className=''>Browse shops by more categories</span>
+            <span className=''>Xem Duyệt qua các cửa hàng theo nhiều danh mục hơn</span>
           </div>
           <div className='d-flex justify-content-center align-items-start'>
-            <CategoryItem itemName='Food & Beverages' bgColor='#FFA800' iconSrc='/assets/food.svg' url='/explore' isFirst ></CategoryItem>
-            <CategoryItem itemName='Digitals' bgColor='#5BCCFA' iconSrc='/assets/digital.svg' url='/explore' ></CategoryItem>
-            <CategoryItem itemName='Clothes & Accessories' bgColor='#725CFD' iconSrc='/assets/cloth.svg' url='/explore' ></CategoryItem>
-            <CategoryItem itemName='Home Depot' bgColor='#AFDC10' iconSrc='/assets/appliance.svg' url='/explore' ></CategoryItem>
-            <CategoryItem itemName='Cosmetics & Fragrances' bgColor='#FF70A6' iconSrc='/assets/lip-stick.svg' url='/explore' ></CategoryItem>
-           
+            <CategoryItem itemName='Nhà hàng &amp; Ăn uống' bgColor='#FFA800' iconSrc='/assets/food.svg' url='/explore' isFirst ></CategoryItem>
+            <CategoryItem itemName='Điện tử' bgColor='#5BCCFA' iconSrc='/assets/digital.svg' url='/explore' ></CategoryItem>
+            <CategoryItem itemName='Thời trang &amp; phụ kiện' bgColor='#725CFD' iconSrc='/assets/cloth.svg' url='/explore' ></CategoryItem>
+            <CategoryItem itemName='Nhà cửa' bgColor='#AFDC10' iconSrc='/assets/appliance.svg' url='/explore' ></CategoryItem>
+            <CategoryItem itemName='Mỹ phẩm &amp; nước hoa' bgColor='#FF70A6' iconSrc='/assets/lip-stick.svg' url='/explore' ></CategoryItem>
+
             <Link
               to='/explore'
               className='d-flex flex-column align-items-center ms-4'
@@ -332,7 +332,7 @@ const HomePage = () => {
                 <SVG src={toAbsoluteUrl('/assets/right-arrow.svg')}></SVG>
               </Symbol48px>
               <div className='text-center'>
-                <span>More Categories</span>
+                <span>Các mục khác</span>
               </div>
             </Link>
           </div>

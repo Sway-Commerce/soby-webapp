@@ -98,10 +98,10 @@ export const ChannelPreview = function ({ ...props }) {
 };
 
 export const createSellerTabs = {
-  basicInfo: { label: 'Basic Info' },
-  shopChannel: { label: 'Shop Channel' },
-  businessVerification: { label: 'Business Verification' },
-  preview: { label: 'Preview' },
+  basicInfo: { label: 'Thông tin' },
+  shopChannel: { label: 'Kênh cửa hàng' },
+  businessVerification: { label: 'Xác thực doanh nghiệp' },
+  preview: { label: 'Xem trước' },
 };
 
 const initialShopChannel = {
