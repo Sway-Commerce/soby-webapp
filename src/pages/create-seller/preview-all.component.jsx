@@ -85,9 +85,9 @@ export function PreviewAll({ ...props }) {
     <div key='preview-wrapper' aria-label='preview-all' className=''>
       <div aria-label='title' className='text-center'>
         <h3 className='fw-bold' style={{ fontSize: '24px' }}>
-          Let's review one more time
+          Kiểm tra lại lần nữa nhé!
         </h3>
-        <p style={{ color: '#6E7678', fontSize: '14px' }}>Double-check the information</p>
+        <p style={{ color: '#6E7678', fontSize: '14px' }}>Kiểm tra lại thông tin</p>
       </div>
       {/* <div aria-label='profile-img' className='d-flex justify-content-center text-center'>
         <div
@@ -98,14 +98,14 @@ export function PreviewAll({ ...props }) {
       <div aria-label='preview-all-form' className='mt-3'>
         <div className=''>
           <h4 className='fw-bold mt-4' style={{ fontSize: '20px' }}>
-            Info
+            Thông tin cơ bản
           </h4>
-          <FieldPreview key='businessName-0' label={'Business Name'} value={basicInfo.businessName} valueBold></FieldPreview>
-          <FieldPreview key='owner' label={'Owner'} value={basicInfo.owner}></FieldPreview>
-          <FieldPreview key='phone' label={'Phone Number'} value={basicInfo.phoneNumber}></FieldPreview>
+          <FieldPreview key='businessName-0' label={'Tên doanh nghiệp'} value={basicInfo.businessName} valueBold></FieldPreview>
+          <FieldPreview key='owner' label={'Chủ sở hữu'} value={basicInfo.owner}></FieldPreview>
+          <FieldPreview key='phone' label={'Số điện thoại'} value={basicInfo.phoneNumber}></FieldPreview>
           <FieldPreview key='email' label={'Email'} value={basicInfo.email}></FieldPreview>
           <h4 className='fw-bold mt-4' style={{ fontSize: '20px' }}>
-            Channel
+            Kênh
           </h4>
           {Object.keys(shopChannelData).map(function (channelName) {
             if (shopChannelData[channelName]?.isSelected) {
@@ -127,7 +127,7 @@ export function PreviewAll({ ...props }) {
             </div>
           )}
           <h4 className='fw-bold mt-4' style={{ fontSize: '20px' }}>
-            Introduction
+            Giới thiệu
           </h4>
           <div className='row' style={{ fontSize: '14px', color: '#6E7678' }}>
             {basicInfo.intro ? (
@@ -136,16 +136,16 @@ export function PreviewAll({ ...props }) {
               </p>
             ) : (
               <span key='no-specified-intro' className='fst-italic'>
-                Not provided yet
+                Chưa có thông tin
               </span>
             )}
           </div>
           <h4 className='fw-bold mt-4' style={{ fontSize: '20px' }}>
-            Business Verification
+            Xác thực doanh nghiệp
           </h4>
-          <FieldPreview key='businessName-1' label={'Business Name'} value={businessVerification.businessName}></FieldPreview>
-          <FieldPreview key='licenseNo' label={'License Number'} value={businessVerification.licenseNumber}></FieldPreview>
-          <FieldPreview key='address' label={'Address'} value={businessVerification.address}></FieldPreview>
+          <FieldPreview key='businessName-1' label={'Tên doanh nghiệp'} value={businessVerification.businessName}></FieldPreview>
+          <FieldPreview key='licenseNo' label={'Mã số thuế'} value={businessVerification.licenseNumber}></FieldPreview>
+          <FieldPreview key='address' label={'Địa chỉ'} value={businessVerification.address}></FieldPreview>
           {/* <h5 className='fw-bold mt-4 mx-1' style={{ fontSize: '14px' }}>
             Business License
           </h5>
@@ -177,7 +177,7 @@ export function PreviewAll({ ...props }) {
                 style={{ fontSize: '14px', height: '40px' }}
                 onClick={handleSubmit}
               >
-                <span>Complete</span>
+                <span>Hoàn thành</span>
               </button>
             </div>
           </div>

@@ -55,14 +55,14 @@ const App = () => {
             <Suspense fallback={<Spinner />}>
               <Route exact path='/' component={HomePage} />
               <Route exact path='/explore' component={ExplorePage} />
-              <Route exact path='/shop-profile-v2' component={ShopProfileV2Page} />
+              <Route exact path='/shop-profile/:shopId' component={ShopProfileV2Page} />
               <JwtRoute exact path='/create-seller' component={CreateSellerPage} />
               <Route path='/phone-signin' component={PhoneSignin} />
               <Route exact path='/phone-verification' component={PhoneVerification} />
               <Route exact path='/signup' component={SignUpInfo} />
               <Route exact path='/signup-info' component={SignUpPhone} />
 
-              <Route path='/shop-profile/:shopId' component={ShopProfile} />
+              {/* <Route path='/shop-profile/:shopId' component={ShopProfile} /> */}
               <Route path='/product/:productId' component={ProductDetail} />
               <JwtRoute path='/your-transaction' component={YourTransaction} />
               <JwtRoute path='/individual-profile' component={IndividualProfile} />

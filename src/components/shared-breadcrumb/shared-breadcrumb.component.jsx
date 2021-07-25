@@ -37,7 +37,7 @@ const SharedBreadcrumb = ({ breadcrumbs = [] }) => {
             {x.name}
           </Link>
           {i < breadcrumbs.length - 1 ? (
-            <p className="arrow-right">&gt;</p>
+            ' / '
           ) : null}
         </React.Fragment>
       ))}

@@ -481,7 +481,7 @@ const ShopProfile = () => {
               <div className="btn-point">
                 <RankPoint
                   style={{
-                    color: getColor(shopInfo.shopRank.rank.name),
+                    color: getColor(shopInfo.shopRank.totalPoints/10),
                   }}
                   show
                 >
@@ -496,12 +496,12 @@ const ShopProfile = () => {
             <p className="btn-number">0</p>
             <StatusContainer
               percent={+shopInfo.shopRank.totalPoints}
-              color={getColor(shopInfo.shopRank.rank.name)}
+              color={getColor(shopInfo.shopRank.totalPoints/10)}
             >
               <div className="status-bar">
                 <RankPoint
                   style={{
-                    color: getColor(shopInfo.shopRank.rank.name),
+                    color: getColor(shopInfo.shopRank.totalPoints/10),
                   }}
                   percent={+shopInfo.shopRank.totalPoints}
                   hide

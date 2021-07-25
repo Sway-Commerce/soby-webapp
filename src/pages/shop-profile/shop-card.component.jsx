@@ -99,7 +99,7 @@ const ShopCard = ({
             <div className="contact-wrapper">
               <ShopBadge
                 point={shopInfo.shopRank.totalPoints}
-                rankColor={color}
+                rankColor={shopInfo.shopRank.totalPoints}
               />
               <p className="status">
                 <b>{shopInfo.shopRank.rank.description}</b>

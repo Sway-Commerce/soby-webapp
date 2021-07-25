@@ -97,7 +97,7 @@ export function BasicInfo({ ...props }) {
     <div aria-label='basic-info' className=''>
       <div aria-label='title' className='text-center'>
         <h3 className='fw-bold' style={{ fontSize: '24px' }}>
-          Let's get you started with some basic info
+          Bắt đầu với những thông tin cơ bản
         </h3>
       </div>
       {/* <div aria-label='upload-profile-img' className='d-flex justify-content-center text-center'>
@@ -107,15 +107,15 @@ export function BasicInfo({ ...props }) {
         <form>
           <FormInput
             key='businessname'
-            label='Business Name'
+            label='Tên doanh nghiệp'
             initialValue={businessName}
             onChange={function (evt) {
               setBusinessName(evt.target.value);
             }}
           />
-          {!isBusinessNameValid ? <p className='error-title'>*Your name must not be empty</p> : null}
+          {!isBusinessNameValid ? <p className='error-title'>*Tên không được để trống</p> : null}
           <FormInput
-            label='Owner'
+            label='Chủ sỡ hữu'
             initialValue={owner}
             onChange={function (evt) {
               setOwner(evt.target.value);
@@ -123,7 +123,7 @@ export function BasicInfo({ ...props }) {
           />
           <FormInput
             key='password'
-            label='Password'
+            label='Mật khẩu'
             inputType='password'
             initialValue={password}
             onChange={function (evt) {
@@ -135,20 +135,18 @@ export function BasicInfo({ ...props }) {
           />
           {!isPasswordValid ? (
             <p className='error-title'>
-              *Your password must be between 8 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase
-              letter
+              * Mật khẩu của bạn phải từ 8-20 kí tự, ít nhất 1 chữ cái, 1 chữ viết hoa, 1 chữ cái đặc biệt 
             </p>
           ) : (
             <p className='fs-14'>
-              Your password must be between 8 to 20 characters which contain at least one numeric digit, one uppercase and one lowercase
-              letter
+              * Mật khẩu của bạn phải từ 8-20 kí tự, ít nhất 1 chữ cái, 1 chữ viết hoa, 1 chữ cái đặc biệt 
             </p>
           )}
           <h4 className='fw-bold mt-4' style={{ fontSize: '20px' }}>
-            Business Contract
+            Thông tin liên hệ
           </h4>
           <FormInput
-            label='Phone Number'
+            label='Số điện thoại'
             initialValue={phoneNumber}
             onChange={function (evt) {
               if (!evt) {
@@ -157,7 +155,7 @@ export function BasicInfo({ ...props }) {
               setPhoneNumber(evt.target.value);
             }}
           />
-          {!isPhoneValid ? <p className='error-title'>*Your phone number is not correct</p> : null}
+          {!isPhoneValid ? <p className='error-title'>* Số điện thoại bạn không đúng format</p> : null}
           <FormInput
             label='Email'
             initialValue={email}
@@ -168,9 +166,9 @@ export function BasicInfo({ ...props }) {
               setEmail(evt.target.value);
             }}
           />
-          {!isEmailValid ? <p className='error-title'>*Your email is not correct</p> : null}
+          {!isEmailValid ? <p className='error-title'>* Email bạn không đúng format</p> : null}
           <FormTextArea
-            label='Introduction'
+            label='Giới thiệu'
             rows={3}
             initialValue={intro}
             onChange={function (evt) {
@@ -189,7 +187,7 @@ export function BasicInfo({ ...props }) {
               style={{ fontSize: '14px', height: '40px' }}
               onClick={handleSubmit}
             >
-              <span>Continue</span>
+              <span>Tiếp theo</span>
               <SVG className='ms-2' src={toAbsoluteUrl('/assets/vector-right.svg')}></SVG>
             </button>
           </div>

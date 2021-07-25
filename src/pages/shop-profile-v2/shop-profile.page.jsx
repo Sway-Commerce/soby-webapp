@@ -1,22 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Link, Redirect, Route, Switch } from 'react-router-dom';
+import { Link, Redirect, Route, Switch, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { useLazyQuery } from '@apollo/client';
+import { GET_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
+import { SEARCH_PRODUCT } from 'graphQL/repository/product.repository';
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../shared/utils/assetsHelper';
 import backgroundImg from 'shared/assets/home-background.svg';
 import { CustomButton } from '../../components/ui/custom-button/custom-button.component';
+import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
 // import FormInput from 'components/form-input/form-input.component';
 import { ReactComponent as SearchIcon } from 'shared/assets/search-btn.svg';
-import { REGISTER_SHOP } from 'graphQL/repository/shop.repository';
+import buildAddressString from 'shared/utils/buildAddressString';
+import { formatPhoneNumberIntl } from 'react-phone-number-input';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import ShopItem from '../../components/shop-item/shop-item.component';
 import useDebounce from 'shared/hooks/useDebounce';
+import { getColor } from 'shared/constants/shop.constant';
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { borderColor } from 'shared/css-variable/variable';
+
+
 
 const ChannelIconLink = function ({ ...props }) {
   const { url, imgSrc } = props;
@@ -108,20 +116,25 @@ const Promotion = function ({ ...props }) {
 };
 
 const Product = function ({ ...props }) {
+  const { imgSrc, productId } = props
   return (
-    <div className='' style={{ width: '190px', height: '190px' }}>
-      <SVG src={toAbsoluteUrl('/assets/products/no-product-img.svg')} style={{ width: '190px', height: '190px' }}></SVG>
+    <div 
+      key={productId} 
+      onClick={() => {window.location = `/product/${productId}`}}
+      className='' 
+      style={{ width: '190px', height: '190px', borderColor: 'black' }}>
+      <img src={imgSrc} style={{ width: '190px', height: '190px' }} />
     </div>
   );
 };
 
 const ProductRow = function ({ ...props }) {
+  const { products } = props
   return (
     <div className='d-flex flex-wrap mt-3 justify-content-between'>
-      <Product></Product>
-      <Product></Product>
-      <Product></Product>
-      <Product></Product>
+      {products.map((product) => {
+        return <Product imgSrc={product.imageUrls[0]} productId={product.id}/>
+      })}
     </div>
   );
 };
@@ -152,34 +165,207 @@ const ChannelRow = function ({ ...props }) {
       <div className='col' style={{ fontSize: '14px' }}>
         <span className={bold && 'fw-bold'}>{value}</span>
       </div>
-      <div className='' style={{ width: '40px' }}>
-        <SVG src={toAbsoluteUrl('/assets/right-black.svg')} style={{ width: '19px', height: '19px' }}></SVG>
-      </div>
     </div>
   );
 };
 
-const ShopProfileV2Page = function () {
-  return (
+const ShopProfileV2Page = () => {
+  const { shopId } = useParams();
+  const [open, setOpen] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [shopInfo, setShopInfo] = useState({
+    name: '',
+    phoneCountryCode: '',
+    phoneNumber: '',
+    description: '',
+    logoUrl: '',
+    categories: [],
+    shopUrls: [],
+    kyb: { status: null },
+    records: [],
+    email: '',
+    coverUrl: '',
+    shippingLocation: {
+      addressLine: '',
+      country: '',
+      district: '',
+      province: '',
+      ward: '',
+    },
+    shopRank: {
+      items: [],
+      rank: {},
+    },
+    kycStatus: '',
+  });
+
+  const [breadcrumbs, setBreadcrumb] = useState([
+    {
+      name: 'Trang chủ / Cửa hàng',
+      src: '/',
+    },
+  ]);
+
+  const [
+    getAggregatedShop,
+    {
+      loading: getAggregatedShopLoading,
+      error: getAggregatedShopError,
+      data: getAggregatedShopData,
+    },
+  ] = useLazyQuery(GET_AGGREGATED_SHOP);
+
+  const [
+    searchProduct,
+    { loading: productLoading, error: productError, data: productData },
+  ] = useLazyQuery(SEARCH_PRODUCT);
+
+  useEffect(() => {
+    if (shopId) {
+      for (const tooltip of document.querySelectorAll(
+        '.__react_component_tooltip'
+      )) {
+        tooltip.addEventListener('click', (e) => e.stopPropagation());
+      }
+      getAggregatedShop({
+        variables: { id: shopId },
+      });
+    }
+
+    return () => {
+      for (const tooltip of document.querySelectorAll(
+        '.__react_component_tooltip'
+      )) {
+        tooltip.removeEventListener('click', (e) => e.stopPropagation());
+      }
+    };
+  }, [shopId]);
+
+  useEffect(() => {
+    if (getAggregatedShopError?.message || productError?.message) {
+      setFormError(getAggregatedShopError?.message || productError?.message);
+      setOpen(true);
+    }
+  }, [getAggregatedShopError, productError]);
+
+  useEffect(() => {
+    if (getAggregatedShopData?.getAggregatedShop?.data) {
+      const {
+        name,
+        phoneCountryCode,
+        phoneNumber,
+        description,
+        logoUrl,
+        categories,
+        shopUrls,
+        kyb,
+        email,
+        coverUrl,
+        shippingLocations,
+        shopRank,
+        kycStatus,
+      } = getAggregatedShopData?.getAggregatedShop?.data;
+      const [shippingLocation] = shippingLocations;
+
+      setShopInfo({
+        ...shopInfo,
+        name,
+        phoneCountryCode,
+        phoneNumber,
+        description,
+        logoUrl,
+        categories,
+        shopUrls,
+        kyb,
+        email,
+        coverUrl,
+        shippingLocation,
+        shopRank,
+        kycStatus,
+      });
+
+      setBreadcrumb([
+        {
+          name: 'Trang chủ / Cửa hàng ',
+          src: '/',
+        },
+        {
+          name: name,
+          src: `/shop-profile/${shopId}`,
+        },
+      ]);
+
+      searchProduct({
+        variables: {
+          searchInput: {
+            page: 0,
+            pageSize: 8,
+            filters: null,
+            queries: `shopId:${shopId}`,
+            sorts: null,
+          },
+        },
+      });
+    }
+  }, [getAggregatedShopData?.getAggregatedShop?.data]);
+
+  useEffect(() => {
+    if (productData?.searchProduct?.data?.records?.length) {
+      setShopInfo({
+        ...shopInfo,
+        records: productData?.searchProduct?.data?.records,
+      });
+    }
+  }, [productData?.searchProduct?.data]);
+
+  return getAggregatedShopLoading || productLoading ? (
+    <Spinner />
+  ) : (
     <div className='container-fluid mb-5'>
+      <SharedBreadcrumb breadcrumbs={breadcrumbs} />
       <div className='row mt-3 justify-content-center py-2'>
         <div className='col-2 p-0'>
           <div className=''>
-            <div className='bg-white border' style={{ width: '160px', height: '160px' }}></div>
-            {/* <img alt='logo' src='' width={160} height={160} /> */}
+            <div className='bg-white border' style={{ width: '160px', height: '160px' }}>
+              <img className="avatar" style={{width: '160px', height: '160px' }} src={shopInfo.logoUrl} alt="" />
+            </div>
           </div>
         </div>
         <div className='col-7'>
           <div className='row p-0 pt-2'>
             <h4 className='fw-bold' style={{ fontSize: '32px' }}>
-              Houseeker
+              {shopInfo.name}
             </h4>
           </div>
           <div className='row p-0 pb-2'>
             <div className='d-flex align-items-center'>
-              <ChannelIconLink url='/' imgSrc='/assets/shopChannels/facebook.svg'></ChannelIconLink>
-              <ChannelIconLink url='/' imgSrc='/assets/shopChannels/instagram.svg'></ChannelIconLink>
-              <ChannelIconLink url='/' imgSrc='/assets/shopChannels/website.svg'></ChannelIconLink>
+              {shopInfo.shopUrls.map((x) => {
+                let imgPath = '';
+                switch(x.type) {
+                  case 'FACEBOOK':
+                    imgPath = '/assets/facebook.svg';
+                    break;
+                  case 'INSTAGRAM':
+                    imgPath = '/assets/instagram-icon.svg';
+                    break;
+                  case 'TIKTOK':
+                    imgPath = '/assets/instagram-icon.svg';
+                    break;
+                  case 'ZALO':
+                    imgPath = '/assets/instagram-icon.svg';
+                    break;
+                  case 'SHOPEE':
+                    imgPath = '/assets/instagram-icon.svg';
+                    break;
+                  case 'LAZADA':
+                    imgPath = '/assets/instagram-icon.svg';
+                    break;
+                  default:
+                    imgPath = '/assets/instagram-icon.svg';
+                    break;
+                }
+                return <ChannelIconLink url={x.url} imgSrc={imgPath} />
+              })}
             </div>
           </div>
           <div className='row p-0 justify-content-start align-items-center'>
@@ -196,7 +382,10 @@ const ShopProfileV2Page = function () {
                 type='button'
                 className='btn rounded-pill border px-3 align-items-center d-flex justify-content-center align-items-center '
                 style={{ fontSize: '14px', height: '40px', width: '200px' }}
-                onClick={function () {}}
+                onClick={() => {
+                  navigator?.clipboard?.writeText(window.location.href);
+                  window.alert('Shop url is copied');
+                }}
               >
                 <SVG className='me-2' src={toAbsoluteUrl('/assets/share-2.svg')} width={20} height={20}></SVG>
                 <span>Chia sẻ</span>
@@ -210,23 +399,23 @@ const ShopProfileV2Page = function () {
               <CircularProgressbarWithChildren
                 minValue={0}
                 maxValue={10}
-                value={9.5}
+                value={shopInfo.shopRank.totalPoints/10}
                 counterClockwise
                 strokeWidth={6}
                 styles={buildStyles({
                   trailColor: '#F3F4F4',
-                  pathColor: '#28BD4B',
+                  pathColor: getColor(shopInfo.shopRank.totalPoints/10),
                 })}
               >
                 <h4 className='fw-bold' style={{ fontSize: '32px', color: 'black', marginTop: '10px', marginLeft: '-2px' }}>
-                  9.5
+                  {shopInfo.shopRank.totalPoints/10}
                 </h4>
               </CircularProgressbarWithChildren>
             </div>
           </div>
           <div className='row text-center mt-2'>
-            <h4 className='fw-bold' style={{ fontSize: '16px', color: '#28BD4B' }}>
-              Extremely good
+            <h4 className='fw-bold' style={{ fontSize: '16px', color: getColor(shopInfo.shopRank.totalPoints/10) }}>
+              {shopInfo.shopRank.rank.description}
             </h4>
           </div>
         </div>
@@ -246,8 +435,8 @@ const ShopProfileV2Page = function () {
               <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
                 Sản phẩm
               </h5>
-              <ProductRow></ProductRow>
-              <ProductRow></ProductRow>
+              <ProductRow products={shopInfo.records.slice().splice(0, 4)}/>
+              <ProductRow products={shopInfo.records.slice().splice(4, 8)}/>
               <div className='d-flex justify-content-center align-items-center'>
                 <button
                   type='button'
@@ -268,8 +457,7 @@ const ShopProfileV2Page = function () {
                 Giới thiệu
               </h5>
               <p className='mt-2' style={{ fontSize: '14px' }}>
-                Houseeker tự hào dịch vụ khách hàng tuyệt vời. Bạn hài lòng, chúng tôi hạnh phúc. Cần một dịch vụ nhanh và gọn? Không còn
-                băn khoăn nữa! Đơn đặt hàng số lượng lớn không có vấn đề
+                {shopInfo.description}
               </p>
             </div>
             <div className='mt-2 py-2'>
@@ -277,22 +465,10 @@ const ShopProfileV2Page = function () {
                 Thông tin liên hệ
               </h5>
               <div className='mt-2 px-2'>
-                <ContactRow bold imgSrc='/assets/phone-outline-black.svg' value='090123456'></ContactRow>
-                <ContactRow imgSrc='/assets/email-outline-black.svg' value='support@houseeker.vn'></ContactRow>
-                <div className='row border-bottom py-2'>
-                  <div className='' style={{ width: '40px' }}>
-                    <SVG
-                      src={toAbsoluteUrl('/assets/shopChannels/website.svg')}
-                      style={{ width: '19px', height: '19px', marginTop: '-2px' }}
-                    ></SVG>
-                  </div>
-                  <div className='col' style={{ fontSize: '14px' }}>
-                    <span className='fw-bold'>Truy cập trang web</span>
-                  </div>
-                  <div className='' style={{ width: '40px' }}>
-                    <SVG src={toAbsoluteUrl('/assets/right-black.svg')} style={{ width: '19px', height: '19px' }}></SVG>
-                  </div>
-                </div>
+                <ContactRow bold imgSrc='/assets/phone-outline-black.svg' value={formatPhoneNumberIntl(
+              `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
+            )}></ContactRow>
+                <ContactRow imgSrc='/assets/email-outline-black.svg' value={shopInfo.email}></ContactRow>
               </div>
             </div>
             <div className='mt-2 py-2'>
@@ -300,9 +476,33 @@ const ShopProfileV2Page = function () {
                 Kênh
               </h5>
               <div className='mt-2 px-2'>
-                <ChannelRow imgSrc='/assets/shopChannels/facebook.svg' value='Houseeker'></ChannelRow>
-                <ChannelRow imgSrc='/assets/shopChannels/instagram.svg' value='Houseeker'></ChannelRow>
-                <ChannelRow imgSrc='/assets/shopChannels/shopee.svg' value='Houseeker'></ChannelRow>
+                {shopInfo.shopUrls.map((x) => {
+                let imgPath = '';
+                switch(x.type) {
+                  case 'FACEBOOK':
+                    imgPath = '/assets/facebook.svg';
+                    break;
+                  case 'INSTAGRAM':
+                    imgPath = '/assets/instagram-icon.svg';
+                    break;
+                  case 'TIKTOK':
+                    imgPath = '/assets/instagram-icon.svg';
+                    break;
+                  case 'ZALO':
+                    imgPath = '/assets/instagram-icon.svg';
+                    break;
+                  case 'SHOPEE':
+                    imgPath = '/assets/instagram-icon.svg';
+                    break;
+                  case 'LAZADA':
+                    imgPath = '/assets/instagram-icon.svg';
+                    break;
+                  default:
+                    imgPath = '/assets/instagram-icon.svg';
+                    break;
+                }
+                return <ChannelRow imgSrc={imgPath} value={x.url}></ChannelRow>
+              })}
               </div>
             </div>
             <div className='mt-2 py-2'>
@@ -310,12 +510,17 @@ const ShopProfileV2Page = function () {
                 Địa chỉ
               </h5>
               <p className='mt-2' style={{ fontSize: '14px' }}>
-                CirCo Coworking Space, Tòa nhà H3, 384 Hoàng Diệu, Phường 6, Quận 4
+                {buildAddressString(shopInfo.shippingLocation)}
               </p>
             </div>
           </div>
         </div>
       </div>
+      <SobyModal open={open} setOpen={setOpen}>
+        {formError ? (
+          <ErrorPopup content={formError} setOpen={setOpen} />
+        ) : null}
+      </SobyModal>
     </div>
   );
 };
