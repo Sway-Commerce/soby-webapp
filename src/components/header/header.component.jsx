@@ -122,7 +122,7 @@ const LogoItem = styled.div`
 `;
 
 export const Header = ({ history }) => {
-  const { accessToken, lastName, middleName, firstName, imageUrl } = useSelector((state) => {
+  const { accessToken, lastName, middleName, firstName, fullName, imageUrl } = useSelector((state) => {
     return state.user;
   });
   const [isSignIn, setIsSignin] = useState(!!accessToken);
@@ -179,13 +179,29 @@ export const Header = ({ history }) => {
           <a href='https://soby.vn/#what-is-soby' style={{ padding: '10px 24px', cursor: 'pointer', color: `${defaultFontColor}` }}>
             What is Soby?
           </a>
-          <OptionLink to={{ pathname: '/phone-signin' }}>Log In</OptionLink>
-          <SwitchBtn
-            className='fw-bold'
-            style={{ marginLeft: '34px', marginRight: '8px', backgroundColor: 'white', border: '2px solid #E7E8E9', color: 'black' }}
-          >
-            Join Now
-          </SwitchBtn>
+          <OptionLink
+            to={isSignIn ? '/your-transaction' : '/phone-signin'}>
+            My Order
+            <ArrowIcon />
+          </OptionLink>
+          {isSignIn? (
+            <Link to='/individual-profile'
+            style={{ marginRight: '29px' }}>
+              <b>
+                Hi {firstName}
+              </b>
+            </Link>
+          ) : (
+            <OptionLink to={{ pathname: '/phone-signin' }}>
+              Log In
+
+              <SwitchBtn
+                className='fw-bold'
+                style={{ marginLeft: '34px', marginRight: '8px', backgroundColor: 'white', border: '2px solid #E7E8E9', color: 'black' }}>
+                Join Now
+              </SwitchBtn>
+            </OptionLink>
+          )}
           <Link to='/create-seller'>
             <SwitchBtn type='button'>For Seller</SwitchBtn>
           </Link>
