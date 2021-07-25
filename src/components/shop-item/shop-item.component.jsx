@@ -67,7 +67,7 @@ const ShopItem = ({ shop, ...rest }) => {
         </Link>
 
         <div className="item-info">
-          <ShopBadge point={totalPoints} color={rankColor} />
+          <ShopBadge point={totalPoints} color={totalPoints} />
           <p className="status">{description}</p>
           <img
             className="heed clickable"

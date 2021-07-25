@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Link, Redirect, Route, Switch } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { useLazyQuery } from '@apollo/client';
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../shared/utils/assetsHelper';
@@ -20,7 +20,6 @@ import { BusinessVerification } from './business-verfication.component';
 import { ShopChannel } from './shop-channel.component';
 import { PreviewAll } from './preview-all.component';
 import { generateEncryptionKey, generateSignInKey } from 'graphQL/repository/individual.repository';
-import { shallowEqual } from 'react-redux';
 
 export const FormInput = function ({ ...props }) {
   const { label, initialValue, onChange, inputType } = props;
@@ -99,10 +98,10 @@ export const ChannelPreview = function ({ ...props }) {
 };
 
 export const createSellerTabs = {
-  basicInfo: { label: 'Basic Info' },
-  shopChannel: { label: 'Shop Channel' },
-  businessVerification: { label: 'Business Verification' },
-  preview: { label: 'Preview' },
+  basicInfo: { label: 'Thông tin' },
+  shopChannel: { label: 'Kênh cửa hàng' },
+  businessVerification: { label: 'Xác thực doanh nghiệp' },
+  preview: { label: 'Xem trước' },
 };
 
 const initialShopChannel = {
