@@ -206,7 +206,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const date = new Date();
-    date.setDate(date.getDate() - 7);
+    date.setDate(date.getDate() - 1000);
     const lastSevenDay = date.getTime();
     const now = Date.now();
     setQuery({ ...query, filters: [`createdAt:${lastSevenDay};${now}`] });
