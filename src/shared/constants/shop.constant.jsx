@@ -1,24 +1,23 @@
 import {
-  redColor,
-  orangeColor,
-  yellowColor,
+  fadeColor,
+  darkGreyColor,
+  excellentColor,
   greenColor,
-  mainColor,
+  amazingColor,
 } from 'shared/css-variable/variable';
 
-export const getColor = (name) => {
-  switch (name) {
-    case 'Red':
-      return redColor;
-    case 'Orange':
-      return orangeColor;
-    case 'Yellow':
-      return yellowColor;
-    case 'Green':
-      return greenColor;
-    case 'Blue':
-      return mainColor;
-    default:
-      return redColor;
+export const getColor = (score) => {
+  if (score <= 0.0) {
+    return fadeColor;
+  } else if (score <= 5.0 && score > 0.0) {
+    return darkGreyColor
+  } else if (score <= 6.0 && score > 5.0) {
+    return darkGreyColor;
+  } else if (score <= 8.0 && score > 6.0) {
+    return greenColor
+  } else if (score <= 9.5 && score > 8.0) {
+    return excellentColor
+  } else {
+    return amazingColor
   }
 };

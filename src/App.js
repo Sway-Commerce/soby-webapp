@@ -23,7 +23,6 @@ const SignUpInfo = lazy(() => import('pages/register/register.component'));
 const PhoneVerification = lazy(() => import('pages/phone-verification/phone-verification.component'));
 const PhoneSignin = lazy(() => import('pages/phone-signin/phone-signin.component'));
 const PaymentResult = lazy(() => import('pages/payment-result/payment-result.component'));
-const ShopProfile = lazy(() => import('pages/shop-profile/shop-profile.component'));
 const ProductDetail = lazy(() => import('pages/product-detail/product-detail.component'));
 const YourTransaction = lazy(() => import('pages/your-transactions/your-transactions.component'));
 const IndividualProfile = lazy(() => import('pages/individual-profile/individual-profile.component'));
@@ -43,6 +42,7 @@ const SearchResult = lazy(() => import('pages/search-result/search-result.compon
 const ExplorePage = lazy(() => import('pages/explore/explore.page'));
 const CreateSellerPage = lazy(() => import('pages/create-seller/create-seller.page'));
 const CreateSellerSuccessPage = lazy(() => import('pages/create-seller/create-seller-success'));
+const ShopProfileV2Page = lazy(() => import('pages/shop-profile-v2/shop-profile.page'));
 
 const App = () => {
   return (
@@ -55,6 +55,7 @@ const App = () => {
             <Suspense fallback={<Spinner />}>
               <Route exact path='/' component={HomePage} />
               <Route exact path='/explore' component={ExplorePage} />
+              <Route exact path='/shop-profile/:shopId' component={ShopProfileV2Page} />
               <JwtRoute exact path='/create-seller' component={CreateSellerPage} />
               <Route path='/phone-signin' component={PhoneSignin} />
               <Route exact path='/phone-verification' component={PhoneVerification} />
@@ -65,7 +66,6 @@ const App = () => {
               <JwtRoute path="/edit-profile" component={EditProfile} />
               <JwtRoute path="/change-password" component={ChangePassword} />
               <Route path="/search-result" component={SearchResult} />
-              <Route path='/shop-profile/:shopId' component={ShopProfile} />
               <Route path='/product/:productId' component={ProductDetail} />
               <JwtRoute path='/your-transaction' component={YourTransaction} />
               <JwtRoute path='/individual-profile' component={IndividualProfile} />

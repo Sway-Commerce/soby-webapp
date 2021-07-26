@@ -15,7 +15,7 @@ const Container = styled.div`
   p {
     font-size: 0.7rem;
     color: white;
-    line-height: 24px;
+    margin-top: 22px;
   }
   svg {
     margin-right: 4px;
@@ -27,7 +27,7 @@ const Container = styled.div`
 
 const ShopBadge = ({ point, rankColor }) => {
   return (
-    <Container color={getColor(rankColor)}>
+    <Container color={getColor(rankColor / 10)}>
       <ShopBadgeIcon />
       <p>{(+point || 0) / 10}</p>
     </Container>

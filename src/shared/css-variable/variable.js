@@ -12,3 +12,9 @@ export const yellowColor = '#F8D000';
 export const whiteColor = '#FFFFFF';
 export const defaultFontColor = '#3D494B';
 export const titleFontColor = '#0D1B1E';
+
+export const fadeColor = '#F3F4F4';
+export const darkGreyColor = '#6E7678';
+export const excellentColor = '#5BCCFA';
+export const amazingColor = '#725CFD';
+

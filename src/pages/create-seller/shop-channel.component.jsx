@@ -49,7 +49,7 @@ export function ShopChannel({ ...props }) {
     <div aria-label='shop-channel' className=''>
       <div aria-label='title' className='text-center'>
         <h3 className='fw-bold' style={{ fontSize: '24px' }}>
-          Add Shop Channel
+          Thêm kênh cửa hàng
         </h3>
       </div>
       <div aria-label='shop-channel-form' className='mt-3'>
@@ -100,7 +100,7 @@ export function ShopChannel({ ...props }) {
                   getShopChannel({ shopChannelData }, createSellerTabs.businessVerification.label);
                 }}
               >
-                <span>Continue</span>
+                <span>Tiếp theo</span>
                 <SVG className='ms-2' src={toAbsoluteUrl('/assets/vector-right.svg')}></SVG>
               </button>
             </div>
