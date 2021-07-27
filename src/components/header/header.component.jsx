@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { ReactComponent as SearchIcon } from 'shared/assets/search-icon.svg';
 import { ReactComponent as ArrowIcon } from 'shared/assets/arrow-down.svg';
 import { ReactComponent as Logo } from 'shared/assets/logo-temp.svg';
+import { ReactComponent as SobyLogo } from 'shared/assets/soby.svg';
 import { ReactComponent as MobileLogo } from 'shared/assets/mobile-logo.svg';
 import TempImage from 'shared/assets/default-individual-ava.png';
 import { ReactComponent as MenuIcon } from 'shared/assets/menu-icon.svg';
@@ -156,7 +157,7 @@ export const Header = ({ history }) => {
             <MobileLogo />
           </LogoItem>
           <LogoItem show>
-            <Logo />
+            <SobyLogo />
           </LogoItem>
         </LogoContainer>
 

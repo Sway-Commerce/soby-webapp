@@ -193,12 +193,12 @@ const ExploreMainPage = () => {
             return (
               <Link key={currCategory.id} to={`/explore/${currCategory.id}`}>
                 <CategoryItem
-                  imgSrc={categoryIconMapper[currCategory.id].iconSrc}
-                  value={currCategory.name}
+                  imgSrc={categoryIconMapper[currCategory.id]?.iconSrc}
+                  value={currCategory?.name}
                   isFirst={index === 0}
                   bgColor='#F3F4F4'
-                  fill={categoryIconMapper[currCategory.id].fill}
-                  stroke={categoryIconMapper[currCategory.id].stroke}
+                  fill={categoryIconMapper[currCategory.id]?.fill}
+                  stroke={categoryIconMapper[currCategory.id]?.stroke}
                 ></CategoryItem>
               </Link>
             );
