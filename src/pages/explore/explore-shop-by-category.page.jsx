@@ -28,9 +28,11 @@ const Shop = function ({ ...props }) {
         className='pb-2'
         style={{ width: '216px' }}
       >
-        <div className='border'>
+        <div className='d-flex justify-content-center align-items-center border' style={{ height: '216px' }}>
           {/* <SVG src={toAbsoluteUrl(imgSrc)} style={{ width: '216px', height: '216px' }}></SVG> */}
-          <img src={shopData.logoUrl} style={{ width: '100%' }} className='' />
+          <div className=''>
+            <img className='' src={shopData.logoUrl} style={{ width: '100%' }} />
+          </div>
         </div>
         <div className='' style={{ marginTop: '8px' }}>
           <h5 className='fw-bold mb-0' style={{ fontSize: '16px' }}>
