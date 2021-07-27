@@ -10,7 +10,7 @@ import {
   redColor,
   gray1Color,
   stokeColor,
-  whiteColor
+  whiteColor,
 } from './shared/css-variable/variable';
 
 export const GlobalStyle = createGlobalStyle`
@@ -50,6 +50,22 @@ export const GlobalStyle = createGlobalStyle`
 				}
 			}
 		}
+		 ::-webkit-scrollbar {
+				width: 5px;
+				height: 10px;
+			}
+			::-webkit-scrollbar-thumb {
+				background: #927fff;
+				border-radius: 30px;
+			}
+			::-webkit-scrollbar-thumb:hover {
+				background: #725cfd;
+			}
+			::-webkit-scrollbar-track {
+				background: #ffffff;
+				border-radius: 0px;
+				box-shadow: inset 0px 0px 0px 0px #f0f0f0;
+			}
 		@media screen and (max-width: 1200px) {
 			.body-container {
 				width: auto;
@@ -79,22 +95,22 @@ export const GlobalStyle = createGlobalStyle`
 		scroll-behavior: smooth;
 	}
 
-	button:hover {
-		cursor: pointer;
-	}
+	// button:hover {
+	// 	cursor: pointer;
+	// }
 
-	body::-webkit-scrollbar {
-		width: 12px;
-	}
+	// body::-webkit-scrollbar {
+	// 	width: 12px;
+	// }
 
-	body::-webkit-scrollbar-track {
-		box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-	}
+	// body::-webkit-scrollbar-track {
+	// 	box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+	// }
 
-	body::-webkit-scrollbar-thumb {
-		background-color: darkgrey;
-		outline: 1px solid slategrey;
-	}
+	// body::-webkit-scrollbar-thumb {
+	// 	background-color: darkgrey;
+	// 	outline: 1px solid slategrey;
+	// }
 
 	* {
 		margin: 0;

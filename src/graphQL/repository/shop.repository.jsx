@@ -224,8 +224,32 @@ export const SEARCH_AGGREGATED_SHOP = gql`
       data {
         total
         records {
+          id
+          individualId
+          name
+          phoneCountryCode
+          phoneNumber
           email
+          description
+          logoUrl
           coverUrl
+          categories {
+            id
+            name
+            description
+          }
+          shopUrls {
+            url
+            verified
+            type
+          }
+          shippingType
+          createdAt
+          updatedAt
+          kyb {
+            status
+            reason
+          }
           allowedCod
           shopRank {
             shopId
@@ -247,30 +271,8 @@ export const SEARCH_AGGREGATED_SHOP = gql`
               description
             }
           }
-          id
-          individualId
-          logoUrl
-          name
-          phoneCountryCode
-          phoneNumber
-          description
-          categories {
-            id
-            name
-            description
-          }
-          shopUrls {
-            url
-            verified
-            type
-          }
-          shippingType
-          createdAt
-          updatedAt
-          kyb {
-            status
-            reason
-          }
+          shippingFeeInCity
+          shippingFeeOutCity
         }
       }
     }
