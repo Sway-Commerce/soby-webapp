@@ -188,12 +188,13 @@ const ExploreMainPage = () => {
         <ScrollContainer horizontal={true} vertical={false} className='d-flex'>
           {Object.keys(categoryIconMapper).map(function (currCategory, index) {
             return (
-              <CategoryItem
-                key={categoryIconMapper[currCategory].id}
-                imgSrc={categoryIconMapper[currCategory].iconSrc}
-                value={categoryIconMapper[currCategory].name}
-                isFirst={index === 0}
-              ></CategoryItem>
+              <Link key={categoryIconMapper[currCategory].id} to={`/explore/${categoryIconMapper[currCategory].id}`}>
+                <CategoryItem
+                  imgSrc={categoryIconMapper[currCategory].iconSrc}
+                  value={categoryIconMapper[currCategory].name}
+                  isFirst={index === 0}
+                ></CategoryItem>
+              </Link>
             );
           })}
         </ScrollContainer>

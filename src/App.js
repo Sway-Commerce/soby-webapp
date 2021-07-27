@@ -59,6 +59,7 @@ const App = () => {
               <Route exact path='/explore' component={ExploreMainShopPage} />
               <Route exact path='/explore/:categoryId' component={ExploreShopByCategoryPage} />
               <Route exact path='/shop-profile/:shopId' component={ShopProfileV2Page} />
+              {/* <Route path='/shop-profile/:shopId' component={ShopProfile} /> */}
               <JwtRoute exact path='/create-seller' component={CreateSellerPage} />
               <Route path='/phone-signin' component={PhoneSignin} />
               <Route exact path='/phone-verification' component={PhoneVerification} />
@@ -69,7 +70,6 @@ const App = () => {
               <JwtRoute path='/edit-profile' component={EditProfile} />
               <JwtRoute path='/change-password' component={ChangePassword} />
               <Route path='/search-result' component={SearchResult} />
-              <Route path='/shop-profile/:shopId' component={ShopProfile} />
               <Route path='/product/:productId' component={ProductDetail} />
               <JwtRoute path='/your-transaction' component={YourTransaction} />
               <JwtRoute path='/individual-profile' component={IndividualProfile} />
