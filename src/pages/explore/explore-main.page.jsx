@@ -163,7 +163,7 @@ const ExploreMainPage = () => {
     filters: [],
     queries: [],
     sorts: [],
-  });
+  }); 
 
   const [getAllShopCategories, { loading: getAllShopCategoriesLoading, error: getAllShopCategoriesError, data: getAllShopCategoriesData }] =
     useLazyQuery(GET_ALL_SHOP_CATEGORIES);
@@ -196,14 +196,12 @@ const ExploreMainPage = () => {
   }, [getAllShopCategories, getAllShopCategoriesData, shopCategories]);
 
   useEffect(() => {
-    if (query.filters.length) {
-      if (!shopsByCategory.length) {
-        searchAggregatedShop({
-          variables: {
-            query,
-          },
-        });
-      }
+    if (!shopsByCategory.length) {
+      searchAggregatedShop({
+        variables: {
+          query,
+        },
+      });
     }
   }, [query, searchAggregatedShop, shopsByCategory.length]);
 
