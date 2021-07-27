@@ -14,6 +14,7 @@ import ShopItem from '../../components/shop-item/shop-item.component';
 import useDebounce from 'shared/hooks/useDebounce';
 import SVG from 'react-inlinesvg';
 import { toAbsoluteUrl } from '../../shared/utils/assetsHelper';
+import { categoryIconMapper } from '../explore/icon.mapper';
 
 const Container = styled.div`
   margin: auto;
@@ -179,7 +180,7 @@ const CategoryItem = function ({ ...props }) {
       </div>
       <div
         className='text-center mt-2'
-        style={{ width: '72px', height: 'auto', wordWrap: 'break-word', fontSize: '12px', lineHeight: '.8rem' }}
+        style={{ width: '72px', height: 'auto', wordWrap: 'break-word', fontSize: '12px', lineHeight: '1rem' }}
       >
         <span className=''>{value}</span>
       </div>
@@ -311,36 +312,36 @@ const HomePage = () => {
             <span className=''>Xem Duyệt qua các cửa hàng theo nhiều danh mục hơn</span>
           </div>
           <div className='d-flex justify-content-center align-items-start'>
-            <Link to='/explore/'>
+            <Link to='/explore/203'>
               <CategoryItem
-                value='Nhà hàng &amp; Ăn uống'
+                value={categoryIconMapper[203].name}
                 bgColor='#FFA800'
-                imgSrc='/assets/categories/food.svg'
+                imgSrc={categoryIconMapper[203].iconSrc}
                 isFirst
                 fill='none'
                 stroke='white'
               />
             </Link>
-            <Link to='/explore/'>
-              <CategoryItem value='Điện tử' bgColor='#5BCCFA' imgSrc='/assets/categories/monitor.svg' fill='white' stroke='none' />
+            <Link to='/explore/206'>
+              <CategoryItem value={categoryIconMapper[206].name} bgColor='#5BCCFA' imgSrc={categoryIconMapper[206].iconSrc} fill='white' stroke='none' />
             </Link>
-            <Link to='/explore/'>
+            <Link to='/explore/208'>
               <CategoryItem
-                value='Thời trang &amp; phụ kiện'
+                value={categoryIconMapper[208].name}
                 bgColor='#725CFD'
-                imgSrc='/assets/categories/t-shirt.svg'
+                imgSrc={categoryIconMapper[208].iconSrc}
                 fill='none'
                 stroke='white'
               />
             </Link>
-            <Link to='/explore/'>
-              <CategoryItem value='Nhà cửa' bgColor='#AFDC10' imgSrc='/assets/categories/furnitures.svg' fill='white' stroke='none' />
+            <Link to='/explore/210'>
+              <CategoryItem value={categoryIconMapper[210].name} bgColor='#AFDC10' imgSrc={categoryIconMapper[210].iconSrc} fill='white' stroke='none' />
             </Link>
-            <Link to='/explore/'>
+            <Link to='/explore/209'>
               <CategoryItem
-                value='Mỹ phẩm &amp; nước hoa'
+                value={categoryIconMapper[209].name}
                 bgColor='#FF70A6'
-                imgSrc='/assets/categories/lipstick.svg'
+                imgSrc={categoryIconMapper[209].iconSrc}
                 fill='white'
                 stroke='none'
               />

@@ -16,6 +16,7 @@ import { toAbsoluteUrl } from '../../shared/utils/assetsHelper';
 import { categoryIconMapper } from './icon.mapper';
 import { ScrollMenu } from 'react-horizontal-scrolling-menu';
 import ScrollContainer from 'react-indiana-drag-scroll';
+import { getColor } from 'shared/constants/shop.constant';
 
 const CategoryIcon = function ({ ...props }) {
   const { imgSrc, fill, stroke, bgColor, border } = props;
@@ -90,43 +91,47 @@ const ArrowLeft = function ({ ...props }) {
 };
 
 const Shop = function ({ ...props }) {
-  const { imgSrc, shopId } = props;
+  const { imgSrc, shopData } = props;
+  const score = shopData?.shopRank?.totalPoints / 10;
   return (
-    <div
-      key={shopId}
-      // onClick={() => {window.location = `/product/${shopId}`}}
-      className=''
-      style={{ width: '216px' }}
-    >
-      <div className=''>
-        <SVG src={toAbsoluteUrl(imgSrc)} style={{ width: '216px', height: '216px' }}></SVG>
-        {/* <img src={imgSrc} style={{ width: '190px', height: '190px' }} /> */}
-      </div>
-      <div className='' style={{ marginTop: '8px' }}>
-        <h5 className='fw-bold mb-0' style={{ fontSize: '16px' }}>
-          Houseeker
-        </h5>
-      </div>
-      <div className='' style={{ marginTop: '8px' }}>
-        <div
-          className='rounded-pill d-flex justify-content-center align-items-center p-0'
-          style={{ backgroundColor: '#725CFD', width: '48px' }}
-        >
-          <div className='d-block p-0' style={{ marginLeft: '-2px' }}>
-            <SVG
-              className=''
-              src={toAbsoluteUrl('/assets/commons/star.svg')}
-              style={{ width: '12px', height: '12px', fill: 'white', marginTop: '-2px' }}
-            ></SVG>
+    <Link className='' to={`/shop-profile/${shopData.id}`}>
+      <div
+        // onClick={() => {window.location = `/product/${shopId}`}}
+        className='pb-2'
+        style={{ width: '216px' }}
+      >
+        <div className='d-flex justify-content-center align-items-center border' style={{ height: '216px' }}>
+          {/* <SVG src={toAbsoluteUrl(imgSrc)} style={{ width: '216px', height: '216px' }}></SVG> */}
+          <div className=''>
+            <img className='' src={shopData.logoUrl} style={{ width: '100%' }} />
           </div>
-          <div>
-            <span className='' style={{ fontSize: '12px', color: 'white', marginLeft: '5px' }}>
-              9.5
-            </span>
+        </div>
+        <div className='' style={{ marginTop: '8px' }}>
+          <h5 className='fw-bold mb-0' style={{ fontSize: '16px' }}>
+            {shopData.name}
+          </h5>
+        </div>
+        <div className='' style={{ marginTop: '8px' }}>
+          <div
+            className='rounded-pill d-flex justify-content-center align-items-center p-0'
+            style={{ backgroundColor: getColor(score), width: '48px' }}
+          >
+            <div className='d-block p-0' style={{ marginLeft: '-2px' }}>
+              <SVG
+                className=''
+                src={toAbsoluteUrl('/assets/commons/star.svg')}
+                style={{ width: '12px', height: '12px', fill: 'white', marginTop: '-2px' }}
+              ></SVG>
+            </div>
+            <div>
+              <span className='' style={{ fontSize: '12px', color: 'white', marginLeft: '5px' }}>
+                {score}
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
@@ -135,17 +140,16 @@ const ShopRow = function ({ ...props }) {
   return (
     <div className={`d-flex flex-wrap justify-content-between ${!isFirst && 'mt-4'}`}>
       {shopList?.map(function (shop) {
-        return <Shop imgSrc={'/assets/commons/no-shop-img.svg'} />;
+        return <Shop key={shop.id} imgSrc={'/assets/commons/no-shop-img.svg'} shopData={shop} />;
       })}
-      {/* {shops.map((product) => {
-        return <Shop imgSrc={product.imageUrls[0]} productId={product.id} />;
-      })} */}
     </div>
   );
 };
 
 const ExploreMainPage = () => {
   const [shopCategories, setShopCategories] = useState([]);
+  const [shopsByCategory, setShopsByCategory] = useState([]);
+  const [numOfShopsInRow, setNumOfShopsInRow] = useState(5);
   const [topValueShops, setTopValueShops] = useState([]);
   const [breadcrumbs, setBreadcrumb] = useState([
     {
@@ -153,10 +157,23 @@ const ExploreMainPage = () => {
       src: '/',
     },
   ]);
+  const [query, setQuery] = useState({
+    page: 0,
+    pageSize: 10,
+    filters: [],
+    queries: [],
+    sorts: [],
+  });
 
   const [getAllShopCategories, { loading: getAllShopCategoriesLoading, error: getAllShopCategoriesError, data: getAllShopCategoriesData }] =
     useLazyQuery(GET_ALL_SHOP_CATEGORIES);
   console.log('test', shopCategories);
+
+  const [searchAggregatedShop, { data: searchAggregatedShopData, loading: searchAggregatedShopLoading, error: searchAggregatedShopError }] =
+    useLazyQuery(SEARCH_AGGREGATED_SHOP, {
+      fetchPolicy: 'network-only',
+      errorPolicy: 'all',
+    });
 
   useEffect(
     function () {
@@ -177,6 +194,31 @@ const ExploreMainPage = () => {
       }
     }
   }, [getAllShopCategories, getAllShopCategoriesData, shopCategories]);
+
+  useEffect(() => {
+    if (query.filters.length) {
+      if (!shopsByCategory.length) {
+        searchAggregatedShop({
+          variables: {
+            query,
+          },
+        });
+      }
+    }
+  }, [query, searchAggregatedShop, shopsByCategory.length]);
+
+  useEffect(() => {
+    if (searchAggregatedShopData?.searchAggregatedShop?.data) {
+      let shopCategoryData = [...searchAggregatedShopData?.searchAggregatedShop?.data?.records];
+      let tempArr = [];
+      while (shopCategoryData.length > 0) {
+        tempArr.push(shopCategoryData.splice(0, numOfShopsInRow));
+      }
+      setShopsByCategory(tempArr);
+    }
+  }, [numOfShopsInRow, searchAggregatedShopData?.searchAggregatedShop?.data]);
+
+  console.info('shopsByCategory', shopsByCategory);
 
   return (
     <div className='container-fluid mt-3 mb-5'>
@@ -214,8 +256,13 @@ const ExploreMainPage = () => {
       </div>
       <div aria-label='popular-shop' className='row'>
         <div aria-label='shop-item-wrapper' className=''>
-          <ShopRow isFirst></ShopRow>
-          <ShopRow></ShopRow>
+          {shopsByCategory.map(function (shopRow, index) {
+            if (index === 0) {
+              return <ShopRow key={index} isFirst shopList={shopRow}></ShopRow>;
+            } else {
+              return <ShopRow key={index} shopList={shopRow}></ShopRow>;
+            }
+          })}
           <hr className='hr' style={{ color: '#E7E8E9' }} />
         </div>
       </div>
