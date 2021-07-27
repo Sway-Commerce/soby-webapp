@@ -18,29 +18,32 @@ import { ScrollMenu } from 'react-horizontal-scrolling-menu';
 import ScrollContainer from 'react-indiana-drag-scroll';
 
 const CategoryIcon = function ({ ...props }) {
-  const { imgSrc, fill } = props;
+  const { imgSrc, fill, stroke, bgColor, border } = props;
 
   return (
     <div
-      className='rounded-circle d-flex justify-content-center align-items-center'
-      style={{ width: '48px', height: '48px', backgroundColor: '#F3F4F4' }}
+      className={`rounded-circle d-flex justify-content-center align-items-center ${border && 'border'}`}
+      style={{ width: '48px', height: '48px', backgroundColor: bgColor }}
     >
       <div className='d-block'>
-        <SVG src={toAbsoluteUrl(imgSrc)} style={{ width: '24px', height: '24px', marginTop: '-2px', fill: `${fill}` }}></SVG>
+        <SVG
+          src={toAbsoluteUrl(imgSrc)}
+          style={{ width: '24px', height: '24px', marginTop: '-2px', fill: `${fill}`, stroke: `${stroke}` }}
+        ></SVG>
       </div>
     </div>
   );
 };
 
 const CategoryItem = function ({ ...props }) {
-  const { imgSrc, value, isFirst } = props;
+  const { imgSrc, value, isFirst, bgColor, fill, stroke, border } = props;
   return (
     <div className={''.concat(!isFirst && 'ms-3')} tabIndex={0}>
       <div className='d-flex justify-content-center align-items-center'>
-        <CategoryIcon imgSrc={imgSrc}></CategoryIcon>
+        <CategoryIcon imgSrc={imgSrc} bgColor={bgColor} fill={fill} stroke={stroke} border={border} />
       </div>
       <div
-        className='text-center mt-1'
+        className='text-center mt-2'
         style={{ width: '72px', height: 'auto', wordWrap: 'break-word', fontSize: '12px', lineHeight: '.8rem' }}
       >
         <span className=''>{value}</span>
@@ -186,13 +189,16 @@ const ExploreMainPage = () => {
       </div>
       <div aria-label='category-selection-bar' className='row pt-4 pb-4'>
         <ScrollContainer horizontal={true} vertical={false} className='d-flex'>
-          {Object.keys(categoryIconMapper).map(function (currCategory, index) {
+          {shopCategories.map(function (currCategory, index) {
             return (
-              <Link key={categoryIconMapper[currCategory].id} to={`/explore/${categoryIconMapper[currCategory].id}`}>
+              <Link key={currCategory.id} to={`/explore/${currCategory.id}`}>
                 <CategoryItem
-                  imgSrc={categoryIconMapper[currCategory].iconSrc}
-                  value={categoryIconMapper[currCategory].name}
+                  imgSrc={categoryIconMapper[currCategory.id].iconSrc}
+                  value={currCategory.name}
                   isFirst={index === 0}
+                  bgColor='#F3F4F4'
+                  fill={categoryIconMapper[currCategory.id].fill}
+                  stroke={categoryIconMapper[currCategory.id].stroke}
                 ></CategoryItem>
               </Link>
             );

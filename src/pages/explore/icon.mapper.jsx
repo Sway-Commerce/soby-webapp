@@ -5,6 +5,8 @@ export const categoryIconMapper = {
     englishName: 'Electronics',
     description: '',
     iconSrc: '/assets/categories/monitor.svg',
+    fill: '#0D1B1E',
+    stroke: 'none',
   },
   202: {
     id: '202',
@@ -12,6 +14,8 @@ export const categoryIconMapper = {
     englishName: 'Fashion & Accessories',
     description: '',
     iconSrc: '/assets/categories/t-shirt.svg',
+    fill: 'none',
+    stroke: '#0D1B1E',
   },
   203: {
     id: '203',
@@ -19,6 +23,8 @@ export const categoryIconMapper = {
     englishName: 'Home, Kitchen & Garden',
     description: '',
     iconSrc: '/assets/categories/vacuum-cleaner.svg',
+    fill: '#0D1B1E',
+    stroke: 'none',
   },
   204: {
     id: '204',
@@ -26,6 +32,8 @@ export const categoryIconMapper = {
     englishName: 'Automotive & Accessories',
     description: '',
     iconSrc: '/assets/categories/car.svg',
+    fill: 'none',
+    stroke: '#0D1B1E',
   },
   205: {
     id: '205',
@@ -33,6 +41,8 @@ export const categoryIconMapper = {
     englishName: 'Books, Movies & Music (Entertainment)',
     description: '',
     iconSrc: '/assets/categories/media.svg',
+    fill: '#0D1B1E',
+    stroke: 'none',
   },
   206: {
     id: '206',
@@ -40,6 +50,8 @@ export const categoryIconMapper = {
     englishName: 'Pet',
     description: '',
     iconSrc: '/assets/categories/pet.svg',
+    fill: 'none',
+    stroke: '#0D1B1E',
   },
   207: {
     id: '207',
@@ -47,18 +59,26 @@ export const categoryIconMapper = {
     englishName: 'Collectibles & Art',
     description: '',
     iconSrc: '/assets/categories/stamp.svg',
+    fill: '#0D1B1E',
+    stroke: 'none',
   },
   208: {
     id: '208',
     name: 'Đồ chơi & Games',
     englishName: 'Toys & Games',
     description: '',
+    iconSrc: '',
+    fill: '',
+    stroke: '',
   },
   209: {
     id: '209',
     name: 'Thương mại & Công nghệ',
     englishName: 'Business & Industrial',
     description: '',
+    iconSrc: '',
+    fill: '',
+    stroke: '',
   },
   210: {
     id: '210',
@@ -66,6 +86,8 @@ export const categoryIconMapper = {
     englishName: 'Health & Beauty',
     description: '',
     iconSrc: '/assets/categories/bandage.svg',
+    fill: '#0D1B1E',
+    stroke: 'none',
   },
   211: {
     id: '211',
@@ -73,6 +95,8 @@ export const categoryIconMapper = {
     englishName: 'Sporting Goods',
     description: '',
     iconSrc: '/assets/categories/muscle.svg',
+    fill: '#0D1B1E',
+    stroke: 'none',
   },
   212: {
     id: '212',
@@ -80,6 +104,8 @@ export const categoryIconMapper = {
     englishName: 'Travel',
     description: '',
     iconSrc: '/assets/categories/luggage.svg',
+    fill: 'none',
+    stroke: '#0D1B1E',
   },
   299: {
     id: '299',
@@ -87,5 +113,7 @@ export const categoryIconMapper = {
     englishName: 'Other',
     description: '',
     iconSrc: '/assets/categories/box.svg',
+    fill: 'none',
+    stroke: '#0D1B1E',
   },
 };

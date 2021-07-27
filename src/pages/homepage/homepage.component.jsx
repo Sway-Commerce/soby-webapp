@@ -31,8 +31,7 @@ const Row = styled.div`
   width: 100vw;
   background-color: white;
   margin-bottom: 1.2rem;
-  margin-left: ${(props) =>
-    props.headRow ? 'calc(((100vw - 1200px) / 2) * -1)' : 0};
+  margin-left: ${(props) => (props.headRow ? 'calc(((100vw - 1200px) / 2) * -1)' : 0)};
 
   .mb-0 {
     margin-bottom: 0rem;
@@ -48,7 +47,7 @@ const HeadHome = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #0D1B1E;
+  color: #0d1b1e;
   text-align: center;
   .soby-welcome {
     font-size: 2.6rem;
@@ -153,25 +152,38 @@ const Symbol48px = styled.div`
   height: 48px;
 `;
 
-const CategoryItem = function ({ itemName, bgColor, iconSrc, url, isFirst }) {
+const CategoryIcon = function ({ ...props }) {
+  const { imgSrc, fill, stroke, bgColor, border } = props;
+
   return (
-    <>
-      <Link
-        to={url}
-        className={`d-flex flex-column align-items-center ${!isFirst && 'ms-4'}`}
-        style={{ width: '110px', lineHeight: '1rem' }}
+    <div
+      className={`rounded-circle d-flex justify-content-center align-items-center ${border && 'border'}`}
+      style={{ width: '48px', height: '48px', backgroundColor: bgColor }}
+    >
+      <div className='d-block'>
+        <SVG
+          src={toAbsoluteUrl(imgSrc)}
+          style={{ width: '24px', height: '24px', marginTop: '-2px', fill: `${fill}`, stroke: `${stroke}` }}
+        ></SVG>
+      </div>
+    </div>
+  );
+};
+
+const CategoryItem = function ({ ...props }) {
+  const { imgSrc, value, isFirst, bgColor, fill, stroke, border } = props;
+  return (
+    <div className={''.concat(!isFirst && 'ms-3')} tabIndex={0}>
+      <div className='d-flex justify-content-center align-items-center'>
+        <CategoryIcon imgSrc={imgSrc} bgColor={bgColor} fill={fill} stroke={stroke} border={border} />
+      </div>
+      <div
+        className='text-center mt-2'
+        style={{ width: '72px', height: 'auto', wordWrap: 'break-word', fontSize: '12px', lineHeight: '.8rem' }}
       >
-        <Symbol48px
-          className='d-flex justify-content-center align-items-center rounded-circle mb-2'
-          style={{ backgroundColor: `${bgColor}` }}
-        >
-          <SVG src={toAbsoluteUrl(`${iconSrc}`)}></SVG>
-        </Symbol48px>
-        <div className='text-center'>
-          <span>{itemName}</span>
-        </div>
-      </Link>
-    </>
+        <span className=''>{value}</span>
+      </div>
+    </div>
   );
 };
 
@@ -192,17 +204,11 @@ const HomePage = () => {
   const debouncedSearchTerm = useDebounce(inputSearch, 500);
   const [recordsSuggest, setRecordsSuggest] = useState([]);
 
-  const [
-    searchAggregatedShop,
-    {
-      data: searchAggregatedShopData,
-      loading: searchAggregatedShopLoading,
-      error: searchAggregatedShopError,
-    },
-  ] = useLazyQuery(SEARCH_AGGREGATED_SHOP, {
-    fetchPolicy: 'network-only',
-    errorPolicy: 'all',
-  });
+  const [searchAggregatedShop, { data: searchAggregatedShopData, loading: searchAggregatedShopLoading, error: searchAggregatedShopError }] =
+    useLazyQuery(SEARCH_AGGREGATED_SHOP, {
+      fetchPolicy: 'network-only',
+      errorPolicy: 'all',
+    });
 
   useEffect(() => {
     const date = new Date();
@@ -220,9 +226,7 @@ const HomePage = () => {
             query: {
               ...query,
               filters: records.length ? [] : query.filters,
-              queries: debouncedSearchTerm
-                ? [`name:${debouncedSearchTerm}`]
-                : [],
+              queries: debouncedSearchTerm ? [`name:${debouncedSearchTerm}`] : [],
             },
           },
         });
@@ -242,12 +246,8 @@ const HomePage = () => {
   useEffect(() => {
     if (searchAggregatedShopData?.searchAggregatedShop?.data) {
       !records.length
-        ? setRecords(
-          searchAggregatedShopData?.searchAggregatedShop?.data.records
-        )
-        : setRecordsSuggest(
-          searchAggregatedShopData?.searchAggregatedShop?.data.records
-        );
+        ? setRecords(searchAggregatedShopData?.searchAggregatedShop?.data.records)
+        : setRecordsSuggest(searchAggregatedShopData?.searchAggregatedShop?.data.records);
     }
   }, [searchAggregatedShopData?.searchAggregatedShop?.data]);
 
@@ -290,10 +290,7 @@ const HomePage = () => {
                   withoutTitle
                   id='home-input'
                 />
-                <SearchIcon
-                  onClick={handleSubmit}
-                  className='mobile-btn clickable'
-                />
+                <SearchIcon onClick={handleSubmit} className='mobile-btn clickable' />
                 {!!recordsSuggest.length && (
                   <ResultSearchBox>
                     {recordsSuggest.map((shop) => (
@@ -314,34 +311,55 @@ const HomePage = () => {
             <span className=''>Xem Duyệt qua các cửa hàng theo nhiều danh mục hơn</span>
           </div>
           <div className='d-flex justify-content-center align-items-start'>
-            <CategoryItem itemName='Nhà hàng &amp; Ăn uống' bgColor='#FFA800' iconSrc='/assets/food.svg' url='/explore' isFirst ></CategoryItem>
-            <CategoryItem itemName='Điện tử' bgColor='#5BCCFA' iconSrc='/assets/digital.svg' url='/explore' ></CategoryItem>
-            <CategoryItem itemName='Thời trang &amp; phụ kiện' bgColor='#725CFD' iconSrc='/assets/cloth.svg' url='/explore' ></CategoryItem>
-            <CategoryItem itemName='Nhà cửa' bgColor='#AFDC10' iconSrc='/assets/appliance.svg' url='/explore' ></CategoryItem>
-            <CategoryItem itemName='Mỹ phẩm &amp; nước hoa' bgColor='#FF70A6' iconSrc='/assets/lip-stick.svg' url='/explore' ></CategoryItem>
-
-            <Link
-              to='/explore'
-              className='d-flex flex-column align-items-center ms-4'
-              style={{ width: '110px', lineHeight: '1rem' }}
-            >
-              <Symbol48px
-                className='d-flex justify-content-center align-items-center rounded-circle mb-2 border'
-                style={{ backgroundColor: '#FFFFFF' }}
-              >
-                <SVG src={toAbsoluteUrl('/assets/right-arrow.svg')}></SVG>
-              </Symbol48px>
-              <div className='text-center'>
-                <span>Các mục khác</span>
-              </div>
+            <Link to='/explore/'>
+              <CategoryItem
+                value='Nhà hàng &amp; Ăn uống'
+                bgColor='#FFA800'
+                imgSrc='/assets/categories/food.svg'
+                isFirst
+                fill='none'
+                stroke='white'
+              />
+            </Link>
+            <Link to='/explore/'>
+              <CategoryItem value='Điện tử' bgColor='#5BCCFA' imgSrc='/assets/categories/monitor.svg' fill='white' stroke='none' />
+            </Link>
+            <Link to='/explore/'>
+              <CategoryItem
+                value='Thời trang &amp; phụ kiện'
+                bgColor='#725CFD'
+                imgSrc='/assets/categories/t-shirt.svg'
+                fill='none'
+                stroke='white'
+              />
+            </Link>
+            <Link to='/explore/'>
+              <CategoryItem value='Nhà cửa' bgColor='#AFDC10' imgSrc='/assets/categories/furnitures.svg' fill='white' stroke='none' />
+            </Link>
+            <Link to='/explore/'>
+              <CategoryItem
+                value='Mỹ phẩm &amp; nước hoa'
+                bgColor='#FF70A6'
+                imgSrc='/assets/categories/lipstick.svg'
+                fill='white'
+                stroke='none'
+              />
+            </Link>
+            <Link to='/explore'>
+              <CategoryItem
+                value='Các mục khác'
+                bgColor='#FFFFFF'
+                imgSrc='/assets/commons/right-arrow.svg'
+                fill='#0D1B1E'
+                stroke='none'
+                border
+              />
             </Link>
           </div>
         </div>
       </Container>
       <SobyModal open={open} setOpen={setOpen}>
-        {formError ? (
-          <ErrorPopup content={formError} setOpen={setOpen} />
-        ) : null}
+        {formError ? <ErrorPopup content={formError} setOpen={setOpen} /> : null}
       </SobyModal>
     </React.Fragment>
   );
