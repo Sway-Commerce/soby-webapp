@@ -64,19 +64,11 @@ const App = () => {
               <Route exact path='/phone-verification' component={PhoneVerification} />
               <Route exact path='/signup' component={SignUpInfo} />
               <Route exact path='/signup-info' component={SignUpPhone} />
-<<<<<<< HEAD
               <Route path='/invoice/:invoiceId' component={Invoice} />
               <Route path='/your-invoice/:invoiceId' component={YourInvoice} />
               <JwtRoute path='/edit-profile' component={EditProfile} />
               <JwtRoute path='/change-password' component={ChangePassword} />
               <Route path='/search-result' component={SearchResult} />
-=======
-              <Route path="/invoice/:invoiceId" component={Invoice} />
-              <Route path="/your-invoice/:invoiceId" component={YourInvoice} />
-              <JwtRoute path="/edit-profile" component={EditProfile} />
-              <JwtRoute path="/change-password" component={ChangePassword} />
-              <Route path="/search-result" component={SearchResult} />
->>>>>>> 017fc0efc9a4ff07dbcf4d64ce9e94b7cf563111
               <Route path='/product/:productId' component={ProductDetail} />
               <JwtRoute path='/your-transaction' component={YourTransaction} />
               <JwtRoute path='/individual-profile' component={IndividualProfile} />
