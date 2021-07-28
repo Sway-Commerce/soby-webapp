@@ -23,7 +23,6 @@ const SignUpInfo = lazy(() => import('pages/register/register.component'));
 const PhoneVerification = lazy(() => import('pages/phone-verification/phone-verification.component'));
 const PhoneSignin = lazy(() => import('pages/phone-signin/phone-signin.component'));
 const PaymentResult = lazy(() => import('pages/payment-result/payment-result.component'));
-const ShopProfile = lazy(() => import('pages/shop-profile/shop-profile.component'));
 const ProductDetail = lazy(() => import('pages/product-detail/product-detail.component'));
 const YourTransaction = lazy(() => import('pages/your-transactions/your-transactions.component'));
 const IndividualProfile = lazy(() => import('pages/individual-profile/individual-profile.component'));
@@ -65,11 +64,19 @@ const App = () => {
               <Route exact path='/phone-verification' component={PhoneVerification} />
               <Route exact path='/signup' component={SignUpInfo} />
               <Route exact path='/signup-info' component={SignUpPhone} />
+<<<<<<< HEAD
               <Route path='/invoice/:invoiceId' component={Invoice} />
               <Route path='/your-invoice/:invoiceId' component={YourInvoice} />
               <JwtRoute path='/edit-profile' component={EditProfile} />
               <JwtRoute path='/change-password' component={ChangePassword} />
               <Route path='/search-result' component={SearchResult} />
+=======
+              <Route path="/invoice/:invoiceId" component={Invoice} />
+              <Route path="/your-invoice/:invoiceId" component={YourInvoice} />
+              <JwtRoute path="/edit-profile" component={EditProfile} />
+              <JwtRoute path="/change-password" component={ChangePassword} />
+              <Route path="/search-result" component={SearchResult} />
+>>>>>>> 017fc0efc9a4ff07dbcf4d64ce9e94b7cf563111
               <Route path='/product/:productId' component={ProductDetail} />
               <JwtRoute path='/your-transaction' component={YourTransaction} />
               <JwtRoute path='/individual-profile' component={IndividualProfile} />
