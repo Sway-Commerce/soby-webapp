@@ -23,7 +23,6 @@ const SignUpInfo = lazy(() => import('pages/register/register.component'));
 const PhoneVerification = lazy(() => import('pages/phone-verification/phone-verification.component'));
 const PhoneSignin = lazy(() => import('pages/phone-signin/phone-signin.component'));
 const PaymentResult = lazy(() => import('pages/payment-result/payment-result.component'));
-const ShopProfile = lazy(() => import('pages/shop-profile/shop-profile.component'));
 const ProductDetail = lazy(() => import('pages/product-detail/product-detail.component'));
 const YourTransaction = lazy(() => import('pages/your-transactions/your-transactions.component'));
 const IndividualProfile = lazy(() => import('pages/individual-profile/individual-profile.component'));
