@@ -39,10 +39,11 @@ const EditProfile = lazy(() => import('pages/individual-profile/edit-profile.com
 const ChangePassword = lazy(() => import('pages/individual-profile/edit-password.component'));
 const HomePage = lazy(() => import('pages/homepage/homepage.component'));
 const SearchResult = lazy(() => import('pages/search-result/search-result.component'));
-const ExplorePage = lazy(() => import('pages/explore/explore.page'));
+const ExploreMainShopPage = lazy(() => import('pages/explore/explore-main.page'));
 const CreateSellerPage = lazy(() => import('pages/create-seller/create-seller.page'));
 const CreateSellerSuccessPage = lazy(() => import('pages/create-seller/create-seller-success'));
 const ShopProfileV2Page = lazy(() => import('pages/shop-profile-v2/shop-profile.page'));
+const ExploreShopByCategoryPage = lazy(() => import('pages/explore/explore-shop-by-category.page'));
 
 const App = () => {
   return (
@@ -54,18 +55,28 @@ const App = () => {
           <ErrorBoundary>
             <Suspense fallback={<Spinner />}>
               <Route exact path='/' component={HomePage} />
-              <Route exact path='/explore' component={ExplorePage} />
+              <Route exact path='/explore' component={ExploreMainShopPage} />
+              <Route exact path='/explore/:categoryId' component={ExploreShopByCategoryPage} />
               <Route exact path='/shop-profile/:shopId' component={ShopProfileV2Page} />
+              {/* <Route path='/shop-profile/:shopId' component={ShopProfile} /> */}
               <JwtRoute exact path='/create-seller' component={CreateSellerPage} />
               <Route path='/phone-signin' component={PhoneSignin} />
               <Route exact path='/phone-verification' component={PhoneVerification} />
               <Route exact path='/signup' component={SignUpInfo} />
               <Route exact path='/signup-info' component={SignUpPhone} />
+<<<<<<< HEAD
+              <Route path='/invoice/:invoiceId' component={Invoice} />
+              <Route path='/your-invoice/:invoiceId' component={YourInvoice} />
+              <JwtRoute path='/edit-profile' component={EditProfile} />
+              <JwtRoute path='/change-password' component={ChangePassword} />
+              <Route path='/search-result' component={SearchResult} />
+=======
               <Route path="/invoice/:invoiceId" component={Invoice} />
               <Route path="/your-invoice/:invoiceId" component={YourInvoice} />
               <JwtRoute path="/edit-profile" component={EditProfile} />
               <JwtRoute path="/change-password" component={ChangePassword} />
               <Route path="/search-result" component={SearchResult} />
+>>>>>>> 017fc0efc9a4ff07dbcf4d64ce9e94b7cf563111
               <Route path='/product/:productId' component={ProductDetail} />
               <JwtRoute path='/your-transaction' component={YourTransaction} />
               <JwtRoute path='/individual-profile' component={IndividualProfile} />

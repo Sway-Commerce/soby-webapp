@@ -9,7 +9,7 @@ export const Container = styled.div`
   align-items: center;
 
   .arrow-right {
-    margin: 0 .8rem;
+    margin: 0 0.8rem;
   }
 
   a {
@@ -33,12 +33,10 @@ const SharedBreadcrumb = ({ breadcrumbs = [] }) => {
     <Container>
       {breadcrumbs.map((x, i) => (
         <React.Fragment key={x.name}>
-          <Link to={x.src} key={x.name} className="truncate">
+          <Link to={x.src} key={x.name} className='truncate'>
             {x.name}
           </Link>
-          {i < breadcrumbs.length - 1 ? (
-            ' / '
-          ) : null}
+          {i < breadcrumbs.length - 1 ? <span className='mx-1'>/</span> : null}
         </React.Fragment>
       ))}
     </Container>
