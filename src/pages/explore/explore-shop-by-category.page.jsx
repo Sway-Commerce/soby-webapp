@@ -10,6 +10,7 @@ import SobyModal from 'components/ui/modal/modal.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import useDebounce from 'shared/hooks/useDebounce';
 import { SEARCH_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
+
 import SVG from 'react-inlinesvg';
 import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
 import { toAbsoluteUrl } from '../../shared/utils/assetsHelper';
@@ -28,10 +29,10 @@ const Shop = function ({ ...props }) {
         className='pb-2'
         style={{ width: '216px' }}
       >
-        <div className='d-flex justify-content-center align-items-center border' style={{ height: '216px' }}>
+        <div className='d-flex justify-content-center align-items-center border' style={{ height: '216px', overflow: 'hidden' }}>
           {/* <SVG src={toAbsoluteUrl(imgSrc)} style={{ width: '216px', height: '216px' }}></SVG> */}
-          <div className=''>
-            <img className='' src={shopData.logoUrl} style={{ width: '100%' }} />
+          <div className='d-block bg-warning' style={{}}>
+            <img className='d-block bg-danger' src={shopData.logoUrl} style={{ maxHeight: '216px', maxWidth: '100%' }} />
           </div>
         </div>
         <div className='' style={{ marginTop: '8px' }}>

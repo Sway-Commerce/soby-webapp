@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy } from 'react';
 import styled from 'styled-components';
-import { Link, Redirect, Route, Switch, useParams } from 'react-router-dom';
+import { Link, Redirect, Route, Switch, useParams, BrowserRouter as Router, useLocation, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { useLazyQuery } from '@apollo/client';
 import { GET_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
@@ -24,7 +24,7 @@ import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-pro
 import 'react-circular-progressbar/dist/styles.css';
 import { borderColor } from 'shared/css-variable/variable';
 
-
+const ProductDetailV2Page = lazy(() => import('pages/product-detail-modal/product-detail.page'));
 
 const ChannelIconLink = function ({ ...props }) {
   const { url, imgSrc } = props;
@@ -116,24 +116,27 @@ const Promotion = function ({ ...props }) {
 };
 
 const Product = function ({ ...props }) {
-  const { imgSrc, productId } = props
+  const { imgSrc, productId } = props;
   return (
-    <div 
-      key={productId} 
-      onClick={() => {window.location = `/product/${productId}`}}
-      className='' 
-      style={{ width: '190px', height: '190px', borderColor: 'black' }}>
+    <div
+      key={productId}
+      onClick={() => {
+        window.location = `/product/${productId}`;
+      }}
+      className=''
+      style={{ width: '190px', height: '190px', borderColor: 'black' }}
+    >
       <img src={imgSrc} style={{ width: '190px', height: '190px' }} />
     </div>
   );
 };
 
 const ProductRow = function ({ ...props }) {
-  const { products } = props
+  const { products } = props;
   return (
     <div className='d-flex flex-wrap mt-3 justify-content-between'>
       {products.map((product) => {
-        return <Product imgSrc={product.imageUrls[0]} productId={product.id}/>
+        return <Product imgSrc={product.imageUrls[0]} productId={product.id} />;
       })}
     </div>
   );
@@ -169,7 +172,52 @@ const ChannelRow = function ({ ...props }) {
   );
 };
 
+const ProductDetailsModal = function ({ ...props }) {
+  // const {} = props;
+  const history = useHistory();
+  const { productId } = useParams();
+  console.info('productId', productId);
+  let back = (e) => {
+    e.stopPropagation();
+    history.goBack();
+  };
+  return (
+    <div
+      onClick={back}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        background: 'rgba(255, 255, 255, 0.15)',
+      }}
+    >
+      <div
+        className='modal'
+        style={{
+          position: 'absolute',
+          background: '#fff',
+          top: 25,
+          left: '10%',
+          right: '10%',
+          padding: 15,
+          border: '2px solid #444',
+        }}
+      >
+        <h1>Test SSS</h1>
+        <button type='button' onClick={back}>
+          Close
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const ShopProfileV2Page = () => {
+  const location = useLocation();
+  let background = location.state && location.state.background;
+  console.info('location', location);
   const { shopId } = useParams();
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
@@ -206,25 +254,14 @@ const ShopProfileV2Page = () => {
     },
   ]);
 
-  const [
-    getAggregatedShop,
-    {
-      loading: getAggregatedShopLoading,
-      error: getAggregatedShopError,
-      data: getAggregatedShopData,
-    },
-  ] = useLazyQuery(GET_AGGREGATED_SHOP);
+  const [getAggregatedShop, { loading: getAggregatedShopLoading, error: getAggregatedShopError, data: getAggregatedShopData }] =
+    useLazyQuery(GET_AGGREGATED_SHOP);
 
-  const [
-    searchProduct,
-    { loading: productLoading, error: productError, data: productData },
-  ] = useLazyQuery(SEARCH_PRODUCT);
+  const [searchProduct, { loading: productLoading, error: productError, data: productData }] = useLazyQuery(SEARCH_PRODUCT);
 
   useEffect(() => {
     if (shopId) {
-      for (const tooltip of document.querySelectorAll(
-        '.__react_component_tooltip'
-      )) {
+      for (const tooltip of document.querySelectorAll('.__react_component_tooltip')) {
         tooltip.addEventListener('click', (e) => e.stopPropagation());
       }
       getAggregatedShop({
@@ -233,9 +270,7 @@ const ShopProfileV2Page = () => {
     }
 
     return () => {
-      for (const tooltip of document.querySelectorAll(
-        '.__react_component_tooltip'
-      )) {
+      for (const tooltip of document.querySelectorAll('.__react_component_tooltip')) {
         tooltip.removeEventListener('click', (e) => e.stopPropagation());
       }
     };
@@ -323,11 +358,14 @@ const ShopProfileV2Page = () => {
   ) : (
     <div className='container-fluid mb-5'>
       <SharedBreadcrumb breadcrumbs={breadcrumbs} />
+
+      <Route exact path='/product/:id' children={<ProductDetailV2Page />} />
+      <Link to={{ pathname: `/product/testId`, state: { background: location } }}>view product</Link>
       <div className='row mt-3 justify-content-center py-2'>
         <div className='col-2 p-0'>
           <div className=''>
             <div className='bg-white border' style={{ width: '160px', height: '160px' }}>
-              <img className="avatar" style={{width: '160px', height: '160px' }} src={shopInfo.logoUrl} alt="" />
+              <img className='avatar' style={{ width: '160px', height: '160px' }} src={shopInfo.logoUrl} alt='' />
             </div>
           </div>
         </div>
@@ -341,7 +379,7 @@ const ShopProfileV2Page = () => {
             <div className='d-flex align-items-center'>
               {shopInfo.shopUrls.map((x) => {
                 let imgPath = '';
-                switch(x.type) {
+                switch (x.type) {
                   case 'FACEBOOK':
                     imgPath = '/assets/facebook.svg';
                     break;
@@ -364,7 +402,7 @@ const ShopProfileV2Page = () => {
                     imgPath = '/assets/instagram-icon.svg';
                     break;
                 }
-                return <ChannelIconLink url={x.url} imgSrc={imgPath} />
+                return <ChannelIconLink url={x.url} imgSrc={imgPath} />;
               })}
             </div>
           </div>
@@ -399,22 +437,22 @@ const ShopProfileV2Page = () => {
               <CircularProgressbarWithChildren
                 minValue={0}
                 maxValue={10}
-                value={shopInfo.shopRank.totalPoints/10}
+                value={shopInfo.shopRank.totalPoints / 10}
                 counterClockwise
                 strokeWidth={6}
                 styles={buildStyles({
                   trailColor: '#F3F4F4',
-                  pathColor: getColor(shopInfo.shopRank.totalPoints/10),
+                  pathColor: getColor(shopInfo.shopRank.totalPoints / 10),
                 })}
               >
                 <h4 className='fw-bold' style={{ fontSize: '32px', color: 'black', marginTop: '10px', marginLeft: '-2px' }}>
-                  {shopInfo.shopRank.totalPoints/10}
+                  {shopInfo.shopRank.totalPoints / 10}
                 </h4>
               </CircularProgressbarWithChildren>
             </div>
           </div>
           <div className='row text-center mt-2'>
-            <h4 className='fw-bold' style={{ fontSize: '16px', color: getColor(shopInfo.shopRank.totalPoints/10) }}>
+            <h4 className='fw-bold' style={{ fontSize: '16px', color: getColor(shopInfo.shopRank.totalPoints / 10) }}>
               {shopInfo.shopRank.rank.description}
             </h4>
           </div>
@@ -435,8 +473,8 @@ const ShopProfileV2Page = () => {
               <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
                 Sản phẩm
               </h5>
-              <ProductRow products={shopInfo.records.slice().splice(0, 4)}/>
-              <ProductRow products={shopInfo.records.slice().splice(4, 8)}/>
+              <ProductRow products={shopInfo.records.slice().splice(0, 4)} />
+              <ProductRow products={shopInfo.records.slice().splice(4, 8)} />
               <div className='d-flex justify-content-center align-items-center'>
                 <button
                   type='button'
@@ -465,9 +503,11 @@ const ShopProfileV2Page = () => {
                 Thông tin liên hệ
               </h5>
               <div className='mt-2 px-2'>
-                <ContactRow bold imgSrc='/assets/phone-outline-black.svg' value={formatPhoneNumberIntl(
-              `${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`
-            )}></ContactRow>
+                <ContactRow
+                  bold
+                  imgSrc='/assets/phone-outline-black.svg'
+                  value={formatPhoneNumberIntl(`${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`)}
+                ></ContactRow>
                 <ContactRow imgSrc='/assets/email-outline-black.svg' value={shopInfo.email}></ContactRow>
               </div>
             </div>
@@ -477,32 +517,32 @@ const ShopProfileV2Page = () => {
               </h5>
               <div className='mt-2 px-2'>
                 {shopInfo.shopUrls.map((x) => {
-                let imgPath = '';
-                switch(x.type) {
-                  case 'FACEBOOK':
-                    imgPath = '/assets/facebook.svg';
-                    break;
-                  case 'INSTAGRAM':
-                    imgPath = '/assets/instagram-icon.svg';
-                    break;
-                  case 'TIKTOK':
-                    imgPath = '/assets/instagram-icon.svg';
-                    break;
-                  case 'ZALO':
-                    imgPath = '/assets/instagram-icon.svg';
-                    break;
-                  case 'SHOPEE':
-                    imgPath = '/assets/instagram-icon.svg';
-                    break;
-                  case 'LAZADA':
-                    imgPath = '/assets/instagram-icon.svg';
-                    break;
-                  default:
-                    imgPath = '/assets/instagram-icon.svg';
-                    break;
-                }
-                return <ChannelRow imgSrc={imgPath} value={x.url}></ChannelRow>
-              })}
+                  let imgPath = '';
+                  switch (x.type) {
+                    case 'FACEBOOK':
+                      imgPath = '/assets/facebook.svg';
+                      break;
+                    case 'INSTAGRAM':
+                      imgPath = '/assets/instagram-icon.svg';
+                      break;
+                    case 'TIKTOK':
+                      imgPath = '/assets/instagram-icon.svg';
+                      break;
+                    case 'ZALO':
+                      imgPath = '/assets/instagram-icon.svg';
+                      break;
+                    case 'SHOPEE':
+                      imgPath = '/assets/instagram-icon.svg';
+                      break;
+                    case 'LAZADA':
+                      imgPath = '/assets/instagram-icon.svg';
+                      break;
+                    default:
+                      imgPath = '/assets/instagram-icon.svg';
+                      break;
+                  }
+                  return <ChannelRow imgSrc={imgPath} value={x.url}></ChannelRow>;
+                })}
               </div>
             </div>
             <div className='mt-2 py-2'>
@@ -517,9 +557,7 @@ const ShopProfileV2Page = () => {
         </div>
       </div>
       <SobyModal open={open} setOpen={setOpen}>
-        {formError ? (
-          <ErrorPopup content={formError} setOpen={setOpen} />
-        ) : null}
+        {formError ? <ErrorPopup content={formError} setOpen={setOpen} /> : null}
       </SobyModal>
     </div>
   );

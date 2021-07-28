@@ -148,11 +148,6 @@ const SearchInputContainer = styled.div`
   position: relative;
 `;
 
-const Symbol48px = styled.div`
-  width: 48px;
-  height: 48px;
-`;
-
 const CategoryIcon = function ({ ...props }) {
   const { imgSrc, fill, stroke, bgColor, border } = props;
 
