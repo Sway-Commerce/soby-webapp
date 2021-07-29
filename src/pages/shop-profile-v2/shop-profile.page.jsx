@@ -172,52 +172,11 @@ const ChannelRow = function ({ ...props }) {
   );
 };
 
-const ProductDetailsModal = function ({ ...props }) {
-  // const {} = props;
-  const history = useHistory();
-  const { productId } = useParams();
-  console.info('productId', productId);
-  let back = (e) => {
-    e.stopPropagation();
-    history.goBack();
-  };
-  return (
-    <div
-      onClick={back}
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
-        background: 'rgba(255, 255, 255, 0.15)',
-      }}
-    >
-      <div
-        className='modal'
-        style={{
-          position: 'absolute',
-          background: '#fff',
-          top: 25,
-          left: '10%',
-          right: '10%',
-          padding: 15,
-          border: '2px solid #444',
-        }}
-      >
-        <h1>Test SSS</h1>
-        <button type='button' onClick={back}>
-          Close
-        </button>
-      </div>
-    </div>
-  );
-};
-
 const ShopProfileV2Page = () => {
   const location = useLocation();
-  let background = location.state && location.state.background;
-  console.info('location', location);
+
+  console.info('locationShop', location);
+  const background = location?.state?.background;
   const { shopId } = useParams();
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
@@ -353,169 +312,33 @@ const ShopProfileV2Page = () => {
     }
   }, [productData?.searchProduct?.data]);
 
+  console.info('productData', shopInfo?.records);
+
   return getAggregatedShopLoading || productLoading ? (
     <Spinner />
   ) : (
-    <div className='container-fluid mb-5'>
-      <SharedBreadcrumb breadcrumbs={breadcrumbs} />
-
+    <>
       <Route exact path='/product/:id' children={<ProductDetailV2Page />} />
-      <Link to={{ pathname: `/product/testId`, state: { background: location } }}>view product</Link>
-      <div className='row mt-3 justify-content-center py-2'>
-        <div className='col-2 p-0'>
-          <div className=''>
-            <div className='bg-white border' style={{ width: '160px', height: '160px' }}>
-              <img className='avatar' style={{ width: '160px', height: '160px' }} src={shopInfo.logoUrl} alt='' />
-            </div>
-          </div>
-        </div>
-        <div className='col-7'>
-          <div className='row p-0 pt-2'>
-            <h4 className='fw-bold' style={{ fontSize: '32px' }}>
-              {shopInfo.name}
-            </h4>
-          </div>
-          <div className='row p-0 pb-2'>
-            <div className='d-flex align-items-center'>
-              {shopInfo.shopUrls.map((x) => {
-                let imgPath = '';
-                switch (x.type) {
-                  case 'FACEBOOK':
-                    imgPath = '/assets/facebook.svg';
-                    break;
-                  case 'INSTAGRAM':
-                    imgPath = '/assets/instagram-icon.svg';
-                    break;
-                  case 'TIKTOK':
-                    imgPath = '/assets/instagram-icon.svg';
-                    break;
-                  case 'ZALO':
-                    imgPath = '/assets/instagram-icon.svg';
-                    break;
-                  case 'SHOPEE':
-                    imgPath = '/assets/instagram-icon.svg';
-                    break;
-                  case 'LAZADA':
-                    imgPath = '/assets/instagram-icon.svg';
-                    break;
-                  default:
-                    imgPath = '/assets/instagram-icon.svg';
-                    break;
-                }
-                return <ChannelIconLink url={x.url} imgSrc={imgPath} />;
-              })}
-            </div>
-          </div>
-          <div className='row p-0 justify-content-start align-items-center'>
-            <div className='d-flex'>
-              <button
-                type='button'
-                className='btn btn-primary rounded-pill px-3 align-items-center me-1'
-                style={{ fontSize: '14px', height: '40px', width: '200px' }}
-                onClick={function () {}}
-              >
-                <span>Liên hệ</span>
-              </button>
-              <button
-                type='button'
-                className='btn rounded-pill border px-3 align-items-center d-flex justify-content-center align-items-center '
-                style={{ fontSize: '14px', height: '40px', width: '200px' }}
-                onClick={() => {
-                  navigator?.clipboard?.writeText(window.location.href);
-                  window.alert('Shop url is copied');
-                }}
-              >
-                <SVG className='me-2' src={toAbsoluteUrl('/assets/share-2.svg')} width={20} height={20}></SVG>
-                <span>Chia sẻ</span>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className='col-3'>
-          <div className='row justify-content-center'>
-            <div className='p-0' style={{ width: '98px', height: '98px' }}>
-              <CircularProgressbarWithChildren
-                minValue={0}
-                maxValue={10}
-                value={shopInfo.shopRank.totalPoints / 10}
-                counterClockwise
-                strokeWidth={6}
-                styles={buildStyles({
-                  trailColor: '#F3F4F4',
-                  pathColor: getColor(shopInfo.shopRank.totalPoints / 10),
-                })}
-              >
-                <h4 className='fw-bold' style={{ fontSize: '32px', color: 'black', marginTop: '10px', marginLeft: '-2px' }}>
-                  {shopInfo.shopRank.totalPoints / 10}
-                </h4>
-              </CircularProgressbarWithChildren>
-            </div>
-          </div>
-          <div className='row text-center mt-2'>
-            <h4 className='fw-bold' style={{ fontSize: '16px', color: getColor(shopInfo.shopRank.totalPoints / 10) }}>
-              {shopInfo.shopRank.rank.description}
-            </h4>
-          </div>
-        </div>
-      </div>
-      <div className='row mt-3 justify-content-between'>
-        <div className='' style={{ width: '73%' }}>
-          <div className='row bg-white'>
-            <div className='border py-2'>
-              <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
-                Khuyến mãi
-              </h5>
-              <Promotion></Promotion>
-            </div>
-          </div>
-          <div className='row bg-white mt-3'>
-            <div className='border py-2'>
-              <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
-                Sản phẩm
-              </h5>
-              <ProductRow products={shopInfo.records.slice().splice(0, 4)} />
-              <ProductRow products={shopInfo.records.slice().splice(4, 8)} />
-              <div className='d-flex justify-content-center align-items-center'>
-                <button
-                  type='button'
-                  className='btn rounded-pill border px-3 align-items-center d-flex justify-content-center align-items-center fw-bold mt-3 mb-2'
-                  style={{ fontSize: '14px', height: '40px' }}
-                  onClick={function () {}}
-                >
-                  <span>Xem thêm</span>
-                </button>
+      <div className='container-fluid mb-5' style={{ filter: background && 'blur(3px)' }}>
+        <SharedBreadcrumb breadcrumbs={breadcrumbs} />
+
+        <Link to={{ pathname: `/product/testId`, state: { background: location } }}>view product</Link>
+        <div className='row mt-3 justify-content-center py-2'>
+          <div className='col-2 p-0'>
+            <div className=''>
+              <div className='bg-white border' style={{ width: '160px', height: '160px' }}>
+                <img className='avatar' style={{ width: '160px', height: '160px' }} src={shopInfo.logoUrl} alt='' />
               </div>
             </div>
           </div>
-        </div>
-        <div className='' style={{ width: '25%' }}>
-          <div className='row border bg-white'>
-            <div className='mt-2 py-2'>
-              <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
-                Giới thiệu
-              </h5>
-              <p className='mt-2' style={{ fontSize: '14px' }}>
-                {shopInfo.description}
-              </p>
+          <div className='col-7'>
+            <div className='row p-0 pt-2'>
+              <h4 className='fw-bold' style={{ fontSize: '32px' }}>
+                {shopInfo.name}
+              </h4>
             </div>
-            <div className='mt-2 py-2'>
-              <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
-                Thông tin liên hệ
-              </h5>
-              <div className='mt-2 px-2'>
-                <ContactRow
-                  bold
-                  imgSrc='/assets/phone-outline-black.svg'
-                  value={formatPhoneNumberIntl(`${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`)}
-                ></ContactRow>
-                <ContactRow imgSrc='/assets/email-outline-black.svg' value={shopInfo.email}></ContactRow>
-              </div>
-            </div>
-            <div className='mt-2 py-2'>
-              <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
-                Kênh
-              </h5>
-              <div className='mt-2 px-2'>
+            <div className='row p-0 pb-2'>
+              <div className='d-flex align-items-center'>
                 {shopInfo.shopUrls.map((x) => {
                   let imgPath = '';
                   switch (x.type) {
@@ -541,25 +364,165 @@ const ShopProfileV2Page = () => {
                       imgPath = '/assets/instagram-icon.svg';
                       break;
                   }
-                  return <ChannelRow imgSrc={imgPath} value={x.url}></ChannelRow>;
+                  return <ChannelIconLink url={x.url} imgSrc={imgPath} />;
                 })}
               </div>
             </div>
-            <div className='mt-2 py-2'>
-              <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
-                Địa chỉ
-              </h5>
-              <p className='mt-2' style={{ fontSize: '14px' }}>
-                {buildAddressString(shopInfo.shippingLocation)}
-              </p>
+            <div className='row p-0 justify-content-start align-items-center'>
+              <div className='d-flex'>
+                <button
+                  type='button'
+                  className='btn btn-primary rounded-pill px-3 align-items-center me-1'
+                  style={{ fontSize: '14px', height: '40px', width: '200px' }}
+                  onClick={function () {}}
+                >
+                  <span>Liên hệ</span>
+                </button>
+                <button
+                  type='button'
+                  className='btn rounded-pill border px-3 align-items-center d-flex justify-content-center align-items-center '
+                  style={{ fontSize: '14px', height: '40px', width: '200px' }}
+                  onClick={() => {
+                    navigator?.clipboard?.writeText(window.location.href);
+                    window.alert('Shop url is copied');
+                  }}
+                >
+                  <SVG className='me-2' src={toAbsoluteUrl('/assets/share-2.svg')} width={20} height={20}></SVG>
+                  <span>Chia sẻ</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className='col-3'>
+            <div className='row justify-content-center'>
+              <div className='p-0' style={{ width: '98px', height: '98px' }}>
+                <CircularProgressbarWithChildren
+                  minValue={0}
+                  maxValue={10}
+                  value={shopInfo.shopRank.totalPoints / 10}
+                  counterClockwise
+                  strokeWidth={6}
+                  styles={buildStyles({
+                    trailColor: '#F3F4F4',
+                    pathColor: getColor(shopInfo.shopRank.totalPoints / 10),
+                  })}
+                >
+                  <h4 className='fw-bold' style={{ fontSize: '32px', color: 'black', marginTop: '10px', marginLeft: '-2px' }}>
+                    {shopInfo.shopRank.totalPoints / 10}
+                  </h4>
+                </CircularProgressbarWithChildren>
+              </div>
+            </div>
+            <div className='row text-center mt-2'>
+              <h4 className='fw-bold' style={{ fontSize: '16px', color: getColor(shopInfo.shopRank.totalPoints / 10) }}>
+                {shopInfo.shopRank.rank.description}
+              </h4>
             </div>
           </div>
         </div>
+        <div className='row mt-3 justify-content-between'>
+          <div className='' style={{ width: '73%' }}>
+            <div className='row bg-white'>
+              <div className='border py-2'>
+                <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
+                  Khuyến mãi
+                </h5>
+                <Promotion></Promotion>
+              </div>
+            </div>
+            <div className='row bg-white mt-3'>
+              <div className='border py-2'>
+                <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
+                  Sản phẩm
+                </h5>
+                <ProductRow products={shopInfo.records.slice().splice(0, 4)} />
+                <ProductRow products={shopInfo.records.slice().splice(4, 8)} />
+                <div className='d-flex justify-content-center align-items-center'>
+                  <button
+                    type='button'
+                    className='btn rounded-pill border px-3 align-items-center d-flex justify-content-center align-items-center fw-bold mt-3 mb-2'
+                    style={{ fontSize: '14px', height: '40px' }}
+                    onClick={function () {}}
+                  >
+                    <span>Xem thêm</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className='' style={{ width: '25%' }}>
+            <div className='row border bg-white'>
+              <div className='mt-2 py-2'>
+                <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
+                  Giới thiệu
+                </h5>
+                <p className='mt-2' style={{ fontSize: '14px' }}>
+                  {shopInfo.description}
+                </p>
+              </div>
+              <div className='mt-2 py-2'>
+                <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
+                  Thông tin liên hệ
+                </h5>
+                <div className='mt-2 px-2'>
+                  <ContactRow
+                    bold
+                    imgSrc='/assets/phone-outline-black.svg'
+                    value={formatPhoneNumberIntl(`${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`)}
+                  ></ContactRow>
+                  <ContactRow imgSrc='/assets/email-outline-black.svg' value={shopInfo.email}></ContactRow>
+                </div>
+              </div>
+              <div className='mt-2 py-2'>
+                <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
+                  Kênh
+                </h5>
+                <div className='mt-2 px-2'>
+                  {shopInfo.shopUrls.map((x) => {
+                    let imgPath = '';
+                    switch (x.type) {
+                      case 'FACEBOOK':
+                        imgPath = '/assets/facebook.svg';
+                        break;
+                      case 'INSTAGRAM':
+                        imgPath = '/assets/instagram-icon.svg';
+                        break;
+                      case 'TIKTOK':
+                        imgPath = '/assets/instagram-icon.svg';
+                        break;
+                      case 'ZALO':
+                        imgPath = '/assets/instagram-icon.svg';
+                        break;
+                      case 'SHOPEE':
+                        imgPath = '/assets/instagram-icon.svg';
+                        break;
+                      case 'LAZADA':
+                        imgPath = '/assets/instagram-icon.svg';
+                        break;
+                      default:
+                        imgPath = '/assets/instagram-icon.svg';
+                        break;
+                    }
+                    return <ChannelRow imgSrc={imgPath} value={x.url}></ChannelRow>;
+                  })}
+                </div>
+              </div>
+              <div className='mt-2 py-2'>
+                <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
+                  Địa chỉ
+                </h5>
+                <p className='mt-2' style={{ fontSize: '14px' }}>
+                  {buildAddressString(shopInfo.shippingLocation)}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <SobyModal open={open} setOpen={setOpen}>
+          {formError ? <ErrorPopup content={formError} setOpen={setOpen} /> : null}
+        </SobyModal>
       </div>
-      <SobyModal open={open} setOpen={setOpen}>
-        {formError ? <ErrorPopup content={formError} setOpen={setOpen} /> : null}
-      </SobyModal>
-    </div>
+    </>
   );
 };
 
