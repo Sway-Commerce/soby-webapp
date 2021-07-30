@@ -208,7 +208,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const date = new Date();
-    date.setDate(date.getDate() - 7);
+    date.setDate(date.getDate() - 30);
     const lastSevenDay = date.getTime();
     const now = Date.now();
     setQuery({ ...query, filters: [`createdAt:${lastSevenDay};${now}`] });
@@ -259,6 +259,8 @@ const HomePage = () => {
     event.preventDefault();
     setQuery({ ...query, queries: inputSearch ? [`name:${inputSearch}`] : [] });
   };
+
+  console.info('searchRecords', records);
   return (
     <React.Fragment>
       <Container>
@@ -318,7 +320,13 @@ const HomePage = () => {
               />
             </Link>
             <Link to='/explore/206'>
-              <CategoryItem value={categoryIconMapper[206].name} bgColor='#5BCCFA' imgSrc={categoryIconMapper[206].iconSrc} fill='white' stroke='none' />
+              <CategoryItem
+                value={categoryIconMapper[206].name}
+                bgColor='#5BCCFA'
+                imgSrc={categoryIconMapper[206].iconSrc}
+                fill='white'
+                stroke='none'
+              />
             </Link>
             <Link to='/explore/208'>
               <CategoryItem
@@ -330,7 +338,13 @@ const HomePage = () => {
               />
             </Link>
             <Link to='/explore/210'>
-              <CategoryItem value={categoryIconMapper[210].name} bgColor='#AFDC10' imgSrc={categoryIconMapper[210].iconSrc} fill='white' stroke='none' />
+              <CategoryItem
+                value={categoryIconMapper[210].name}
+                bgColor='#AFDC10'
+                imgSrc={categoryIconMapper[210].iconSrc}
+                fill='white'
+                stroke='none'
+              />
             </Link>
             <Link to='/explore/209'>
               <CategoryItem

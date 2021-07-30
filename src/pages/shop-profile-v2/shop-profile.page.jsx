@@ -318,7 +318,7 @@ const ShopProfileV2Page = () => {
     <Spinner />
   ) : (
     <>
-      <Route exact path='/product/:id' children={<ProductDetailV2Page />} />
+      <Route exact path='/product/:productId' children={<ProductDetailV2Page />} />
       <div className='container-fluid mb-5' style={{ filter: background && 'blur(3px)' }}>
         <SharedBreadcrumb breadcrumbs={breadcrumbs} />
 
