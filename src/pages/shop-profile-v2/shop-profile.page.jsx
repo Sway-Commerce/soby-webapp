@@ -460,7 +460,7 @@ const ShopProfileV2Page = () => {
                   Thông tin liên hệ
                 </h5>
                 <div className='mt-2 px-2'>
-                  <table className='table'>
+                  <table className='table' style={{ width: '100%', tableLayout: 'fixed' }}>
                     <thead>
                       <th style={{ width: '40px' }}></th>
                       <th></th>
@@ -474,7 +474,9 @@ const ShopProfileV2Page = () => {
                           ></SVG>
                         </td>
                         <td>
-                          <span className='fw-bold'>{formatPhoneNumberIntl(`${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`)}</span>
+                          <span className='fw-bold' style={{ wordWrap: 'break-word' }}>
+                            {formatPhoneNumberIntl(`${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`)}
+                          </span>
                         </td>
                       </tr>
                       <tr>
@@ -485,7 +487,9 @@ const ShopProfileV2Page = () => {
                           ></SVG>
                         </td>
                         <td>
-                          <span className=''>{shopInfo.email}</span>
+                          <span className='' style={{ wordWrap: 'break-word' }}>
+                            {shopInfo.email}
+                          </span>
                         </td>
                       </tr>
                     </tbody>
@@ -497,7 +501,7 @@ const ShopProfileV2Page = () => {
                   Kênh
                 </h5>
                 <div className='mt-2 px-2'>
-                  <table className='table'>
+                  <table className='table' style={{ width: '100%', tableLayout: 'fixed' }}>
                     <thead>
                       <th style={{ width: '40px' }}></th>
                       <th></th>
@@ -535,7 +539,9 @@ const ShopProfileV2Page = () => {
                               <SVG src={toAbsoluteUrl(imgPath)} style={{ width: '24px', height: '24px', marginTop: '-2px' }}></SVG>
                             </td>
                             <td>
-                              <span className=''>{x.url}</span>
+                              <span className='' style={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
+                                {x.url}ssssssssssss dasd das asdsss
+                              </span>
                             </td>
                           </tr>
                         );

@@ -111,14 +111,19 @@ const CarouselComp = function ({ ...props }) {
       onSelect={handleSelect}
       nextIcon={<ArrowRight />}
       prevIcon={<ArrowLeft />}
-      className='bg-success d-flex justify-content-center align-items-center'
+      className='bg-dark d-flex justify-content-center align-items-center'
       style={{ width: '100%', height: '100%' }}
     >
       {imgList?.map(function (currImg, index) {
         return (
           <Carousel.Item key={index} className=''>
             <div className='d-flex justify-content-center align-items-center'>
-              <img alt='' className='d-block' src={currImg} style={{ width: '100%', minHeight: '600px', maxHeight: '720px' }} />
+              <img
+                alt=''
+                className='d-block'
+                src={currImg}
+                style={{ height: '600px', width: '100%', backgroundPosition: 'center center', backgroundRepeat: 'no-repeat' }}
+              />
             </div>
           </Carousel.Item>
         );
