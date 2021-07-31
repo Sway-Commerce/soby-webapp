@@ -1,5 +1,5 @@
-import React, { lazy, Suspense } from 'react';
-import { Switch, Route, useLocation } from 'react-router-dom';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
+import { Switch, Route, useLocation, Redirect } from 'react-router-dom';
 import 'react-phone-number-input/style.css';
 
 import { GlobalStyle } from './global.styles';
@@ -7,11 +7,12 @@ import { ThemeProvider } from 'styled-components';
 
 import Header from 'components/header/header.component';
 import Spinner from 'components/ui/spinner/spinner.component';
-import JwtRoute from './jwt-route';
 import ErrorBoundary from 'components/error-boundary/error-boundary.component';
 import FooterSection from 'components/footer/footer.component';
 import MainLayoutRoutes from 'routes/MainLayoutRoutes';
 import BlankLayoutRoutes from 'routes/BlankLayoutRoutes';
+import CreateSellerLayoutRoutes from 'routes/CreateSellerLayoutRoutes';
+import { useSelector } from 'react-redux';
 
 const theme = {
   primary: '#2B74E4',
@@ -43,7 +44,6 @@ const HomePage = lazy(() => import('pages/homepage/homepage.component'));
 const SearchResult = lazy(() => import('pages/search-result/search-result.component'));
 const ExploreMainShopPage = lazy(() => import('pages/explore/explore-main.page'));
 const CreateSellerPage = lazy(() => import('pages/create-seller/create-seller.page'));
-const CreateSellerSuccessPage = lazy(() => import('pages/create-seller/create-seller-success'));
 const ShopProfileV2Page = lazy(() => import('pages/shop-profile-v2/shop-profile.page'));
 const ExploreShopByCategoryPage = lazy(() => import('pages/explore/explore-shop-by-category.page'));
 
@@ -51,9 +51,21 @@ const App = () => {
   const location = useLocation();
   let background = location?.state?.background;
   console.info('locationAppp', location);
+  const { accessToken, id } = useSelector((state) => {
+    return state.user;
+  });
+  const [isAuthenticated, setIsAuthenticated] = useState(!!accessToken && !!id);
+
+  useEffect(() => {
+    if (!!accessToken && !!id) {
+      setIsAuthenticated(!!accessToken && !!id);
+    }
+  }, [accessToken, id]);
+  console.info('isAuthenticated', isAuthenticated);
+
   return (
     <ThemeProvider theme={theme}>
-      <div style={{ filter: background && 'blur(10px)' }}>
+      <div className='' style={{ filter: background && 'blur(10px)' }}>
         {/* <Header /> */}
         <GlobalStyle />
         <Switch location={background || location}>
@@ -63,31 +75,35 @@ const App = () => {
               <MainLayoutRoutes exact path='/explore' component={ExploreMainShopPage} />
               <MainLayoutRoutes exact path='/explore/:categoryId' component={ExploreShopByCategoryPage} />
               <MainLayoutRoutes exact path='/shop-profile/:shopId' component={ShopProfileV2Page} />
-
-              <BlankLayoutRoutes exact path='/create-seller' component={CreateSellerPage} />
-              <BlankLayoutRoutes isAuthorized path='/create-seller-success' component={CreateSellerSuccessPage} />
               <BlankLayoutRoutes exact path='/phone-signin' component={PhoneSignin} />
               <BlankLayoutRoutes exact path='/phone-verification' component={PhoneVerification} />
               <BlankLayoutRoutes exact path='/signup' component={SignUpInfo} />
               <BlankLayoutRoutes exact path='/signup-info' component={SignUpPhone} />
               <MainLayoutRoutes path='/invoice/:invoiceId' component={Invoice} />
               <MainLayoutRoutes path='/your-invoice/:invoiceId' component={YourInvoice} />
-              <MainLayoutRoutes isAuthorized path='/edit-profile' component={EditProfile} />
-              <MainLayoutRoutes isAuthorized path='/change-password' component={ChangePassword} />
               <MainLayoutRoutes path='/search-result' component={SearchResult} />
               {/* <Route path='/product/:productId' component={ProductDetail} /> */}
               <MainLayoutRoutes exact path='/product/:productId' component={ShopProfileV2Page} />
-              <MainLayoutRoutes isAuthorized path='/your-transaction' component={YourTransaction} />
-              <MainLayoutRoutes isAuthorized path='/individual-profile' component={IndividualProfile} />
-              <MainLayoutRoutes isAuthorized path='/individual-shipping' component={IndividualShipping} />
               <MainLayoutRoutes path='/transaction/vnpay-return' component={PaymentResult} />
               <MainLayoutRoutes path='/transaction/vnpay-mobile' component={MobilePaymentResult} />
               <MainLayoutRoutes path='/transaction/payme-success' component={PaymeSuccess} />
               <MainLayoutRoutes path='/transaction/payme-fail' component={PaymeFail} />
 
-              <MainLayoutRoutes isAuthorized path='/return-request/:invoiceId' component={ReturnRequestPage} />
-              <MainLayoutRoutes isAuthorized path='/return-request' exact component={ReturnRequestList} />
-              <MainLayoutRoutes isAuthorized path='/return-info/:assessId/:requestId' exact component={ReturnRequestInfo} />
+              {!isAuthenticated ? (
+                <Redirect to='/phone-signin' />
+              ) : (
+                <>
+                  <CreateSellerLayoutRoutes isAuthorized exact path='/create-seller' component={CreateSellerPage} />
+                  <MainLayoutRoutes isAuthorized path='/edit-profile' component={EditProfile} />
+                  <MainLayoutRoutes isAuthorized path='/change-password' component={ChangePassword} />
+                  <MainLayoutRoutes isAuthorized path='/your-transaction' component={YourTransaction} />
+                  <MainLayoutRoutes isAuthorized path='/individual-profile' component={IndividualProfile} />
+                  <MainLayoutRoutes isAuthorized path='/individual-shipping' component={IndividualShipping} />
+                  <MainLayoutRoutes isAuthorized path='/return-request/:invoiceId' component={ReturnRequestPage} />
+                  <MainLayoutRoutes isAuthorized path='/return-request' exact component={ReturnRequestList} />
+                  <MainLayoutRoutes isAuthorized path='/return-info/:assessId/:requestId' exact component={ReturnRequestInfo} />
+                </>
+              )}
             </Suspense>
           </ErrorBoundary>
         </Switch>

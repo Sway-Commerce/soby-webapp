@@ -34,7 +34,13 @@ const ChannelInput = function ({ ...props }) {
       </div>
       {isSelected && (
         <div className='row'>
-          <input type='text' className='form-control' defaultValue={initialValue} style={{ fontSize: '14px' }} onChange={onInputChange}></input>
+          <input
+            type='text'
+            className='form-control'
+            defaultValue={initialValue}
+            style={{ fontSize: '14px' }}
+            onChange={onInputChange}
+          ></input>
         </div>
       )}
     </div>
@@ -82,26 +88,43 @@ export function ShopChannel({ ...props }) {
             <div className='col-4 d-flex justify-content-start align-items-center'>
               <button
                 type='button'
-                className='btn btn-light rounded-circle align-items-center'
+                className='btn btn-light rounded-circle d-flex justify-content-center align-items-center'
                 style={{ fontSize: '14px', height: '40px', width: '40px' }}
                 onClick={function () {
-                  getShopChannel({ shopChannelData }, createSellerTabs.basicInfo.label);
+                  getShopChannel({ shopChannelData }, createSellerTabs.basicInfo.key, { 1: { state: 'active' }, 2: { state: 'default' } });
                 }}
               >
-                <SVG className='' src={toAbsoluteUrl('/assets/vector-left.svg')}></SVG>
+                <div className=''>
+                  <SVG
+                    className=''
+                    src={toAbsoluteUrl('/assets/commons/vector-right.svg')}
+                    style={{
+                      fill: '#3D494B',
+                      width: '20px',
+                      height: '20px',
+                      transform: 'rotate(180deg)',
+                      marginLeft: '-1px',
+                      marginTop: '',
+                    }}
+                  ></SVG>
+                </div>
               </button>
             </div>
             <div className='col-8 d-flex justify-content-end align-items-center'>
               <button
                 type='button'
-                className='btn btn-primary rounded-pill px-3 align-items-center'
+                className='btn btn-primary rounded-pill px-3 d-flex justify-content-center align-items-center'
                 style={{ fontSize: '14px', height: '40px' }}
                 onClick={function () {
-                  getShopChannel({ shopChannelData }, createSellerTabs.businessVerification.label);
+                  getShopChannel({ shopChannelData }, createSellerTabs.businessVerification.key, { 2: { state: 'done' }, 3: { state: 'active' } });
                 }}
               >
                 <span>Tiếp theo</span>
-                <SVG className='ms-2' src={toAbsoluteUrl('/assets/vector-right.svg')}></SVG>
+                <SVG
+                  className='ms-1'
+                  src={toAbsoluteUrl('/assets/commons/vector-right.svg')}
+                  style={{ fill: '#ffffff', marginTop: '1px', width: '20px', height: '20px' }}
+                ></SVG>
               </button>
             </div>
           </div>

@@ -82,13 +82,29 @@ export function BusinessVerification({ ...props }) {
             <div className='col-4 d-flex justify-content-start align-items-center'>
               <button
                 type='button'
-                className='btn btn-light rounded-circle align-items-center'
+                className='btn btn-light rounded-circle d-flex justify-content-center align-items-center'
                 style={{ fontSize: '14px', height: '40px', width: '40px' }}
                 onClick={function () {
-                  getBusinessVerification({ businessName, licenseNumber, address }, createSellerTabs.shopChannel.label);
+                  getBusinessVerification({ businessName, licenseNumber, address }, createSellerTabs.shopChannel.key, {
+                    2: { state: 'active' },
+                    3: { state: 'default' },
+                  });
                 }}
               >
-                <SVG className='' src={toAbsoluteUrl('/assets/vector-left.svg')}></SVG>
+                <div className=''>
+                  <SVG
+                    className=''
+                    src={toAbsoluteUrl('/assets/commons/vector-right.svg')}
+                    style={{
+                      fill: '#3D494B',
+                      width: '20px',
+                      height: '20px',
+                      transform: 'rotate(180deg)',
+                      marginLeft: '-1px',
+                      marginTop: '',
+                    }}
+                  ></SVG>
+                </div>
               </button>
             </div>
             <div className='col-8 d-flex justify-content-end align-items-center'>
@@ -97,21 +113,31 @@ export function BusinessVerification({ ...props }) {
                 className='btn btn-light me-2 fw-bold'
                 style={{ fontSize: '14px', backgroundColor: 'transparent', border: 'none' }}
                 onClick={function () {
-                  getBusinessVerification({}, createSellerTabs.preview.label);
+                  getBusinessVerification({}, createSellerTabs.preview.key, {
+                    3: { state: 'done' },
+                    4: { state: 'active' },
+                  });
                 }}
               >
                 Bỏ qua
               </button>
               <button
                 type='button'
-                className='btn btn-primary rounded-pill px-3 align-items-center'
+                className='btn btn-primary rounded-pill px-3 d-flex justify-con align-items-center'
                 style={{ fontSize: '14px', height: '40px' }}
                 onClick={function () {
-                  getBusinessVerification({ businessName, licenseNumber, address }, createSellerTabs.preview.label);
+                  getBusinessVerification({ businessName, licenseNumber, address }, createSellerTabs.preview.key, {
+                    3: { state: 'done' },
+                    4: { state: 'active' },
+                  });
                 }}
               >
                 <span>Tiếp theo</span>
-                <SVG className='ms-2' src={toAbsoluteUrl('/assets/vector-right.svg')}></SVG>
+                <SVG
+                  className='ms-1'
+                  src={toAbsoluteUrl('/assets/commons/vector-right.svg')}
+                  style={{ fill: '#ffffff', marginTop: '1px', width: '20px', height: '20px' }}
+                ></SVG>
               </button>
             </div>
           </div>

@@ -27,6 +27,9 @@ export function PreviewAll({ ...props }) {
   useEffect(() => {
     if (registerShopData?.registerShop?.data?.id) {
       alert(`Created success with id ${registerShopData?.registerShop?.data?.id}`);
+      getPreviewAll({}, createSellerTabs.createSuccess.key, {
+        4: { state: 'done' },
+      });
       // const signature = getSignature(signingPublicKey, signingSecret, password);
       // setSignature(signature);
     }
@@ -34,10 +37,12 @@ export function PreviewAll({ ...props }) {
 
   useEffect(() => {
     if (registerShopError?.message) {
-      // alert(registerShopError?.message);
+      alert(registerShopError?.message);
+      getPreviewAll({}, createSellerTabs.createSuccess.key, {
+        4: { state: 'done' },
+      });
       // setFormError(registerShopError?.message);
       // setOpen(true);
-      window.location = '/create-seller-success'
     }
   }, [registerShopError]);
 
@@ -72,11 +77,12 @@ export function PreviewAll({ ...props }) {
 
   const handleSubmit = async function (evt) {
     evt.preventDefault();
-    registerShop({
-      variables: {
-        cmd: finalData,
-      },
-    });
+
+    // registerShop({
+    //   variables: {
+    //     cmd: finalData,
+    //   },
+    // });
   };
 
   console.log('finalData', finalData);
@@ -123,7 +129,7 @@ export function PreviewAll({ ...props }) {
           })}
           {countSelectedChannel === 0 && (
             <div key='no-specified-url' className='row fst-italic' style={{ fontSize: '14px', color: '#6E7678' }}>
-              <span>Not provided yet</span>
+              <span>Chưa có thông tin</span>
             </div>
           )}
           <h4 className='fw-bold mt-4' style={{ fontSize: '20px' }}>
@@ -161,19 +167,35 @@ export function PreviewAll({ ...props }) {
             <div className='col-4 d-flex justify-content-start align-items-center'>
               <button
                 type='button'
-                className='btn btn-light rounded-circle align-items-center'
+                className='btn btn-light rounded-circle d-flex justify-content-center align-items-center'
                 style={{ fontSize: '14px', height: '40px', width: '40px' }}
                 onClick={function () {
-                  getPreviewAll({ finalData }, createSellerTabs.businessVerification.label);
+                  getPreviewAll({ finalData }, createSellerTabs.businessVerification.key, {
+                    3: { state: 'active' },
+                    4: { state: 'default' },
+                  });
                 }}
               >
-                <SVG className='' src={toAbsoluteUrl('/assets/vector-left.svg')}></SVG>
+                <div className=''>
+                  <SVG
+                    className=''
+                    src={toAbsoluteUrl('/assets/commons/vector-right.svg')}
+                    style={{
+                      fill: '#3D494B',
+                      width: '20px',
+                      height: '20px',
+                      transform: 'rotate(180deg)',
+                      marginLeft: '-1px',
+                      marginTop: '',
+                    }}
+                  ></SVG>
+                </div>
               </button>
             </div>
             <div className='col-8 d-flex justify-content-end align-items-center'>
               <button
                 type='button'
-                className='btn btn-primary rounded-pill px-3 align-items-center'
+                className='btn btn-primary rounded-pill px-3 d-flex justify-content-center align-items-center'
                 style={{ fontSize: '14px', height: '40px' }}
                 onClick={handleSubmit}
               >
