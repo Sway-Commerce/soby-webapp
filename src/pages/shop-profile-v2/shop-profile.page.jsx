@@ -300,7 +300,7 @@ const ShopProfileV2Page = () => {
           <div className='col-7'>
             <div className='row p-0 pt-2'>
               <h4 className='fw-bold' style={{ fontSize: '32px' }}>
-                {shopInfo.name}
+                {shopInfo?.name}
               </h4>
             </div>
             <div className='row p-0 pb-2'>
@@ -384,7 +384,7 @@ const ShopProfileV2Page = () => {
                   })}
                 >
                   <h4 className='fw-bold' style={{ fontSize: '32px', color: 'black', marginTop: '10px', marginLeft: '-2px' }}>
-                    {shopInfo.shopRank.totalPoints / 10}
+                    {shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0}
                   </h4>
                 </CircularProgressbarWithChildren>
               </div>

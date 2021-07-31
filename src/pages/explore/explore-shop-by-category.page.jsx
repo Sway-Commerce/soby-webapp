@@ -162,7 +162,7 @@ const ExploreShopByCategoryPage = () => {
                       <tr key={index}>
                         {shopRow.map(function (shop, index) {
                           return (
-                            <td style={{ width: `${100 / numOfShopsInRow}%` }}>
+                            <td key={index} style={{ width: `${100 / numOfShopsInRow}%` }}>
                               <Shop key={shop.id} isFirst={index === 0} imgSrc={'/assets/commons/no-shop-img.svg'} shopData={shop} />
                             </td>
                           );

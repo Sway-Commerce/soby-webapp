@@ -10,6 +10,8 @@ import Spinner from 'components/ui/spinner/spinner.component';
 import JwtRoute from './jwt-route';
 import ErrorBoundary from 'components/error-boundary/error-boundary.component';
 import FooterSection from 'components/footer/footer.component';
+import MainLayoutRoutes from 'routes/MainLayoutRoutes';
+import BlankLayoutRoutes from 'routes/BlankLayoutRoutes';
 
 const theme = {
   primary: '#2B74E4',
@@ -51,46 +53,45 @@ const App = () => {
   console.info('locationAppp', location);
   return (
     <ThemeProvider theme={theme}>
-      <div style={{ filter: background && 'blur(5px)' }}>
-        <Header />
+      <div style={{ filter: background && 'blur(10px)' }}>
+        {/* <Header /> */}
         <GlobalStyle />
-        <div className='body-container'>
-          <Switch location={background || location}>
-            <ErrorBoundary>
-              <Suspense fallback={<Spinner />}>
-                <Route exact path='/' component={HomePage} />
-                <Route exact path='/explore' component={ExploreMainShopPage} />
-                <Route exact path='/explore/:categoryId' component={ExploreShopByCategoryPage} />
-                <Route exact path='/shop-profile/:shopId' component={ShopProfileV2Page} />
-                {/* <Route path='/shop-profile/:shopId' component={ShopProfile} /> */}
-                <JwtRoute exact path='/create-seller' component={CreateSellerPage} />
-                <Route path='/phone-signin' component={PhoneSignin} />
-                <Route exact path='/phone-verification' component={PhoneVerification} />
-                <Route exact path='/signup' component={SignUpInfo} />
-                <Route exact path='/signup-info' component={SignUpPhone} />
-                <Route path='/invoice/:invoiceId' component={Invoice} />
-                <Route path='/your-invoice/:invoiceId' component={YourInvoice} />
-                <JwtRoute path='/edit-profile' component={EditProfile} />
-                <JwtRoute path='/change-password' component={ChangePassword} />
-                <Route path='/search-result' component={SearchResult} />
-                {/* <Route path='/product/:productId' component={ProductDetail} /> */}
-                <Route exact path='/product/:productId' children={<ShopProfileV2Page />} />
-                <JwtRoute path='/your-transaction' component={YourTransaction} />
-                <JwtRoute path='/individual-profile' component={IndividualProfile} />
-                <JwtRoute path='/individual-shipping' component={IndividualShipping} />
-                <Route path='/transaction/vnpay-return' component={PaymentResult} />
-                <Route path='/transaction/vnpay-mobile' component={MobilePaymentResult} />
-                <Route path='/transaction/payme-success' component={PaymeSuccess} />
-                <Route path='/transaction/payme-fail' component={PaymeFail} />
-                <JwtRoute path='/create-seller-success' component={CreateSellerSuccessPage} />
-                <JwtRoute path='/return-request/:invoiceId' component={ReturnRequestPage} />
-                <JwtRoute path='/return-request' exact component={ReturnRequestList} />
-                <JwtRoute path='/return-info/:assessId/:requestId' exact component={ReturnRequestInfo} />
-              </Suspense>
-            </ErrorBoundary>
-          </Switch>
-        </div>
-        <FooterSection />
+        <Switch location={background || location}>
+          <ErrorBoundary>
+            <Suspense fallback={<Spinner />}>
+              <MainLayoutRoutes exact path='/' component={HomePage} />
+              <MainLayoutRoutes exact path='/explore' component={ExploreMainShopPage} />
+              <MainLayoutRoutes exact path='/explore/:categoryId' component={ExploreShopByCategoryPage} />
+              <MainLayoutRoutes exact path='/shop-profile/:shopId' component={ShopProfileV2Page} />
+
+              <BlankLayoutRoutes exact path='/create-seller' component={CreateSellerPage} />
+              <BlankLayoutRoutes isAuthorized path='/create-seller-success' component={CreateSellerSuccessPage} />
+              <BlankLayoutRoutes exact path='/phone-signin' component={PhoneSignin} />
+              <BlankLayoutRoutes exact path='/phone-verification' component={PhoneVerification} />
+              <BlankLayoutRoutes exact path='/signup' component={SignUpInfo} />
+              <BlankLayoutRoutes exact path='/signup-info' component={SignUpPhone} />
+              <MainLayoutRoutes path='/invoice/:invoiceId' component={Invoice} />
+              <MainLayoutRoutes path='/your-invoice/:invoiceId' component={YourInvoice} />
+              <MainLayoutRoutes isAuthorized path='/edit-profile' component={EditProfile} />
+              <MainLayoutRoutes isAuthorized path='/change-password' component={ChangePassword} />
+              <MainLayoutRoutes path='/search-result' component={SearchResult} />
+              {/* <Route path='/product/:productId' component={ProductDetail} /> */}
+              <MainLayoutRoutes exact path='/product/:productId' component={ShopProfileV2Page} />
+              <MainLayoutRoutes isAuthorized path='/your-transaction' component={YourTransaction} />
+              <MainLayoutRoutes isAuthorized path='/individual-profile' component={IndividualProfile} />
+              <MainLayoutRoutes isAuthorized path='/individual-shipping' component={IndividualShipping} />
+              <MainLayoutRoutes path='/transaction/vnpay-return' component={PaymentResult} />
+              <MainLayoutRoutes path='/transaction/vnpay-mobile' component={MobilePaymentResult} />
+              <MainLayoutRoutes path='/transaction/payme-success' component={PaymeSuccess} />
+              <MainLayoutRoutes path='/transaction/payme-fail' component={PaymeFail} />
+
+              <MainLayoutRoutes isAuthorized path='/return-request/:invoiceId' component={ReturnRequestPage} />
+              <MainLayoutRoutes isAuthorized path='/return-request' exact component={ReturnRequestList} />
+              <MainLayoutRoutes isAuthorized path='/return-info/:assessId/:requestId' exact component={ReturnRequestInfo} />
+            </Suspense>
+          </ErrorBoundary>
+        </Switch>
+        {/* <FooterSection /> */}
       </div>
     </ThemeProvider>
   );
