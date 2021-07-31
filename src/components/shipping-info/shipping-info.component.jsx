@@ -112,7 +112,7 @@ const ShippingInfo = ({ invoiceIndividualId, signingSecret }) => {
     addressLineValid: true,
     isPasswordValid: true,
   });
-  const [paymentMethod, setPaymentMethod] = useState('BANK');
+  const [paymentMethod, setPaymentMethod] = useState('ONLINE');
   const [provinceList, setProvinceList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
   const [wardList, setWardList] = useState([]);

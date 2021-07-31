@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, useLocation } from 'react-router-dom';
 import 'react-phone-number-input/style.css';
 
 import { GlobalStyle } from './global.styles';
@@ -39,34 +39,41 @@ const EditProfile = lazy(() => import('pages/individual-profile/edit-profile.com
 const ChangePassword = lazy(() => import('pages/individual-profile/edit-password.component'));
 const HomePage = lazy(() => import('pages/homepage/homepage.component'));
 const SearchResult = lazy(() => import('pages/search-result/search-result.component'));
-const ExplorePage = lazy(() => import('pages/explore/explore.page'));
+const ExploreMainShopPage = lazy(() => import('pages/explore/explore-main.page'));
 const CreateSellerPage = lazy(() => import('pages/create-seller/create-seller.page'));
 const CreateSellerSuccessPage = lazy(() => import('pages/create-seller/create-seller-success'));
 const ShopProfileV2Page = lazy(() => import('pages/shop-profile-v2/shop-profile.page'));
+const ExploreShopByCategoryPage = lazy(() => import('pages/explore/explore-shop-by-category.page'));
 
 const App = () => {
+  const location = useLocation();
+  let background = location?.state?.background;
+  console.info('locationAppp', location);
   return (
     <ThemeProvider theme={theme}>
       <Header />
       <GlobalStyle />
       <div className='body-container'>
-        <Switch>
+        <Switch location={background || location}>
           <ErrorBoundary>
             <Suspense fallback={<Spinner />}>
               <Route exact path='/' component={HomePage} />
-              <Route exact path='/explore' component={ExplorePage} />
+              <Route exact path='/explore' component={ExploreMainShopPage} />
+              <Route exact path='/explore/:categoryId' component={ExploreShopByCategoryPage} />
               <Route exact path='/shop-profile/:shopId' component={ShopProfileV2Page} />
+              {/* <Route path='/shop-profile/:shopId' component={ShopProfile} /> */}
               <JwtRoute exact path='/create-seller' component={CreateSellerPage} />
               <Route path='/phone-signin' component={PhoneSignin} />
               <Route exact path='/phone-verification' component={PhoneVerification} />
               <Route exact path='/signup' component={SignUpInfo} />
               <Route exact path='/signup-info' component={SignUpPhone} />
-              <Route path="/invoice/:invoiceId" component={Invoice} />
-              <Route path="/your-invoice/:invoiceId" component={YourInvoice} />
-              <JwtRoute path="/edit-profile" component={EditProfile} />
-              <JwtRoute path="/change-password" component={ChangePassword} />
-              <Route path="/search-result" component={SearchResult} />
-              <Route path='/product/:productId' component={ProductDetail} />
+              <Route path='/invoice/:invoiceId' component={Invoice} />
+              <Route path='/your-invoice/:invoiceId' component={YourInvoice} />
+              <JwtRoute path='/edit-profile' component={EditProfile} />
+              <JwtRoute path='/change-password' component={ChangePassword} />
+              <Route path='/search-result' component={SearchResult} />
+              {/* <Route path='/product/:productId' component={ProductDetail} /> */}
+              <Route exact path='/product/:productId' children={<ShopProfileV2Page />} />
               <JwtRoute path='/your-transaction' component={YourTransaction} />
               <JwtRoute path='/individual-profile' component={IndividualProfile} />
               <JwtRoute path='/individual-shipping' component={IndividualShipping} />
