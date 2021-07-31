@@ -189,7 +189,7 @@ const CustomModal = function ({ ...props }) {
                 type='button'
                 className='btn border rounded-pill px-3 align-items-center bg-white'
                 style={{ fontSize: '14px', height: '40px' }}
-                onClick={function () {}}
+                onClick={goBack}
               >
                 <span className='fw-bold'>Ghé cửa hàng</span>
               </button>
@@ -209,7 +209,9 @@ const CustomModal = function ({ ...props }) {
                   height={20}
                   style={{ fill: '#0D1B1E' }}
                 ></SVG>
-                <span className='fw-bold' style={{marginTop: '-2px'}}>Chia sẻ</span>
+                <span className='fw-bold' style={{ marginTop: '-2px' }}>
+                  Chia sẻ
+                </span>
               </button>
               <button
                 type='button'

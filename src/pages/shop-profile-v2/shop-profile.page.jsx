@@ -116,9 +116,9 @@ const Promotion = function ({ ...props }) {
 };
 
 const Product = function ({ ...props }) {
-  const { imgSrc, productId, isFirst } = props;
+  const { imgSrc, productId, location } = props;
   return (
-    <Link key={productId} to={`/product/${productId}`}>
+    <Link key={productId} to={{ pathname: `/product/${productId}`, state: { background: location } }}>
       <div
         className=''
         // style={{ width: '190px', height: '190px', borderColor: 'black', marginLeft: !isFirst && '1.25rem' }}
@@ -286,7 +286,7 @@ const ShopProfileV2Page = () => {
   ) : (
     <>
       <Route exact path='/product/:productId' children={<ProductDetailV2Page />} />
-      <div className='container-fluid mb-5' style={{ filter: background && 'blur(3px)' }}>
+      <div className='container-fluid mb-5' style={{ filter: background && 'blur(5px)' }}>
         <SharedBreadcrumb breadcrumbs={breadcrumbs} />
 
         <div className='row mt-3 justify-content-center py-2'>
@@ -305,7 +305,7 @@ const ShopProfileV2Page = () => {
             </div>
             <div className='row p-0 pb-2'>
               <div className='d-flex align-items-center'>
-                {shopInfo.shopUrls.map((x) => {
+                {shopInfo.shopUrls.map((x, index) => {
                   let imgPath = '';
                   switch (x.type) {
                     case 'FACEBOOK':
@@ -330,7 +330,7 @@ const ShopProfileV2Page = () => {
                       imgPath = '/assets/shopChannels/.svg';
                       break;
                   }
-                  return <ChannelIconLink url={x.url} imgSrc={imgPath} />;
+                  return <ChannelIconLink key={index} url={x.url} imgSrc={imgPath} />;
                 })}
               </div>
             </div>
@@ -426,8 +426,13 @@ const ShopProfileV2Page = () => {
                             <tr key={index}>
                               {productRow.map(function (product, index) {
                                 return (
-                                  <td style={{ width: `${100 / numOfProductsInRow}%` }}>
-                                    <Product isFirst={index === 0} imgSrc={product.imageUrls[0]} productId={product.id} />
+                                  <td key={index} style={{ width: `${100 / numOfProductsInRow}%` }}>
+                                    <Product
+                                      isFirst={index === 0}
+                                      imgSrc={product.imageUrls[0]}
+                                      productId={product.id}
+                                      location={location}
+                                    />
                                   </td>
                                 );
                               })}
@@ -517,7 +522,7 @@ const ShopProfileV2Page = () => {
                       <th></th>
                     </thead>
                     <tbody>
-                      {shopInfo.shopUrls.map((x) => {
+                      {shopInfo.shopUrls.map((x, index) => {
                         console.info('shopdata', x);
                         let imgPath = '';
                         switch (x.type) {
@@ -544,7 +549,7 @@ const ShopProfileV2Page = () => {
                             break;
                         }
                         return (
-                          <tr>
+                          <tr key={index}>
                             <td>
                               <SVG src={toAbsoluteUrl(imgPath)} style={{ width: '24px', height: '24px', marginTop: '-2px' }}></SVG>
                             </td>

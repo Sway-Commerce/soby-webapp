@@ -51,45 +51,47 @@ const App = () => {
   console.info('locationAppp', location);
   return (
     <ThemeProvider theme={theme}>
-      <Header />
-      <GlobalStyle />
-      <div className='body-container'>
-        <Switch location={background || location}>
-          <ErrorBoundary>
-            <Suspense fallback={<Spinner />}>
-              <Route exact path='/' component={HomePage} />
-              <Route exact path='/explore' component={ExploreMainShopPage} />
-              <Route exact path='/explore/:categoryId' component={ExploreShopByCategoryPage} />
-              <Route exact path='/shop-profile/:shopId' component={ShopProfileV2Page} />
-              {/* <Route path='/shop-profile/:shopId' component={ShopProfile} /> */}
-              <JwtRoute exact path='/create-seller' component={CreateSellerPage} />
-              <Route path='/phone-signin' component={PhoneSignin} />
-              <Route exact path='/phone-verification' component={PhoneVerification} />
-              <Route exact path='/signup' component={SignUpInfo} />
-              <Route exact path='/signup-info' component={SignUpPhone} />
-              <Route path='/invoice/:invoiceId' component={Invoice} />
-              <Route path='/your-invoice/:invoiceId' component={YourInvoice} />
-              <JwtRoute path='/edit-profile' component={EditProfile} />
-              <JwtRoute path='/change-password' component={ChangePassword} />
-              <Route path='/search-result' component={SearchResult} />
-              {/* <Route path='/product/:productId' component={ProductDetail} /> */}
-              <Route exact path='/product/:productId' children={<ShopProfileV2Page />} />
-              <JwtRoute path='/your-transaction' component={YourTransaction} />
-              <JwtRoute path='/individual-profile' component={IndividualProfile} />
-              <JwtRoute path='/individual-shipping' component={IndividualShipping} />
-              <Route path='/transaction/vnpay-return' component={PaymentResult} />
-              <Route path='/transaction/vnpay-mobile' component={MobilePaymentResult} />
-              <Route path='/transaction/payme-success' component={PaymeSuccess} />
-              <Route path='/transaction/payme-fail' component={PaymeFail} />
-              <JwtRoute path='/create-seller-success' component={CreateSellerSuccessPage} />
-              <JwtRoute path='/return-request/:invoiceId' component={ReturnRequestPage} />
-              <JwtRoute path='/return-request' exact component={ReturnRequestList} />
-              <JwtRoute path='/return-info/:assessId/:requestId' exact component={ReturnRequestInfo} />
-            </Suspense>
-          </ErrorBoundary>
-        </Switch>
+      <div style={{ filter: background && 'blur(5px)' }}>
+        <Header />
+        <GlobalStyle />
+        <div className='body-container'>
+          <Switch location={background || location}>
+            <ErrorBoundary>
+              <Suspense fallback={<Spinner />}>
+                <Route exact path='/' component={HomePage} />
+                <Route exact path='/explore' component={ExploreMainShopPage} />
+                <Route exact path='/explore/:categoryId' component={ExploreShopByCategoryPage} />
+                <Route exact path='/shop-profile/:shopId' component={ShopProfileV2Page} />
+                {/* <Route path='/shop-profile/:shopId' component={ShopProfile} /> */}
+                <JwtRoute exact path='/create-seller' component={CreateSellerPage} />
+                <Route path='/phone-signin' component={PhoneSignin} />
+                <Route exact path='/phone-verification' component={PhoneVerification} />
+                <Route exact path='/signup' component={SignUpInfo} />
+                <Route exact path='/signup-info' component={SignUpPhone} />
+                <Route path='/invoice/:invoiceId' component={Invoice} />
+                <Route path='/your-invoice/:invoiceId' component={YourInvoice} />
+                <JwtRoute path='/edit-profile' component={EditProfile} />
+                <JwtRoute path='/change-password' component={ChangePassword} />
+                <Route path='/search-result' component={SearchResult} />
+                {/* <Route path='/product/:productId' component={ProductDetail} /> */}
+                <Route exact path='/product/:productId' children={<ShopProfileV2Page />} />
+                <JwtRoute path='/your-transaction' component={YourTransaction} />
+                <JwtRoute path='/individual-profile' component={IndividualProfile} />
+                <JwtRoute path='/individual-shipping' component={IndividualShipping} />
+                <Route path='/transaction/vnpay-return' component={PaymentResult} />
+                <Route path='/transaction/vnpay-mobile' component={MobilePaymentResult} />
+                <Route path='/transaction/payme-success' component={PaymeSuccess} />
+                <Route path='/transaction/payme-fail' component={PaymeFail} />
+                <JwtRoute path='/create-seller-success' component={CreateSellerSuccessPage} />
+                <JwtRoute path='/return-request/:invoiceId' component={ReturnRequestPage} />
+                <JwtRoute path='/return-request' exact component={ReturnRequestList} />
+                <JwtRoute path='/return-info/:assessId/:requestId' exact component={ReturnRequestInfo} />
+              </Suspense>
+            </ErrorBoundary>
+          </Switch>
+        </div>
+        <FooterSection />
       </div>
-      <FooterSection />
     </ThemeProvider>
   );
 };
