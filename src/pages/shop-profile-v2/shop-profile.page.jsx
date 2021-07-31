@@ -338,11 +338,13 @@ const ShopProfileV2Page = () => {
               <div className='d-flex'>
                 <button
                   type='button'
-                  className='btn btn-primary rounded-pill px-3 align-items-center me-1'
+                  className='btn btn-primary rounded-pill d-flex px-3 justify-content-center align-items-center me-1'
                   style={{ fontSize: '14px', height: '40px', width: '200px' }}
                   onClick={function () {}}
                 >
-                  <span>Liên hệ</span>
+                  <span className='' style={{ marginTop: '-2px' }}>
+                    Liên hệ
+                  </span>
                 </button>
                 <button
                   type='button'
@@ -353,8 +355,16 @@ const ShopProfileV2Page = () => {
                     window.alert('Shop url is copied');
                   }}
                 >
-                  <SVG className='me-2' src={toAbsoluteUrl('/assets/share-2.svg')} width={20} height={20}></SVG>
-                  <span>Chia sẻ</span>
+                  <SVG
+                    className='me-2'
+                    src={toAbsoluteUrl('/assets/commons/share.svg')}
+                    width={20}
+                    height={20}
+                    style={{ fill: '#0D1B1E' }}
+                  ></SVG>
+                  <span className='' style={{ marginTop: '-2px' }}>
+                    Chia sẻ
+                  </span>
                 </button>
               </div>
             </div>
@@ -540,7 +550,7 @@ const ShopProfileV2Page = () => {
                             </td>
                             <td>
                               <span className='' style={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
-                                {x.url}ssssssssssss dasd das asdsss
+                                {x.url}
                               </span>
                             </td>
                           </tr>

@@ -196,26 +196,38 @@ const CustomModal = function ({ ...props }) {
               <button
                 type='button'
                 className='btn bg-white rounded-pill border px-3 align-items-center d-flex justify-content-center align-items-center ms-1'
-                style={{ fontSize: '14px', height: '40px', width: '120px' }}
+                style={{ fontSize: '14px', height: '40px' }}
                 onClick={() => {
                   navigator?.clipboard?.writeText(window.location.href);
                   window.alert('Shop url is copied');
                 }}
               >
-                <SVG className='me-2' src={toAbsoluteUrl('/assets/share-2.svg')} width={20} height={20}></SVG>
-                <span className='fw-bold'>Chia sẻ</span>
+                <SVG
+                  className='me-2'
+                  src={toAbsoluteUrl('/assets/commons/share.svg')}
+                  width={20}
+                  height={20}
+                  style={{ fill: '#0D1B1E' }}
+                ></SVG>
+                <span className='fw-bold' style={{marginTop: '-2px'}}>Chia sẻ</span>
               </button>
               <button
                 type='button'
                 className='btn btn-primary rounded-pill px-3 align-items-center d-flex justify-content-center align-items-center ms-1'
-                style={{ fontSize: '14px', height: '40px', width: '100px' }}
+                style={{ fontSize: '14px', height: '40px' }}
                 onClick={() => {
-                  navigator?.clipboard?.writeText(window.location.href);
-                  window.alert('Shop url is copied');
+                  // navigator?.clipboard?.writeText(window.location.href);
+                  // window.alert('Shop url is copied');
                 }}
               >
                 <span className='fw-bold'>Contact</span>
-                {/* <SVG className='me-2' src={toAbsoluteUrl('/assets/share-2.svg')} width={20} height={20}></SVG> */}
+                <SVG
+                  className='ms-1'
+                  src={toAbsoluteUrl('/assets/commons/vector-right.svg')}
+                  width={20}
+                  height={20}
+                  style={{ transform: 'rotate(90deg)', marginTop: '2px', fill: '#FFFFFF' }}
+                ></SVG>
               </button>
             </div>
           </div>
