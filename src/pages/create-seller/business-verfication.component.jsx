@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import SVG from 'react-inlinesvg';
-import { toAbsoluteUrl } from '../../shared/utils/assetsHelper';
+import { toAbsoluteUrl } from 'shared/utils/assetsHelper';
 // import { SEARCH_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';

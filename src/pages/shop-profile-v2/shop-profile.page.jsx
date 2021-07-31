@@ -6,7 +6,7 @@ import { useLazyQuery } from '@apollo/client';
 import { GET_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
 import { SEARCH_PRODUCT } from 'graphQL/repository/product.repository';
 import SVG from 'react-inlinesvg';
-import { toAbsoluteUrl } from '../../shared/utils/assetsHelper';
+import { toAbsoluteUrl } from 'shared/utils/assetsHelper';
 import backgroundImg from 'shared/assets/home-background.svg';
 import { CustomButton } from '../../components/ui/custom-button/custom-button.component';
 import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
@@ -285,8 +285,8 @@ const ShopProfileV2Page = () => {
     <Spinner />
   ) : (
     <>
-      <Route exact path='/product/:productId' children={<ProductDetailV2Page />} />
       <div className='container-fluid mb-5' style={{ filter: background && 'blur(5px)' }}>
+        <Route exact path='/product/:productId' children={<ProductDetailV2Page />} />
         <SharedBreadcrumb breadcrumbs={breadcrumbs} />
 
         <div className='row mt-3 justify-content-center py-2'>

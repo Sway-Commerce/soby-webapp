@@ -13,7 +13,7 @@ import { SEARCH_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
 
 import SVG from 'react-inlinesvg';
 import SharedBreadcrumb from 'components/shared-breadcrumb/shared-breadcrumb.component';
-import { toAbsoluteUrl } from '../../shared/utils/assetsHelper';
+import { toAbsoluteUrl } from 'shared/utils/assetsHelper';
 import { categoryIconMapper } from './icon.mapper';
 import { ScrollMenu } from 'react-horizontal-scrolling-menu';
 import ScrollContainer from 'react-indiana-drag-scroll';

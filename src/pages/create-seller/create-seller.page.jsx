@@ -4,7 +4,7 @@ import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { useLazyQuery } from '@apollo/client';
 import SVG from 'react-inlinesvg';
-import { toAbsoluteUrl } from '../../shared/utils/assetsHelper';
+import { toAbsoluteUrl } from 'shared/utils/assetsHelper';
 import backgroundImg from 'shared/assets/home-background.svg';
 import { CustomButton } from '../../components/ui/custom-button/custom-button.component';
 // import FormInput from 'components/form-input/form-input.component';

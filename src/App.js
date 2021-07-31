@@ -89,21 +89,35 @@ const App = () => {
               <MainLayoutRoutes path='/transaction/payme-success' component={PaymeSuccess} />
               <MainLayoutRoutes path='/transaction/payme-fail' component={PaymeFail} />
 
-              {!isAuthenticated ? (
-                <Redirect to='/phone-signin' />
-              ) : (
-                <>
-                  <CreateSellerLayoutRoutes isAuthorized exact path='/create-seller' component={CreateSellerPage} />
-                  <MainLayoutRoutes isAuthorized path='/edit-profile' component={EditProfile} />
-                  <MainLayoutRoutes isAuthorized path='/change-password' component={ChangePassword} />
-                  <MainLayoutRoutes isAuthorized path='/your-transaction' component={YourTransaction} />
-                  <MainLayoutRoutes isAuthorized path='/individual-profile' component={IndividualProfile} />
-                  <MainLayoutRoutes isAuthorized path='/individual-shipping' component={IndividualShipping} />
-                  <MainLayoutRoutes isAuthorized path='/return-request/:invoiceId' component={ReturnRequestPage} />
-                  <MainLayoutRoutes isAuthorized path='/return-request' exact component={ReturnRequestList} />
-                  <MainLayoutRoutes isAuthorized path='/return-info/:assessId/:requestId' exact component={ReturnRequestInfo} />
-                </>
-              )}
+              <Route
+                path={[
+                  '/create-seller',
+                  '/edit-profile',
+                  '/change-password',
+                  '/your-transaction',
+                  '/individual-profile',
+                  '/individual-shipping',
+                  '/return-request/:invoiceId',
+                  '/return-request',
+                  '/return-info/:assessId/:requestId',
+                ]}
+              >
+                {!isAuthenticated ? (
+                  <Redirect to='/phone-signin' />
+                ) : (
+                  <>
+                    <CreateSellerLayoutRoutes exact path='/create-seller' component={CreateSellerPage} />
+                    <MainLayoutRoutes path='/edit-profile' component={EditProfile} />
+                    <MainLayoutRoutes path='/change-password' component={ChangePassword} />
+                    <MainLayoutRoutes path='/your-transaction' component={YourTransaction} />
+                    <MainLayoutRoutes path='/individual-profile' component={IndividualProfile} />
+                    <MainLayoutRoutes path='/individual-shipping' component={IndividualShipping} />
+                    <MainLayoutRoutes path='/return-request/:invoiceId' component={ReturnRequestPage} />
+                    <MainLayoutRoutes path='/return-request' exact component={ReturnRequestList} />
+                    <MainLayoutRoutes path='/return-info/:assessId/:requestId' exact component={ReturnRequestInfo} />
+                  </>
+                )}
+              </Route>
             </Suspense>
           </ErrorBoundary>
         </Switch>

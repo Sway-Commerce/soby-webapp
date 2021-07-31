@@ -13,7 +13,7 @@ import Spinner from 'components/ui/spinner/spinner.component';
 import ShopItem from '../../components/shop-item/shop-item.component';
 import useDebounce from 'shared/hooks/useDebounce';
 import SVG from 'react-inlinesvg';
-import { toAbsoluteUrl } from '../../shared/utils/assetsHelper';
+import { toAbsoluteUrl } from 'shared/utils/assetsHelper';
 import { categoryIconMapper } from '../explore/icon.mapper';
 
 const Container = styled.div`

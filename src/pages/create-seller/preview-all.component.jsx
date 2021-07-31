@@ -5,7 +5,7 @@ import SVG from 'react-inlinesvg';
 import phoneValidation from 'shared/utils/phoneValidation';
 import passwordValidation from 'shared/utils/passwordValidation';
 import emailValidation from 'shared/utils/emailValidation';
-import { toAbsoluteUrl } from '../../shared/utils/assetsHelper';
+import { toAbsoluteUrl } from 'shared/utils/assetsHelper';
 import { REGISTER_SHOP } from 'graphQL/repository/shop.repository';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
