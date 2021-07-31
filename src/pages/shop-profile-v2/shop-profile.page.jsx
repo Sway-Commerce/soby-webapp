@@ -118,57 +118,14 @@ const Promotion = function ({ ...props }) {
 const Product = function ({ ...props }) {
   const { imgSrc, productId, isFirst } = props;
   return (
-    <div
-      key={productId}
-      onClick={() => {
-        window.location = `/product/${productId}`;
-      }}
-      className=''
-      // style={{ width: '190px', height: '190px', borderColor: 'black', marginLeft: !isFirst && '1.25rem' }}
-    >
-      <img src={imgSrc} style={{ width: '190px', height: '190px' }} />
-    </div>
-  );
-};
-
-const ProductRow = function ({ ...props }) {
-  const { products } = props;
-  return (
-    <div className='d-flex flex-wrap mt-3 align-items-center justify-content-start'>
-      {products.map((product, index) => {
-        return <Product isFirst={index === 0} imgSrc={product.imageUrls[0]} productId={product.id} />;
-      })}
-    </div>
-  );
-};
-
-const ContactRow = function ({ ...props }) {
-  const { imgSrc, value, bold } = props;
-
-  return (
-    <div className='row border-bottom py-2'>
-      <div className='' style={{ width: '40px' }}>
-        <SVG src={toAbsoluteUrl(imgSrc)} style={{ width: '19px', height: '19px', marginTop: '-1px' }}></SVG>
+    <Link key={productId} to={`/product/${productId}`}>
+      <div
+        className=''
+        // style={{ width: '190px', height: '190px', borderColor: 'black', marginLeft: !isFirst && '1.25rem' }}
+      >
+        <img src={imgSrc} style={{ width: '190px', height: '190px' }} />
       </div>
-      <div className='col' style={{ fontSize: '14px' }}>
-        <span className={bold && 'fw-bold'}>{value}</span>
-      </div>
-    </div>
-  );
-};
-
-const ChannelRow = function ({ ...props }) {
-  const { imgSrc, value, bold } = props;
-
-  return (
-    <div className='row border-bottom py-2'>
-      <div className='' style={{ width: '40px' }}>
-        <SVG src={toAbsoluteUrl(imgSrc)} style={{ width: '24px', height: '24px', marginTop: '-2px' }}></SVG>
-      </div>
-      <div className='col' style={{ fontSize: '14px' }}>
-        <span className={bold && 'fw-bold'}>{value}</span>
-      </div>
-    </div>
+    </Link>
   );
 };
 
