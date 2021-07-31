@@ -5,10 +5,8 @@ import 'react-phone-number-input/style.css';
 import { GlobalStyle } from './global.styles';
 import { ThemeProvider } from 'styled-components';
 
-import Header from 'components/header/header.component';
 import Spinner from 'components/ui/spinner/spinner.component';
 import ErrorBoundary from 'components/error-boundary/error-boundary.component';
-import FooterSection from 'components/footer/footer.component';
 import MainLayoutRoutes from 'routes/MainLayoutRoutes';
 import BlankLayoutRoutes from 'routes/BlankLayoutRoutes';
 import CreateSellerLayoutRoutes from 'routes/CreateSellerLayoutRoutes';
@@ -41,6 +39,7 @@ const ReturnRequestInfo = lazy(() => import('pages/request-info/request-info.com
 const EditProfile = lazy(() => import('pages/individual-profile/edit-profile.component'));
 const ChangePassword = lazy(() => import('pages/individual-profile/edit-password.component'));
 const HomePage = lazy(() => import('pages/homepage/homepage.component'));
+const HomeV2Page = lazy(() => import('pages/homepage/home-v2.page'));
 const SearchResult = lazy(() => import('pages/search-result/search-result.component'));
 const ExploreMainShopPage = lazy(() => import('pages/explore/explore-main.page'));
 const CreateSellerPage = lazy(() => import('pages/create-seller/create-seller.page'));
@@ -71,7 +70,7 @@ const App = () => {
         <Switch location={background || location}>
           <ErrorBoundary>
             <Suspense fallback={<Spinner />}>
-              <MainLayoutRoutes exact path='/' component={HomePage} />
+              <MainLayoutRoutes exact path='/' component={HomeV2Page} />
               <MainLayoutRoutes exact path='/explore' component={ExploreMainShopPage} />
               <MainLayoutRoutes exact path='/explore/:categoryId' component={ExploreShopByCategoryPage} />
               <MainLayoutRoutes exact path='/shop-profile/:shopId' component={ShopProfileV2Page} />
