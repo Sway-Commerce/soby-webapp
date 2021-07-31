@@ -116,14 +116,14 @@ const Shop = function ({ ...props }) {
             className='rounded-pill d-flex justify-content-center align-items-center p-0'
             style={{ backgroundColor: getColor(score), width: '48px' }}
           >
-            <div className='d-block p-0' style={{ marginLeft: '-2px' }}>
+            <div className='d-block p-0' style={{ marginLeft: '-2px', marginTop: '-1px' }}>
               <SVG
                 className=''
                 src={toAbsoluteUrl('/assets/commons/star.svg')}
                 style={{ width: '12px', height: '12px', fill: 'white', marginTop: '-2px' }}
               ></SVG>
             </div>
-            <div>
+            <div style={{ marginTop: '0px' }}>
               <span className='' style={{ fontSize: '12px', color: 'white', marginLeft: '5px' }}>
                 {score}
               </span>
@@ -163,7 +163,7 @@ const ExploreMainPage = () => {
     filters: [],
     queries: [],
     sorts: [],
-  }); 
+  });
 
   const [getAllShopCategories, { loading: getAllShopCategoriesLoading, error: getAllShopCategoriesError, data: getAllShopCategoriesData }] =
     useLazyQuery(GET_ALL_SHOP_CATEGORIES);
@@ -219,7 +219,7 @@ const ExploreMainPage = () => {
   console.info('shopsByCategory', shopsByCategory);
 
   return (
-    <div className='container-fluid mt-3 mb-5'>
+    <div className='container-fluid mt-3 mb-5' style={{ minHeight: '100vh' }}>
       <SharedBreadcrumb breadcrumbs={breadcrumbs} />
 
       <div aria-label='title' className='row'>
@@ -246,21 +246,50 @@ const ExploreMainPage = () => {
         </ScrollContainer>
       </div>
 
-      <div aria-label='title' className='row pt-2'>
+      <div aria-label='title' className='pt-2'>
         <div>
           <h2 className='fw-bold pb-0'>Cửa hàng phổ biến</h2>
           <p className='pt-0'>Khám phá các doanh nghiệp thịnh hành đang phát triển trực tuyến</p>
         </div>
       </div>
-      <div aria-label='popular-shop' className='row'>
+      <div aria-label='popular-shop' className=''>
         <div aria-label='shop-item-wrapper' className=''>
-          {shopsByCategory.map(function (shopRow, index) {
-            if (index === 0) {
-              return <ShopRow key={index} isFirst shopList={shopRow}></ShopRow>;
-            } else {
-              return <ShopRow key={index} shopList={shopRow}></ShopRow>;
-            }
-          })}
+          {shopsByCategory?.length ? (
+            <>
+              <div className='d-flex flex-column align-items-center'>
+                <div>
+                  <table className='table w-100 table-borderless' style={{ border: '' }}>
+                    <thead className=''>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                    </thead>
+                    <tbody>
+                      {shopsByCategory.map(function (shopRow, index) {
+                        return (
+                          <tr key={index}>
+                            {shopRow.map(function (shop, index) {
+                              return (
+                                <td key={index} style={{ width: `${100 / numOfShopsInRow}%` }}>
+                                  <Shop key={shop.id} isFirst={index === 0} imgSrc={'/assets/commons/no-shop-img.svg'} shopData={shop} />
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className='my-3 text-center'>
+              <span className='fst-italic'>Hiện tại chưa có cửa hàng nào bán các sản phẩm thuộc danh mục này</span>
+            </div>
+          )}
           <hr className='hr' style={{ color: '#E7E8E9' }} />
         </div>
       </div>

@@ -286,7 +286,7 @@ const HomeV2Page = () => {
 
   console.info('searchRecords', records);
   return (
-    <div className='container-fluid mt-0 mb-5'>
+    <div className='container-fluid mt-2 mb-5'>
       <div className='mb-4'>
         <div className='d-flex justify-content-center align-items-center'>
           <h1 className='fw-bold text-center'>

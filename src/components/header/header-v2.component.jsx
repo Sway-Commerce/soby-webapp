@@ -35,7 +35,7 @@ const Header = ({ history }) => {
 
   return (
     <div className='container-fluid p-0'>
-      <div className='d-flex justify-content-center align-items-center bg-white mb-2' style={{ height: '64px' }}>
+      <div className='d-flex justify-content-center align-items-center bg-white mb-0' style={{ height: '64px' }}>
         <div className='d-flex p-0' style={{ width: '1200px', height: '100%' }}>
           <div className='d-flex justify-content-start align-items-center' style={{ width: '12%' }}>
             <Link to='/'>

@@ -11,6 +11,7 @@ import MainLayoutRoutes from 'routes/MainLayoutRoutes';
 import BlankLayoutRoutes from 'routes/BlankLayoutRoutes';
 import CreateSellerLayoutRoutes from 'routes/CreateSellerLayoutRoutes';
 import { useSelector } from 'react-redux';
+import ShopProfileLayoutRoutes from 'routes/ShopProfileLayoutRoutes';
 
 const theme = {
   primary: '#2B74E4',
@@ -73,7 +74,7 @@ const App = () => {
               <MainLayoutRoutes exact path='/' component={HomeV2Page} />
               <MainLayoutRoutes exact path='/explore' component={ExploreMainShopPage} />
               <MainLayoutRoutes exact path='/explore/:categoryId' component={ExploreShopByCategoryPage} />
-              <MainLayoutRoutes exact path='/shop-profile/:shopId' component={ShopProfileV2Page} />
+              <ShopProfileLayoutRoutes exact path='/shop-profile/:shopId' component={ShopProfileV2Page} />
               <BlankLayoutRoutes exact path='/phone-signin' component={PhoneSignin} />
               <BlankLayoutRoutes exact path='/phone-verification' component={PhoneVerification} />
               <BlankLayoutRoutes exact path='/signup' component={SignUpInfo} />

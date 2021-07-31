@@ -64,7 +64,7 @@ const ShopItem = ({ shop, ...rest }) => {
 
   return (
     <>
-      <Link to={``}>
+      <Link to={`shop-profile/${id}`}>
         <div
           className='d-flex flex-row justify-content-center align-items-center rounded p-1'
           style={{ width: '100%', backgroundColor: isMouseEnter && 'rgba(91,204,250,.3)', opacity: '.9' }}
