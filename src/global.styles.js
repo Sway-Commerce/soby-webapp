@@ -28,7 +28,7 @@ export const GlobalStyle = createGlobalStyle`
 		font-family: 'Inter', sans-serif;
 		font-weight: regular;
 		line-height: 1rem;
-		font-size: .875rem;
+		font-size: 14px;
 		color: #3D494B;
 		.body-container {
 			width: 1200px;
@@ -74,19 +74,19 @@ export const GlobalStyle = createGlobalStyle`
 		color: #0D1B1E;
 	}
 	h1 {
-		font-size: 2.5rem; // 40px
+		font-size: 40px; // 40px
 	}
 	h2 {
-		font-size: 2rem; // 32px
+		font-size: 32px; // 32px
 	}
 	h3 {
-		font-size: 1.5rem; // 24px
+		font-size: 24px; // 24px
 	}
 	h4 {
-		font-size: 1.25rem; // 20px
+		font-size: 20px; // 20px
 	}
 	h5 {
-		font-size: 1rem; // 16px
+		font-size: 16px; // 16px
 	}
 
 	a {
@@ -101,8 +101,12 @@ export const GlobalStyle = createGlobalStyle`
 	p, a {
 		font-style: normal;
 		font-weight: 400;
-		font-size: 0.875rem;
-		line-height: 1.25rem;
+		font-size: 14px;
+		line-height: 20px;
+	}
+
+	span {
+		font-size: 14px; // 14px
 	}
 
 	// will remove later

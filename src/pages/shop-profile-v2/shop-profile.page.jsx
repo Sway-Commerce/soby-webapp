@@ -332,11 +332,10 @@ const ShopProfileV2Page = () => {
       <div className='container-fluid mb-5' style={{ filter: background && 'blur(3px)' }}>
         <SharedBreadcrumb breadcrumbs={breadcrumbs} />
 
-        <Link to={{ pathname: `/product/testId`, state: { background: location } }}>view product</Link>
         <div className='row mt-3 justify-content-center py-2'>
           <div className='col-2 p-0'>
-            <div className=''>
-              <div className='bg-white border' style={{ width: '160px', height: '160px' }}>
+            <div className='d-flex'>
+              <div className='bg-white border'>
                 <img className='avatar' style={{ width: '160px', height: '160px' }} src={shopInfo.logoUrl} alt='' />
               </div>
             </div>
@@ -353,25 +352,25 @@ const ShopProfileV2Page = () => {
                   let imgPath = '';
                   switch (x.type) {
                     case 'FACEBOOK':
-                      imgPath = '/assets/facebook.svg';
+                      imgPath = '/assets/shopChannels/facebook.svg';
                       break;
                     case 'INSTAGRAM':
-                      imgPath = '/assets/instagram-icon.svg';
+                      imgPath = '/assets/shopChannels/instagram.svg';
                       break;
                     case 'TIKTOK':
-                      imgPath = '/assets/instagram-icon.svg';
+                      imgPath = '/assets/shopChannels/tiktok.svg';
                       break;
                     case 'ZALO':
-                      imgPath = '/assets/instagram-icon.svg';
+                      imgPath = '/assets/shopChannels/zalo.svg';
                       break;
                     case 'SHOPEE':
-                      imgPath = '/assets/instagram-icon.svg';
+                      imgPath = '/assets/shopChannels/shopee.svg';
                       break;
-                    case 'LAZADA':
-                      imgPath = '/assets/instagram-icon.svg';
+                    case 'WEBSITE':
+                      imgPath = '/assets/shopChannels/website.svg';
                       break;
                     default:
-                      imgPath = '/assets/instagram-icon.svg';
+                      imgPath = '/assets/shopChannels/.svg';
                       break;
                   }
                   return <ChannelIconLink url={x.url} imgSrc={imgPath} />;
@@ -432,14 +431,14 @@ const ShopProfileV2Page = () => {
         </div>
         <div className='row mt-3 justify-content-between'>
           <div className='' style={{ width: '73%' }}>
-            <div className='row bg-white'>
+            {/* <div className='row bg-white'>
               <div className='border py-2'>
                 <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
                   Khuyến mãi
                 </h5>
                 <Promotion></Promotion>
               </div>
-            </div>
+            </div> */}
             <div className='row bg-white mt-3'>
               <div className='border py-2'>
                 <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
@@ -486,7 +485,6 @@ const ShopProfileV2Page = () => {
                     <span className='fst-italic'>Hiện tại cửa hàng này chưa có sản phẩm</span>
                   </div>
                 )}
-        
               </div>
             </div>
           </div>
@@ -496,7 +494,7 @@ const ShopProfileV2Page = () => {
                 <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
                   Giới thiệu
                 </h5>
-                <p className='mt-2' style={{ fontSize: '14px' }}>
+                <p className='mt-2' style={{ fontSize: '' }}>
                   {shopInfo.description}
                 </p>
               </div>
@@ -505,12 +503,36 @@ const ShopProfileV2Page = () => {
                   Thông tin liên hệ
                 </h5>
                 <div className='mt-2 px-2'>
-                  <ContactRow
-                    bold
-                    imgSrc='/assets/phone-outline-black.svg'
-                    value={formatPhoneNumberIntl(`${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`)}
-                  ></ContactRow>
-                  <ContactRow imgSrc='/assets/email-outline-black.svg' value={shopInfo.email}></ContactRow>
+                  <table className='table'>
+                    <thead>
+                      <th style={{ width: '40px' }}></th>
+                      <th></th>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <SVG
+                            src={toAbsoluteUrl('/assets/commons/phone-outline.svg')}
+                            style={{ width: '19px', height: '19px', marginTop: '-1px', fill: '#0D1B1E' }}
+                          ></SVG>
+                        </td>
+                        <td>
+                          <span className='fw-bold'>{formatPhoneNumberIntl(`${shopInfo.phoneCountryCode}${shopInfo.phoneNumber}`)}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <SVG
+                            src={toAbsoluteUrl('/assets/commons/email-outline.svg')}
+                            style={{ width: '19px', height: '19px', marginTop: '-1px', fill: '#0D1B1E' }}
+                          ></SVG>
+                        </td>
+                        <td>
+                          <span className=''>{shopInfo.email}</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
               <div className='mt-2 py-2'>
@@ -518,33 +540,51 @@ const ShopProfileV2Page = () => {
                   Kênh
                 </h5>
                 <div className='mt-2 px-2'>
-                  {shopInfo.shopUrls.map((x) => {
-                    let imgPath = '';
-                    switch (x.type) {
-                      case 'FACEBOOK':
-                        imgPath = '/assets/facebook.svg';
-                        break;
-                      case 'INSTAGRAM':
-                        imgPath = '/assets/instagram-icon.svg';
-                        break;
-                      case 'TIKTOK':
-                        imgPath = '/assets/instagram-icon.svg';
-                        break;
-                      case 'ZALO':
-                        imgPath = '/assets/instagram-icon.svg';
-                        break;
-                      case 'SHOPEE':
-                        imgPath = '/assets/instagram-icon.svg';
-                        break;
-                      case 'LAZADA':
-                        imgPath = '/assets/instagram-icon.svg';
-                        break;
-                      default:
-                        imgPath = '/assets/instagram-icon.svg';
-                        break;
-                    }
-                    return <ChannelRow imgSrc={imgPath} value={x.url}></ChannelRow>;
-                  })}
+                  <table className='table'>
+                    <thead>
+                      <th style={{ width: '40px' }}></th>
+                      <th></th>
+                    </thead>
+                    <tbody>
+                      {shopInfo.shopUrls.map((x) => {
+                        console.info('shopdata', x);
+                        let imgPath = '';
+                        switch (x.type) {
+                          case 'FACEBOOK':
+                            imgPath = '/assets/shopChannels/facebook.svg';
+                            break;
+                          case 'INSTAGRAM':
+                            imgPath = '/assets/shopChannels/instagram.svg';
+                            break;
+                          case 'TIKTOK':
+                            imgPath = '/assets/shopChannels/tiktok.svg';
+                            break;
+                          case 'ZALO':
+                            imgPath = '/assets/shopChannels/zalo.svg';
+                            break;
+                          case 'SHOPEE':
+                            imgPath = '/assets/shopChannels/shopee.svg';
+                            break;
+                          case 'WEBSITE':
+                            imgPath = '/assets/shopChannels/website.svg';
+                            break;
+                          default:
+                            imgPath = '/assets/shopChannels/.svg';
+                            break;
+                        }
+                        return (
+                          <tr>
+                            <td>
+                              <SVG src={toAbsoluteUrl(imgPath)} style={{ width: '24px', height: '24px', marginTop: '-2px' }}></SVG>
+                            </td>
+                            <td>
+                              <span className=''>{x.url}</span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               </div>
               <div className='mt-2 py-2'>
