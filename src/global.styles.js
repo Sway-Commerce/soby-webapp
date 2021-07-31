@@ -15,22 +15,21 @@ import {
 
 export const GlobalStyle = createGlobalStyle`
 	html {
-		font-size: 20px;
+		font-size: 1.25rem;
+		scroll-behavior: smooth;
 		@media screen and (max-width: 1024px) {
-			font-size: 18px;
+			font-size: 1.125rem;
 		}
 		@media screen and (max-width: 785px) {
-			font-size: 16px;
+			font-size: 1rem;
 		}
 	}
 	body {
-		font-family: 'Roboto', sans-serif;
+		font-family: 'Inter', sans-serif;
 		font-weight: regular;
-		line-height: 24px;
-		font-size: .8rem;
-		color: #000000;
-		// background-color: #F2F2F2;
-		background-color: ${whiteColor};
+		line-height: 1rem;
+		font-size: .875rem;
+		color: #3D494B;
 		.body-container {
 			width: 1200px;
 			min-height: 100vh;
@@ -51,20 +50,18 @@ export const GlobalStyle = createGlobalStyle`
 			}
 		}
 		 ::-webkit-scrollbar {
-				width: 5px;
-				height: 10px;
+				width: .3rem;
+				height: .3rem;
 			}
 			::-webkit-scrollbar-thumb {
-				background: #927fff;
+				background: rgba(0,0,0,.3);
 				border-radius: 30px;
 			}
 			::-webkit-scrollbar-thumb:hover {
-				background: #725cfd;
+				background: #rgba(0,0,0,.7);
 			}
 			::-webkit-scrollbar-track {
-				background: #ffffff;
 				border-radius: 0px;
-				box-shadow: inset 0px 0px 0px 0px #f0f0f0;
 			}
 		@media screen and (max-width: 1200px) {
 			.body-container {
@@ -73,66 +70,45 @@ export const GlobalStyle = createGlobalStyle`
 			}
 		}
 	}
-
+	h1,h2,h3,h4,h5,h6 {
+		color: #0D1B1E;
+	}
+	h1 {
+		font-size: 2.5rem; // 40px
+	}
 	h2 {
-		font-size: 1.2rem;
+		font-size: 2rem; // 32px
 	}
-
 	h3 {
-		font-size: 1rem;
+		font-size: 1.5rem; // 24px
 	}
-
+	h4 {
+		font-size: 1.25rem; // 20px
+	}
 	h5 {
-		font-size: 0.8rem;
+		font-size: 1rem; // 16px
 	}
 
 	a {
 		text-decoration: none;
-		color: black;
+		color: #000000;
 	}
-
-	html {
-		scroll-behavior: smooth;
-	}
-
-	// button:hover {
-	// 	cursor: pointer;
-	// }
-
-	// body::-webkit-scrollbar {
-	// 	width: 12px;
-	// }
-
-	// body::-webkit-scrollbar-track {
-	// 	box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-	// }
-
-	// body::-webkit-scrollbar-thumb {
-	// 	background-color: darkgrey;
-	// 	outline: 1px solid slategrey;
-	// }
-
 	* {
 		margin: 0;
 		padding: 0;
 	}
-
-	button:focus, button {
-		outline: none;
+	
+	p, a {
+		font-style: normal;
+		font-weight: 400;
+		font-size: 0.875rem;
+		line-height: 1.25rem;
 	}
 
+	// will remove later
 	.primary-color {
 		color: ${mainColor};
 	}
-
-	.secondary-color {
-		color: white;
-	}
-
-	.sub-color {
-		color: ${subColor};
-	}
-
 	.body-color {
 		color: ${bodyColor};
 	}
@@ -178,12 +154,6 @@ export const GlobalStyle = createGlobalStyle`
 		margin-bottom: 1.2rem;
 	}
 
-	p, a {
-		font-style: normal;
-		font-weight: normal;
-		font-size: 0.8rem;
-		line-height: 1.3rem;
-	}
 
 	.Soby__dropdown {
 		font-size: 0.8rem;
@@ -217,11 +187,6 @@ export const GlobalStyle = createGlobalStyle`
 	.text-right {
 		text-align: right;
 	}
-
-	input {
-		margin-top: 4px;
-	}
-
 	p.error-title {
 		color: red;
   	margin: 5px 0;
@@ -386,13 +351,5 @@ export const GlobalStyle = createGlobalStyle`
 
 	.fs-14 {
 		font-size: 0.7rem;
-	}
-
-	.mg-t-30 {
-		margin-top: 1.5rem;
-	}
-
-	.fw-normal {
-		font-weight: normal;
 	}
 `;

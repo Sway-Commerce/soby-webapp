@@ -3,13 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  createHttpLink,
-  ApolloLink,
-} from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink, ApolloLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { createBrowserHistory } from 'history';
@@ -31,19 +25,13 @@ const getNewToken = () => {
       variables: { cmd: { signature } },
     })
     .then(({ data }) => {
-      store.dispatch(
-        setAccessToken(data?.loginWithSignature?.data?.accessToken)
-      );
+      store.dispatch(setAccessToken(data?.loginWithSignature?.data?.accessToken));
     });
 };
 
 const link = ApolloLink.from([
   onError(({ graphQLErrors, networkError }) => {
-    if (
-      graphQLErrors.some(
-        (x) => x.extensions.code === HttpStatusCode.Unauthorized
-      )
-    ) {
+    if (graphQLErrors.some((x) => x.extensions.code === HttpStatusCode.Unauthorized)) {
       if (!window.location.pathname.includes('phone-signin')) {
         sessionStorage.setItem('redirectUrl', window.location.pathname);
         window.location.href = '/phone-signin';
@@ -91,11 +79,11 @@ history.listen((location) => {
 ReactDOM.render(
   <ApolloProvider client={client}>
     <Provider store={store}>
-      <BrowserRouter>
-        <PersistGate persistor={persistor}>
+      <PersistGate persistor={persistor}>
+        <BrowserRouter>
           <App />
-        </PersistGate>
-      </BrowserRouter>
+        </BrowserRouter>
+      </PersistGate>
     </Provider>
   </ApolloProvider>,
   document.getElementById('root')

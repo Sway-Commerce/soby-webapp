@@ -1,13 +1,15 @@
 import React, { lazy, Suspense } from 'react';
-import { Switch, Route, useLocation } from 'react-router-dom';
+import { Switch, Route, useLocation, BrowserRouter as Router, useHistory } from 'react-router-dom';
 import 'react-phone-number-input/style.css';
 
 import { GlobalStyle } from './global.styles';
 import { ThemeProvider } from 'styled-components';
+import MainLayoutRoute from 'layouts/main.layout';
+import CustomLayout from 'layouts/custom.layout';
 
 import Header from 'components/header/header.component';
 import Spinner from 'components/ui/spinner/spinner.component';
-import JwtRoute from './jwt-route';
+import JwtRoute from 'jwt-route';
 import ErrorBoundary from 'components/error-boundary/error-boundary.component';
 import FooterSection from 'components/footer/footer.component';
 
@@ -46,50 +48,50 @@ const ShopProfileV2Page = lazy(() => import('pages/shop-profile-v2/shop-profile.
 const ExploreShopByCategoryPage = lazy(() => import('pages/explore/explore-shop-by-category.page'));
 
 const App = () => {
+  const history = useHistory();
   const location = useLocation();
   let background = location?.state?.background;
-  console.info('locationAppp', location);
+  console.info('locationMainLayout', location);
+
   return (
     <ThemeProvider theme={theme}>
-      <Header />
       <GlobalStyle />
-      <div className='body-container'>
-        <Switch location={background || location}>
-          <ErrorBoundary>
-            <Suspense fallback={<Spinner />}>
-              <Route exact path='/' component={HomePage} />
-              <Route exact path='/explore' component={ExploreMainShopPage} />
-              <Route exact path='/explore/:categoryId' component={ExploreShopByCategoryPage} />
-              <Route exact path='/shop-profile/:shopId' component={ShopProfileV2Page} />
-              {/* <Route path='/shop-profile/:shopId' component={ShopProfile} /> */}
-              <JwtRoute exact path='/create-seller' component={CreateSellerPage} />
-              <Route path='/phone-signin' component={PhoneSignin} />
-              <Route exact path='/phone-verification' component={PhoneVerification} />
-              <Route exact path='/signup' component={SignUpInfo} />
-              <Route exact path='/signup-info' component={SignUpPhone} />
-              <Route path='/invoice/:invoiceId' component={Invoice} />
-              <Route path='/your-invoice/:invoiceId' component={YourInvoice} />
-              <JwtRoute path='/edit-profile' component={EditProfile} />
-              <JwtRoute path='/change-password' component={ChangePassword} />
-              <Route path='/search-result' component={SearchResult} />
-              {/* <Route path='/product/:productId' component={ProductDetail} /> */}
-              <Route exact path='/product/:productId' children={<ShopProfileV2Page />} />
-              <JwtRoute path='/your-transaction' component={YourTransaction} />
-              <JwtRoute path='/individual-profile' component={IndividualProfile} />
-              <JwtRoute path='/individual-shipping' component={IndividualShipping} />
-              <Route path='/transaction/vnpay-return' component={PaymentResult} />
-              <Route path='/transaction/vnpay-mobile' component={MobilePaymentResult} />
-              <Route path='/transaction/payme-success' component={PaymeSuccess} />
-              <Route path='/transaction/payme-fail' component={PaymeFail} />
-              <JwtRoute path='/create-seller-success' component={CreateSellerSuccessPage} />
-              <JwtRoute path='/return-request/:invoiceId' component={ReturnRequestPage} />
-              <JwtRoute path='/return-request' exact component={ReturnRequestList} />
-              <JwtRoute path='/return-info/:assessId/:requestId' exact component={ReturnRequestInfo} />
-            </Suspense>
-          </ErrorBoundary>
-        </Switch>
-      </div>
-      <FooterSection />
+      <ErrorBoundary>
+        <Suspense fallback={<Spinner />}>
+          <Switch location={background || location}>
+            <MainLayoutRoute exact path='/' component={HomePage} />
+            <MainLayoutRoute exact path='/explore' component={ExploreMainShopPage} />
+            <MainLayoutRoute exact path='/explore/:categoryId' component={ExploreShopByCategoryPage} />
+            <MainLayoutRoute exact path='/shop-profile/:shopId' component={ShopProfileV2Page} />
+            {/* <Route path='/shop-profile/:shopId' component={ShopProfile} /> */}
+            {/* <Route path='/product/:productId' component={ProductDetail} /> */}
+            <MainLayoutRoute exact path='/product/:productId' children={<ShopProfileV2Page />} />
+            <MainLayoutRoute exact path='/search-result' component={SearchResult} />
+
+            <MainLayoutRoute exact path='/phone-signin' component={PhoneSignin} />
+            <MainLayoutRoute exact path='/phone-verification' component={PhoneVerification} />
+            <MainLayoutRoute exact path='/signup' component={SignUpInfo} />
+            <MainLayoutRoute exact path='/signup-info' component={SignUpPhone} />
+            <MainLayoutRoute exact path='/invoice/:invoiceId' component={Invoice} />
+            <MainLayoutRoute exact path='/your-invoice/:invoiceId' component={YourInvoice} />
+            <MainLayoutRoute exact path='/transaction/vnpay-return' component={PaymentResult} />
+            <MainLayoutRoute exact path='/transaction/vnpay-mobile' component={MobilePaymentResult} />
+            <MainLayoutRoute exact path='/transaction/payme-success' component={PaymeSuccess} />
+            <MainLayoutRoute exact path='/transaction/payme-fail' component={PaymeFail} />
+
+            <MainLayoutRoute isAuthorized exact path='/create-seller' component={CreateSellerPage} />
+            <MainLayoutRoute isAuthorized exact path='/edit-profile' component={EditProfile} />
+            <MainLayoutRoute isAuthorized exact path='/change-password' component={ChangePassword} />
+            <MainLayoutRoute isAuthorized exact path='/your-transaction' component={YourTransaction} />
+            <MainLayoutRoute isAuthorized exact path='/individual-profile' component={IndividualProfile} />
+            <MainLayoutRoute isAuthorized exact path='/individual-shipping' component={IndividualShipping} />
+            <MainLayoutRoute isAuthorized exact path='/create-seller-success' component={CreateSellerSuccessPage} />
+            <MainLayoutRoute isAuthorized exact path='/return-request/:invoiceId' component={ReturnRequestPage} />
+            <MainLayoutRoute isAuthorized exact path='/return-request' component={ReturnRequestList} />
+            <MainLayoutRoute isAuthorized exact path='/return-info/:assessId/:requestId' component={ReturnRequestInfo} />
+          </Switch>
+        </Suspense>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 };

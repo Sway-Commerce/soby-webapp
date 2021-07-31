@@ -23,6 +23,7 @@ import { getColor } from 'shared/constants/shop.constant';
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { borderColor } from 'shared/css-variable/variable';
+import MainLayoutRoute from 'layouts/main.layout';
 
 const ProductDetailV2Page = lazy(() => import('pages/product-detail-modal/product-detail.page'));
 
@@ -318,7 +319,7 @@ const ShopProfileV2Page = () => {
     <Spinner />
   ) : (
     <>
-      <Route exact path='/product/:productId' children={<ProductDetailV2Page />} />
+      <MainLayoutRoute exact path='/product/:productId' children={<ProductDetailV2Page />} />
       <div className='container-fluid mb-5' style={{ filter: background && 'blur(3px)' }}>
         <SharedBreadcrumb breadcrumbs={breadcrumbs} />
 
