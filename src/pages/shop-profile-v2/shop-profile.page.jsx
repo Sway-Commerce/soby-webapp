@@ -116,7 +116,7 @@ const Promotion = function ({ ...props }) {
 };
 
 const Product = function ({ ...props }) {
-  const { imgSrc, productId } = props;
+  const { imgSrc, productId, isFirst } = props;
   return (
     <div
       key={productId}
@@ -124,7 +124,7 @@ const Product = function ({ ...props }) {
         window.location = `/product/${productId}`;
       }}
       className=''
-      style={{ width: '190px', height: '190px', borderColor: 'black' }}
+      // style={{ width: '190px', height: '190px', borderColor: 'black', marginLeft: !isFirst && '1.25rem' }}
     >
       <img src={imgSrc} style={{ width: '190px', height: '190px' }} />
     </div>
@@ -134,9 +134,9 @@ const Product = function ({ ...props }) {
 const ProductRow = function ({ ...props }) {
   const { products } = props;
   return (
-    <div className='d-flex flex-wrap mt-3 justify-content-between'>
-      {products.map((product) => {
-        return <Product imgSrc={product.imageUrls[0]} productId={product.id} />;
+    <div className='d-flex flex-wrap mt-3 align-items-center justify-content-start'>
+      {products.map((product, index) => {
+        return <Product isFirst={index === 0} imgSrc={product.imageUrls[0]} productId={product.id} />;
       })}
     </div>
   );
@@ -174,12 +174,15 @@ const ChannelRow = function ({ ...props }) {
 
 const ShopProfileV2Page = () => {
   const location = useLocation();
+  const history = useHistory();
 
   console.info('locationShop', location);
   const background = location?.state?.background;
   const { shopId } = useParams();
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState('');
+  const [shopProducts, setShopProducts] = useState([]);
+  const [numOfProductsInRow, setNumOfProductsInRow] = useState(4);
   const [shopInfo, setShopInfo] = useState({
     name: '',
     phoneCountryCode: '',
@@ -309,6 +312,13 @@ const ShopProfileV2Page = () => {
         ...shopInfo,
         records: productData?.searchProduct?.data?.records,
       });
+
+      let shopProductData = [...productData?.searchProduct?.data?.records];
+      let tempArr = [];
+      while (shopProductData.length > 0) {
+        tempArr.push(shopProductData.splice(0, numOfProductsInRow));
+      }
+      setShopProducts(tempArr);
     }
   }, [productData?.searchProduct?.data]);
 
@@ -435,18 +445,48 @@ const ShopProfileV2Page = () => {
                 <h5 className='fw-bold m-0' style={{ fontSize: '20px' }}>
                   Sản phẩm
                 </h5>
-                <ProductRow products={shopInfo.records.slice().splice(0, 4)} />
-                <ProductRow products={shopInfo.records.slice().splice(4, 8)} />
-                <div className='d-flex justify-content-center align-items-center'>
-                  <button
-                    type='button'
-                    className='btn rounded-pill border px-3 align-items-center d-flex justify-content-center align-items-center fw-bold mt-3 mb-2'
-                    style={{ fontSize: '14px', height: '40px' }}
-                    onClick={function () {}}
-                  >
-                    <span>Xem thêm</span>
-                  </button>
-                </div>
+                {shopProducts?.length > 0 ? (
+                  <>
+                    <table className='table w-100 table-borderless' style={{ border: '' }}>
+                      <thead>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                      </thead>
+                      <tbody>
+                        {shopProducts.map(function (productRow, index) {
+                          return (
+                            <tr key={index}>
+                              {productRow.map(function (product, index) {
+                                return (
+                                  <td style={{ width: `${100 / numOfProductsInRow}%` }}>
+                                    <Product isFirst={index === 0} imgSrc={product.imageUrls[0]} productId={product.id} />
+                                  </td>
+                                );
+                              })}
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                    <div className='d-flex justify-content-center align-items-center'>
+                      <button
+                        type='button'
+                        className='btn rounded-pill border px-3 align-items-center d-flex justify-content-center align-items-center fw-bold mt-3 mb-2'
+                        style={{ fontSize: '14px', height: '40px' }}
+                        onClick={function () {}}
+                      >
+                        <span>Xem thêm</span>
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className='my-3 text-center'>
+                    <span className='fst-italic'>Hiện tại cửa hàng này chưa có sản phẩm</span>
+                  </div>
+                )}
+        
               </div>
             </div>
           </div>

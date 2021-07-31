@@ -23,7 +23,7 @@ const Shop = function ({ ...props }) {
   const { imgSrc, shopData, isFirst } = props;
   const score = shopData?.shopRank?.totalPoints / 10;
   return (
-    <Link className='' to={`/shop-profile/${shopData.id}`} style={{ marginLeft: !isFirst && '1.125rem' }}>
+    <Link className='' to={`/shop-profile/${shopData.id}`}>
       <div
         // onClick={() => {window.location = `/product/${shopId}`}}
         className='pb-2'
@@ -69,7 +69,6 @@ const ShopRow = function ({ ...props }) {
   return (
     <div className={`d-flex flex-wrap ${!isFirst && 'mt-4'}`}>
       {shopList?.map(function (shop, index) {
-        console.info(index);
         return <Shop key={shop.id} isFirst={index === 0} imgSrc={'/assets/commons/no-shop-img.svg'} shopData={shop} />;
       })}
     </div>
@@ -147,13 +146,39 @@ const ExploreShopByCategoryPage = () => {
       </div>
       <div aria-label='shops-by-category' className='row'>
         <div aria-label='shop-item-wrapper' className=''>
-          {shopsByCategory.map(function (shopRow, index) {
-            if (index === 0) {
-              return <ShopRow key={index} isFirst shopList={shopRow}></ShopRow>;
-            } else {
-              return <ShopRow key={index} shopList={shopRow}></ShopRow>;
-            }
-          })}
+          {shopsByCategory?.length ? (
+            <>
+              <table className='table w-100 table-borderless' style={{ border: '' }}>
+                <thead className=''>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  {shopsByCategory.map(function (shopRow, index) {
+                    return (
+                      <tr key={index}>
+                        {shopRow.map(function (shop, index) {
+                          return (
+                            <td style={{ width: `${100 / numOfShopsInRow}%` }}>
+                              <Shop key={shop.id} isFirst={index === 0} imgSrc={'/assets/commons/no-shop-img.svg'} shopData={shop} />
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </>
+          ) : (
+            <div className='my-3 text-center'>
+              <span className='fst-italic'>Hiện tại chưa có cửa hàng nào bán các sản phẩm thuộc danh mục này</span>
+            </div>
+          )}
+
           <hr className='hr' style={{ color: '#E7E8E9' }} />
         </div>
       </div>
