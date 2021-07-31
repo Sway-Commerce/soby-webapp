@@ -20,10 +20,10 @@ import ScrollContainer from 'react-indiana-drag-scroll';
 import { getColor } from 'shared/constants/shop.constant';
 
 const Shop = function ({ ...props }) {
-  const { imgSrc, shopData } = props;
+  const { imgSrc, shopData, isFirst } = props;
   const score = shopData?.shopRank?.totalPoints / 10;
   return (
-    <Link className='' to={`/shop-profile/${shopData.id}`}>
+    <Link className='' to={`/shop-profile/${shopData.id}`} style={{ marginLeft: !isFirst && '1.125rem' }}>
       <div
         // onClick={() => {window.location = `/product/${shopId}`}}
         className='pb-2'
@@ -67,9 +67,10 @@ const Shop = function ({ ...props }) {
 const ShopRow = function ({ ...props }) {
   const { isFirst, shopList } = props;
   return (
-    <div className={`d-flex flex-wrap justify-content-between ${!isFirst && 'mt-4'}`}>
-      {shopList?.map(function (shop) {
-        return <Shop key={shop.id} imgSrc={'/assets/commons/no-shop-img.svg'} shopData={shop} />;
+    <div className={`d-flex flex-wrap ${!isFirst && 'mt-4'}`}>
+      {shopList?.map(function (shop, index) {
+        console.info(index);
+        return <Shop key={shop.id} isFirst={index === 0} imgSrc={'/assets/commons/no-shop-img.svg'} shopData={shop} />;
       })}
     </div>
   );
