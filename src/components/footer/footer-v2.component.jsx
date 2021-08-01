@@ -51,7 +51,7 @@ const Footer = function () {
             </div>
           </div>
           <div className='d-flex justify-content-end align-items-center p-0' style={{ width: '30%', height: '100%' }}>
-            <div className='me-2'>
+            <div className='me-2' onClick={() => window.open('https://play.google.com/store/apps/details?id=com.vn.soby&ah=XEe68UIQAM9wiZLtLjBCsOqeHng')}>
               <SVG src={toAbsoluteUrl('/assets/commons/android-download.svg')} style={{ height: '44px' }}></SVG>
             </div>
             <div>
