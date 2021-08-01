@@ -32,7 +32,7 @@ export const GlobalStyle = createGlobalStyle`
 		color: #3D494B;
 		.body-container {
 			width: 1200px;
-			min-height: 100vh;
+			// min-height: 100vh;
 			margin: auto;
 			* {
 				box-sizing: border-box;

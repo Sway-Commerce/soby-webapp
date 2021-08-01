@@ -6,7 +6,7 @@ import SVG from 'react-inlinesvg';
 import phoneValidation from 'shared/utils/phoneValidation';
 import passwordValidation from 'shared/utils/passwordValidation';
 import emailValidation from 'shared/utils/emailValidation';
-import { toAbsoluteUrl } from '../../shared/utils/assetsHelper';
+import { toAbsoluteUrl } from 'shared/utils/assetsHelper';
 // import { SEARCH_AGGREGATED_SHOP } from 'graphQL/repository/shop.repository';
 import ErrorPopup from 'components/ui/error-popup/error-popup.component';
 import SobyModal from 'components/ui/modal/modal.component';
@@ -88,7 +88,8 @@ export function BasicInfo({ ...props }) {
           signingSecretKey,
           password,
         },
-        createSellerTabs.shopChannel.label
+        createSellerTabs.shopChannel.key,
+        { 1: { state: 'done' }, 2: { state: 'active' } }
       );
     }
   };
@@ -134,13 +135,9 @@ export function BasicInfo({ ...props }) {
             }}
           />
           {!isPasswordValid ? (
-            <p className='error-title'>
-              * Mật khẩu của bạn phải từ 8-20 kí tự, ít nhất 1 chữ cái, 1 chữ viết hoa, 1 chữ cái đặc biệt 
-            </p>
+            <p className='error-title'>* Mật khẩu của bạn phải từ 8-20 kí tự, ít nhất 1 chữ cái, 1 chữ viết hoa, 1 chữ cái đặc biệt</p>
           ) : (
-            <p className='fs-14'>
-              * Mật khẩu của bạn phải từ 8-20 kí tự, ít nhất 1 chữ cái, 1 chữ viết hoa, 1 chữ cái đặc biệt 
-            </p>
+            <p className='fs-14'>* Mật khẩu của bạn phải từ 8-20 kí tự, ít nhất 1 chữ cái, 1 chữ viết hoa, 1 chữ cái đặc biệt</p>
           )}
           <h4 className='fw-bold mt-4' style={{ fontSize: '20px' }}>
             Thông tin liên hệ
@@ -183,12 +180,16 @@ export function BasicInfo({ ...props }) {
           <div className='d-flex justify-content-center align-items-center'>
             <button
               type='button'
-              className='btn btn-primary rounded-pill px-3 align-items-center'
+              className='btn btn-primary rounded-pill d-flex justify-content-center px-3 align-items-center'
               style={{ fontSize: '14px', height: '40px' }}
               onClick={handleSubmit}
             >
               <span>Tiếp theo</span>
-              <SVG className='ms-2' src={toAbsoluteUrl('/assets/vector-right.svg')}></SVG>
+              <SVG
+                className='ms-1'
+                src={toAbsoluteUrl('/assets/commons/vector-right.svg')}
+                style={{ fill: '#ffffff', marginTop: '1px', width: '20px', height: '20px' }}
+              ></SVG>
             </button>
           </div>
         </div>

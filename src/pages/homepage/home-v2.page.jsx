@@ -134,10 +134,24 @@ const ResultSearchBox = styled.div`
   width: 600px;
   background-color: white;
   box-shadow: 4px 4px 16px 0px rgba(0, 0, 0, 0.16);
-  padding: 16px;
+  padding: 10px;
   max-height: 16rem;
   overflow-y: auto;
-  border-radius: 3px;
+  border-radius: 5px;
+  ::-webkit-scrollbar {
+    width: 0.3rem;
+    height: 0.3rem;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 30px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #rgba(0, 0, 0, 0.2);
+  }
+  ::-webkit-scrollbar-track {
+    border-radius: 0px;
+  }
 
   @media screen and (max-width: 768px) {
     width: calc(100vw - 48px);
@@ -169,7 +183,7 @@ const CategoryIcon = function ({ ...props }) {
 const CategoryItem = function ({ ...props }) {
   const { imgSrc, value, isFirst, bgColor, fill, stroke, border } = props;
   return (
-    <div className={''.concat(!isFirst && 'ms-3')} tabIndex={0}>
+    <div className={''.concat(!isFirst && 'ms-4')} tabIndex={0}>
       <div className='d-flex justify-content-center align-items-center'>
         <CategoryIcon imgSrc={imgSrc} bgColor={bgColor} fill={fill} stroke={stroke} border={border} />
       </div>
@@ -177,13 +191,23 @@ const CategoryItem = function ({ ...props }) {
         className='text-center mt-2'
         style={{ width: '72px', height: 'auto', wordWrap: 'break-word', fontSize: '12px', lineHeight: '1rem' }}
       >
-        <span className=''>{value}</span>
+        <span className='' style={{ color: '#3D494B' }}>
+          {value}
+        </span>
       </div>
     </div>
   );
 };
 
-const HomePage = () => {
+const DefaultCategoryList = [
+  { id: '203', bgColor: '#FFA800', fill: 'none', stroke: 'white' },
+  { id: '206', bgColor: '#5BCCFA', fill: 'white', stroke: 'none' },
+  { id: '208', bgColor: '#725CFD', fill: 'none', stroke: 'white' },
+  { id: '210', bgColor: '#AFDC10', fill: 'white', stroke: 'none' },
+  { id: '209', bgColor: '#FF70A6', fill: 'white', stroke: 'none' },
+];
+
+const HomeV2Page = () => {
   /* display: ${(props) =>
     !!props.searchResults.length ? 'flex' : 'none'}; ; */
   const [inputSearch, setInputSearch] = useState('');
@@ -262,117 +286,157 @@ const HomePage = () => {
 
   console.info('searchRecords', records);
   return (
-    <React.Fragment>
-      <Container>
-        <Row className='mb-5' headRow>
+    <div className='container-fluid mt-2 mb-5'>
+      <div className='mb-4'>
+        <div className='d-flex justify-content-center align-items-center'>
+          <h1 className='fw-bold text-center'>
+            Lựa chọn &amp; Mua sắm thông minh,
+            <br />
+            Tiết kiệm thời gian
+          </h1>
+        </div>
+      </div>
+      <div className='mb-4'>
+        <div className='d-flex justify-content-center align-items-center'>
+          <form onSubmit={handleSubmit}>
+            <div
+              aria-label='search-wrapper'
+              className='d-flex justify-content-center align-items-center p-0 rounded'
+              style={{ border: '2px #CFD1D2 solid', boxSizing: 'border-box' }}
+            >
+              <div>
+                <input
+                  type='text'
+                  name='inputSearch'
+                  value={inputSearch}
+                  onChange={handleChange}
+                  placeholder='Tìm kiếm sản phẩm, cửa hàng, danh mục ...'
+                  id='home-input'
+                  className='form-control'
+                  style={{
+                    width: '600px',
+                    height: '40px',
+                    border: '0px',
+                    fontSize: '16px',
+                    borderTopRightRadius: '0px',
+                    borderBottomRightRadius: '0px',
+                  }}
+                />
+              </div>
+              <div>
+                <button
+                  type='submit'
+                  className='btn d-flex justify-content-center align-items-center'
+                  style={{
+                    fontSize: '14px',
+                    height: '40px',
+                    width: '40px',
+                    borderLeft: '2px #CFD1D2 solid',
+                    borderTopLeftRadius: '0px',
+                    borderBottomLeftRadius: '0px',
+                  }}
+                >
+                  <div className=''>
+                    <SVG
+                      className=''
+                      src={toAbsoluteUrl('/assets/commons/search.svg')}
+                      style={{
+                        fill: '#0D1B1E',
+                        width: '20px',
+                        height: '20px',
+                      }}
+                    ></SVG>
+                  </div>
+                </button>
+              </div>
+            </div>
+            {!!recordsSuggest.length && (
+              <ResultSearchBox>
+                {recordsSuggest.map((shop) => (
+                  <ShopItem key={shop.id} shop={shop} className='' />
+                ))}
+              </ResultSearchBox>
+            )}
+          </form>
+        </div>
+      </div>
+      {/* <Row className='mb-5' headRow>
           <HeadHome>
             <p className='soby-welcome text-center'>
               Lựa chọn &amp; Mua sắm thông minh,
               <br />
               Tiết kiệm thời gian
             </p>
-            {/* <h3 className="fw-normal">
+            <h3 className="fw-normal">
               Find your trust Sellers and have safe transactions with Soby
-            </h3> */}
-            {/* <h3 className="fw-normal mobile-hide">
+            </h3>
+            <h3 className="fw-normal mobile-hide">
               Lorem ipsum dolor sit amet
-            </h3> */}
-            <Search className='mt-4' onSubmit={handleSubmit}>
-              <SearchInputContainer>
-                <FormInput
-                  type='text'
-                  name='inputSearch'
-                  value={inputSearch}
-                  onChange={handleChange}
-                  placeholder='Tìm kiếm sản phẩm, cửa hàng, danh mục ...'
-                  withoutTitle
-                  id='home-input'
-                />
-                <SearchIcon onClick={handleSubmit} className='mobile-btn clickable' />
-                {!!recordsSuggest.length && (
-                  <ResultSearchBox>
-                    {recordsSuggest.map((shop) => (
-                      <ShopItem key={shop.id} shop={shop} className='mg-b-16' />
-                    ))}
-                  </ResultSearchBox>
-                )}
-              </SearchInputContainer>
-
-              <CustomButton type='submit' className='main-btn'>
-                Search
-              </CustomButton>
-            </Search>
+            </h3>
+            
           </HeadHome>
-        </Row>
-        <div className='row'>
-          <div className='d-flex justify-content-center align-items-center mb-4'>
-            <span className=''>Xem Duyệt qua các cửa hàng theo nhiều danh mục hơn</span>
-          </div>
-          <div className='d-flex justify-content-center align-items-start'>
-            <Link to='/explore/203'>
-              <CategoryItem
-                value={categoryIconMapper[203].name}
-                bgColor='#FFA800'
-                imgSrc={categoryIconMapper[203].iconSrc}
-                isFirst
-                fill='none'
-                stroke='white'
-              />
-            </Link>
-            <Link to='/explore/206'>
-              <CategoryItem
-                value={categoryIconMapper[206].name}
-                bgColor='#5BCCFA'
-                imgSrc={categoryIconMapper[206].iconSrc}
-                fill='white'
-                stroke='none'
-              />
-            </Link>
-            <Link to='/explore/208'>
-              <CategoryItem
-                value={categoryIconMapper[208].name}
-                bgColor='#725CFD'
-                imgSrc={categoryIconMapper[208].iconSrc}
-                fill='none'
-                stroke='white'
-              />
-            </Link>
-            <Link to='/explore/210'>
-              <CategoryItem
-                value={categoryIconMapper[210].name}
-                bgColor='#AFDC10'
-                imgSrc={categoryIconMapper[210].iconSrc}
-                fill='white'
-                stroke='none'
-              />
-            </Link>
-            <Link to='/explore/209'>
-              <CategoryItem
-                value={categoryIconMapper[209].name}
-                bgColor='#FF70A6'
-                imgSrc={categoryIconMapper[209].iconSrc}
-                fill='white'
-                stroke='none'
-              />
-            </Link>
-            <Link to='/explore'>
-              <CategoryItem
-                value='Các mục khác'
-                bgColor='#FFFFFF'
-                imgSrc='/assets/commons/right-arrow.svg'
-                fill='#0D1B1E'
-                stroke='none'
-                border
-              />
-            </Link>
-          </div>
+        </Row> */}
+      {/* <Search className='mt-4' onSubmit={handleSubmit}>
+        <SearchInputContainer>
+          <FormInput
+            type='text'
+            name='inputSearch'
+            value={inputSearch}
+            onChange={handleChange}
+            placeholder='Tìm kiếm sản phẩm, cửa hàng, danh mục ...'
+            withoutTitle
+            id='home-input'
+          />
+          <SearchIcon onClick={handleSubmit} className='mobile-btn clickable' />
+          {!!recordsSuggest.length && (
+            <ResultSearchBox>
+              {recordsSuggest.map((shop) => (
+                <ShopItem key={shop.id} shop={shop} className='mg-b-16' />
+              ))}
+            </ResultSearchBox>
+          )}
+        </SearchInputContainer>
+
+        <CustomButton type='submit' className='main-btn'>
+          Search
+        </CustomButton>
+      </Search> */}
+      <div className=''>
+        <div className='d-flex justify-content-center align-items-center mb-3'>
+          <span className=''>Xem Duyệt qua các cửa hàng theo nhiều danh mục hơn</span>
         </div>
-      </Container>
+        <div className='d-flex justify-content-center align-items-start'>
+          {DefaultCategoryList.map(function (categoryItem, index) {
+            return (
+              <Link to={`/explore/${categoryItem.id}`}>
+                <CategoryItem
+                  value={categoryIconMapper[categoryItem.id].name}
+                  bgColor={categoryItem.bgColor}
+                  imgSrc={categoryIconMapper[categoryItem.id].iconSrc}
+                  isFirst={index === 0}
+                  fill={categoryItem.fill}
+                  stroke={categoryItem.stroke}
+                />
+              </Link>
+            );
+          })}
+          <Link to='/explore'>
+            <CategoryItem
+              value='Các mục khác'
+              bgColor='#FFFFFF'
+              imgSrc='/assets/commons/right-arrow.svg'
+              fill='#0D1B1E'
+              stroke='none'
+              border
+            />
+          </Link>
+        </div>
+      </div>
       <SobyModal open={open} setOpen={setOpen}>
         {formError ? <ErrorPopup content={formError} setOpen={setOpen} /> : null}
       </SobyModal>
-    </React.Fragment>
+    </div>
   );
 };
 
-export default HomePage;
+export default HomeV2Page;
