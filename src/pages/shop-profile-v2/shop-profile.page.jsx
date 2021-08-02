@@ -297,7 +297,7 @@ const ShopProfileV2Page = () => {
         <meta property='og:image' content={shopInfo.logoUrl} />
         <meta property='og:image:width' content='475' />
         <meta property='og:image:height' content='308' />
-        <meta property='og:image:type' content='image/jpg' />
+        {/* <meta property='og:image:type' content='image/jpg' /> */}
         <meta
           property='og:description'
           content={`${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
