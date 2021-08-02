@@ -313,6 +313,7 @@ const ShopProfileV2Page = () => {
           } `}
         />
         <meta property='twitter:image' content={shopInfo.logoUrl} />
+        <link rel="canonical" href={`${'http://dev.soby.vn/shop-profile/'.concat(shopId)}`} />
       </Helmet>
       <div
         className='container-fluid mb-0 p-0 d-flex flex-column align-items-center'
