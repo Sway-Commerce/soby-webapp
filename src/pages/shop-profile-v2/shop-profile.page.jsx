@@ -23,6 +23,7 @@ import { getColor } from 'shared/constants/shop.constant';
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { borderColor } from 'shared/css-variable/variable';
+import { Helmet } from 'react-helmet';
 
 const ProductDetailV2Page = lazy(() => import('pages/product-detail-modal/product-detail.page'));
 
@@ -285,6 +286,34 @@ const ShopProfileV2Page = () => {
     <Spinner />
   ) : (
     <>
+      <Helmet>
+        <meta property='og:url' content={`${'http://dev.soby.vn/shop-profile/'.concat(shopId)}`} />
+        <meta
+          property='og:title'
+          content={`${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
+            shopInfo.shopRank.rank.description
+          } `}
+        />
+        <meta property='og:image' content={shopInfo.logoUrl} />
+        <meta property='og:image:width' content='475' />
+        <meta property='og:image:height' content='308' />
+        <meta property='og:image:type' content='image/jpg' />
+        <meta
+          property='og:description'
+          content={`${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
+            shopInfo.shopRank.rank.description
+          } `}
+        />
+        <meta property='og:type' content='website' />
+        <meta name='twitter:card' content='summary_large_image' />
+        <meta
+          property='twitter:description'
+          content={`${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
+            shopInfo?.shopRank?.rank?.description
+          } `}
+        />
+        <meta property='twitter:image' content={shopInfo.logoUrl} />
+      </Helmet>
       <div
         className='container-fluid mb-0 p-0 d-flex flex-column align-items-center'
         style={{ filter: background && 'blur(5px)', minHeight: '100vh' }}
