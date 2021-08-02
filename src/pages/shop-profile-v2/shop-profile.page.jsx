@@ -286,53 +286,53 @@ const ShopProfileV2Page = () => {
     <Spinner />
   ) : (
     <>
-    
       <Helmet
-        defer={false}
+        defer={true}
         htmlAttributes={{ lang: 'en-US', prefix: 'og: https://ogp.me/ns#', 'xmlns:fb': 'http://www.facebook.com/2008/fbml' }}
-        meta={[]}
+        defaultTitle={`Cửa hàng ${shopInfo.name}`}
+        meta={[
+          {
+            name: 'description',
+            content: `${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
+              shopInfo.shopRank.rank.description
+            }`,
+          },
+          { property: 'og:url', content: `${'http://dev.soby.vn/shop-profile/'.concat(shopId)}` },
+          { property: 'og:type', content: `website` },
+          {
+            property: 'og:title',
+            content: `${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
+              shopInfo.shopRank.rank.description
+            }`,
+          },
+          {
+            property: 'og:description',
+            content: `${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
+              shopInfo.shopRank.rank.description
+            }`,
+          },
+          { property: 'og:image', content: `${shopInfo.logoUrl}` },
+          { property: 'og:image:width', content: `475` },
+          { property: 'og:image:height', content: `308` },
+          { name: 'twitter:card', content: `summary_large_image` },
+          { property: 'twitter:url', content: `${'http://dev.soby.vn/shop-profile/'.concat(shopId)}` },
+          {
+            name: 'twitter:title',
+            content: `${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
+              shopInfo.shopRank.rank.description
+            }`,
+          },
+          {
+            name: 'twitter:description',
+            content: `${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
+              shopInfo.shopRank.rank.description
+            }`,
+          },
+          { name: 'twitter:image', content: `${shopInfo.logoUrl}` },
+        ]}
         link={[]}
       >
-        <title>Cửa hàng {shopInfo.name}</title>
-        <meta
-          name='description'
-          content={`${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
-            shopInfo.shopRank.rank.description
-          } `}
-        />
-        <meta property='og:url' content={`${'http://dev.soby.vn/shop-profile/'.concat(shopId)}`} />
-        <meta property='og:type' content='website' />
-        <meta
-          property='og:title'
-          content={`${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
-            shopInfo.shopRank.rank.description
-          } `}
-        />
-        <meta
-          property='og:description'
-          content={`${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
-            shopInfo.shopRank.rank.description
-          } `}
-        />
-        <meta property='og:image' content={shopInfo.logoUrl} />
-        <meta property='og:image:width' content='475' />
-        <meta property='og:image:height' content='308' />
-
-        <meta name='twitter:card' content='summary_large_image' />
-        <meta property='twitter:url' content={`${'http://dev.soby.vn/shop-profile/'.concat(shopId)}`} />
-        <meta
-          name='twitter:title'
-          content={`${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
-            shopInfo.shopRank.rank.description
-          } `}
-        />
-        <meta
-          name='twitter:description'
-          content={`${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
-            shopInfo?.shopRank?.rank?.description
-          } `}
-        />
-        <meta name='twitter:image' content={shopInfo.logoUrl} />
+       
         <link rel='canonical' href={`${'http://dev.soby.vn/shop-profile/'.concat(shopId)}`} />
       </Helmet>
       <div
