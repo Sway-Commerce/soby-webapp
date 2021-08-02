@@ -291,10 +291,23 @@ const ShopProfileV2Page = () => {
         defer={false}
         htmlAttributes={{ lang: 'en-US', prefix: 'og: https://ogp.me/ns#', 'xmlns:fb': 'http://www.facebook.com/2008/fbml' }}
       >
-        <title>Cửa hàng ${shopInfo.name}</title>
+        <title>Cửa hàng {shopInfo.name}</title>
+        <meta
+          name='description'
+          content={`${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
+            shopInfo.shopRank.rank.description
+          } `}
+        />
         <meta property='og:url' content={`${'http://dev.soby.vn/shop-profile/'.concat(shopId)}`} />
+        <meta property='og:type' content='website' />
         <meta
           property='og:title'
+          content={`${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
+            shopInfo.shopRank.rank.description
+          } `}
+        />
+        <meta
+          property='og:description'
           content={`${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
             shopInfo.shopRank.rank.description
           } `}
@@ -302,15 +315,15 @@ const ShopProfileV2Page = () => {
         <meta property='og:image' content={shopInfo.logoUrl} />
         <meta property='og:image:width' content='475' />
         <meta property='og:image:height' content='308' />
-        {/* <meta property='og:image:type' content='image/jpg' /> */}
+
+        <meta name='twitter:card' content='summary_large_image' />
+        <meta property='twitter:url' content={`${'http://dev.soby.vn/shop-profile/'.concat(shopId)}`} />
         <meta
-          property='og:description'
+          name='twitter:title'
           content={`${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
             shopInfo.shopRank.rank.description
           } `}
         />
-        <meta property='og:type' content='website' />
-        <meta name='twitter:card' content='summary_large_image' />
         <meta
           name='twitter:description'
           content={`${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
