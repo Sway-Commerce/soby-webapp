@@ -287,6 +287,7 @@ const ShopProfileV2Page = () => {
   ) : (
     <>
       <Helmet>
+        <title>Cửa hàng ${shopInfo.name}</title>
         <meta property='og:url' content={`${'http://dev.soby.vn/shop-profile/'.concat(shopId)}`} />
         <meta
           property='og:title'
