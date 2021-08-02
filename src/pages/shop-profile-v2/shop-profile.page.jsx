@@ -23,7 +23,7 @@ import { getColor } from 'shared/constants/shop.constant';
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { borderColor } from 'shared/css-variable/variable';
-import { Helmet } from 'react-helmet';
+import { Helmet, canUseDOM } from 'react-helmet';
 
 const ProductDetailV2Page = lazy(() => import('pages/product-detail-modal/product-detail.page'));
 
@@ -286,10 +286,12 @@ const ShopProfileV2Page = () => {
     <Spinner />
   ) : (
     <>
+    
       <Helmet
-        async
         defer={false}
         htmlAttributes={{ lang: 'en-US', prefix: 'og: https://ogp.me/ns#', 'xmlns:fb': 'http://www.facebook.com/2008/fbml' }}
+        meta={[]}
+        link={[]}
       >
         <title>Cửa hàng {shopInfo.name}</title>
         <meta
