@@ -286,7 +286,11 @@ const ShopProfileV2Page = () => {
     <Spinner />
   ) : (
     <>
-      <Helmet>
+      <Helmet
+        async
+        defer={false}
+        htmlAttributes={{ lang: 'en-US', prefix: 'og: https://ogp.me/ns#', 'xmlns:fb': 'http://www.facebook.com/2008/fbml' }}
+      >
         <title>Cửa hàng ${shopInfo.name}</title>
         <meta property='og:url' content={`${'http://dev.soby.vn/shop-profile/'.concat(shopId)}`} />
         <meta
@@ -308,13 +312,13 @@ const ShopProfileV2Page = () => {
         <meta property='og:type' content='website' />
         <meta name='twitter:card' content='summary_large_image' />
         <meta
-          property='twitter:description'
+          name='twitter:description'
           content={`${shopInfo.name} - Điểm: ${shopInfo?.shopRank?.totalPoints ? shopInfo?.shopRank?.totalPoints / 10 : 0} - ${
             shopInfo?.shopRank?.rank?.description
           } `}
         />
-        <meta property='twitter:image' content={shopInfo.logoUrl} />
-        <link rel="canonical" href={`${'http://dev.soby.vn/shop-profile/'.concat(shopId)}`} />
+        <meta name='twitter:image' content={shopInfo.logoUrl} />
+        <link rel='canonical' href={`${'http://dev.soby.vn/shop-profile/'.concat(shopId)}`} />
       </Helmet>
       <div
         className='container-fluid mb-0 p-0 d-flex flex-column align-items-center'
