@@ -200,11 +200,11 @@ const CategoryItem = function ({ ...props }) {
 };
 
 const DefaultCategoryList = [
-  { id: '203', bgColor: '#FFA800', fill: 'none', stroke: 'white' },
-  { id: '206', bgColor: '#5BCCFA', fill: 'white', stroke: 'none' },
-  { id: '208', bgColor: '#725CFD', fill: 'none', stroke: 'white' },
-  { id: '210', bgColor: '#AFDC10', fill: 'white', stroke: 'none' },
-  { id: '209', bgColor: '#FF70A6', fill: 'white', stroke: 'none' },
+  { id: '203', bgColor: '#FFA800', fill: 'none', stroke: 'white'},
+  { id: '206', bgColor: '#5BCCFA', fill: 'white', stroke: 'none'},
+  { id: '208', bgColor: '#725CFD', fill: 'none', stroke: 'white'},
+  { id: '210', bgColor: '#AFDC10', fill: 'white', stroke: 'none'},
+  { id: '209', bgColor: '#FF70A6', fill: 'white', stroke: 'none'},
 ];
 
 const HomeV2Page = () => {
@@ -408,7 +408,7 @@ const HomeV2Page = () => {
         <div className='d-flex justify-content-center align-items-start'>
           {DefaultCategoryList.map(function (categoryItem, index) {
             return (
-              <Link to={`/explore/${categoryItem.id}`}>
+              <Link to={`/explore/${categoryIconMapper[categoryItem.id].name}`}>
                 <CategoryItem
                   value={categoryIconMapper[categoryItem.id].name}
                   bgColor={categoryItem.bgColor}

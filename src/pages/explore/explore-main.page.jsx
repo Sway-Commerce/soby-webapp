@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useContext, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useContext, useCallback } from 'react';
 import styled from 'styled-components';
 import { Link, useHistory } from 'react-router-dom';
+import { isScrollToTheBottom } from 'shared/utils/helper';
 import FormInput from 'components/form-input/form-input.component';
 import { ReactComponent as SearchIcon } from 'shared/assets/search-btn.svg';
 import { useQuery, useLazyQuery } from '@apollo/client';
@@ -147,6 +148,7 @@ const ShopRow = function ({ ...props }) {
 };
 
 const ExploreMainPage = () => {
+  const listRef = useRef();
   const [shopCategories, setShopCategories] = useState([]);
   const [shopsByCategory, setShopsByCategory] = useState([]);
   const [numOfShopsInRow, setNumOfShopsInRow] = useState(5);
@@ -163,7 +165,13 @@ const ExploreMainPage = () => {
     filters: [],
     queries: [],
     sorts: [],
+    total: 0
   });
+
+  const { filters, queries, sorts, page, pageSize } = query;
+
+  const [isLoadMore, setIsLoadMore] = useState(false);
+  const [canLoadMore, setCanLoadMore] = useState(true);
 
   const [getAllShopCategories, { loading: getAllShopCategoriesLoading, error: getAllShopCategoriesError, data: getAllShopCategoriesData }] =
     useLazyQuery(GET_ALL_SHOP_CATEGORIES);
@@ -199,27 +207,72 @@ const ExploreMainPage = () => {
     if (!shopsByCategory.length) {
       searchAggregatedShop({
         variables: {
-          query,
+          query: {
+            page,
+            pageSize,
+            filters,
+            queries,
+            sorts,
+          },
         },
       });
     }
   }, [query, searchAggregatedShop, shopsByCategory.length]);
 
   useEffect(() => {
-    if (searchAggregatedShopData?.searchAggregatedShop?.data) {
+    if (searchAggregatedShopData?.searchAggregatedShop?.data.records) {
       let shopCategoryData = [...searchAggregatedShopData?.searchAggregatedShop?.data?.records];
-      let tempArr = [];
-      while (shopCategoryData.length > 0) {
-        tempArr.push(shopCategoryData.splice(0, numOfShopsInRow));
+      if (isLoadMore && page) {
+        let tempArr = [];
+        tempArr.push([...shopsByCategory, ...shopCategoryData].splice(0, numOfShopsInRow))
+        setShopsByCategory(tempArr);
+      } else {
+        let tempArr = [];
+        while (shopCategoryData.length > 0) {
+          tempArr.push(shopCategoryData.splice(0, numOfShopsInRow));
+        }
+        setShopsByCategory(tempArr);
       }
-      setShopsByCategory(tempArr);
+      setCanLoadMore(searchAggregatedShopData?.searchAggregatedShop?.data.records == pageSize);
+      setQuery({
+        ...query,
+        total: searchAggregatedShopData?.searchAggregatedShop?.data?.total
+      })
     }
-  }, [numOfShopsInRow, searchAggregatedShopData?.searchAggregatedShop?.data]);
+  }, [numOfShopsInRow, searchAggregatedShopData?.searchAggregatedShop?.data.records]);
 
-  console.info('shopsByCategory', shopsByCategory);
+  useEffect(() => {
+    if (listRef && listRef.current) {
+      console.log("can scroll!")
+      const handleScroll = (event) => {
+        const needLoadMore = isScrollToTheBottom(event);
+        console.log(needLoadMore)
+        if (needLoadMore !== isLoadMore) {
+          setIsLoadMore(needLoadMore);
+        }
+      };
+      listRef.current.addEventListener('scroll', handleScroll, {
+        passive: true,
+      });
+
+      return () => {
+        listRef?.current?.removeEventListener('scroll', handleScroll, {
+          passive: true,
+        });
+      };
+    }
+  }, [listRef]);
+
+  useEffect(() => {
+    if (isLoadMore && canLoadMore) {
+      setQuery({ ...query, page: page + 1});
+    } else {
+      console.log("ERROR!")
+    }
+  }, [isLoadMore, canLoadMore]);
 
   return (
-    <div className='container-fluid mt-3 mb-5' style={{ minHeight: '100vh' }}>
+    <div className='container-fluid mt-3 mb-5' style={{ minHeight: '100vh' }} ref={listRef}>
       <SharedBreadcrumb breadcrumbs={breadcrumbs} />
 
       <div aria-label='title' className='row'>
@@ -231,7 +284,7 @@ const ExploreMainPage = () => {
         <ScrollContainer horizontal={true} vertical={false} className='d-flex'>
           {shopCategories.map(function (currCategory, index) {
             return (
-              <Link key={currCategory.id} to={`/explore/${currCategory.id}`}>
+              <Link key={currCategory.id} to={`/explore/${currCategory.name}`}>
                 <CategoryItem
                   imgSrc={categoryIconMapper[currCategory.id]?.iconSrc}
                   value={currCategory?.name}
@@ -266,7 +319,7 @@ const ExploreMainPage = () => {
                       <th></th>
                       <th></th>
                     </thead>
-                    <tbody>
+                    <div>
                       {shopsByCategory.map(function (shopRow, index) {
                         return (
                           <tr key={index}>
@@ -280,7 +333,7 @@ const ExploreMainPage = () => {
                           </tr>
                         );
                       })}
-                    </tbody>
+                    </div>
                   </table>
                 </div>
               </div>

@@ -89,7 +89,7 @@ const ExploreShopByCategoryPage = () => {
   const [query, setQuery] = useState({
     page: 0,
     pageSize: 6,
-    filters: [`categories.id:${categoryId}`],
+    filters: [`categories.name.keyword:${categoryId}`],
     queries: [],
     sorts: [],
   });
@@ -141,7 +141,7 @@ const ExploreShopByCategoryPage = () => {
       <SharedBreadcrumb breadcrumbs={breadcrumbs} />
       <div aria-label='title' className=''>
         <div>
-          <h1 className='fw-bold'>Khám phá cửa hàng</h1>
+          <h1 className='fw-bold'>{categoryId}</h1>
         </div>
       </div>
       <div aria-label='shops-by-category' className=''>
