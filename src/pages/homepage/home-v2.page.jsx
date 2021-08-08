@@ -290,9 +290,9 @@ const HomeV2Page = () => {
       <div className='mb-4'>
         <div className='d-flex justify-content-center align-items-center'>
           <h1 className='fw-bold text-center'>
-            Lựa chọn &amp; Mua sắm thông minh,
+            Mua sắm thông minh,
             <br />
-            Tiết kiệm thời gian
+            An toàn giao dịch
           </h1>
         </div>
       </div>

@@ -64,20 +64,20 @@ const Header = ({ history }) => {
                 </div>
               </div>
             </Link> */}
-            <a href='https://soby.vn/#what-is-soby' className='me-4'>
+            <a href='https://about.soby.vn/tap-chi/' className='me-4'>
               <div className='p-0'>
                 <div className='m-0' style={{ color: '#0D1B1E', fontSize: '14px' }}>
                   <span className=''>Soby là gì?</span>
                 </div>
               </div>
             </a>
-            <Link to={`${isSignIn ? '/individual-profile' : '/phone-signin'}`} className='me-2'>
+            {/* <Link to={`${isSignIn ? '/individual-profile' : '/phone-signin'}`} className='me-2'>
               <div className='p-0'>
                 <div className='m-0' style={{ color: '#0D1B1E', fontSize: '14px' }}>
                   <span className=''>Đơn hàng của tôi</span>
                 </div>
               </div>
-            </Link>
+            </Link> */}
             {isSignIn ? (
               <Link to='/individual-profile' className='me-2'>
                 <div className='p-0'>
@@ -112,7 +112,7 @@ const Header = ({ history }) => {
               </>
             )}
 
-            <Link to='/create-seller' className=''>
+            <a href = 'https://about.soby.vn' className=''>
               <div
                 className={`rounded-pill border px-3 align-items-center d-flex justify-content-center align-items-center`}
                 style={{
@@ -124,7 +124,7 @@ const Header = ({ history }) => {
               >
                 <span className='fw-bold'>Người bán</span>
               </div>
-            </Link>
+            </a>
           </div>
         </div>
       </div>

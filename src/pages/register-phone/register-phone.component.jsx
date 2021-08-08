@@ -128,6 +128,9 @@ const RegisterPhone = ({ history }) => {
   useEffect(() => {
     if (registerData?.register?.data?.id) {
       const signature = getSignature(signingPublicKey, signingSecret, password);
+      console.log("signing pub key is", signingPublicKey)
+      console.log("signing secret key is", signingSecret)
+      console.log("gen signature is", signature)
       setSignature(signature);
     }
   }, [registerData?.register?.data]);

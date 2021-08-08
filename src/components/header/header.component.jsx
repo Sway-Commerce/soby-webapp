@@ -177,14 +177,14 @@ export const Header = ({ history }) => {
         >
           {/* <OptionLink to={{ pathname: '/explore' }}>Khám phá</OptionLink>
           <OptionLink to={{ pathname: '/' }}>Chatbot</OptionLink> */}
-          <a href='https://soby.vn/#what-is-soby' style={{ padding: '10px 24px', cursor: 'pointer', color: `${defaultFontColor}` }}>
+          <a href='https://about.soby.vn/tap-chi/' style={{ padding: '10px 24px', cursor: 'pointer', color: `${defaultFontColor}` }}>
             Soby là gì?
           </a>
-          <OptionLink
+          {/* <OptionLink
             to={isSignIn ? '/your-transaction' : '/phone-signin'}>
             Đơn hàng của tôi
             <ArrowIcon />
-          </OptionLink>
+          </OptionLink> */}
           {isSignIn? (
             <Link to='/individual-profile'
             style={{ marginRight: '29px' }}>
@@ -203,9 +203,9 @@ export const Header = ({ history }) => {
               </SwitchBtn>
             </OptionLink>
           )}
-          <Link to='/create-seller'>
+          <a href='about.soby.vn'>
             <SwitchBtn type='button'>Người bán</SwitchBtn>
-          </Link>
+          </a>
 
           {
             //#region Old code

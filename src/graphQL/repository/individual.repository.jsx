@@ -184,6 +184,7 @@ export const getSignature = (signingPublicKey, signingSecret, password) => {
   signing.importPublicKey(signingPublicKey);
   signing.importPrivateKey(signingSecret, password);
 
+  console.log("generated jwt", generateJwt(signing))
   return generateJwt(signing);
 };
 
