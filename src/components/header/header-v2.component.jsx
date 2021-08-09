@@ -64,7 +64,7 @@ const Header = ({ history }) => {
                 </div>
               </div>
             </Link> */}
-            <a href='https://about.soby.vn/tap-chi/' className='me-4'>
+            <a href='https://about.soby.vn/?page_id=2225' className='me-4'>
               <div className='p-0'>
                 <div className='m-0' style={{ color: '#0D1B1E', fontSize: '14px' }}>
                   <span className=''>Soby là gì?</span>

@@ -12,39 +12,39 @@ const Footer = function () {
           <div className='d-flex flex-column justify-content-between align-items-start p-0' style={{ width: '70%', height: '100%' }}>
             <div className='d-flex justify-content-center align-items-center p-0'>
               <div className=''>
-                <a href='https://soby.vn/tap-chi/' style={{ fontSize: '12px', color: '#6E7678', textDecoration: 'none' }}>
+                <a href='https://about.soby.vn/?page_id=2225' style={{ fontSize: '12px', color: '#6E7678', textDecoration: 'none' }}>
                   <span>Tạp chí</span>
                 </a>
               </div>
               <div className='ms-4'>
-                <a href='https://soby.vn/cau-hoi/' style={{ fontSize: '12px', color: '#6E7678', textDecoration: 'none' }}>
+                <a href='https://about.soby.vn/?page_id=5915' style={{ fontSize: '12px', color: '#6E7678', textDecoration: 'none' }}>
                   <span>FAQ</span>
                 </a>
               </div>
               <div className='ms-4'>
-                <a href='https://soby.vn/en/contact-us/' style={{ fontSize: '12px', color: '#6E7678', textDecoration: 'none' }}>
+                <a href='https://about.soby.vn/?page_id=5915' style={{ fontSize: '12px', color: '#6E7678', textDecoration: 'none' }}>
                   <span>Liên hệ</span>
                 </a>
               </div>
               <div className='ms-4'>
-                <a href='https://soby.vn/dieu-khoan-hoat-dong/chinh-sach-bao-mat-thong-tin/' style={{ fontSize: '12px', color: '#6E7678', textDecoration: 'none' }}>
+                <a href='https://about.soby.vn/?page_id=7195' style={{ fontSize: '12px', color: '#6E7678', textDecoration: 'none' }}>
                   <span>Điều khoản bảo mật</span>
                 </a>
               </div>
             </div>
             <div className='d-flex justify-content-center align-items-start p-0'>
               <div className=''>
-                <a href='#' style={{ fontSize: '12px', color: '#6E7678', textDecoration: 'none' }}>
+                <a href='https://about.soby.vn/?page_id=8773' style={{ fontSize: '12px', color: '#6E7678', textDecoration: 'none' }}>
                   <span>Giới hạn dịch vụ</span>
                 </a>
               </div>
               <div className='ms-4'>
-                <a href='https://soby.vn/dieu-khoan-hoat-dong/chinh-sach-doi-tra/' style={{ fontSize: '12px', color: '#6E7678', textDecoration: 'none' }}>
+                <a href='https://about.soby.vn/?page_id=8773' style={{ fontSize: '12px', color: '#6E7678', textDecoration: 'none' }}>
                   <span>Chính sách đổi trả</span>
                 </a>
               </div>
               <div className='ms-4'>
-                <a href='https://soby.vn/dieu-khoan-hoat-dong/quy-che-hoat-dong/' style={{ fontSize: '12px', color: '#6E7678', textDecoration: 'none' }}>
+                <a href='https://about.soby.vn/?page_id=8773' style={{ fontSize: '12px', color: '#6E7678', textDecoration: 'none' }}>
                   <span>Sản phẩm cấm - Chính sách hạn chế</span>
                 </a>
               </div>
